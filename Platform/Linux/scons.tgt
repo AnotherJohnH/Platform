@@ -42,8 +42,8 @@ env['SIZE']     = PREFIX+'size'
 
 env['OBJPREFIX']     = obj_path
 
-env.Append(CCFLAGS   = '-Wall ')
-env.Append(CXXFLAGS  = '-std=c++11 ')
+env.Append(CCFLAGS   = ' -Wall')
+env.Append(CXXFLAGS  = ' -std=c++11')
 env.Append(CPPPATH   = '/usr/local/include')
 env.Append(LIBPATH   = '/usr/local/lib')
 env.Append(LIBS      = 'SDL2')
