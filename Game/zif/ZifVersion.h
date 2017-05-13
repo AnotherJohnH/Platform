@@ -24,10 +24,10 @@
 #define ZIF_VERSION_H
 
 #define  PROGRAM         "Zif"
-#define  DESCRIPTION     "Another Z-code interpreter"
+#define  DESCRIPTION     "Z-code engine for IF"
 #define  COPYRIGHT_YEAR  "2015-2017"
 #define  AUTHOR          "John D. Haughton"
-#define  VERSION         "0.4"
+#define  VERSION         "0.4.1"
 
 #define  LICENSE \
 "Permission is hereby granted, free of charge, to any person obtaining a copy\n" \

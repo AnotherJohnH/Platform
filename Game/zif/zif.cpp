@@ -76,7 +76,7 @@ public:
       : ConsoleApp(argc_, argv_,
                    PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR, LICENSE,
                    "[Z-file]")
-      , opt_config( 'c', "config", "Config file", "games.list")
+      , opt_config( 'c', "config", "Config file", "zif.cfg")
       , opt_term(   't', "term",   "Use the parent terminal")
       , filename(nullptr)
    {
