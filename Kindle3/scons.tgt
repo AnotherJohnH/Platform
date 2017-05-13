@@ -20,9 +20,16 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
+# scons configuration for Kindle3 builds
+
+MC      = 'armv6hf'
 PREFIX  = 'arm-linux-gnueabihf-'
 
+#-------------------------------------------------------------------------------
+
 Import('env')
+
+obj_path    = 'obj/'+MC+'/'
 
 env['AS']       = PREFIX+'as'
 env['CC']       = PREFIX+'gcc'
@@ -34,6 +41,10 @@ env['OBJCOPY']  = PREFIX+'objcopy'
 env['OBJDUMP']  = PREFIX+'objdump'
 env['SIZE']     = PREFIX+'size'
 
+env['OBJPREFIX']     = obj_path
+
+env.Append(CCFLAGS   = '-Wall ')
+env.Append(CXXFLAGS  = '-std=c++11 ')
 env.Append(CPPPATH   = '')
 env.Append(LIBPATH   = '')
 env.Append(LIBS      = 'pthread')
