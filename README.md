@@ -1,3 +1,4 @@
 # Zif
-Another Z-code interpreter
-Perfectly good Z-code interpreters already exist this project is for my own personal enjoyment and education.
+A Z-code engine for playing interactive fiction games.
+Perfectly good Z-code engines already exist.
+This project is just for the fun of writing code and the learning that brings.
