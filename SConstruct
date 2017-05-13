@@ -34,9 +34,8 @@ binary = 'zif'
 
 env = Environment()
 
-env['CXXFLAGS']  = '-std=c++11 -Wall -O3'
+env['CCFLAGS']   = '-O3'
 env['CPPPATH']   = ['include']
-env['OBJPREFIX'] = 'obj/'
 
 SConscript('Platform/'+platform+'/scons.tgt', exports='env')
 
