@@ -37,13 +37,13 @@ class ZLauncher : public PLT::Curses
 {
 private:
    PLT::Device&   term;
-   const char*    config_file;
-   unsigned       cursor;
-   unsigned       limit;
-   bool           selection_is_dir;
-   bool           quit;
-   char           selection[FILENAME_MAX];
-   char           prefix[FILENAME_MAX];
+   const char*    config_file{nullptr};
+   unsigned       cursor{0};
+   unsigned       limit{0};
+   bool           selection_is_dir{false};
+   bool           quit{false};
+   char           selection[FILENAME_MAX] = {};
+   char           prefix[FILENAME_MAX] = {};
 
    bool getLine(FILE* fp, char* file, size_t size)
    {
@@ -274,9 +274,6 @@ public:
       : Curses(&term_)
       , term(term_)
       , config_file(config_file_)
-      , cursor(0)
-      , selection_is_dir(false)
-      , quit(false)
    {
       raw();
       noecho();

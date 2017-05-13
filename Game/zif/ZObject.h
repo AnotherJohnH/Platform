@@ -30,12 +30,12 @@
 class ZObject
 {
 private:
-   static const unsigned SMALL_PROP_BITS = 5;
-   static const unsigned LARGE_PROP_BITS = 6;
+   const unsigned SMALL_PROP_BITS = 5;
+   const unsigned LARGE_PROP_BITS = 6;
 
-   ZMemory*    memory;
-   uint16_t    obj_table;    //!< Address of object table
-   bool        small;        //!< true => Small table v1 to v3
+   ZMemory*    memory{nullptr};
+   uint16_t    obj_table{0};    //!< Address of object table
+   bool        small{true};     //!< true => Small table v1 to v3
 
    unsigned getPropBits() const { return small ? SMALL_PROP_BITS : LARGE_PROP_BITS; }
    unsigned getMaxProps() const { return (1<<getPropBits()) - 1; }
@@ -155,11 +155,8 @@ private:
 
 public:
    ZObject(ZMemory* memory_)
-      : memory(memory_)
-      , obj_table(0)
-      , small(true)
-   {
-   }
+      : memory{memory_}
+   {}
 
    //! Initialise with game information
    void init(uint16_t obj_table_, uint8_t version_)

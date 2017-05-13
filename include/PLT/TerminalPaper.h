@@ -56,7 +56,7 @@ private:
    class Attr
    {
    private:
-      uint16_t attr;
+      uint16_t attr{};
 
       void pack(unsigned msb, unsigned lsb, unsigned value)
       {
@@ -116,23 +116,23 @@ private:
 
    // Resources
    Paper             paper;
-   const GUI::Font*  font;
-   unsigned          border;
-   unsigned          line_space;
-   unsigned          num_cols;
-   unsigned          num_rows;
+   const GUI::Font*  font{};
+   unsigned          border{0};
+   unsigned          line_space{0};
+   unsigned          num_cols{};
+   unsigned          num_rows{};
    GUI::Vector       org;
 
    // State
    GUI::Colour           palette[8];
-   signed                col, row;
-   signed                save_col, save_row;
+   signed                col{}, row{};
+   signed                save_col{}, save_row{};
    Attr                  attr;
-   bool                  echo;
+   bool                  echo{};
    Attr                  cell_attr[MAX_COLS][MAX_ROWS];
    uint8_t               cell_char[MAX_COLS][MAX_ROWS];
    STB::Fifo<uint8_t,6>  response;
-   bool                  implicit_cr;
+   bool                  implicit_cr{};
 
    //! CSI cursor movement
    void csiCursor(uint8_t cmd, unsigned n=0, unsigned m=0)

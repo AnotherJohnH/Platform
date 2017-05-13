@@ -38,7 +38,7 @@ private:
 
    STB::Option<const char*>  opt_config;
    STB::Option<bool>         opt_term;
-   const char*               filename;
+   const char*               filename{nullptr};
 
    int launch(PLT::Device& term)
    {

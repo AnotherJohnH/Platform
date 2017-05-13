@@ -46,21 +46,17 @@ enum : unsigned
 class Curses
 {
 public:
-   unsigned  lines;
-   unsigned  cols;
+   unsigned  lines{};
+   unsigned  cols{};
 
    Curses(Device* dev_ = nullptr)
-      : lines(0)
-      , cols(0)
-      , dev(nullptr)
-      , attr(0)
    {
       setDevice(dev_);
    }
 
    ~Curses()
    {
-      setDevice(0);
+      setDevice(nullptr);
    }
 
    void setDevice(Device* dev_)
@@ -239,8 +235,8 @@ public:
    }
 
 private:
-   Device*   dev;
-   unsigned  attr;
+   Device*   dev{nullptr};
+   unsigned  attr{0};
 
    void adduint(unsigned value)
    {
