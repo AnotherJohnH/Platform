@@ -433,7 +433,7 @@ private:
    static const unsigned MAX_ALPHA_BPP = 4;
 
    Vector    size;
-   Colour    alpha_table[1<<MAX_ALPHA_BPP];
+   Colour    alpha_table[1<<MAX_ALPHA_BPP] = {};
 
    //! Clip value to between 0 and limit (inclusive range)
    void clip(signed& value, unsigned limit)

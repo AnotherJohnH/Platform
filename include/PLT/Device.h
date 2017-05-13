@@ -44,7 +44,7 @@ public:
 
    virtual ssize_t write(const void* buffer, size_t n) { return 0; }
 
-   virtual ssize_t read(void* buffer_, size_t n) { return 0; }
+   virtual ssize_t read(void* buffer_, size_t n) { return -1; }
 
    virtual int     close() { return 0; }
 };
