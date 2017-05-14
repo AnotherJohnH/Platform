@@ -24,7 +24,7 @@
 #define ZMEMORY_H
 
 #include  <cassert>
-#include  <stdint.h>
+#include  <cstdint>
 
 #include "ZHeader.h"
 

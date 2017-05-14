@@ -27,9 +27,10 @@
 
 #include "ZConsole.h"
 
-static FILE*  input_fp;
-static FILE*  print_fp;
-static FILE*  snoop_fp;
+
+static FILE*  input_fp = nullptr;
+static FILE*  print_fp = nullptr;
+static FILE*  snoop_fp = nullptr;
 
 
 ZConsole::ZConsole(PLT::Device* device_)
@@ -117,7 +118,7 @@ void tprintf(const char* format, ...)
 
    if (fp == NULL)
    {
-      fp = fopen("zem.log", "w");
+      fp = fopen("zif.log", "w");
    }
 
    va_start(ap, format);

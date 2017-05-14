@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2016-2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,30 +23,18 @@
 #ifndef ZCONFIG_H
 #define ZCONFIG_H
 
+//! Configuration/features of the interpreter
 struct ZConfig
 {
-   unsigned interp_major_version;
-   unsigned interp_minor_version;
-
-   bool  status_line;        // Status line available
-   bool  screen_splitting;   // Screen splitting available
-   bool  var_pitch_font;     // variable itch font the default
-   bool  pictures;           // picture display available
-   bool  sounds;             // sounds available
-   bool  timed_keyboard;     // timed keyboard input available
-   bool  transcripting;      // transcripting starts on
-
-   ZConfig()
-      : interp_major_version(0)
-      , interp_minor_version(0)
-      , status_line(false)
-      , screen_splitting(false)
-      , var_pitch_font(false)
-      , pictures(false)
-      , sounds(false)
-      , timed_keyboard(false)
-      , transcripting(false)
-   {}
+   unsigned  interp_major_version{0};
+   unsigned  interp_minor_version{0};
+   bool      status_line{false};          //!< Status line available
+   bool      screen_splitting{false};     //!< Screen splitting available
+   bool      var_pitch_font{false};       //!< variable pitch font the default
+   bool      pictures{false};             //!< picture display available
+   bool      sounds{false};               //!< sounds available
+   bool      timed_keyboard{false};       //!< timed keyboard input available
+   bool      transcripting{false};        //!< transcripting starts on
 };
 
 #endif

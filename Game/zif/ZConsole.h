@@ -23,12 +23,12 @@
 #ifndef Z_CONSOLE_H
 #define Z_CONSOLE_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "PLT/Curses.h"
 #include "PLT/Device.h"
 
-//! Interface to console implementation
+//! Console interface
 class ZConsole : public PLT::Curses
 {
 public:
@@ -63,18 +63,18 @@ public:
       case LINES:        return lines;
       case COLS:         return cols;
 
-      case COLOURS:      return true;
+      case COLOURS:      return true;   // TODO platform specific
       case BOLD:         return true;
       case ITALIC:       return false;
 
-      case FONT_HEIGHT:  return 10;   // TODO this value is fake
-      case FONT_WIDTH:   return 6;    // TODO this value is fake
+      case FONT_HEIGHT:  return 10;     // TODO this value is fake
+      case FONT_WIDTH:   return 6;      // TODO this value is fake
 
       case PICTURE_FONT: return false;
       case GRAPHIC_FONT: return false;
       case FIXED_FONT:   return true;
 
-      case READ_TIMEOUT: return false; // TODO
+      case READ_TIMEOUT: return false;  // TODO
 
       default: return 0;
       }
@@ -83,6 +83,7 @@ public:
    //! Set current font
    void setFont(unsigned font_idx)
    {
+      // TODO
    }
 
    //! Write ZSCII character to printer
