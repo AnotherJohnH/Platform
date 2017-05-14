@@ -7,8 +7,10 @@ dist: trusty
 sudo: required
 
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libsdl2-dev
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]];  then brew update
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]];  then brew install libsdl2-dev
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then sudo apt-get -qq update
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then sudo apt-get install -y libsdl2-dev
 
 language: cpp
 
