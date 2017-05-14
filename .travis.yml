@@ -1,0 +1,7 @@
+
+language: cpp
+
+script: scons
+
+compiler: gcc
+
