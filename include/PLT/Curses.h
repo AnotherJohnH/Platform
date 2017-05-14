@@ -205,6 +205,10 @@ public:
    {
       y = x = 0;
 
+      // TODO fix this it would break apps requiring echo
+      noecho();
+      raw();
+
       addstr("\033[6n");
 
       char response[16];

@@ -101,7 +101,6 @@ public:
          break;
 
       default:
-         status = -1;
          break;
       }
 
