@@ -25,7 +25,7 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <stdint.h>
+#include <cstdint>
 
 #include "PLT/Device.h"
 
@@ -63,12 +63,14 @@ public:
    {
       if (dev != nullptr) dev->close();
 
-      static Device null;
-      dev = dev_ != nullptr ? dev_ : &null;
+      dev = dev_;
 
-      dev->open(0);
+      if (dev != nullptr)
+      {
+         dev->open(0);
 
-      init();
+         init();
+      }
    }
 
    void init()
@@ -188,7 +190,7 @@ public:
       addstr("m");
    }
 
-   //! Set the froeground and background colours
+   //! Set the foreground and background colours
    void colourset(unsigned fg_col, unsigned bg_col)
    {
       addstr("\033[");

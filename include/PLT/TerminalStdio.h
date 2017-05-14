@@ -70,13 +70,16 @@ private:
 
 public:
    TerminalStdio(const char* title_)
-   {}
-
-   virtual int open(unsigned) override
    {
       saveTio();
-      return 0;
    }
+
+   ~TerminalStdio()
+   {
+      restoreTio();
+   }
+
+   // Implement PLT::Device
 
    virtual int ioctl(unsigned request, ...) override
    {
@@ -97,20 +100,8 @@ public:
          status = 0;
          break;
 
-      case IOCTL_TERM_PALETTE:
-         {
-            (void) va_arg(ap, unsigned);
-            (void) va_arg(ap, uint32_t);
-            status = 0;
-         }
-         break;
-
-      case IOCTL_TERM_BORDER:
-         (void) va_arg(ap, unsigned);
-         status = 0;
-         break;
-
       default:
+         status = -1;
          break;
       }
 
