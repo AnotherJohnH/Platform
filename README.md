@@ -12,7 +12,7 @@ on the Kindle a third-party terminal emulator and launcher is not necessary.
 Perfectly good Z-code engines already exist and some have already been ported to the Kindle.
 This project is just for the fun of writing code and the learning that brings.
 
-## Status
+## Status  https://travis-ci.org/AnotherJohnH/Zif.svg?branch=master
 
 The application is currently alpha quality. It has been built and seen to run on various platforms.
 Many popular Z-code games downloaded from the interactive fiction archive start to run as expected
