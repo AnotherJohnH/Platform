@@ -31,6 +31,9 @@ Before building the SConstruct file should be edited to uncomment the intended t
 Depends on SDL2. An installation of SDL2 header and library files is assumed to be in
 /use/local/include and /usr/local/lib respectively.
 
+Note, there is a special build for Raspberry Pi (ARMv6) to link against the required host
+support library.
+
 ### Kindle3
 
 Requires gcc built for arm-linux-gnueabihf and a set of headers and static runtime libraries
@@ -55,3 +58,5 @@ emulation configured.
 The source is C++ but has the following non-typical for modern C++ features ...
 * Memory is statically or stack allocated i.e. no new/delete
 * Use of C style stdio API
+* In some places have re-invented the wheel avoiding functionality that is in the standard library s
+* 3 space indent
