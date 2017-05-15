@@ -34,18 +34,6 @@ template <typename T, std::size_t LOG2_N, typename INDEX=std::size_t>
 class Fifo
 {
 public:
-   enum
-   {
-      SIZE_4    = 2,
-      SIZE_8    = 3,
-      SIZE_16   = 4,
-      SIZE_32   = 5,
-      SIZE_64   = 6,
-      SIZE_128  = 7,
-      SIZE_256  = 8,
-      SIZE_512  = 9,
-      SIZE_1024 = 10
-   };
 
 //------------------------------------------------------------------
 // Member types
@@ -84,7 +72,7 @@ public:
    //! Returns true if the FIFO is full
    bool full() const { return nextIndex(write) == read; }
 
-   //! Returns maximumnumber of elements that can be in the FIFO
+   //! Returns maximum number of elements that can be in the FIFO
    size_type max_size() const { return N - 1; }
 
 
@@ -119,6 +107,11 @@ public:
       read = nextIndex(read);
    }
 
+   //! Remove all elements
+   void clear()
+   {
+       read = write;
+   }
 
 //------------------------------------------------------------------
 

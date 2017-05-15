@@ -29,6 +29,9 @@
 #include <cstdio>
 
 #include "PLT/Device.h"
+#include "PLT/KeyCode.h"
+
+#include "STB/Fifo.h"
 
 namespace PLT {
 
@@ -36,6 +39,8 @@ namespace PLT {
 class TerminalStdio : public PLT::Device
 {
 private:
+   STB::Fifo<uint8_t,2>  input;
+
    static termios* getTio()
    {
       static termios tio;
@@ -66,6 +71,37 @@ private:
          tio.c_lflag &= ~flag;
 
       tcsetattr(0, TCSANOW, &tio);
+   }
+
+   uint8_t inputPush()
+   {
+      uint8_t ch = ::fgetc(stdin);
+      input.push(ch);
+      return ch;
+   }
+
+   uint8_t getNextChar()
+   {
+      if (input.empty())
+      {
+         if (inputPush() == 0x1B)
+         {
+            if (inputPush() == 0x5B)
+            {
+               switch(inputPush())
+               {
+               case 'A': input.clear(); return PLT::UP;
+               case 'B': input.clear(); return PLT::DOWN;
+               case 'C': input.clear(); return PLT::RIGHT;
+               case 'D': input.clear(); return PLT::LEFT;
+               }
+            }
+         }
+      }
+
+      uint8_t ch = input.back();
+      input.pop();
+      return ch;
    }
 
 public:
@@ -113,23 +149,25 @@ public:
    {
       const uint8_t* ptr = static_cast<const uint8_t*>(buffer);
 
-      while(n--)
+      size_t i;
+
+      for(i = 0; i < n; i++)
       {
          ::putchar(*ptr++);
       }
 
-      return n;
+      return i;
    }
 
-   virtual ssize_t read(void* buffer_, size_t n) override
+   virtual ssize_t read(void* buffer, size_t n) override
    {
-      uint8_t* buffer = static_cast<uint8_t*>(buffer_);
+      uint8_t* ptr = static_cast<uint8_t*>(buffer);
 
       size_t i;
 
       for(i = 0; i < n; i++)
       {
-         buffer[i] = ::fgetc(stdin);
+         *ptr++ = getNextChar();
       }
 
       return i;
