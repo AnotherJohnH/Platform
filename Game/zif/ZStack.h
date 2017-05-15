@@ -26,35 +26,28 @@
 #include <cassert>
 #include <stdint.h>
 
+#include "STB/Stack.h"
+
 //! Stack for ZMachine
 template <unsigned SIZE>
 class ZStack
 {
 private:
-   uint16_t  elem[SIZE];
-   uint16_t  sp;
-   uint16_t  fp;
-
-   bool empty() const { return sp == fp;   }
-   bool full()  const { return sp == SIZE; }
+   STB::Stack<uint16_t,SIZE,uint16_t>   impl;
+   uint16_t  fp{};
 
 public:
-   ZStack()
-   {
-      init();
-   }
-
    void init()
    {
-      sp = fp = 0;
+      impl.clear();
+      fp = 0;
    }
 
    uint16_t framePtr() const { return fp; }
 
    void push(uint16_t value)
    {
-      assert(!full());
-      elem[sp++] = value;
+      impl.push_back(value);
       //tprintf("\npush %5u => stack[%u]", value, sp - 1);
    }
 
@@ -67,21 +60,21 @@ public:
    void pushFrame(uint16_t num_arg)
    {
       push(fp);
-      fp = sp;
+      fp = impl.size();
       push(num_arg);
    }
 
    uint16_t& peek()
    {
-      assert(!empty());
-      return elem[sp - 1];
+      return impl.back();
    }
 
    uint16_t pop()
    {
-      assert(!empty());
       //tprintf("\npop stack[%u] => %u", sp - 1, elem[sp-1]);
-      return elem[--sp];
+      uint16_t value = impl.back();
+      impl.pop_back();
+      return value;
    }
 
    void pop(uint16_t& value)
@@ -97,22 +90,19 @@ public:
 
    void popFrame()
    {
-      sp = fp;
-      assert(sp != 0);
-      fp = elem[--sp];
+      impl.resize(fp);
+      fp = pop();
    }
 
    uint16_t frameArgs() const
    {
-      return elem[fp];
+      return impl[fp];
    }
 
    uint16_t& frame(unsigned index)
    {
       assert(index <= 14);
-      unsigned ptr = fp + 1 + index;
-      assert(ptr < sp);
-      return elem[ptr];
+      return impl[fp + 1 + index];
    }
 };
 
