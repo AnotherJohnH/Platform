@@ -275,19 +275,10 @@ public:
       , term(term_)
       , config_file(config_file_)
    {
-      raw();
-      noecho();
-
       action("!Border=0");
       action("!FontSize=18");
       action("!LineSpace=1");
       action("!Inverse");
-   }
-
-   ~ZLauncher()
-   {
-      clear();
-      echo();
    }
 
    int run(const char* story)
