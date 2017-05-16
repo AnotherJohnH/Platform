@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2016 John D. Haughton
+#  Copyright (c) 2017 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,32 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# scons configuration for Kindle3 builds
+# scons configuration for Linux builds
 
-MC      = 'armv6hf'
-PREFIX  = 'arm-linux-gnueabihf-'
+PREFIX  = ''
 
 #-------------------------------------------------------------------------------
 
+obj_path = 'obj/'
+
 Import('env')
 
-obj_path    = 'obj/'+MC+'/'
+env['AS']        = PREFIX+'as'
+env['CC']        = PREFIX+'gcc'
+env['CXX']       = PREFIX+'g++'
+env['LINK']      = PREFIX+'g++'
+env['AR']        = PREFIX+'ar'
+env['RANLIB']    = PREFIX+'ranlib'
+env['OBJCOPY']   = PREFIX+'objcopy'
+env['OBJDUMP']   = PREFIX+'objdump'
+env['SIZE']      = PREFIX+'size'
 
-env['AS']       = PREFIX+'as'
-env['CC']       = PREFIX+'gcc'
-env['CXX']      = PREFIX+'g++'
-env['LINK']     = PREFIX+'g++'
-env['AR']       = PREFIX+'ar'
-env['RANLIB']   = PREFIX+'ranlib'
-env['OBJCOPY']  = PREFIX+'objcopy'
-env['OBJDUMP']  = PREFIX+'objdump'
-env['SIZE']     = PREFIX+'size'
+env['OBJPREFIX'] = obj_path
 
-env['OBJPREFIX']     = obj_path
-
-env.Append(CCFLAGS   = ' -Wall')
-env.Append(CXXFLAGS  = ' -std=c++11')
-env.Append(CPPPATH   = '')
-env.Append(LIBPATH   = '')
-env.Append(LIBS      = 'pthread')
-env.Append(LINKFLAGS = '-static')
+env['CCFLAGS']   = ['-Wall']
+env['CXXFLAGS']  = ['-std=c++11']
+env['CPPPATH']   = ['/usr/local/include']
+env['LIBPATH']   = ['/usr/local/lib']
+env['LIBS']      = ['SDL2']
+env['LINKFLAGS'] = ['']
 
