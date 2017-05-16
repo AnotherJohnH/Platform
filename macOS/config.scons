@@ -48,4 +48,5 @@ env['CPPPATH']   = ['/usr/local/include']
 env['LIBPATH']   = ['/usr/local/lib']
 env['LIBS']      = ['SDL2']
 env['LINKFLAGS'] = ['']
+env['TARFLAGS']  = ['-c', '-z', '-H', '--exclude', '.DS_Store']
 
