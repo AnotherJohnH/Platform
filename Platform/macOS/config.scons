@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2016 John D. Haughton
+#  Copyright (c) 2017 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,32 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-source = ['Game/zif/zif.cpp',
-          'Game/zif/ZConsole.cpp']
+# scons configuration for macOS builds
 
-binary = 'zif'
+PREFIX  = ''
 
-# Get a build environment
-env = SConscript('Platform/build.scons', 'source')
+#-------------------------------------------------------------------------------
 
-# Project specific build config
-env.Append(CCFLAGS = '-O3')
-env.Append(CPPPATH = 'include')
+obj_path = 'obj/'
 
-# Builders
-exe = env.Program(binary, source)
-env.Tar(binary+'-'+env['platform'],
-        [exe, 'LICENSE', 'zif.cfg', 'tpip'])
+Import('env')
+
+env['AS']        = PREFIX+'as'
+env['CC']        = PREFIX+'gcc'
+env['CXX']       = PREFIX+'g++'
+env['LINK']      = PREFIX+'g++'
+env['AR']        = PREFIX+'ar'
+env['RANLIB']    = PREFIX+'ranlib'
+env['OBJCOPY']   = PREFIX+'objcopy'
+env['OBJDUMP']   = PREFIX+'objdump'
+env['SIZE']      = PREFIX+'size'
+
+env['OBJPREFIX'] = obj_path
+
+env['CCFLAGS']   = ['-Wall']
+env['CXXFLAGS']  = ['-std=c++11']
+env['CPPPATH']   = ['/usr/local/include']
+env['LIBPATH']   = ['/usr/local/lib']
+env['LIBS']      = ['SDL2']
+env['LINKFLAGS'] = ['']
 
