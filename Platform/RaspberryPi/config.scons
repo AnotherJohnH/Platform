@@ -48,4 +48,5 @@ env['CPPPATH']   = ['/usr/local/include']
 env['LIBPATH']   = ['/usr/local/lib','/opt/vc/lib']
 env['LIBS']      = ['SDL2', 'bcm_host']
 env['LINKFLAGS'] = ['']
+env['TARFLAGS']  = ['-c', '-z', '-h']
 

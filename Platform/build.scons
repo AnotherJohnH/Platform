@@ -26,7 +26,6 @@ env = Environment()
 
 # Cross platform defaults
 env['TARSUFFIX'] = '.tgz'
-env['TARFLAGS'] = '-c -z -H --exclude .DS_Store'
 
 # Select and configure for the target platform
 import os
