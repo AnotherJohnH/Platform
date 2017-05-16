@@ -3,6 +3,9 @@ os:
   - linux
   - osx
 
+env:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then PROJ_TARGET=macOS; fi
+
 dist: trusty
 sudo: required
 
