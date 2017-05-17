@@ -23,18 +23,26 @@ before zif is ready for it's intended purpose.
 
 ## How to build
 
-The application is built using the SConstruct file in the top level directory.
-Before building the SConstruct file should be edited to uncomment the intended target platform.
+Type scons in the top level directory to run the SConstruct file.
+
+The build files will work out whether the host system is Linux or macOS and configure the
+build environment for the host system as the target. The automatic target selection can be
+overriden by setting the PROJ\_TARGET environment variable. e.g.
+
+PROJ\_TARGET=macOS
+PROJ\_TARGET=Linux
+
+Cross targets are also selected via the PROJ\_TARGET environment variable. e.g.
+
+PROJ\_TARGET=Kindle3
 
 ### Linux and macOS
 
-Depends on SDL2. An installation of SDL2 header and library files is assumed to be in
-/use/local/include and /usr/local/lib respectively.
-
-Note, there is a special build for Raspberry Pi (ARMv6) to link against the required host
-support library.
+Depend on SDL2, so a development install of SDL2 is required.
 
 ### Kindle3
+
+Although this is also a Linux build, it does not depend on SDL2.
 
 Requires gcc built for arm-linux-gnueabihf and a set of headers and static runtime libraries
 that are compatible with the Linux installed on the Kindle3. The original ARMv6 Raspberry Pi
@@ -58,5 +66,5 @@ emulation configured.
 The source is C++ but has the following non-typical for modern C++ features ...
 * Memory is statically or stack allocated i.e. no new/delete
 * Use of C style stdio API
-* In some places have re-invented the wheel avoiding functionality that is in the standard library s
+* In some places have re-invented the wheel avoiding functionality that is in the standard librarys
 * 3 space indent

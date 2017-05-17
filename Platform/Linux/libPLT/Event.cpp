@@ -22,7 +22,7 @@
 
 #include <stdint.h>
 
-#include "SDL2/SDL.h"
+#include "SDL.h"
 
 #include "PLT/Event.h"
 
