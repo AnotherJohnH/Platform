@@ -47,8 +47,8 @@ env['CXXFLAGS']  = ['-std=c++11']
 env['CPPPATH']   = ['']
 env['LIBPATH']   = ['']
 env['LIBS']      = ['']
-env['LINKFLAGS'] = ['-static']
+env['LINKFLAGS'] = ['']
 env['TARFLAGS']  = ['-c', '-z', '-h']
 
-env.ParseConfig('sdl2-config --cflags --static-libs')
+env.ParseConfig('sdl2-config --cflags --libs')
 
