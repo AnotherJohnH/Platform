@@ -22,11 +22,12 @@
 
 # Construct a target platform specific build environment
 
-import os
+import os, sys
+from subprocess import *
 
 env = Environment(ENV = os.environ)
 
-# Cross platform defaults
+# Common platform defaults
 env['TARSUFFIX'] = '.tgz'
 
 system  = os.uname()[0]
@@ -50,11 +51,16 @@ if not os.path.isdir(target):
    print 'ERROR: Target platform "'+target+'" is not supported'
    Exit(1)
 
+env['version'] = Popen('git describe --tags --abbrev=0',
+                       stdout=PIPE, shell=True).stdout.read().strip()
+
 env['machine'] = machine
 env['target']  = target
 
 # Configure for the target platform
 SConscript(target+'/config.scons', exports='env')
+
+env.Append(CCFLAGS = '-DPROJ_VERSION=\\"'+env['version']+'\\"')
 
 # Add target sources to project sources
 Import('source')
