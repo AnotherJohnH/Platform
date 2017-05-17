@@ -28,6 +28,8 @@ PREFIX  = 'arm-linux-gnueabihf-'
 
 Import('env')
 
+env['machine'] = 'arm6l'
+
 obj_path = 'obj/'+env['machine']+'/'
 
 env['AS']        = PREFIX+'as'
