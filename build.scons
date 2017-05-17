@@ -22,22 +22,45 @@
 
 # Construct a target platform specific build environment
 
-env = Environment()
+import os
+
+env = Environment(ENV = os.environ)
 
 # Cross platform defaults
 env['TARSUFFIX'] = '.tgz'
 
-# Select and configure for the target platform
-import os
-platform = os.environ.get('PROJ_TARGET')
-SConscript(platform+'/config.scons', exports='env')
+system  = os.uname()[0]
+machine = os.uname()[4]
 
-# Add platform sources to project sources
+# Get the target selection
+if "PROJ_TARGET" in os.environ:
+   target = os.environ.get('PROJ_TARGET')
+else:
+   # Try and determine the target from the system
+   system = os.uname()[0]
+   if system == 'Darwin':
+      target = 'macOS'
+   elif system == 'Linux':
+      target = 'Linux'
+   else:
+      print 'ERROR: System "'+system+'" is not supported'
+      Exit(1)
+
+if not os.path.isdir(target):
+   print 'ERROR: Target platform "'+target+'" is not supported'
+   Exit(1)
+
+env['machine'] = machine
+env['target']  = target
+
+# Configure for the target platform
+SConscript(target+'/config.scons', exports='env')
+
+# Add target sources to project sources
 Import('source')
-source+=[env.File(platform+'/libPLT/Event.cpp'),
-         env.File(platform+'/libPLT/Frame.cpp'),
-         env.File(platform+'/libPLT/FrameBase.cpp')]
+source+=[env.File(target+'/libPLT/Event.cpp'),
+         env.File(target+'/libPLT/Frame.cpp'),
+         env.File(target+'/libPLT/FrameBase.cpp')]
 
 # Return state to top level
-env['platform'] = platform
 Return('env')

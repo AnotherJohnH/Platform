@@ -26,9 +26,9 @@ PREFIX  = ''
 
 #-------------------------------------------------------------------------------
 
-obj_path = 'obj/'
-
 Import('env')
+
+obj_path = 'obj/'+env['machine']+'/'
 
 env['AS']        = PREFIX+'as'
 env['CC']        = PREFIX+'gcc'
@@ -44,9 +44,11 @@ env['OBJPREFIX'] = obj_path
 
 env['CCFLAGS']   = ['-Wall']
 env['CXXFLAGS']  = ['-std=c++11']
-env['CPPPATH']   = ['/usr/local/include']
-env['LIBPATH']   = ['/usr/local/lib']
-env['LIBS']      = ['SDL2']
-env['LINKFLAGS'] = ['-static']
+env['CPPPATH']   = ['']
+env['LIBPATH']   = ['']
+env['LIBS']      = ['']
+env['LINKFLAGS'] = ['']
 env['TARFLAGS']  = ['-c', '-z', '-h', '--exclude', '.DS_Store']
+
+env.ParseConfig('sdl2-config --cflags --libs')
 

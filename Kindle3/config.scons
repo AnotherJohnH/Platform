@@ -22,14 +22,13 @@
 
 # scons configuration for Kindle3 builds
 
-MC      = 'armv6hf'
 PREFIX  = 'arm-linux-gnueabihf-'
 
 #-------------------------------------------------------------------------------
 
-obj_path = 'obj/'+MC+'/'
-
 Import('env')
+
+obj_path = 'obj/'+env['machine']+'/'
 
 env['AS']        = PREFIX+'as'
 env['CC']        = PREFIX+'gcc'
