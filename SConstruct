@@ -34,6 +34,6 @@ env.Append(CPPPATH = 'include')
 
 # Builders
 exe = env.Program(binary, source)
-env.Tar(binary+'-'+env['target']+'-'+env['machine'],
+env.Tar(binary+'-'+env['target']+'-'+env['machine']+'-'+env['version'],
         [exe, 'LICENSE', 'zif.cfg', 'tpip'])
 
