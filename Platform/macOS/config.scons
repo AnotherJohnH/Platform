@@ -47,6 +47,6 @@ env['CXXFLAGS']  = ['-std=c++11']
 env['CPPPATH']   = ['/usr/local/include']
 env['LIBPATH']   = ['/usr/local/lib']
 env['LIBS']      = ['SDL2']
-env['LINKFLAGS'] = ['']
-env['TARFLAGS']  = ['-c', '-z', '-H', '--exclude', '.DS_Store']
+env['LINKFLAGS'] = ['-static']
+env['TARFLAGS']  = ['-c', '-z', '-h', '--exclude', '.DS_Store']
 
