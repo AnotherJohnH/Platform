@@ -61,6 +61,8 @@ env['target']  = target
 SConscript(target+'/config.scons', exports='env')
 
 env.Append(CCFLAGS = '-DPROJ_VERSION=\\"'+env['version']+'\\"')
+env.Append(CCFLAGS = '-DPROJ_MACHINE_='+machine)
+env.Append(CCFLAGS = '-DPROJ_TARGET_'+target)
 
 # Add target sources to project sources
 Import('source')
