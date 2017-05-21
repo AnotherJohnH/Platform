@@ -279,7 +279,7 @@ EventType waitEvent(Event& event)
 
 void setTimer(unsigned period_ms)
 {
-   return impl.setTimer(period_ms);
+   impl.setTimer(period_ms);
 }
 
 } // namespace PLT
