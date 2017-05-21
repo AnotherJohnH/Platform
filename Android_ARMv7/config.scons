@@ -20,10 +20,16 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# scons configuration for Kindle3 builds
+# scons configuration for Android ARMv7-A builds
 
-PREFIX  = 'arm-linux-gnueabihf-'
-MC='armv6l'
+PREFIX  = 'arm-linux-androideabi-'
+MC='armv7-a'
+
+NDK_API='17'
+NDK_GCC_VER='4.9'
+
+import os
+NDK_HOME=os.environ.get('NDK_HOME')
 
 #-------------------------------------------------------------------------------
 
@@ -45,11 +51,16 @@ env['SIZE']      = PREFIX+'size'
 
 env['OBJPREFIX'] = obj_path
 
-env['CCFLAGS']   = ['-Wall']
+env['CCFLAGS']   = ['-Wall', '-march='+MC, '-fno-rtti']
 env['CXXFLAGS']  = ['-std=c++11']
-env['CPPPATH']   = ['']
-env['LIBPATH']   = ['']
-env['LIBS']      = ['pthread']
-env['LINKFLAGS'] = ['-static']
+env['CPPPATH']   = \
+   [NDK_HOME+'/sources/cxx-stl/gnu-libstdc++/'+NDK_GCC_VER+'/include',
+    NDK_HOME+'/sources/cxx-stl/gnu-libstdc++/'+NDK_GCC_VER+'/libs/armeabi-v7a/include',
+    NDK_HOME+'/platforms/android-'+NDK_API+'/arch-arm/usr/include']
+env['LIBPATH']   = \
+   [NDK_HOME+'/sources/cxx-stl/gnu-libstdc++/'+NDK_GCC_VER+'/libs/armeabi-v7a',
+    NDK_HOME+'/platforms/android-'+NDK_API+'/arch-arm/usr/lib']
+env['LIBS']      = ['supc++']
+env['LINKFLAGS'] = ['--sysroot='+NDK_HOME+'/platforms/android-'+NDK_API+'/arch-arm']
 env['TARFLAGS']  = ['-c', '-z', '-h']
 
