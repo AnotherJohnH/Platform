@@ -33,19 +33,21 @@ env['TARSUFFIX'] = '.tgz'
 system  = os.uname()[0]
 machine = os.uname()[4]
 
-# Get the target selection
+# Try and determine the host target from the system
+system = os.uname()[0]
+if system == 'Darwin':
+   target = 'macOS'
+   env['TARFLAGS']  = ['-c', '-z', '-h', '--exclude', '.DS_Store']
+elif system == 'Linux':
+   target = 'Linux'
+   env['TARFLAGS']  = ['-c', '-z', '-h']
+else:
+   print 'ERROR: System "'+system+'" is not supported'
+   Exit(1)
+
+# Env var PROJ_TARGET overides default host target
 if "PROJ_TARGET" in os.environ:
    target = os.environ.get('PROJ_TARGET')
-else:
-   # Try and determine the target from the system
-   system = os.uname()[0]
-   if system == 'Darwin':
-      target = 'macOS'
-   elif system == 'Linux':
-      target = 'Linux'
-   else:
-      print 'ERROR: System "'+system+'" is not supported'
-      Exit(1)
 
 if not os.path.isdir(target):
    print 'ERROR: Target platform "'+target+'" is not supported'

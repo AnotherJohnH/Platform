@@ -51,5 +51,4 @@ env['CPPPATH']   = ['']
 env['LIBPATH']   = ['']
 env['LIBS']      = ['pthread']
 env['LINKFLAGS'] = ['-static']
-env['TARFLAGS']  = ['-c', '-z', '-h']
 

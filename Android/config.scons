@@ -73,5 +73,4 @@ env['LIBPATH']   = \
 env['LIBS']      = ['supc++']
 env['LINKFLAGS'] = ['--sysroot='+NDK_HOME+'/platforms/android-'+NDK_API+'/arch-'+NDK_ARCH,
                     '-march='+GCC_ARCH]
-env['TARFLAGS']  = ['-c', '-z', '-h']
 
