@@ -20,24 +20,35 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# scons configuration for Android ARMv7-A builds
-
-PREFIX  = 'arm-linux-androideabi-'
-MC='armv7-a'
-
-NDK_API='17'
-NDK_GCC_VER='4.9'
+# scons configuration for Android (ARM) builds
 
 import os
-NDK_HOME=os.environ.get('NDK_HOME')
 
-#-------------------------------------------------------------------------------
+# See BUILD_ANDROID.env
+NDK_HOME    = os.environ.get('NDK_HOME')
+NDK_ARCH    = os.environ.get('NDK_ARCH')
+NDK_API     = os.environ.get('NDK_API')
+NDK_GCC_VER = os.environ.get('NDK_GCC_VER')
+
+# ARMv7 builds
+if NDK_ARCH == 'arm':
+   PREFIX      = 'arm-linux-androideabi-'
+   GCC_ARCH    = 'armv7-a'
+   LIB_ARCH    = 'armeabi-v7a'
+
+# ARMv8 builds
+elif NDK_ARCH == 'arm64':
+   PREFIX      = 'aarch64-linux-android-'
+   GCC_ARCH    = 'armv8-a'
+   LIB_ARCH    = 'arm64-v8a'
+
+else:
+   print 'ERROR: Env var NDK_ARCH not recognoised or not set, see "BUILD_ANDROID.env"'
+   Exit(1)
 
 Import('env')
 
-env['machine'] = MC
-
-obj_path = 'obj/'+env['machine']+'/'
+env['machine'] = GCC_ARCH
 
 env['AS']        = PREFIX+'as'
 env['CC']        = PREFIX+'gcc'
@@ -49,18 +60,18 @@ env['OBJCOPY']   = PREFIX+'objcopy'
 env['OBJDUMP']   = PREFIX+'objdump'
 env['SIZE']      = PREFIX+'size'
 
-env['OBJPREFIX'] = obj_path
-
-env['CCFLAGS']   = ['-Wall', '-march='+MC, '-fno-rtti']
+env['OBJPREFIX'] = 'obj/'+GCC_ARCH+'/'
+env['CCFLAGS']   = ['-Wall', '-march='+GCC_ARCH, '-fno-rtti']
 env['CXXFLAGS']  = ['-std=c++11']
 env['CPPPATH']   = \
    [NDK_HOME+'/sources/cxx-stl/gnu-libstdc++/'+NDK_GCC_VER+'/include',
-    NDK_HOME+'/sources/cxx-stl/gnu-libstdc++/'+NDK_GCC_VER+'/libs/armeabi-v7a/include',
-    NDK_HOME+'/platforms/android-'+NDK_API+'/arch-arm/usr/include']
+    NDK_HOME+'/sources/cxx-stl/gnu-libstdc++/'+NDK_GCC_VER+'/libs/'+LIB_ARCH+'/include',
+    NDK_HOME+'/platforms/android-'+NDK_API+'/arch-'+NDK_ARCH+'/usr/include']
 env['LIBPATH']   = \
-   [NDK_HOME+'/sources/cxx-stl/gnu-libstdc++/'+NDK_GCC_VER+'/libs/armeabi-v7a',
-    NDK_HOME+'/platforms/android-'+NDK_API+'/arch-arm/usr/lib']
+   [NDK_HOME+'/sources/cxx-stl/gnu-libstdc++/'+NDK_GCC_VER+'/libs/'+LIB_ARCH,
+    NDK_HOME+'/platforms/android-'+NDK_API+'/arch-'+NDK_ARCH+'/usr/lib']
 env['LIBS']      = ['supc++']
-env['LINKFLAGS'] = ['--sysroot='+NDK_HOME+'/platforms/android-'+NDK_API+'/arch-arm']
+env['LINKFLAGS'] = ['--sysroot='+NDK_HOME+'/platforms/android-'+NDK_API+'/arch-'+NDK_ARCH,
+                    '-march='+GCC_ARCH]
 env['TARFLAGS']  = ['-c', '-z', '-h']
 
