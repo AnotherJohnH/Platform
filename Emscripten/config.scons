@@ -39,7 +39,7 @@ env['LIBPREFIX']  = obj_path+'lib'
 env['PROGPREFIX'] = ''
 env['PROGSUFFIX'] = '.html'
 
-env['CCFLAGS']   = ['-Wall', '-Wno-main']
+env['CCFLAGS']   = ['-Wall', '-Wno-main', '-DCO_OP_MULTI_TASK']
 env['CXXFLAGS']  = ['-std=c++11']
 env['CPPPATH']   = ['']
 env['LIBPATH']   = ['']
