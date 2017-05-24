@@ -66,7 +66,11 @@ public:
          init = true;
       }
 
-      Uint32  sdl_flags = SDL_WINDOW_ALLOW_HIGHDPI;
+      Uint32  sdl_flags = 0;
+
+#ifndef PROJ_TARGET_Emscripten
+     sdl_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
+#endif
 
       if (flags_ & Frame::FULL_SCREEN)  sdl_flags |= SDL_WINDOW_FULLSCREEN;
       if (flags_ & Frame::RESIZABLE)    sdl_flags |= SDL_WINDOW_RESIZABLE;

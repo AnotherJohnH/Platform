@@ -44,5 +44,5 @@ env['CXXFLAGS']  = ['-std=c++11']
 env['CPPPATH']   = ['']
 env['LIBPATH']   = ['']
 env['LIBS']      = ['']
-env['LINKFLAGS'] = ['']
+env['LINKFLAGS'] = ['-s USE_SDL=2', '-O3']
 
