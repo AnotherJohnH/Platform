@@ -36,11 +36,11 @@ machine = os.uname()[4]
 # Try and determine the host target from the system
 system = os.uname()[0]
 if system == 'Darwin':
-   target = 'macOS'
    env['TARFLAGS']  = ['-c', '-z', '-h', '--exclude', '.DS_Store']
+   target = 'macOS'
 elif system == 'Linux':
-   target = 'Linux'
    env['TARFLAGS']  = ['-c', '-z', '-h']
+   target = 'Linux'
 else:
    print 'ERROR: System "'+system+'" is not supported'
    Exit(1)
@@ -48,6 +48,8 @@ else:
 # Env var PROJ_TARGET overides default host target
 if "PROJ_TARGET" in os.environ:
    target = os.environ.get('PROJ_TARGET')
+   if target == 'Darwin':
+      target = 'macOS'
 
 if not os.path.isdir(target):
    print 'ERROR: Target platform "'+target+'" is not supported'
