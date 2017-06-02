@@ -1,0 +1,112 @@
+#-------------------------------------------------------------------------------
+#  Copyright (c) 2017 John D. Haughton
+# 
+#  Permission is hereby granted, free of charge, to any person obtaining a copy
+#  of this software and associated documentation files (the "Software"), to deal
+#  in the Software without restriction, including without limitation the rights
+#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#  copies of the Software, and to permit persons to whom the Software is
+#  furnished to do so, subject to the following conditions:
+# 
+#  The above copyright notice and this permission notice shall be included in
+#  all copies or substantial portions of the Software.
+# 
+#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#  SOFTWARE.
+#-------------------------------------------------------------------------------
+
+# scons configuration for iOS builds
+
+#-------------------------------------------------------------------------------
+# Sample environment vars
+
+import os
+
+IOS_ARCH          = os.environ.get('IOS_ARCH')
+IOS_PLATFORM_PATH = os.environ.get('IOS_PLATFORM_PATH')
+IOS_PLATFORM      = os.environ.get('IOS_PLATFORM')
+IOS_VERSION       = os.environ.get('IOS_VERSION')
+IOS_SDL2_PATH     = os.environ.get('IOS_SDL2_PATH')
+
+#-------------------------------------------------------------------------------
+# Configure scons build env
+
+Import('env')
+
+target_flags=['-arch' , IOS_ARCH, 
+              '-isysroot', IOS_PLATFORM_PATH+'/'+IOS_PLATFORM+
+                 '.platform/Developer/SDKs/'+IOS_PLATFORM+IOS_VERSION+'.sdk',
+              '-mios-simulator-version-min='+IOS_VERSION]
+
+env['machine']   = IOS_ARCH
+
+env['CC']        = 'clang'
+env['CXX']       = 'clang'
+env['LINK']      = 'clang'
+
+env['OBJPREFIX'] = 'obj/iOS_'+IOS_ARCH+'/'
+env['LIBPREFIX'] = 'lib/'+IOS_ARCH+'/'
+
+env['CCFLAGS']   = ['-Wall', target_flags, '-fobjc-arc']
+env['CXXFLAGS']  = ['-std=c++11']
+env['CPPPATH']   = [IOS_SDL2_PATH+'/include']
+#env['LIBPATH']   = ['Platform/iOS']
+env['LIBPATH']   = ['Platform/iOS/lib/'+IOS_ARCH]
+env['LIBS']      = ['SDL2', 'c++']
+env['LINKFLAGS'] = [target_flags,
+                    '-dead_strip',
+                    '-Xlinker', '-no_deduplicate',
+                    '-Xlinker', '-objc_abi_version', '-Xlinker', '2',
+                    '-framework', 'AVFoundation',
+                    '-framework', 'GameController',
+                    '-framework', 'CoreMotion',
+                    '-framework', 'CoreAudio',
+                    '-framework', 'AudioToolBox',
+                    '-framework', 'Foundation',
+                    '-framework', 'UIKit',
+                    '-framework', 'CoreGraphics',
+                    '-framework', 'OpenGLES',
+                    '-framework', 'QuartzCore']
+
+#-------------------------------------------------------------------------------
+# Build the SDL2 library for iOS
+
+sdl2_src =  Glob(IOS_SDL2_PATH+'/src/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/atomic/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/audio/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/audio/coreaudio/*.m')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/audio/dummy/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/cpuinfo/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/dynapi/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/events/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/file/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/file/cocoa/*.m')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/filesystem/*.m')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/haptic/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/haptic/dummy/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/joystick/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/joystick/iphoneos/*.m')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/loadso/dummy/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/loadso/dlopen/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/power/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/power/uikit/*.m')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/render/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/render/opengles/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/render/opengles2/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/render/software/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/stdlib/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/thread/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/thread/pthread/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/timer/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/timer/unix/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/video/*.c')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/video/uikit/*.m')
+sdl2_src += Glob(IOS_SDL2_PATH+'/src/video/dummy/*.c')
+
+sdl2_lib =  env.Library('libSDL2', sdl2_src)
+

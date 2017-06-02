@@ -48,7 +48,6 @@ env['CPPPATH']   = ['']
 env['LIBPATH']   = ['']
 env['LIBS']      = ['']
 env['LINKFLAGS'] = ['']
-env['TARFLAGS']  = ['-c', '-z', '-h', '--exclude', '.DS_Store']
 
 env.ParseConfig('sdl2-config --cflags --libs')
 
