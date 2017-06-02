@@ -29,6 +29,7 @@ env = Environment(ENV = os.environ)
 
 # Common platform defaults
 env['TARSUFFIX'] = '.tgz'
+env['platform_files'] = []
 
 system  = os.uname()[0]
 machine = os.uname()[4]

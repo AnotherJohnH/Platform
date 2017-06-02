@@ -26,7 +26,8 @@
 
 Import('env')
 
-env['machine'] = 'embc'
+env['machine']        = 'embc'
+env['platform_files'] = ['app/zif.js']
 
 obj_path = 'obj/'+env['machine']+'/'
 
@@ -36,7 +37,7 @@ env['CXX']       = 'emcc'
 env['OBJPREFIX']  = obj_path
 env['OBJSUFFIX']  = '.bc'
 env['LIBPREFIX']  = obj_path+'lib'
-env['PROGPREFIX'] = ''
+env['PROGPREFIX'] = 'app/'
 env['PROGSUFFIX'] = '.html'
 
 env['CCFLAGS']   = ['-Wall', '-Wno-main', '-DCO_OP_MULTI_TASK']
