@@ -27,11 +27,11 @@
 
 import os
 
-IOS_ARCH          = os.environ.get('IOS_ARCH')
-IOS_PLATFORM_PATH = os.environ.get('IOS_PLATFORM_PATH')
-IOS_PLATFORM      = os.environ.get('IOS_PLATFORM')
-IOS_VERSION       = os.environ.get('IOS_VERSION')
-IOS_SDL2_PATH     = os.environ.get('IOS_SDL2_PATH')
+IOS_ARCH        = os.environ.get('IOS_ARCH')
+IOS_XCODE_PATH  = os.environ.get('IOS_XCODE_PATH')
+IOS_PLATFORM    = os.environ.get('IOS_PLATFORM')
+IOS_VERSION     = os.environ.get('IOS_VERSION')
+IOS_SDL2_PATH   = os.environ.get('IOS_SDL2_PATH')
 
 #-------------------------------------------------------------------------------
 # Configure scons build env
@@ -39,7 +39,7 @@ IOS_SDL2_PATH     = os.environ.get('IOS_SDL2_PATH')
 Import('env')
 
 target_flags=['-arch' , IOS_ARCH, 
-              '-isysroot', IOS_PLATFORM_PATH+'/'+IOS_PLATFORM+
+              '-isysroot', IOS_XCODE_PATH+'/Platforms/'+IOS_PLATFORM+
                  '.platform/Developer/SDKs/'+IOS_PLATFORM+IOS_VERSION+'.sdk',
               '-mios-simulator-version-min='+IOS_VERSION]
 
@@ -49,13 +49,13 @@ env['CC']        = 'clang'
 env['CXX']       = 'clang'
 env['LINK']      = 'clang'
 
-env['OBJPREFIX'] = 'obj/iOS_'+IOS_ARCH+'/'
-env['LIBPREFIX'] = 'lib/'+IOS_ARCH+'/'
+env['OBJPREFIX']  = 'obj/iOS_'+IOS_ARCH+'/'
+env['LIBPREFIX']  = 'lib/'+IOS_ARCH+'/'
+env['PROGPREFIX'] = 'app/'
 
 env['CCFLAGS']   = ['-Wall', target_flags, '-fobjc-arc']
 env['CXXFLAGS']  = ['-std=c++11']
 env['CPPPATH']   = [IOS_SDL2_PATH+'/include']
-#env['LIBPATH']   = ['Platform/iOS']
 env['LIBPATH']   = ['Platform/iOS/lib/'+IOS_ARCH]
 env['LIBS']      = ['SDL2', 'c++']
 env['LINKFLAGS'] = [target_flags,
