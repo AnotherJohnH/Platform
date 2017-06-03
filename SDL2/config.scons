@@ -20,34 +20,15 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# scons configuration for macOS builds
-
-PREFIX  = ''
-
-#-------------------------------------------------------------------------------
+# scons configuration for standard SDL2 builds
 
 Import('env')
 
 obj_path = 'obj/'+env['machine']+'/'
 
-env['AS']        = PREFIX+'as'
-env['CC']        = PREFIX+'gcc'
-env['CXX']       = PREFIX+'g++'
-env['LINK']      = PREFIX+'g++'
-env['AR']        = PREFIX+'ar'
-env['RANLIB']    = PREFIX+'ranlib'
-env['OBJCOPY']   = PREFIX+'objcopy'
-env['OBJDUMP']   = PREFIX+'objdump'
-env['SIZE']      = PREFIX+'size'
-
 env['OBJPREFIX'] = obj_path
 
 env['CCFLAGS']   = ['-Wall']
 env['CXXFLAGS']  = ['-std=c++11']
-env['CPPPATH']   = ['']
-env['LIBPATH']   = ['']
-env['LIBS']      = ['']
-env['LINKFLAGS'] = ['']
 
 env.ParseConfig('sdl2-config --cflags --libs')
-
