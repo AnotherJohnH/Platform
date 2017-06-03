@@ -38,6 +38,8 @@ IOS_SDL2_PATH   = os.environ.get('IOS_SDL2_PATH')
 
 Import('env')
 
+app = env['app']
+
 target_flags=['-arch' , IOS_ARCH, 
               '-isysroot', IOS_XCODE_PATH+'/Platforms/'+IOS_PLATFORM+
                  '.platform/Developer/SDKs/'+IOS_PLATFORM+IOS_VERSION+'.sdk',
@@ -51,7 +53,7 @@ env['LINK']      = 'clang'
 
 env['OBJPREFIX']  = 'obj/iOS_'+IOS_ARCH+'/'
 env['LIBPREFIX']  = 'lib/'+IOS_ARCH+'/'
-env['PROGPREFIX'] = 'app/'
+env['PROGPREFIX'] = app+'.app/'
 
 env['CCFLAGS']   = ['-Wall', target_flags, '-fobjc-arc']
 env['CXXFLAGS']  = ['-std=c++11']
@@ -108,5 +110,34 @@ sdl2_src += Glob(IOS_SDL2_PATH+'/src/video/*.c')
 sdl2_src += Glob(IOS_SDL2_PATH+'/src/video/uikit/*.m')
 sdl2_src += Glob(IOS_SDL2_PATH+'/src/video/dummy/*.c')
 
+# XXX need app link to depend on this
 sdl2_lib =  env.Library('libSDL2', sdl2_src)
+
+#-------------------------------------------------------------------------------
+# Process the PNG files
+# TODO the source icons should be under Game/zif
+
+bld = Builder(action = IOS_XCODE_PATH+'/usr/bin/copypng -compress -strip-PNG-text $SOURCE $TARGET')
+env.Append(BUILDERS = {'CopyPng' : bld})
+env.CopyPng('../../'+app+'.app/Icon.png',   app+'Icon.png')
+env.CopyPng('../../'+app+'.app/Launch.png', app+'Launch.png')
+
+#-------------------------------------------------------------------------------
+
+ib_options=' --errors --warnings --notices --module '+app+ \
+           ' --target-device iphone '+ \
+           ' --target-device ipad '+ \
+           ' --minimum-deployment-target '+IOS_VERSION+ \
+           ' --output-format human-readable-text '+ \
+           ' --compilation-directory obj'
+
+bld = Builder(action = IOS_XCODE_PATH+'/usr/bin/ibtool '+ib_options+' $SOURCE '+
+              '--output-partial-info-plist $TARGET')
+env.Append(BUILDERS = {'IbTool' : bld})
+env.IbTool('partial_launch.plist', 'launch.storyboard')
+
+#-------------------------------------------------------------------------------
+
+bld = Builder(action = 'touch $TARGET; codesign --force --sign - --timestamp=none ${TARGET}.app')
+env.Append(BUILDERS = {'Package' : bld})
 

@@ -59,8 +59,10 @@ if not os.path.isdir(target):
 env['version'] = Popen('git describe --tags --abbrev=0',
                        stdout=PIPE, shell=True).stdout.read().strip()
 
+Import('app')
 env['machine'] = machine
 env['target']  = target
+env['app']     = app
 
 # Configure for the target platform
 SConscript(target+'/config.scons', exports='env')
