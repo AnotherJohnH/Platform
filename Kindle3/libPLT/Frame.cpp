@@ -117,7 +117,7 @@ public:
 
    void refresh()
    {
-      write(refresh_fd, "2", 1);
+      (void) write(refresh_fd, "2", 1);
    }
 };
 
