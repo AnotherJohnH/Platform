@@ -71,11 +71,14 @@ env.Append(CCFLAGS = '-DPROJ_VERSION=\\"'+env['version']+'\\"')
 env.Append(CCFLAGS = '-DPROJ_MACHINE_='+env['machine'])
 env.Append(CCFLAGS = '-DPROJ_TARGET_'+target)
 
+env.Append(CPPPATH = 'Platform/include')
+
 # Add target sources to project sources
 Import('source')
 source+=[env.File(target+'/libPLT/Event.cpp'),
          env.File(target+'/libPLT/Frame.cpp'),
-         env.File(target+'/libPLT/FrameBase.cpp')]
+         env.File(target+'/libPLT/FrameBase.cpp'),
+         env.File('src/STB/Option.cpp')]
 
 # Return state to top level
 Return('env')
