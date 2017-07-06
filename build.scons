@@ -56,9 +56,6 @@ if not os.path.isdir(target):
    print 'ERROR: Target platform "'+target+'" is not supported'
    Exit(1)
 
-env['version'] = Popen('git describe --tags --abbrev=0',
-                       stdout=PIPE, shell=True).stdout.read().strip()
-
 Import('app')
 env['machine'] = machine
 env['target']  = target
@@ -67,7 +64,8 @@ env['app']     = app
 # Configure for the target platform
 SConscript(target+'/config.scons', exports='env')
 
-env.Append(CCFLAGS = '-DPROJ_VERSION=\\"'+env['version']+'\\"')
+Import('version')
+env.Append(CCFLAGS = '-DPROJ_VERSION=\\"'+version+'\\"')
 env.Append(CCFLAGS = '-DPROJ_MACHINE_='+env['machine'])
 env.Append(CCFLAGS = '-DPROJ_TARGET_'+target)
 
