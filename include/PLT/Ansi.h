@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <ctype.h>
 
- namespace PLT {
+namespace PLT {
 
 //! State machine to help interpret ANSI/VT100 character streams
 class Ansi 
