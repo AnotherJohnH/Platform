@@ -60,8 +60,6 @@ private:
    STB::Option<bool>         opt_xga{    'X', "xga",    "XGA display     1024x768"};
 #endif
 
-   const char* program{nullptr};
-
    virtual int start() override
    {  
 #ifdef TERMINAL_EMULATOR
@@ -70,7 +68,7 @@ private:
       {  
          // Use the parent terminal
          PLT::TerminalStdio  term(program);
-         return launch(term);
+         return startWithTerminal(term);
       }
 #ifdef TERMINAL_EMULATOR
       else
@@ -100,12 +98,12 @@ private:
    int launchDisplay()
    {  
       PLT::TerminalPaper<WIDTH,HEIGHT>  term(program);
-      return launch(term);
+      return startWithTerminal(term);
    }
 
 protected:
-   //! Game entry point
-   virtual int launch(PLT::Device& term) = 0;
+   //! App entry point with constructed terminal
+   virtual int startWithTerminal(PLT::Device& term) = 0;
 
 public:
     TerminalApp(int          argc_,
@@ -126,7 +124,6 @@ public:
 #endif
                    program_, author_, description_, version_, copyright_year_, license_,
                    args_help_)
-      , program(program_)
    {}
 };
 

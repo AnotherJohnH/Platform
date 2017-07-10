@@ -45,6 +45,7 @@ private:
                                   : path;
     }
 
+protected:
     const char*    name;
     const char*    program;
     const char*    description;
@@ -53,8 +54,6 @@ private:
     const char*    copyright_year;
     const char*    license;
     const char*    args_help;
-
-protected:
     unsigned       argc;
     const char**   argv;
 

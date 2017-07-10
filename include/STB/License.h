@@ -20,8 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef LICENSE_H
-#define LICENSE_H
+#ifndef STB_LICENSE_H
+#define STB_LICENSE_H
 
 #define  MIT_LICENSE \
 "Permission is hereby granted, free of charge, to any person obtaining a copy\n" \
