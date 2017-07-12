@@ -23,6 +23,8 @@
 #ifndef PLT_DEVICE_H
 #define PLT_DEVICE_H
 
+#include <cstdlib>
+
 namespace PLT {
 
 class Device
@@ -41,15 +43,15 @@ public:
    static const unsigned long IOCTL_TERM_COLOURS    = IOCTL_TERM(8);
    static const unsigned long IOCTL_TERM_FONTS      = IOCTL_TERM(9);
 
-   virtual int     open(unsigned oflag) { return 0; }
+   virtual int open(unsigned oflag) { return 0; }
 
-   virtual int     ioctl(unsigned request, ...) { return -1; }
+   virtual int ioctl(unsigned request, ...) { return -1; }
 
-   virtual ssize_t write(const void* buffer, size_t n) { return 0; }
+   virtual int write(const void* buffer, size_t n) { return 0; }
 
-   virtual ssize_t read(void* buffer_, size_t n) { return -1; }
+   virtual int read(void* buffer_, size_t n) { return -1; }
 
-   virtual int     close() { return 0; }
+   virtual int close() { return 0; }
 };
 
 } // namespace PLT

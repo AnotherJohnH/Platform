@@ -181,7 +181,7 @@ public:
       return status;
    }
 
-   virtual ssize_t write(const void* buffer, size_t n) override
+   virtual int write(const void* buffer, size_t n) override
    {
       const uint8_t* ptr = static_cast<const uint8_t*>(buffer);
 
@@ -195,7 +195,7 @@ public:
       return i;
    }
 
-   virtual ssize_t read(void* buffer, size_t n) override
+   virtual int read(void* buffer, size_t n) override
    {
       uint8_t* ptr = static_cast<uint8_t*>(buffer);
 
