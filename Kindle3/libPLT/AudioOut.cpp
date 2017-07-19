@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2015 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,51 +20,22 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_AUDIO_H
-#define PLT_AUDIO_H
-
-#include <cstdint>
+#include "PLT/AudioOut.h"
 
 namespace PLT {
 
-enum AudioFormat
+bool AudioOut::setFormat(AudioFormat format_, unsigned channels_)
 {
-   AUDIO_NONE,
+   return false;
+}
 
-   AUDIO_UINT8,
-   AUDIO_UINT16,
-
-   AUDIO_SINT8,
-   AUDIO_SINT16,
-   AUDIO_SINT32
-};
-
-//! Raw audio base class
-class Audio
+AudioOut::~AudioOut()
 {
-private:
-   unsigned     freq{0};
-   AudioFormat  format{AUDIO_NONE};
-   bool         enable{false};
+}
 
-public:
-   Audio(unsigned freq_=44100) : freq(freq_) {}
-   ~Audio();
-
-   unsigned    getFreq()   const { return freq;   }
-   AudioFormat getFormat() const { return format; }
-   bool        isEnabled() const { return enable; }
-
-   bool     setFormat(AudioFormat format_, unsigned channels_);
-   void     setEnable(bool enable_);
-
-   virtual bool fill(uint8_t*  buffer, unsigned n) { return false; }
-   virtual bool fill(uint16_t* buffer, unsigned n) { return false; }
-   virtual bool fill(int8_t*   buffer, unsigned n) { return false; }
-   virtual bool fill(int16_t*  buffer, unsigned n) { return false; }
-   virtual bool fill(int32_t*  buffer, unsigned n) { return false; }
-};
+void AudioOut::setEnable(bool enable_)
+{
+}
 
 } // namespace PLT
 
-#endif

@@ -23,14 +23,14 @@
 #include "SDL.h"
 #include "SDL_audio.h"
 
-#include "PLT/Audio.h"
+#include "PLT/AudioOut.h"
 
 namespace PLT {
 
 template <typename TYPE, TYPE zero>
 static void mixAudio(void* userdata, uint8_t* stream, int len)
 {
-   Audio* audio = (Audio*)userdata;
+   AudioOut* audio = (AudioOut*)userdata;
 
    TYPE*    buffer = reinterpret_cast<TYPE*>(stream);
    unsigned n      = len/sizeof(TYPE);
@@ -44,7 +44,7 @@ static void mixAudio(void* userdata, uint8_t* stream, int len)
    }
 }
 
-bool Audio::setFormat(AudioFormat format_, unsigned channels_)
+bool AudioOut::setFormat(AudioFormat format_, unsigned channels_)
 {
    if (format != AUDIO_NONE)
    {
@@ -77,7 +77,7 @@ bool Audio::setFormat(AudioFormat format_, unsigned channels_)
    return true;
 }
 
-Audio::~Audio()
+AudioOut::~AudioOut()
 {
    if (format != AUDIO_NONE)
    {
@@ -85,7 +85,7 @@ Audio::~Audio()
    }
 }
 
-void Audio::setEnable(bool enable_)
+void AudioOut::setEnable(bool enable_)
 {
    if (format == AUDIO_NONE) return;
 

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2015 John D. Haughton
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,22 +20,34 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "PLT/Audio.h"
 
-namespace PLT {
+#include <cstdio>
 
-bool Audio::setFormat(AudioFormat format_, unsigned channels_)
+#include "PLT/AudioOut.h"
+
+
+class TestAudio : public PLT::AudioOut
 {
-   return false;
-}
+public:
+   bool fill(int16_t* buffer, unsigned n)
+   {
+      for(unsigned i=0; i<n; ++i)
+      {
+         buffer[i] = i<<5;
+      }
 
-Audio::~Audio()
+      return true;
+   }
+};
+
+
+int main()
 {
-}
+   TestAudio  audio;
 
-void Audio::setEnable(bool enable_)
-{
-}
+   audio.setFormat(PLT::AUDIO_SINT16, 1);
+   audio.setEnable(true);
 
-} // namespace PLT
+   getchar();
+}
 

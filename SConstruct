@@ -20,11 +20,10 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-source  = ['src/test.cpp']
-
-binary  = 'testPlatform'
-app     = 'Platform'
-version = '0.0.1'
+source   = []
+binaries = ['testAudioOut']
+app      = 'PlatformTest'
+version  = '0.0.1'
 
 # Get a build environment
 env = SConscript('build.scons', ['source', 'app', 'version'])
@@ -33,7 +32,9 @@ env = SConscript('build.scons', ['source', 'app', 'version'])
 env.Append(CCFLAGS = ['-O3', '-DTERMINAL_EMULATOR'])
 
 # Builders
-exe = env.Program(binary, source)
+exe = []
+for binary in binaries:
+   exe += env.Program(binary, ['test/'+binary+'.cpp'] + source)
 
-env.Tar(binary+'_'+env['target']+'_'+env['machine']+'_'+version+'.tgz',
+env.Tar(app+'_'+env['target']+'_'+env['machine']+'_'+version+'.tgz',
         [exe, env['platform_files'], 'LICENSE'])

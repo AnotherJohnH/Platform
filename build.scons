@@ -73,7 +73,7 @@ env.Append(CPPPATH = env.Dir('include'))
 
 # Add target sources to project sources
 Import('source')
-source+=[env.File(target+'/libPLT/Audio.cpp'),
+source+=[env.File(target+'/libPLT/AudioOut.cpp'),
          env.File(target+'/libPLT/Event.cpp'),
          env.File(target+'/libPLT/Frame.cpp'),
          env.File(target+'/libPLT/FrameBase.cpp'),
