@@ -21,7 +21,7 @@
 #-------------------------------------------------------------------------------
 
 source   = []
-binaries = ['testAudioOut']
+binaries = ['testAudioOut', 'testTerminalPaper']
 app      = 'PlatformTest'
 version  = '0.0.1'
 
