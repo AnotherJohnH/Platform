@@ -4,6 +4,8 @@ A platform abstraction layer for building portable applications.
 
 ## Status
 
+[![Build Status](https://travis-ci.org/AnotherJohnH/Platform.svg?branch=master)](https://travis-ci.org/AnotherJohnH/Platform)
+
 The is currently alpha quality.
 
 ### Linux and macOS
