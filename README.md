@@ -9,7 +9,7 @@ mkdir MyProject
 cd MyProject
 git init .
 git submodule add https://github.com/AnotherJohnH/Platform.git
-cp Platform/template/* .
+cp Platform/template/.* .
 cp -r Platform/template/* .
 ```
 
