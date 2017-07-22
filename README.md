@@ -17,7 +17,7 @@ Edit the copies of `README.md` and `LICENSE` as appropriate.
 
 ```
 git add .
-git commit -m "Initial commit"
+git commit -m Initial
 scons
 ```
 

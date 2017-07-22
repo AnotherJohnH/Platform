@@ -69,16 +69,16 @@ env.Append(CCFLAGS = '-DPROJ_VERSION=\\"'+version+'\\"')
 env.Append(CCFLAGS = '-DPROJ_MACHINE_='+env['machine'])
 env.Append(CCFLAGS = '-DPROJ_TARGET_'+target)
 
-env.Append(CPPPATH = env.Dir('include'))
+env.Append(CPPPATH = env.Dir('../include'))
 
 # Add target sources to project sources
 Import('source')
-source+=[env.File(target+'/libPLT/AudioOut.cpp'),
-         env.File(target+'/libPLT/Event.cpp'),
-         env.File(target+'/libPLT/Frame.cpp'),
-         env.File(target+'/libPLT/FrameBase.cpp'),
-         env.File(target+'/libPLT/Sounder.cpp'),
-         env.File('Source/STB/Option.cpp')]
+source+=[env.File(target+'/PLT/AudioOut.cpp'),
+         env.File(target+'/PLT/Event.cpp'),
+         env.File(target+'/PLT/Frame.cpp'),
+         env.File(target+'/PLT/FrameBase.cpp'),
+         env.File(target+'/PLT/Sounder.cpp'),
+         env.File('STB/Option.cpp')]
 
 # Return state to top level
 Return('env')

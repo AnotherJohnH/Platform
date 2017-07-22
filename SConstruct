@@ -29,15 +29,15 @@ app      = 'PlatformTest'
 version  = '0.0.1'
 
 # Get a build environment
-env = SConscript('build.scons', ['source', 'app', 'version'])
+env = SConscript('Source/build.scons', ['source', 'app', 'version'])
 
 # Project specific build config
-env.Append(CCFLAGS = ['-O3', '-DTERMINAL_EMULATOR'])
+env.Append(CCFLAGS = ['-O3'])
 
 # Builders
 exe = []
 for binary in binaries:
-   exe += env.Program(binary, ['test/'+binary+'.cpp'] + source)
+   exe += env.Program(binary, ['Source/test/'+binary+'.cpp'] + source)
 
 env.Tar(app+'_'+env['target']+'_'+env['machine']+'_'+version+'.tgz',
         [exe, env['platform_files'], 'LICENSE'])
