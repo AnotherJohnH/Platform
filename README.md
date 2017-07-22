@@ -13,10 +13,10 @@ cp Platform/template/* .
 cp -r Platform/template/* .
 ```
 
-Edit the copies of README.md and LICENSE as appropriate.
+Edit the copies of `README.md` and `LICENSE` as appropriate.
 
 ```
-git add * .gitignore .travis.yml
+git add .
 git commit -m "Initial commit"
 scons
 ```
@@ -39,8 +39,7 @@ running a Debian based Linux has been found to be suitable platform to build the
 
 ### Browser (via Emscripten)
 
-Uses the SDL2 library supplied with Emscripten. Some re-work/conditonal compilation will
-be required to make it work.
+Uses the SDL2 library supplied with Emscripten.
 
 ### iOS
 
