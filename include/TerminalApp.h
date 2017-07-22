@@ -24,19 +24,16 @@
 #define TERMINAL_APP_H
 
 #include  "STB/ConsoleApp.h"
+#include  "STB/License.h"
 
 #include  "PLT/TerminalPaper.h"
 #include  "PLT/TerminalStdio.h"
 
-#if defined(PROJ_TARGET_Emscripten)
-// TODO this is just a confidence test
-static const char* local_argv[] = {"fred", "-v"};
-#endif
 
 class TerminalApp : public STB::ConsoleApp
 {
 private:
-#ifdef TERMINAL_EMULATOR
+#ifndef NO_TERMINAL_EMULATOR
    enum Display
    {  
       DISP_KINDLE3,
@@ -60,9 +57,9 @@ private:
    STB::Option<bool>         opt_xga{    'X', "xga",    "XGA display     1024x768"};
 #endif
 
-   virtual int start() override
+   virtual int startApp() override
    {  
-#ifdef TERMINAL_EMULATOR
+#ifndef NO_TERMINAL_EMULATOR
       if (opt_term)
 #endif
       {  
@@ -70,7 +67,7 @@ private:
          PLT::TerminalStdio  term(program);
          return startWithTerminal(term);
       }
-#ifdef TERMINAL_EMULATOR
+#ifndef NO_TERMINAL_EMULATOR
       else
       {  
          // Use the built in terminal
@@ -106,23 +103,13 @@ protected:
    virtual int startWithTerminal(PLT::Device& term) = 0;
 
 public:
-    TerminalApp(int          argc_,
-                const char*  argv_[],
-                const char*  program_,
+    TerminalApp(const char*  program_,
                 const char*  author_,
                 const char*  description_,
                 const char*  version_,
                 const char*  copyright_year_,
-                const char*  license_,
                 const char*  args_help_ = nullptr)
-      : ConsoleApp(
-#if defined(PROJ_TARGET_Emscripten)
-// TODO this is just a confidence test
-                   2, local_argv,
-#else
-                   argc_, argv_,
-#endif
-                   program_, author_, description_, version_, copyright_year_, license_,
+      : ConsoleApp(program_, author_, description_, version_, copyright_year_, MIT_LICENSE,
                    args_help_)
    {}
 };

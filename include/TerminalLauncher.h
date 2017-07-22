@@ -30,8 +30,6 @@
 #include "PLT/Curses.h"
 #include "PLT/KeyCode.h"
 
-#include "STB/License.h"
-
 #include "TerminalApp.h"
 
 
@@ -39,12 +37,13 @@ class TerminalLauncher : public TerminalApp
 {
 protected:
    PLT::Device*   term;
+   PLT::Curses    curses;
 
 private:
    STB::Option<const char*>  opt_config{ 'c', "config",
                                          "Use alternate config file",
                                          "zif.cfg"};
-   PLT::Curses    curses;
+   const char*    filename{nullptr};
    unsigned       cursor{0};
    unsigned       cursor_limit{0};
    bool           quit{false};
@@ -341,6 +340,11 @@ private:
       }
    }
 
+   virtual void parseArg(const char* arg_) override
+   {
+      filename = arg_;
+   }
+
    virtual int startWithTerminal(PLT::Device& term_) override
    {  
       term = &term_;
@@ -351,12 +355,6 @@ private:
       doAction("LineSpace", "0");
       doAction("Video",     "Inverse");
 
-      const char* filename{nullptr};
-      if (argc == 2)
-      {   
-          filename = argv[1];
-      }
-      
       return filename ? run(filename)
                       : menu();
    }
@@ -422,19 +420,14 @@ private:
    }
 
 public:
-   TerminalLauncher(int          argc,
-                    const char*  argv[],
-                    const char*  program,
+   TerminalLauncher(const char*  program,
                     const char*  author,
                     const char*  description,
                     const char*  version,
                     const char*  copyright_year,
                     const char*  args_help,
                     const char*  config_file)
-      : TerminalApp(argc, argv,
-                    program, author, description, version, copyright_year,
-                    MIT_LICENSE,
-                    args_help)
+      : TerminalApp(program, author, description, version, copyright_year, args_help)
       , opt_config('c', "config", "Use alternate config file", config_file)
    {}
 };

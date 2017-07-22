@@ -20,15 +20,19 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-source   = []
 binaries = ['testAudioOut',
+            'testPaper',
+            'testConsoleApp',
             'testTerminalPaper',
             'testTerminalStdio',
-            'testPaper']
+            'testTerminalApp',
+            'testTerminalLauncher']
+
 app      = 'PlatformTest'
 version  = '0.0.1'
 
 # Get a build environment
+source   = []
 env = SConscript('Source/build.scons', ['source', 'app', 'version'])
 
 # Project specific build config

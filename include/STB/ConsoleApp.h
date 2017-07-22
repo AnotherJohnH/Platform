@@ -36,6 +36,10 @@ namespace STB {
 class ConsoleApp
 {
 private:
+    Option<bool>   opt_version{'v', "version", "Display version information"};
+    Option<bool>   opt_help{   'h', "help",    "Display this help"};
+    Option<bool>   opt_debug{  'd', "debug",   "Report extra debug information"};
+
     static const char* extractFilename(const char* path)
     {
        // Windows is not supported
@@ -43,105 +47,6 @@ private:
 
        return filename != nullptr ? filename + 1
                                   : path;
-    }
-
-protected:
-    const char*    name;
-    const char*    program;
-    const char*    description;
-    const char*    author;
-    const char*    version;
-    const char*    copyright_year;
-    const char*    license;
-    const char*    args_help;
-    unsigned       argc;
-    const char**   argv;
-
-    Option<bool>   opt_version;
-    Option<bool>   opt_help;
-    Option<bool>   opt_debug;
-
-public:
-    ConsoleApp(int          argc_,
-               const char*  argv_[],
-               const char*  program_,
-               const char*  author_,
-               const char*  description_,
-               const char*  version_,
-               const char*  copyright_year_,
-               const char*  license_,
-               const char*  args_help_ = nullptr)
-        : name(extractFilename(argv_[0]))
-        , program(program_)
-        , description(description_)
-        , author(author_)
-        , version(version_)
-        , copyright_year(copyright_year_)
-        , license(license_)
-        , args_help(args_help_ ? args_help_ : "")
-        , argc(argc_)
-        , argv(argv_)
-        , opt_version('v', "version", "Display version information")
-        , opt_help(   'h', "help",    "Display this help")
-        , opt_debug(  'd', "debug",   "Report extra debug information")
-    {}
-
-    bool isDebug() const { return opt_debug; }
-
-    void parseArgsAndStart()
-    {
-        unsigned j = 1;
-
-        for(unsigned i=1; i<argc; ++i)
-        {
-            OptionBase* opt = OptionBase::find(argv[i]);
-            if (opt)
-            {
-                const char* next_arg = (i + 1) < argc ? argv[i + 1] : nullptr;
-
-                if (opt->set(next_arg))
-                {
-                   if (next_arg)
-                   {
-                      ++i;
-                   }
-                   else
-                   {
-                      error("option value for %s is missing", argv[i]);
-                   }
-                }
-            }
-            else if (argv[i][0] == '-')
-            {
-               error("unknown option %s", argv[i]);
-            }
-            else
-            {
-                argv[j++] = argv[i];
-            }
-        }
-
-        argc = j;
-
-        if (opt_version)  showVersion();
-        if (opt_help)     showHelp();
-
-        exit(start());
-    }
-
-    void error(const char* format, ...)
-    {
-        va_list ap;
-
-        fprintf(stderr, "%s: ERROR - ", name);
-
-        va_start(ap, format);
-        vfprintf(stderr, format, ap);
-        va_end(ap);
-
-        fprintf(stderr, "\n");
-
-        exit(1);
     }
 
     void showVersion()
@@ -178,14 +83,107 @@ public:
 
         printf("\n");
 
-        extraHelp();
+        showExtraHelp();
 
         exit(0);
     }
 
-    virtual void extraHelp() {}
+protected:
+    const char*    name;
+    const char*    program;
+    const char*    description;
+    const char*    author;
+    const char*    version;
+    const char*    copyright_year;
+    const char*    license;
+    const char*    args_help;
 
-    virtual int start() = 0;
+    bool isDebug() const { return opt_debug; }
+
+    void error(const char* format, ...)
+    {
+        va_list ap;
+
+        fprintf(stderr, "%s: ERROR - ", name);
+
+        va_start(ap, format);
+        vfprintf(stderr, format, ap);
+        va_end(ap);
+
+        fprintf(stderr, "\n");
+
+        exit(1);
+    }
+
+    virtual void showExtraHelp() {}
+
+    virtual void parseArg(const char* arg) {}
+
+    virtual int startApp() = 0;
+
+public:
+    ConsoleApp(const char*  program_,
+               const char*  author_,
+               const char*  description_,
+               const char*  version_,
+               const char*  copyright_year_,
+               const char*  license_,
+               const char*  args_help_ = nullptr)
+        : name(program_)
+        , program(program_)
+        , description(description_)
+        , author(author_)
+        , version(version_)
+        , copyright_year(copyright_year_)
+        , license(license_)
+        , args_help(args_help_ ? args_help_ : "")
+    {}
+
+    void parseArgsAndStart(int argc, const char* argv[])
+    {
+#if defined(PROJ_TARGET_Emscripten)
+        // TODO this is just a confidence test
+        static const char* local_argv[] = {"fred", "-v"};
+
+        argc = 2;
+        argv = lcoal_argv;
+#endif
+        name = extractFilename(argv[0]);
+
+        for(unsigned i=1; i<argc; ++i)
+        {
+            OptionBase* opt = OptionBase::find(argv[i]);
+            if (opt)
+            {
+                const char* next_arg = (i + 1) < argc ? argv[i + 1] : nullptr;
+
+                if (opt->set(next_arg))
+                {
+                   if (next_arg)
+                   {
+                      ++i;
+                   }
+                   else
+                   {
+                      error("option value for %s is missing", argv[i]);
+                   }
+                }
+            }
+            else if (argv[i][0] == '-')
+            {
+               error("unknown option %s", argv[i]);
+            }
+            else
+            {
+                parseArg(argv[i]);
+            }
+        }
+
+        if (opt_version)  showVersion();
+        if (opt_help)     showHelp();
+
+        exit(startApp());
+    }
 };
 
 } // namespace STB
