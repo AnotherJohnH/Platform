@@ -1,0 +1,18 @@
+
+source  = ['Source/hellow.cpp']
+binary  = 'hellow'
+app     = 'HelloW'
+version = '0.0.0'
+
+# Get a build environment
+env = SConscript('Platform/build.scons', ['source', 'app', 'version'])
+
+# Project specific build config
+env.Append(CCFLAGS = ['-O3'])
+
+# Builders
+exe = env.Program(binary, source)
+
+env.Tar(binary+'_'+env['target']+'_'+env['machine']+'_'+version+'.tgz',
+        [exe, env['platform_files'], 'LICENSE'])
+

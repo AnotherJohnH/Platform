@@ -2,11 +2,28 @@
 
 A platform abstraction layer for building portable applications.
 
+## Starting a new project
+
+```
+mkdir MyProject
+cd MyProject
+git init .
+git submodule add https://github.com/AnotherJohnH/Platform.git
+cp Platform/template/* .
+cp -r Platform/template/* .
+```
+
+Edit the copies of README.md and LICENSE as appropriate.
+
+```
+git add * .gitignore .travis.yml
+git commit -m "Initial commit"
+scons
+```
+
 ## Status
 
 [![Build Status](https://travis-ci.org/AnotherJohnH/Platform.svg?branch=master)](https://travis-ci.org/AnotherJohnH/Platform)
-
-The is currently alpha quality.
 
 ### Linux and macOS
 
