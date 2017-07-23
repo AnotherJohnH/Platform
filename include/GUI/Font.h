@@ -25,7 +25,7 @@
 
 #include <cassert>
 
-#include "GUI/Types.h"
+#include "GUI/Vector.h"
 
 namespace GUI {
 

@@ -20,14 +20,10 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// Basic shared types
-
-#ifndef GUI_TYPES_H
-#define GUI_TYPES_H
+#ifndef GUI_COLOUR_H
+#define GUI_COLOUR_H
 
 #include <cstdint>
-
-#include "MTH/Vector2.h"
 
 namespace GUI {
 
@@ -99,16 +95,6 @@ const Colour FACE       = GREY(0xB0);
 const Colour LIGHT      = GREY(0xD0);
 const Colour HILIGHT    = GREY(0xF0);
 const Colour HIDDEN     = RGBA(0x00, 0x00, 0x00, 0xFF);
-
-
-
-using Vector = MTH::Vector2<unsigned>;
-
-
-// Window flags
-const uint32_t RESIZABLE   = 1<<0;
-const uint32_t NO_BORDER   = 1<<1;
-const uint32_t FULL_SCREEN = 1<<2;
 
 
 } // namespace GUI

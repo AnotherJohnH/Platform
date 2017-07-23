@@ -27,8 +27,9 @@
 #include <cstdlib>
 #include <utility>
 
-#include "GUI/Types.h"
+#include "GUI/Colour.h"
 #include "GUI/Font.h"
+#include "GUI/Vector.h"
 
 namespace GUI {
 

@@ -56,7 +56,7 @@ int main(int argc, const char* argv[])
       paper.drawLine(GUI::GREY(x), 10+x, 90, 10+x, 122);
    }
 
-   for(unsigned x=0; x<256; x += 2)
+   for(unsigned x=0; x<256; x += 4)
    {
       paper.drawPoint(GUI::WHITE, 10+x, 130);
    }
@@ -65,14 +65,13 @@ int main(int argc, const char* argv[])
    paper.drawRect(GUI::BLACK,   11,  141, 68, 198);
    paper.drawRect(GUI::BLACK,   14,  144, 65, 195);
 
-   paper.drawLine(GUI::WHITE,   140, 170, 140, 140);
-   paper.drawLine(GUI::WHITE,   140, 170, 170, 140);
-   paper.drawLine(GUI::WHITE,   140, 170, 170, 170);
-   paper.drawLine(GUI::WHITE,   140, 170, 170, 200);
-   paper.drawLine(GUI::WHITE,   140, 170, 140, 200);
-   paper.drawLine(GUI::WHITE,   140, 170, 110, 200);
-   paper.drawLine(GUI::WHITE,   140, 170, 110, 170);
-   paper.drawLine(GUI::WHITE,   140, 170, 110, 140);
+   for(unsigned i=0; i<=60; i += 10)
+   {
+      paper.drawLine(GUI::WHITE, 140, 170, 110 + i, 140);
+      paper.drawLine(GUI::WHITE, 140, 170, 170,     140 + i);
+      paper.drawLine(GUI::WHITE, 140, 170, 110 + i, 200);
+      paper.drawLine(GUI::WHITE, 140, 170, 110,     140 + i);
+   }
 
    paper.fillTriangle(GUI::WHITE,
                       300, 200,
