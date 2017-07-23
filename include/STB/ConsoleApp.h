@@ -49,6 +49,9 @@ private:
                                   : path;
     }
 
+    static void normal() { printf("\033[0m"); }
+    static void bold()   { printf("\033[1m"); }
+
     void showVersion()
     {
         printf("\n");
@@ -59,7 +62,7 @@ private:
         printf("Built       : %s %s\n", __TIME__, __DATE__);
         printf("Compiler    : %s\n",    __VERSION__);
         printf("\n");
-        printf("Copyright (c) %s %s\n", copyright_year, author);
+        bold(); printf("Copyright (c) %s %s\n", copyright_year, author); normal();
         printf("\n");
         printf("%s", license);
         printf("\n");
@@ -71,13 +74,13 @@ private:
     void showHelp()
     {
         printf("\n");
-        printf("NAME\n");
-        printf("        %s - %s\n", program, description);
+        bold(); printf("NAME\n"); normal();
+        printf("     %s - %s\n", program, description);
         printf("\n");
-        printf("SYNOPSIS\n");
-        printf("        %s [options] %s\n", name, args_help);
+        bold(); printf("SYNOPSIS\n"); normal();
+        printf("     %s [options] %s\n", name, args_help);
         printf("\n");
-        printf("OPTIONS\n");
+        bold(); printf("OPTIONS\n"); normal();
 
         OptionBase::printHelpAll();
 
@@ -150,7 +153,7 @@ public:
 #endif
         name = extractFilename(argv[0]);
 
-        for(unsigned i=1; i<argc; ++i)
+        for(int i=1; i<argc; ++i)
         {
             OptionBase* opt = OptionBase::find(argv[i]);
             if (opt)

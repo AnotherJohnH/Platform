@@ -65,7 +65,7 @@ private:
    //! Print option help
    void printHelp() const
    {
-      printf("        ");
+      printf("     ");
 
       if (short_opt != '\0')
       {
