@@ -23,9 +23,6 @@
 
 #include <cstdio>
 
-#include "PLT/AudioOut.h"
-
-
 #include  "PLT/Paper.h"
 #include  "PLT/Event.h"
 
@@ -34,36 +31,63 @@
 
 int main(int argc, const char* argv[])
 {
-   PLT::Paper paper("Paper Test", 400, 400);
+   PLT::Paper paper("Paper Test", 400, 300);
 
    paper.clear(GUI::BLACK);
 
-   paper.drawPoint(GUI::WHITE, 5, 5);
+   paper.fillRect(GUI::RED,         10,  10,  42,  42);
+   paper.fillRect(GUI::GREEN,       42,  10,  74,  42);
+   paper.fillRect(GUI::YELLOW,      74,  10, 106,  42);
+   paper.fillRect(GUI::BLUE,       106,  10, 138,  42);
+   paper.fillRect(GUI::MAGENTA,    138,  10, 170,  42);
+   paper.fillRect(GUI::CYAN,       170,  10, 202,  42);
+   paper.fillRect(GUI::WHITE,      202,  10, 234,  42);
 
-   paper.fillRect(GUI::WHITE, 10,  10,  40,  40);
-   paper.drawRect(GUI::WHITE, 10, 110,  40, 140);
+   paper.fillRect(GUI::BACKGROUND,  10,  50,  42,  82);
+   paper.fillRect(GUI::FOREGROUND,  42,  50,  74,  82);
+   paper.fillRect(GUI::DARK,        74,  50, 106,  82);
+   paper.fillRect(GUI::SHADOW,     106,  50, 138,  82);
+   paper.fillRect(GUI::FACE,       138,  50, 170,  82);
+   paper.fillRect(GUI::LIGHT,      170,  50, 202,  82);
+   paper.fillRect(GUI::HILIGHT,    202,  50, 234,  82);
 
-   paper.fillRect(GUI::RED, 110,  10, 140,  40);
-   paper.drawRect(GUI::RED, 110, 110, 140, 140);
+   for(unsigned x=0; x<256; x++)
+   {
+      paper.drawLine(GUI::GREY(x), 10+x, 90, 10+x, 122);
+   }
 
-   paper.fillRect(GUI::GREEN, 210,  10, 240,  40);
-   paper.drawRect(GUI::GREEN, 210, 110, 240, 140);
+   for(unsigned x=0; x<256; x += 2)
+   {
+      paper.drawPoint(GUI::WHITE, 10+x, 130);
+   }
 
-   paper.fillRect(GUI::BLUE, 310,  10, 340,  40);
-   paper.drawRect(GUI::BLUE, 310, 110, 340, 140);
+   paper.fillRect(GUI::WHITE,   10,  140, 70, 200);
+   paper.drawRect(GUI::BLACK,   11,  141, 68, 198);
+   paper.drawRect(GUI::BLACK,   14,  144, 65, 195);
 
-   paper.drawLine(GUI::MAGENTA, 10, 200, 60, 250);
-   paper.drawLine(GUI::MAGENTA, 60, 200, 10, 250);
+   paper.drawLine(GUI::WHITE,   140, 170, 140, 140);
+   paper.drawLine(GUI::WHITE,   140, 170, 170, 140);
+   paper.drawLine(GUI::WHITE,   140, 170, 170, 170);
+   paper.drawLine(GUI::WHITE,   140, 170, 170, 200);
+   paper.drawLine(GUI::WHITE,   140, 170, 140, 200);
+   paper.drawLine(GUI::WHITE,   140, 170, 110, 200);
+   paper.drawLine(GUI::WHITE,   140, 170, 110, 170);
+   paper.drawLine(GUI::WHITE,   140, 170, 110, 140);
 
    paper.fillTriangle(GUI::WHITE,
                       300, 200,
                       100, 350,
                       350, 260);
 
-   paper.drawCircle(GUI::CYAN, 100, 300, 20);
-   paper.fillCircle(GUI::CYAN, 100, 300, 15);
+   for(unsigned i=0; i<60; i += 3)
+   {
+      paper.drawSpan(GUI::WHITE, 210, 140 + i, 220 + i);
+   }
 
-   paper.drawText(GUI::YELLOW, 0x000000, 120, 200, &GUI::font_teletext18,
+   paper.drawCircle(GUI::CYAN, 40, 250, 20);
+   paper.fillCircle(GUI::CYAN, 40, 250, 15);
+
+   paper.drawText(GUI::YELLOW, 0x000000, 100, 210, &GUI::font_teletext18,
                   "Hello, world!");
 
    paper.refresh();

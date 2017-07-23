@@ -172,13 +172,13 @@ private:
       switch(col)
       {
       case  0: return GUI::BLACK;
-      case  1: return GUI::ColourEncDec(RGB_NRM,       0,       0).colour;
-      case  2: return GUI::ColourEncDec(      0, RGB_NRM,       0).colour;
-      case  3: return GUI::ColourEncDec(RGB_NRM, RGB_NRM,       0).colour;
-      case  4: return GUI::ColourEncDec(      0,       0, RGB_NRM).colour;
-      case  5: return GUI::ColourEncDec(RGB_NRM,       0, RGB_NRM).colour;
-      case  6: return GUI::ColourEncDec(      0, RGB_NRM, RGB_NRM).colour;
-      case  7: return GUI::ColourEncDec(RGB_NRM, RGB_NRM, RGB_NRM).colour;
+      case  1: return GUI::RGB(RGB_NRM,       0,       0);
+      case  2: return GUI::RGB(      0, RGB_NRM,       0);
+      case  3: return GUI::RGB(RGB_NRM, RGB_NRM,       0);
+      case  4: return GUI::RGB(      0,       0, RGB_NRM);
+      case  5: return GUI::RGB(RGB_NRM,       0, RGB_NRM);
+      case  6: return GUI::RGB(      0, RGB_NRM, RGB_NRM);
+      case  7: return GUI::RGB(RGB_NRM, RGB_NRM, RGB_NRM);
       case  8: return bg ? default_bg_col : default_fg_col;
       case  9: return GUI::RED;
       case 10: return GUI::GREEN;
@@ -197,13 +197,13 @@ private:
              uint8_t grn = (col % 6) * 51;
              col /= 6;
              uint8_t red = (col % 6) * 51;
-             return GUI::ColourEncDec(red, blu, grn).colour;
+             return GUI::RGB(red, blu, grn);
          }
          else
          {
              col -= 232;
              uint8_t lvl = col * 11;
-             return GUI::ColourEncDec(lvl, lvl, lvl).colour;
+             return GUI::GREY(lvl);
          }
       }
    }

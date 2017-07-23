@@ -31,49 +31,75 @@
 
 namespace GUI {
 
+
+//! Packed pixel colour type
 using Colour = uint32_t;
 
-const Colour BACKGROUND = 0x00FFFFFF;
-const Colour FOREGROUND = 0x00000000;
-const Colour DARK       = 0x00606060;
-const Colour SHADOW     = 0x00808080;
-const Colour FACE       = 0x00B0B0B0;
-const Colour LIGHT      = 0x00D0D0D0;
-const Colour HILIGHT    = 0x00F0F0F0;
 
-const Colour BLACK      = 0x00000000;
-const Colour BLUE       = 0x000000FF;
-const Colour GREEN      = 0x0000FF00;
-const Colour CYAN       = 0x0000FFFF;
-const Colour RED        = 0x00FF0000;
-const Colour MAGENTA    = 0x00FF00FF;
-const Colour YELLOW     = 0x00FFFF00;
-const Colour WHITE      = 0x00FFFFFF;
-
-const Colour HIDDEN     = 0xFF000000;
+//! Least significant bit for fields in the packed pixel colour type Colour
+const unsigned ALP_LSB = 24;
+const unsigned RED_LSB = 16;
+const unsigned GRN_LSB =  8;
+const unsigned BLU_LSB =  0;
 
 
-union ColourEncDec
+//! Compute a Colour value from red, green, blu and alpha components
+static constexpr Colour RGBA(uint8_t red, uint8_t grn, uint8_t blu, uint8_t alpha)
 {
-   ColourEncDec(Colour colour_)
+   return (alpha<<ALP_LSB) | (red<<RED_LSB) | (grn<<GRN_LSB) | (blu<<BLU_LSB);
+}
+
+
+//! Compute a Colour value from red, green, blu components
+static constexpr Colour RGB(uint8_t red, uint8_t grn, uint8_t blu)
+{
+   return RGBA(red, grn, blu, 0x00);
+}
+
+
+//! Compute a Colour value for a grey level
+static constexpr Colour GREY(uint8_t level)
+{
+   return RGB(level, level, level);
+}
+
+
+//! Helper class to extract fields from packed colour type Colour
+struct ColourDecode
+{
+   Colour  colour;
+
+   ColourDecode(Colour colour_)
       : colour(colour_)
    {}
 
-   ColourEncDec(uint8_t red_, uint8_t grn_, uint8_t blu_)
-      : blu(blu_), grn(grn_), red(red_)
-   {}
-
-   Colour  colour;
-
-   // XXX Little endian processor assumed
-   struct
-   {
-      uint8_t  blu;
-      uint8_t  grn;
-      uint8_t  red;
-      uint8_t  alp;
-   };
+   uint8_t alp() const { return colour >> ALP_LSB; }
+   uint8_t red() const { return colour >> RED_LSB; }
+   uint8_t grn() const { return colour >> GRN_LSB; }
+   uint8_t blu() const { return colour >> BLU_LSB; }
 };
+
+
+// Some pre-defined packed colour values
+
+const Colour BLACK      = RGB(0x00, 0x00, 0x00);
+const Colour BLUE       = RGB(0x00, 0x00, 0xFF);
+const Colour GREEN      = RGB(0x00, 0xFF, 0x00);
+const Colour CYAN       = RGB(0x00, 0xFF, 0xFF);
+const Colour RED        = RGB(0xFF, 0x00, 0x00);
+const Colour MAGENTA    = RGB(0xFF, 0x00, 0xFF);
+const Colour YELLOW     = RGB(0xFF, 0xFF, 0x00);
+const Colour WHITE      = RGB(0xFF, 0xFF, 0xFF);
+
+const Colour BACKGROUND = WHITE;
+const Colour FOREGROUND = BLACK;
+const Colour DARK       = GREY(0x60);
+const Colour SHADOW     = GREY(0x80);
+const Colour FACE       = GREY(0xB0);
+const Colour LIGHT      = GREY(0xD0);
+const Colour HILIGHT    = GREY(0xF0);
+const Colour HIDDEN     = RGBA(0x00, 0x00, 0x00, 0xFF);
+
 
 
 using Vector = MTH::Vector2<unsigned>;

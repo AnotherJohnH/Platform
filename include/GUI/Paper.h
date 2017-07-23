@@ -468,18 +468,17 @@ private:
       {
          // Not already computed
 
-         ColourEncDec  fg(fg_);
-         ColourEncDec  bg(bg_);
+         ColourDecode  fg(fg_);
+         ColourDecode  bg(bg_);
 
          alpha_table[0]         = bg_;
          alpha_table[max_alpha] = fg_;
 
          for(unsigned alpha = 1; alpha < max_alpha; ++alpha)
          {
-            alpha_table[alpha] =
-                  ColourEncDec((fg.red * alpha + bg.red * (max_alpha - alpha)) / max_alpha,
-                               (fg.grn * alpha + bg.grn * (max_alpha - alpha)) / max_alpha,
-                               (fg.blu * alpha + bg.blu * (max_alpha - alpha)) / max_alpha).colour;
+            alpha_table[alpha] = RGB((fg.red() * alpha + bg.red() * (max_alpha - alpha)) / max_alpha,
+                                     (fg.grn() * alpha + bg.grn() * (max_alpha - alpha)) / max_alpha,
+                                     (fg.blu() * alpha + bg.blu() * (max_alpha - alpha)) / max_alpha);
          }
       }
    }
@@ -509,6 +508,8 @@ private:
    //! Set a horizontal row of pixels in the frame buffer
    virtual void paperSpan(Colour colour, signed x1, signed y, signed x2)
    {
+      assert(x1 < x2);
+
       for(signed x=x1; x<x2; x++)
       {
          paperPoint(colour, x, y);
