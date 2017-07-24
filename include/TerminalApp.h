@@ -47,13 +47,11 @@ private:
    Display display = DISP_SVGA;
 #endif
 
-   STB::Option<bool>         opt_term{   't', "term",
-                                         "Use the parent terminal (not the built in terminal)"};
-
-   STB::Option<bool>         opt_k3{     'K', "k3",     "Kindle 3 display 600x800"};
-   STB::Option<bool>         opt_vga{    'V', "vga",    "VGA display      640x480"};
-   STB::Option<bool>         opt_svga{   'S', "svga",   "SVGA display     800x600"};
-   STB::Option<bool>         opt_xga{    'X', "xga",    "XGA display     1024x768"};
+   STB::Option<bool>         opt_term{'t', "term", "Use the parent terminal (not the built in terminal)"};
+   STB::Option<bool>         opt_k3{  'K', "k3",   "Kindle 3 display 600x800"};
+   STB::Option<bool>         opt_vga{ 'V', "vga",  "VGA display      640x480"};
+   STB::Option<bool>         opt_svga{'S', "svga", "SVGA display     800x600"};
+   STB::Option<bool>         opt_xga{ 'X', "xga",  "XGA display     1024x768"};
 #endif
 
    virtual int startConsoleApp() override
@@ -64,7 +62,7 @@ private:
       {  
          // Use the parent terminal
          PLT::TerminalStdio  term(program);
-         return startWithTerminal(term);
+         return startTerminalApp(term);
       }
 #ifndef NO_TERMINAL_EMULATOR
       else
@@ -94,12 +92,12 @@ private:
    int launchDisplay()
    {  
       PLT::TerminalPaper<WIDTH,HEIGHT>  term(program);
-      return startWithTerminal(term);
+      return startTerminalApp(term);
    }
 
 protected:
    //! App entry point with constructed terminal
-   virtual int startWithTerminal(PLT::Device& term) = 0;
+   virtual int startTerminalApp(PLT::Device& term) = 0;
 
 public:
     TerminalApp(const char*  program_,
@@ -108,8 +106,7 @@ public:
                 const char*  version_,
                 const char*  copyright_year_,
                 const char*  args_help_ = nullptr)
-      : ConsoleApp(program_, author_, description_, version_, copyright_year_,
-                   args_help_)
+      : ConsoleApp(program_, author_, description_, version_, copyright_year_, args_help_)
    {}
 };
 

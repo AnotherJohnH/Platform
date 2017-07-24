@@ -23,6 +23,11 @@
 
 #include "TerminalApp.h"
 
+#define  PROGRAM         "MyApp"
+#define  DESCRIPTION     "A test"
+#define  COPYRIGHT_YEAR  "2017"
+#define  AUTHOR          "John D. Haughton"
+#define  VERSION         PROJ_VERSION
 
 class MyApp : public TerminalApp
 {
@@ -33,7 +38,7 @@ private:
       printf("Some extra help text.\n");
    }
 
-   virtual int startWithTerminal(PLT::Device& term) override
+   virtual int startTerminalApp(PLT::Device& term) override
    {
       // TODO Body of application goes here
 
@@ -48,7 +53,7 @@ private:
 
 public:
    MyApp(int argc, const char* argv[])
-      : TerminalApp("MyApp", "John D. Haughton", "A test", "0.0", "2017")
+      : TerminalApp(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR)
    {
       parseArgsAndStart(argc, argv);
    } 

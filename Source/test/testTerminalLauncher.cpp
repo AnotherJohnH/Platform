@@ -23,6 +23,11 @@
 
 #include "TerminalLauncher.h"
 
+#define  PROGRAM         "MyApp"
+#define  DESCRIPTION     "A test"
+#define  COPYRIGHT_YEAR  "2017"
+#define  AUTHOR          "John D. Haughton"
+#define  VERSION         PROJ_VERSION
 
 class MyApp : public TerminalLauncher
 {
@@ -33,7 +38,7 @@ private:
       printf("Some extra help text.\n");
    }
 
-   virtual int run(const char* file) override
+   virtual int startTerminalLauncher(const char* file) override
    {
       // TODO Body of application goes here
 
@@ -46,7 +51,8 @@ private:
 
 public:
    MyApp(int argc, const char* argv[])
-      : TerminalLauncher("MyApp", "John D. Haughton", "A test", "0.0", "2017", "<file>", "cfg")
+      : TerminalLauncher(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR,
+                         "<file>", "cfg")
    {
       parseArgsAndStart(argc, argv);
    } 

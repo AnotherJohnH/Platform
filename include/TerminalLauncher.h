@@ -336,7 +336,7 @@ private:
          strcpy(story, path);
          strcat(story, selection);
 
-         run(story);
+         startTerminalLauncher(story);
       }
    }
 
@@ -345,7 +345,7 @@ private:
       filename = arg_;
    }
 
-   virtual int startWithTerminal(PLT::Device& term_) override
+   virtual int startTerminalApp(PLT::Device& term_) override
    {  
       term = &term_;
       curses.setDevice(&term_);
@@ -355,12 +355,12 @@ private:
       doAction("LineSpace", "0");
       doAction("Video",     "Inverse");
 
-      return filename ? run(filename)
+      return filename ? startTerminalLauncher(filename)
                       : menu();
    }
 
    //! Load and run a file
-   virtual int run(const char* file) = 0;
+   virtual int startTerminalLauncher(const char* file) = 0;
 
    //! Enter the menu system
    int menu()

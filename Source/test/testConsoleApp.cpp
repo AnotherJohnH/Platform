@@ -25,6 +25,11 @@
 
 #include "STB/ConsoleApp.h"
 
+#define  PROGRAM         "MyApp"
+#define  DESCRIPTION     "A test"
+#define  COPYRIGHT_YEAR  "2017"
+#define  AUTHOR          "John D. Haughton"
+#define  VERSION         PROJ_VERSION
 
 class MyApp : public STB::ConsoleApp
 {
@@ -45,12 +50,13 @@ private:
       {
          printf("HERE %s:%u\n", __FILE__, __LINE__);
       }
+
       return 0;
    }
 
 public:
    MyApp(int argc, const char* argv[])
-      : ConsoleApp("MyApp", "John D. Haughton", "A test", "0.0", "2017")
+      : ConsoleApp(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR)
    {
       parseArgsAndStart(argc, argv);
    } 
