@@ -29,6 +29,7 @@
 #include <cstring>
 
 #include "STB/Option.h"
+#include "STB/License.h"
 
 namespace STB {
 
@@ -64,7 +65,7 @@ private:
         printf("\n");
         bold(); printf("Copyright (c) %s %s\n", copyright_year, author); normal();
         printf("\n");
-        printf("%s", license);
+        printf("%s", MIT_LICENSE);
         printf("\n");
         printf("\n");
 
@@ -98,7 +99,6 @@ protected:
     const char*    author;
     const char*    version;
     const char*    copyright_year;
-    const char*    license;
     const char*    args_help;
 
     bool isDebug() const { return opt_debug; }
@@ -122,7 +122,7 @@ protected:
 
     virtual void parseArg(const char* arg) {}
 
-    virtual int startApp() = 0;
+    virtual int startConsoleApp() = 0;
 
 public:
     ConsoleApp(const char*  program_,
@@ -130,7 +130,6 @@ public:
                const char*  description_,
                const char*  version_,
                const char*  copyright_year_,
-               const char*  license_,
                const char*  args_help_ = nullptr)
         : name(program_)
         , program(program_)
@@ -138,7 +137,6 @@ public:
         , author(author_)
         , version(version_)
         , copyright_year(copyright_year_)
-        , license(license_)
         , args_help(args_help_ ? args_help_ : "")
     {}
 
@@ -185,7 +183,7 @@ public:
         if (opt_version)  showVersion();
         if (opt_help)     showHelp();
 
-        exit(startApp());
+        exit(startConsoleApp());
     }
 };
 

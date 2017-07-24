@@ -24,7 +24,6 @@
 #define TERMINAL_APP_H
 
 #include  "STB/ConsoleApp.h"
-#include  "STB/License.h"
 
 #include  "PLT/TerminalPaper.h"
 #include  "PLT/TerminalStdio.h"
@@ -57,7 +56,7 @@ private:
    STB::Option<bool>         opt_xga{    'X', "xga",    "XGA display     1024x768"};
 #endif
 
-   virtual int startApp() override
+   virtual int startConsoleApp() override
    {  
 #ifndef NO_TERMINAL_EMULATOR
       if (opt_term)
@@ -109,7 +108,7 @@ public:
                 const char*  version_,
                 const char*  copyright_year_,
                 const char*  args_help_ = nullptr)
-      : ConsoleApp(program_, author_, description_, version_, copyright_year_, MIT_LICENSE,
+      : ConsoleApp(program_, author_, description_, version_, copyright_year_,
                    args_help_)
    {}
 };

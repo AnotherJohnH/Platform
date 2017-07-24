@@ -24,7 +24,6 @@
 #include <cstdio>
 
 #include "STB/ConsoleApp.h"
-#include "STB/License.h"
 
 
 class MyApp : public STB::ConsoleApp
@@ -36,7 +35,7 @@ private:
       printf("Some extra help text.\n");
    }
 
-   virtual int startApp() override
+   virtual int startConsoleApp() override
    {
       // TODO Body of application goes here
 
@@ -51,7 +50,7 @@ private:
 
 public:
    MyApp(int argc, const char* argv[])
-      : ConsoleApp("MyApp", "John D. Haughton", "A test", "0.0", "2017", MIT_LICENSE)
+      : ConsoleApp("MyApp", "John D. Haughton", "A test", "0.0", "2017")
    {
       parseArgsAndStart(argc, argv);
    } 
