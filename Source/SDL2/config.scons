@@ -32,3 +32,13 @@ env['CCFLAGS']   = ['-Wall']
 env['CXXFLAGS']  = ['-std=c++11']
 
 env.ParseConfig('sdl2-config --cflags --libs')
+
+
+Import('source')
+
+source+=[env.File('../SDL2/AudioOut.cpp'),
+         env.File('../SDL2/Event.cpp'),
+         env.File('../SDL2/Frame.cpp'),
+         env.File('../SDL2/FrameBase.cpp'),
+         env.File('../SDL2/Sounder.cpp')]
+

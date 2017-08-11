@@ -74,3 +74,12 @@ env['LIBS']      = ['supc++']
 env['LINKFLAGS'] = ['--sysroot='+NDK_HOME+'/platforms/android-'+NDK_API+'/arch-'+NDK_ARCH,
                     '-march='+GCC_ARCH]
 
+
+Import('source')
+
+source+=[env.File('AudioOut.cpp'),
+         env.File('Event.cpp'),
+         env.File('Frame.cpp'),
+         env.File('FrameBase.cpp'),
+         env.File('Sounder.cpp')]
+

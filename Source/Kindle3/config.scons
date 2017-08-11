@@ -52,3 +52,12 @@ env['LIBPATH']   = ['']
 env['LIBS']      = ['pthread']
 env['LINKFLAGS'] = ['-static']
 
+
+Import('source')
+
+source+=[env.File('AudioOut.cpp'),
+         env.File('Event.cpp'),
+         env.File('Frame.cpp'),
+         env.File('FrameBase.cpp'),
+         env.File('Sounder.cpp')]
+

@@ -47,3 +47,11 @@ env['LIBPATH']   = ['']
 env['LIBS']      = ['']
 env['LINKFLAGS'] = ['-s USE_SDL=2', '-O3']
 
+Import('source')
+
+source+=[env.File('../SDL2/AudioOut.cpp'),
+         env.File('../SDL2/Event.cpp'),
+         env.File('../SDL2/Frame.cpp'),
+         env.File('../SDL2/FrameBase.cpp'),
+         env.File('../SDL2/Sounder.cpp')]
+

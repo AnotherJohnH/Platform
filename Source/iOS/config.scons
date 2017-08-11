@@ -141,3 +141,13 @@ env.IbTool('partial_launch.plist', 'launch.storyboard')
 bld = Builder(action = 'touch $TARGET; codesign --force --sign - --timestamp=none ${TARGET}.app')
 env.Append(BUILDERS = {'Package' : bld})
 
+#-------------------------------------------------------------------------------
+
+Import('source')
+
+source+=[env.File('../SDL2/AudioOut.cpp'),
+         env.File('../SDL2/Event.cpp'),
+         env.File('../SDL2/Frame.cpp'),
+         env.File('../SDL2/FrameBase.cpp'),
+         env.File('../SDL2/Sounder.cpp')]
+

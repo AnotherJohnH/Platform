@@ -62,7 +62,8 @@ env['target']  = target
 env['app']     = app
 
 # Configure for the target platform
-SConscript(target+'/config.scons', exports='env')
+Import('source')
+SConscript(target+'/config.scons', exports=['env','source'])
 
 Import('version')
 env.Append(CCFLAGS = '-DPROJ_VERSION=\\"'+version+'\\"')
@@ -72,13 +73,7 @@ env.Append(CCFLAGS = '-DPROJ_TARGET_'+target)
 env.Append(CPPPATH = env.Dir('../include'))
 
 # Add target sources to project sources
-Import('source')
-source+=[env.File(target+'/PLT/AudioOut.cpp'),
-         env.File(target+'/PLT/Event.cpp'),
-         env.File(target+'/PLT/Frame.cpp'),
-         env.File(target+'/PLT/FrameBase.cpp'),
-         env.File(target+'/PLT/Sounder.cpp'),
-         env.File('STB/Option.cpp')]
+source+=[env.File('STB/Option.cpp')]
 
 # Return state to top level
 Return('env')
