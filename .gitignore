@@ -4,3 +4,4 @@
 *.tgz
 .DS_Store
 .sconsign.dblite
+test*
