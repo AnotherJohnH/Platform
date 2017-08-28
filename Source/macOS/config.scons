@@ -43,5 +43,5 @@ source+=[env.File('../SDL2/AudioOut.cpp'),
          env.File('../SDL2/Frame.cpp'),
          env.File('../SDL2/FrameBase.cpp'),
          env.File('../SDL2/Sounder.cpp'),
-         env.File('MidiIn.cpp')]
+         env.File('Midi.cpp')]
 

@@ -23,13 +23,13 @@
 
 #include <cstdio>
 
-#include "PLT/MidiIn.h"
+#include "PLT/Midi.h"
 
 
-class TestMidiIn : public PLT::MidiIn
+class TestMidiIn : public PLT::MIDI::In
 {
 private:
-   void packetIn(unsigned length, uint8_t* data)
+   void messageIn(unsigned length, uint8_t* data)
    {
       for(unsigned i=0; i<length; ++i)
       {

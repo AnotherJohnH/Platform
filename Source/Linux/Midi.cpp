@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2015 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,28 +20,17 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_MIDI_IN_H
-#define PLT_MIDI_IN_H
-
-#include <cstdint>
+#include "PLT/MidiIn.h"
 
 namespace PLT {
 
-//! Access to a MIDI input stream
-class MidiIn
-{
-public:
-   MidiIn(unsigned device_index = 0);
-   ~MidiIn();
+namespace MIDI {
 
-   bool isConnected() const { return connected; }
+In::In(unsigned) {}
 
-   virtual void packetIn(unsigned length, uint8_t* data) {}
+In::~In() {}
 
-private:
-   bool connected{false};
-};
+} // namespace MIDI
 
 } // namespace PLT
 
-#endif

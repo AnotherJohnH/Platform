@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2015 John D. Haughton
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +20,60 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "PLT/MidiIn.h"
+#ifndef PLT_MIDI_H
+#define PLT_MIDI_H
+
+#include <cstdint>
 
 namespace PLT {
 
-PLT::MidiIn::MidiIn(unsigned) {}
+namespace MIDI {
 
-PLT::MidiIn::~MidiIn() {}
+
+static const uint8_t  NOTE_OFF          = 0x80;
+static const uint8_t  NOTE_ON           = 0x90;
+static const uint8_t  POLY_KEY_PRESSURE = 0xA0;
+static const uint8_t  CONTROL_CHANGE    = 0xB0;
+static const uint8_t  PROGRAM_CHANGE    = 0xC0;
+static const uint8_t  CHANNEL_PRESSURE  = 0xD0;
+static const uint8_t  PITCH_BEND        = 0xE0;
+static const uint8_t  SYSEX             = 0xF0;
+
+
+//! MIDI input stream
+class In
+{
+public:
+   In(unsigned device_index = 0);
+   ~In();
+
+   bool isConnected() const { return connected; }
+
+   virtual void messageIn(unsigned length, uint8_t* data) = 0;
+
+private:
+   bool connected{false};
+};
+
+
+//! MIDI output stream
+class Out
+{
+public:
+   Out(unsigned device_index = 0);
+   ~Out();
+
+   bool isConnected() const { return connected; }
+
+   void messageOut(unsigned length, const uint8_t* data);
+
+private:
+   bool connected{false};
+};
+
+
+} // namespace MIDI
 
 } // namespace PLT
 
+#endif

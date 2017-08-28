@@ -24,9 +24,12 @@
 #include <cstdint>
 #include <CoreMIDI/CoreMIDI.h>
 
-#include "PLT/MidiIn.h"
+#include "PLT/Midi.h"
 
 namespace PLT {
+
+namespace MIDI {
+
 
 static MIDIClientRef  client;
 static MIDIPortRef    port;
@@ -36,18 +39,18 @@ static void midiInputCallBack(const MIDIPacketList*  pkt_list,
                               void*                  read_proc_ref_con,
                               void*                  src_conn_ref_con)
 {
-   PLT::MidiIn* midi_in = (PLT::MidiIn*)read_proc_ref_con;
+   In* midi_in = (In*)read_proc_ref_con;
 
    for(uint32_t i=0; i<pkt_list->numPackets; ++i)
    {
       const MIDIPacket* pkt = &pkt_list->packet[i];
 
-      midi_in->packetIn(pkt->length, (uint8_t*)pkt->data);
+      midi_in->messageIn(pkt->length, (uint8_t*)pkt->data);
    }
 }
 
 
-PLT::MidiIn::MidiIn(unsigned device_index)
+In::In(unsigned device_index)
 {
    OSStatus    status;
    CFStringRef name;
@@ -99,11 +102,13 @@ PLT::MidiIn::MidiIn(unsigned device_index)
 }
 
 
-PLT::MidiIn::~MidiIn()
+In::~In()
 {
    // TODO tidy up
 }
 
+
+} // namespace MIDI
 
 } // namespace PLT
 
