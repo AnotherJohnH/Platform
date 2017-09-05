@@ -108,6 +108,27 @@ In::~In()
 }
 
 
+Out::Out(unsigned device_index)
+{
+   OSStatus    status;
+   CFStringRef name;
+
+   // Access one of the MIDI destinations in the system
+   MIDIEndpointRef destination = MIDIGetDestination(device_index);
+   if (destination == 0)
+   {
+      fprintf(stderr, "ERROR - MIDIGetDestination() failed\n");
+      return;
+   }
+}
+
+
+Out::~Out()
+{
+   // TODO tidy up
+}
+
+
 } // namespace MIDI
 
 } // namespace PLT

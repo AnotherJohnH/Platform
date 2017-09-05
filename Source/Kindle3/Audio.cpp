@@ -24,17 +24,17 @@
 
 namespace PLT {
 
-bool AudioOut::setFormat(AudioFormat format_, unsigned channels_)
+Audio::Audio(unsigned freq_, AudioFormat format_, unsigned channels_)
+{
+}
+
+Audio::~Audio()
+{
+}
+
+bool Audio::setEnable(bool enable_)
 {
    return false;
-}
-
-AudioOut::~AudioOut()
-{
-}
-
-void AudioOut::setEnable(bool enable_)
-{
 }
 
 } // namespace PLT

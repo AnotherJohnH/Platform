@@ -38,7 +38,7 @@ env.Append(LINKFLAGS = ['-framework', 'CoreFoundation'])
 
 Import('source')
 
-source+=[env.File('../SDL2/AudioOut.cpp'),
+source+=[env.File('../SDL2/Audio.cpp'),
          env.File('../SDL2/Event.cpp'),
          env.File('../SDL2/Frame.cpp'),
          env.File('../SDL2/FrameBase.cpp'),

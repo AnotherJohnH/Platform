@@ -21,6 +21,7 @@
 #-------------------------------------------------------------------------------
 
 binaries = ['testAudioOut',
+            'testAudioIn',
             'testMidiIn',
             'testPaper',
             'testConsoleApp',

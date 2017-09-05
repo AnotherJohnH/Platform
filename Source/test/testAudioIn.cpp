@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,51 +20,54 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_AUDIO_OUT_H
-#define PLT_AUDIO_OUT_H
 
 #include <cstdint>
+#include <cstdio>
 
-namespace PLT {
+#include "PLT/Audio.h"
 
-enum AudioFormat
+
+static int16_t data[1024];
+
+
+class TestAudioIn : public PLT::AudioIn
 {
-   AUDIO_NONE,
-
-   AUDIO_UINT8,
-   AUDIO_UINT16,
-
-   AUDIO_SINT8,
-   AUDIO_SINT16,
-   AUDIO_SINT32
-};
-
-//! Raw audio our base class
-class AudioOut
-{
-private:
-   unsigned     freq{0};
-   AudioFormat  format{AUDIO_NONE};
-   bool         enable{false};
-
 public:
-   AudioOut(unsigned freq_=44100) : freq(freq_) {}
-   ~AudioOut();
+   TestAudioIn() : PLT::AudioIn(44100, PLT::AUDIO_SINT16, 1) {}
 
-   unsigned     getFreq()   const { return freq;   }
-   AudioFormat  getFormat() const { return format; }
-   bool         isEnabled() const { return enable; }
-
-   bool         setFormat(AudioFormat format_, unsigned channels_);
-   void         setEnable(bool enable_);
-
-   virtual bool fill(uint8_t*  buffer, unsigned n) { return false; }
-   virtual bool fill(uint16_t* buffer, unsigned n) { return false; }
-   virtual bool fill(int8_t*   buffer, unsigned n) { return false; }
-   virtual bool fill(int16_t*  buffer, unsigned n) { return false; }
-   virtual bool fill(int32_t*  buffer, unsigned n) { return false; }
+   virtual void setSamples(const int16_t* buffer, unsigned n) override
+   {
+      for(unsigned i=0; i<n; ++i)
+      {
+         data[i] = buffer[i];
+      }
+   }
 };
 
-} // namespace PLT
 
-#endif
+class TestAudioOut : public PLT::AudioOut
+{
+public:
+   TestAudioOut() : PLT::AudioOut(44100, PLT::AUDIO_SINT16, 1) {}
+
+   virtual void getSamples(int16_t* buffer, unsigned n) override
+   {
+      for(unsigned i=0; i<n; ++i)
+      {
+         buffer[i] = data[i];
+      }
+   }
+};
+
+
+int main()
+{
+   TestAudioIn   audio_in;
+   TestAudioOut  audio_out;
+
+   audio_in.setEnable(true);
+   audio_out.setEnable(true);
+
+   getchar();
+}
+

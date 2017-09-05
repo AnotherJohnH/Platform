@@ -23,20 +23,22 @@
 
 #include <cstdio>
 
-#include "PLT/AudioOut.h"
+#include "PLT/Audio.h"
 
 
 class TestAudio : public PLT::AudioOut
 {
 public:
-   bool fill(int16_t* buffer, unsigned n)
+   TestAudio()
+      : PLT::AudioOut(44100, PLT::AUDIO_SINT16, 1)
+   {}
+
+   virtual void getSamples(int16_t* buffer, unsigned n) override
    {
       for(unsigned i=0; i<n; ++i)
       {
          buffer[i] = i<<5;
       }
-
-      return true;
    }
 };
 
@@ -45,7 +47,6 @@ int main()
 {
    TestAudio  audio;
 
-   audio.setFormat(PLT::AUDIO_SINT16, 1);
    audio.setEnable(true);
 
    getchar();

@@ -49,7 +49,59 @@ public:
 
    bool isConnected() const { return connected; }
 
-   virtual void messageIn(unsigned length, uint8_t* data) = 0;
+   virtual void noteOn(         uint8_t channel, uint8_t note,  uint8_t velocity) {}
+   virtual void notePressure(   uint8_t channel, uint8_t note,  uint8_t value)    {}
+   virtual void noteOff(        uint8_t channel, uint8_t note,  uint8_t velocity) {}
+   virtual void controlChange(  uint8_t channel, uint8_t index, uint8_t value)    {}
+   virtual void pitchBend(      uint8_t channel, int16_t value)                   {}
+   virtual void channelPressure(uint8_t channel, uint8_t value)                   {}
+   virtual void programChange(  uint8_t channel, uint8_t index)                   {}
+
+   virtual void messageIn(unsigned length, uint8_t* data)
+   {
+      uint8_t channel = data[0] & 0x0F;
+      uint8_t message = data[0] & 0xF0;
+
+      switch(message)
+      {
+      case PLT::MIDI::NOTE_OFF:
+         noteOff(channel, data[1], data[2]);
+         break;
+
+      case PLT::MIDI::POLY_KEY_PRESSURE:
+         notePressure(channel, data[1], data[2]);
+         break;
+
+      case PLT::MIDI::NOTE_ON:
+         if (data[2] != 0)
+         {
+            noteOn(channel, data[1], data[2]);
+         }
+         else
+         {
+            noteOff(channel, data[1], data[2]);
+         }
+         break;
+
+      case PLT::MIDI::CHANNEL_PRESSURE:
+         channelPressure(channel, data[1]);
+         break;
+
+      case PLT::MIDI::PITCH_BEND:
+         pitchBend(channel, ((data[2] << 7) | data[1]) - 0x2000);
+         break;
+
+      case PLT::MIDI::CONTROL_CHANGE:
+         controlChange(channel, data[1], data[2]);
+         break;
+
+      case PLT::MIDI::PROGRAM_CHANGE:
+         programChange(channel, data[1]);
+         break;
+
+      default: break;
+      }
+   }
 
 private:
    bool connected{false};
