@@ -26,11 +26,11 @@
 #include "PLT/Audio.h"
 
 
-class TestAudio : public PLT::AudioOut
+class TestAudio : public PLT::Audio::Out
 {
 public:
    TestAudio()
-      : PLT::AudioOut(44100, PLT::AUDIO_SINT16, 1)
+      : PLT::Audio::Out(44100, PLT::Audio::SINT16, 1)
    {}
 
    virtual void getSamples(int16_t* buffer, unsigned n) override

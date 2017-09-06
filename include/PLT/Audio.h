@@ -27,45 +27,55 @@
 
 namespace PLT {
 
+namespace Audio {
 
-enum AudioFormat
+enum Format
 {
-   AUDIO_NONE,
+   NONE = 0,
 
-   AUDIO_UINT8,
-   AUDIO_UINT16,
-
-   AUDIO_SINT8,
-   AUDIO_SINT16,
-   AUDIO_SINT32
+   SINT8,
+   SINT16,
+   SINT32
 };
 
 
 //! Raw audio base class
-class Audio
+class Base
 {
 public:
-   Audio(unsigned    freq_,
-         AudioFormat format_,
-         unsigned    channels_,
-         bool        input_);
-
-   ~Audio();
-
    unsigned     getFreq()     const { return freq;     }
-   AudioFormat  getFormat()   const { return format;   }
+   Format       getFormat()   const { return format;   }
    unsigned     getCHannels() const { return channels; }
-   bool         isInput()     const { return input;    }
    bool         isOpen()      const { return open;     }
    bool         isEnabled()   const { return enable;   }
 
    bool         setEnable(bool enable_);
 
-   virtual void getSamples(uint8_t*  buffer, unsigned n)
-   { for(unsigned i=0; i<n; ++i) buffer[i] = 0x80; }
+protected:
+   Base(unsigned  freq_,
+        Format    format_,
+        unsigned  channels_,
+        bool      input_);
 
-   virtual void getSamples(uint16_t* buffer, unsigned n)
-   { for(unsigned i=0; i<n; ++i) buffer[i] = 0x8000; }
+   ~Base();
+
+private:
+   unsigned     freq{0};
+   Format       format{NONE};
+   unsigned     channels{0};
+   bool         open{false};
+   bool         enable{false};
+   unsigned     handle{0};
+};
+
+
+class Out : public Base
+{
+public:
+   Out(unsigned    freq_,
+       Format      format_,
+       unsigned    channels_)
+      : Base(freq_, format_, channels_, /* input */ false) {}
 
    virtual void getSamples(int8_t*   buffer, unsigned n)
    { for(unsigned i=0; i<n; ++i) buffer[i] = 0; }
@@ -75,49 +85,26 @@ public:
 
    virtual void getSamples(int32_t*  buffer, unsigned n)
    { for(unsigned i=0; i<n; ++i) buffer[i] = 0; }
+};
 
 
-   virtual void setSamples(const uint8_t*  buffer, unsigned n) {}
-
-   virtual void setSamples(const uint16_t* buffer, unsigned n) {}
+class In : public Base
+{
+public:
+   In(unsigned    freq_,
+      Format      format_,
+      unsigned    channels_)
+      : Base(freq_, format_, channels_, /* input */ true) {}
 
    virtual void setSamples(const int8_t*   buffer, unsigned n) {}
 
    virtual void setSamples(const int16_t*  buffer, unsigned n) {}
 
    virtual void setSamples(const int32_t*  buffer, unsigned n) {}
-
-
-private:
-   unsigned     freq{0};
-   AudioFormat  format{AUDIO_NONE};
-   unsigned     channels{0};
-   bool         input{false};
-   bool         open{false};
-   bool         enable{false};
-   unsigned     handle{0};
 };
 
 
-class AudioOut : public Audio
-{
-public:
-   AudioOut(unsigned    freq_,
-            AudioFormat format_,
-            unsigned    channels_)
-      : Audio(freq_, format_, channels_, /* setSamples */ false) {}
-};
-
-
-class AudioIn : public Audio
-{
-public:
-   AudioIn(unsigned    freq_,
-           AudioFormat format_,
-           unsigned    channels_)
-      : Audio(freq_, format_, channels_, /* setSamples */ true) {}
-};
-
+} // namespace Audio
 
 } // namespace PLT
 

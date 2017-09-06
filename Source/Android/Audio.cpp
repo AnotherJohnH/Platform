@@ -24,18 +24,22 @@
 
 namespace PLT {
 
-Audio::Audio(unsigned freq_, AudioFormat format_, unsigned channels_)
+namespace Audio {
+
+Base::Base(unsigned freq_, AudioFormat format_, unsigned channels_)
 {
 }
 
-Audio::~Audio()
+Base::~Base()
 {
 }
 
-bool Audio::setEnable(bool enable_)
+bool Base::setEnable(bool enable_)
 {
    return false;
 }
+
+} // namespace Audio
 
 } // namespace PLT
 

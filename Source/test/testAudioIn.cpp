@@ -30,10 +30,10 @@
 static int16_t data[1024];
 
 
-class TestAudioIn : public PLT::AudioIn
+class TestAudioIn : public PLT::Audio::In
 {
 public:
-   TestAudioIn() : PLT::AudioIn(44100, PLT::AUDIO_SINT16, 1) {}
+   TestAudioIn() : PLT::Audio::In(44100, PLT::Audio::SINT16, 1) {}
 
    virtual void setSamples(const int16_t* buffer, unsigned n) override
    {
@@ -45,10 +45,10 @@ public:
 };
 
 
-class TestAudioOut : public PLT::AudioOut
+class TestAudioOut : public PLT::Audio::Out
 {
 public:
-   TestAudioOut() : PLT::AudioOut(44100, PLT::AUDIO_SINT16, 1) {}
+   TestAudioOut() : PLT::Audio::Out(44100, PLT::Audio::SINT16, 1) {}
 
    virtual void getSamples(int16_t* buffer, unsigned n) override
    {

@@ -27,29 +27,38 @@
 
 namespace PLT {
 
+namespace Audio {
+
 
 static bool sdl_init{false};
 
 
 template <typename TYPE>
-static void mixAudio(void* userdata, uint8_t* stream, int len)
+static void mixAudioIn(void* userdata, uint8_t* stream, int len)
 {
-   Audio*   audio  = (Audio*)userdata;
+   In*      in     = (In*)userdata;
    TYPE*    buffer = reinterpret_cast<TYPE*>(stream);
    unsigned n      = len/sizeof(TYPE);
 
-   if (audio->isInput())
-      audio->setSamples(buffer, n);
-   else
-      audio->getSamples(buffer, n);
+   in->setSamples(buffer, n);
 }
 
 
-Audio::Audio(unsigned freq_, AudioFormat format_, unsigned channels_, bool input_)
+template <typename TYPE>
+static void mixAudioOut(void* userdata, uint8_t* stream, int len)
+{
+   Out*     out    = (Out*)userdata;
+   TYPE*    buffer = reinterpret_cast<TYPE*>(stream);
+   unsigned n      = len/sizeof(TYPE);
+
+   out->getSamples(buffer, n);
+}
+
+
+Base::Base(unsigned freq_, Format format_, unsigned channels_, bool input)
    : freq(freq_)
    , format(format_)
    , channels(channels_)
-   , input(input_)
 {
    if (!sdl_init)
    {
@@ -62,33 +71,30 @@ Audio::Audio(unsigned freq_, AudioFormat format_, unsigned channels_, bool input
    requested.freq     = freq;
    requested.channels = channels;
    requested.samples  = 1024;
-   requested.userdata = this;
+
+   if (input)
+      requested.userdata = (In*)this;
+   else
+      requested.userdata = (Out*)this;
 
    switch(format)
    {
-   case PLT::AUDIO_UINT8:
-      requested.format   = AUDIO_U8;
-      requested.callback = mixAudio<uint8_t>;
-      break;
-
-   case PLT::AUDIO_UINT16:
-      requested.format   = AUDIO_U16;
-      requested.callback = mixAudio<uint16_t>;
-      break;
-
-   case PLT::AUDIO_SINT8:
+   case SINT8:
       requested.format   = AUDIO_S8;
-      requested.callback = mixAudio<int8_t>;
+      requested.callback = input ? mixAudioIn<int8_t>
+                                 : mixAudioOut<int8_t>;
       break;
 
-   case PLT::AUDIO_SINT16:
+   case SINT16:
       requested.format   = AUDIO_S16;
-      requested.callback = mixAudio<int16_t>;
+      requested.callback = input ? mixAudioIn<int16_t>
+                                 : mixAudioOut<int16_t>;
       break;
 
-   case PLT::AUDIO_SINT32:
+   case SINT32:
       requested.format   = AUDIO_S32;
-      requested.callback = mixAudio<int32_t>;
+      requested.callback = input ? mixAudioIn<int32_t>
+                                 : mixAudioOut<int32_t>;
       break;
 
    default:
@@ -112,7 +118,7 @@ Audio::Audio(unsigned freq_, AudioFormat format_, unsigned channels_, bool input
    open = true;
 }
 
-Audio::~Audio()
+Base::~Base()
 {
    if (open)
    {
@@ -120,7 +126,7 @@ Audio::~Audio()
    }
 }
 
-bool Audio::setEnable(bool enable_)
+bool Base::setEnable(bool enable_)
 {
    if (!open) return false;
 
@@ -133,6 +139,8 @@ bool Audio::setEnable(bool enable_)
 
    return true;
 }
+
+} // namespace Audio
 
 } // namespace PLT
 
