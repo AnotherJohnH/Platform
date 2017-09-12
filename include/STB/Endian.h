@@ -67,8 +67,8 @@ protected:
 
    WHOLE write(const WHOLE value)
    {
-      half[LS] = value >> SHIFT;
-      half[MS] = value;
+      half[LS] = HALF(value >> SHIFT);
+      half[MS] = HALF(value);
       return value;
    }
 
@@ -81,10 +81,7 @@ private:
 class Big16 : public EndianHelper<uint16_t,uint8_t,/* BIG */true>
 {
 public:
-   Big16(const uint16_t value = 0)
-   {
-      write(value);
-   }
+   Big16(const uint16_t value = 0) { write(value); }
 
    operator uint16_t() const { return read(); }
 
@@ -96,10 +93,7 @@ public:
 class Big32 : public EndianHelper<uint32_t,Big16,/* BIG */true>
 {
 public:
-   Big32(const uint32_t value = 0)
-   {
-      write(value);
-   }
+   Big32(const uint32_t value = 0) { write(value); }
 
    operator uint32_t() const { return read(); }
 
@@ -111,10 +105,7 @@ public:
 class Big64 : public EndianHelper<uint64_t,Big32,/* BIG */true>
 {
 public:
-   Big64(const uint64_t value = 0)
-   {
-      write(value);
-   }
+   Big64(const uint64_t value = 0) { write(value); }
 
    operator uint64_t() const { return read(); }
 
@@ -126,10 +117,7 @@ public:
 class Ltl16 : public EndianHelper<uint16_t,uint8_t,/* BIG */false>
 {
 public:
-   Ltl16(const uint16_t value = 0)
-   {
-      write(value);
-   }
+   Ltl16(const uint16_t value = 0) { write(value); }
 
    operator uint16_t() const { return read(); }
 
@@ -141,10 +129,7 @@ public:
 class Ltl32 : public EndianHelper<uint32_t,Ltl16,/* BIG */false>
 {
 public:
-   Ltl32(const uint32_t value = 0)
-   {
-      write(value);
-   }
+   Ltl32(const uint32_t value = 0) { write(value); }
 
    operator uint32_t() const { return read(); }
 
@@ -156,10 +141,7 @@ public:
 class Ltl64 : public EndianHelper<uint64_t,Ltl32,/* BIG */false>
 {
 public:
-   Ltl64(const uint64_t value = 0)
-   {
-      write(value);
-   }
+   Ltl64(const uint64_t value = 0) { write(value); }
 
    operator uint64_t() const { return read(); }
 
