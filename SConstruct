@@ -28,7 +28,8 @@ binaries = ['testAudioOut',
             'testTerminalPaper',
             'testTerminalStdio',
             'testTerminalApp',
-            'testTerminalLauncher']
+            'testTerminalLauncher',
+            'testEndian']
 
 app      = 'PlatformTest'
 version  = '0.0.1'
