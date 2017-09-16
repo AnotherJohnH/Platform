@@ -33,7 +33,7 @@ namespace MIDI {
 
 
 //! MIDI input stream
-class In : public STB::MIDI::Handler
+class In : public STB::MIDI::Decoder
 {
 public:
    In(unsigned device_index = 0);

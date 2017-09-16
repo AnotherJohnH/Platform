@@ -22,6 +22,7 @@
 
 #include <cstdlib>
 #include <cstdint>
+#include <cstdio>
 
 #include "STB/Midi.h"
 
@@ -30,25 +31,26 @@ namespace STB {
 namespace MIDI {
 
 
-unsigned Handler::messageIn(const uint8_t* data, unsigned length)
+unsigned Decoder::decode(const uint8_t* data, unsigned length)
 {
    if ((data[0] & 0x80) == 0)
    {
       // Use running status
-      return decode(command, data, length);
+      return decodeCommand(data, length);
    }
    else
    {
-      command = data[0];
-      return decode(command, data + 1, length - 1) + 1;
+      // New command
+      state.command = data[0];
+      return decodeCommand(data + 1, length - 1) + 1;
    }
 }
 
 
-unsigned Handler::decode(uint8_t command_, const uint8_t* data, unsigned length)
+unsigned Decoder::decodeCommand(const uint8_t* data, unsigned length)
 {
-   uint8_t message = command_ & 0xF0;
-   uint8_t channel = command_ & 0x0F;
+   uint8_t message = state.command & 0xF0;
+   uint8_t channel = state.command & 0x0F;
 
    switch(message)
    {
@@ -69,7 +71,7 @@ unsigned Handler::decode(uint8_t command_, const uint8_t* data, unsigned length)
       {
          noteOff(channel, data[0], data[1]);
       }
-      return 1;
+      return 2;
 
    case CHANNEL_PRESSURE:
       channelPressure(channel, data[0]);
@@ -122,7 +124,7 @@ unsigned Handler::decode(uint8_t command_, const uint8_t* data, unsigned length)
       return 1;
 
    case SYSTEM:
-      switch(command_)
+      switch(state.command)
       {
       case 0xF0:
          {
@@ -151,12 +153,19 @@ unsigned Handler::decode(uint8_t command_, const uint8_t* data, unsigned length)
       case 0xFE: sysEvent(ACTIVE_SENSING);             return 1;
 
       case 0xFF:
-         sysEvent(RESET);
+#if 0
+         if (!file_stream)
+         {
+            sysEvent(RESET);
+            return 1;
+         }
+#endif
 
          // MIDI file meta events
          switch(data[0])
          {
          case 0x00: // TODO Sequence number
+            todo();
             return 2;
 
          case 0x01:
@@ -174,46 +183,192 @@ unsigned Handler::decode(uint8_t command_, const uint8_t* data, unsigned length)
             }
 
          case 0x20:  // TODO MIDI channel prefix
+            todo();
             return 3;
 
          case 0x21:
+            todo();
             return 3;
 
          case 0x2F: // TODO End of track
+            todo();
             return 2;
 
          case 0x51: // TODO Set tempo uS
+            todo();
             return 5;
 
          case 0x54: // TODO SMPTE offset
+            todo();
             return 7;
 
          case 0x58: // TODO Time signature
+            todo();
             return 6;
 
          case 0x59: // TODO Key signature
+            todo();
             return 4;
 
          case 0x7F: // TODO Special
             {
                uint32_t length;
                const uint8_t* ptr = data + 1 + decodeVarLength(data + 1, length);
+               todo();
                return ptr - data + length;
             }
 
          default:
+            todo();
             return 1;
          }
 
-      default:
-         break;
+      default: break;
       }
-      return 0;
+      break;
 
-   default:
-      return 0;
+   default: break;
    }
+
+   return 1;
 }
+
+
+class Trace : public Decoder
+{
+public:
+   virtual unsigned decode(const uint8_t* data, unsigned length) override
+   {
+      unsigned size = get_size.decode(data, length);
+
+      bool running_status = (data[0] & 0x80) == 0;
+
+      if (running_status)
+      {
+         printf("   ");
+      }
+
+      for(unsigned i=0; i<(running_status ? 7 : 8); ++i)
+      {
+         if (i < size)
+            printf(" %02X", data[i]);
+         else
+            printf("   ");
+      }
+
+      printf(" : ");
+
+      return Decoder::decode(data, length);
+   }
+
+private:
+   virtual void noteOn(uint8_t channel, uint8_t note,  uint8_t velocity) override
+   {
+      printf("CH%u NOTE ON  %3u %3u\n", channel, note, velocity);
+   }
+
+   virtual void notePressure(uint8_t channel, uint8_t note,  uint8_t value) override
+   {
+      printf("CH%u NOTE AFT %3u %3u\n", channel, note, value);
+   }
+
+   virtual void noteOff(uint8_t channel, uint8_t note,  uint8_t velocity) override
+   {
+      printf("CH%u NOTE OFF %3u %3u\n", channel, note, velocity);
+   }
+
+   virtual void controlChange(uint8_t channel, uint8_t index, uint8_t value) override
+   {
+      printf("CH%u CTRL     %3u %3u\n", channel, index, value);
+   }
+
+   virtual void pitchBend(uint8_t channel, int16_t value) override
+   {
+      printf("CH%u PITCHB   %5d\n", channel, value);
+   }
+
+   virtual void channelPressure(uint8_t channel, uint8_t value) override
+   {
+      printf("CH%u CHAN AFT %3u\n", channel, value);
+   }
+
+   virtual void programChange(uint8_t channel, uint8_t index) override
+   {
+      printf("CH%u PROGRAM  %3u\n", channel, index);
+   }
+
+   virtual void textEvent(STB::MIDI::TextEvent event, const char* s, unsigned length) override
+   {
+      printf("TEXT %u ", unsigned(event));
+      for(unsigned i = 0; i<length; i++)
+      {
+         putchar(s[i]);
+      }
+      putchar('\n');
+   }
+
+   virtual void localControl(uint8_t channel, bool on) override
+   {
+      printf("CH%u LOCAL_CONTROL %s\n", channel, on ? "ON" : "OFF");
+   }
+
+   virtual void allNotesOff(uint8_t channel) override
+   {
+      printf("CH%u ALL_NOTES_OFF\n", channel);
+   }
+
+   virtual void omniMode(uint8_t channel, bool on) override
+   {
+      printf("CH%u OMNI_MODE %s\n", channel, on ? "ON" : "OFF");
+   }
+
+   virtual void monoMode(uint8_t channel, uint8_t num_channels) override
+   {
+      printf("CH %u MONO %u\n", channel, num_channels);
+   }
+
+   virtual void polyMode(uint8_t channel) override
+   {
+      printf("CH%u POLY\n", channel);
+   }
+
+   virtual void sysExcl(uint32_t length, const uint8_t* data) override
+   {
+      printf("SYSEX\n");
+   }
+
+   virtual void sysEvent(SystemEvent event) override
+   {
+      printf("SYSTEM EVENT\n");
+   }
+
+   virtual void songPosition(uint16_t pos) override
+   {
+      printf("SONG_POSITION %u\n", pos);
+   }
+
+   virtual void songSelect(uint8_t song) override
+   {
+      printf("SONG_SELECT %u\n", song);
+   }
+
+   virtual void todo() override
+   {
+      printf("<todo>\n");
+   }
+
+   // Empty decoder just used to determine the length of each event
+   Decoder  get_size;
+};
+
+
+unsigned disassemble(const uint8_t* data, unsigned length)
+{
+   static Trace trace;
+
+   return trace.decode(data, length);
+}
+
 
 } // namespace MIDI
 

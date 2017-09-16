@@ -69,21 +69,6 @@ enum TextEvent
 };
 
 
-inline unsigned decodeVarLength(const uint8_t* first, uint32_t& value)
-{
-   value = 0;
-
-   const uint8_t* ptr = first;
-
-   while(true)
-   {
-      uint8_t byte = *ptr++;
-      value = (value << 7) | (byte & 0x7F);
-      if ((byte & 0x80) == 0) return ptr - first;
-   }
-}
-
-
 //! The header for a MIDI file chunk
 //  Should only be used to decode a MIDI file that is stored in a single contiguous
 //  block of memory
@@ -108,10 +93,10 @@ struct FileChunk
 
     //! Return a pointer to the data for the chunk
     const uint8_t* data()      const { return (const uint8_t*)this + sizeof(FileChunk); }
-   
+
     //! Return a pointer to the byte after the last data byte in the chunk
     const uint8_t* end()       const { return data() + length; }
-   
+
     //! Return a pointer to the next chunk
     const FileChunk* getNext() const { return (const FileChunk*)end(); }
 
@@ -136,10 +121,15 @@ struct FileHeader
 };
 
 
-//! MIDI stream handler
-class Handler
+//! MIDI byte stream decoder
+class Decoder
 {
 public:
+   struct State
+   {
+      uint8_t command{0};
+   };
+
    // Channel voice messages
    virtual void noteOn(         uint8_t channel, uint8_t note,  uint8_t velocity)      {}
    virtual void notePressure(   uint8_t channel, uint8_t note,  uint8_t value)         {}
@@ -164,14 +154,48 @@ public:
 
    // File meta messages
    virtual void textEvent(TextEvent event, const char*, unsigned length) {}
+   virtual void todo() {}
 
-   virtual unsigned messageIn(const uint8_t* data, unsigned length);
+   virtual unsigned decode(const uint8_t* data, unsigned length);
 
-private:
-   unsigned decode(uint8_t command_, const uint8_t* data, unsigned length);
+   static unsigned decodeVarLength(const uint8_t* first, uint32_t& value)
+   {
+      value = 0;
 
-   uint8_t command{0};
+      const uint8_t* ptr = first;
+
+      while(true)
+      {
+         uint8_t byte = *ptr++;
+         value = (value << 7) | (byte & 0x7F);
+         if ((byte & 0x80) == 0) return ptr - first;
+      }
+   }
+
+   void resetState()
+   {
+      state.command = 0;
+   }
+
+   const State& getState()
+   {
+      return state;
+   }
+
+   void setState(const State& state_)
+   {
+      state = state_;
+   }
+
+protected:
+   unsigned decodeCommand(const uint8_t* data, unsigned length);
+
+   State   state;
 };
+
+
+//! Disassemble MIDI stream
+extern unsigned disassemble(const uint8_t* data, unsigned length);
 
 
 } // namespace MIDI
