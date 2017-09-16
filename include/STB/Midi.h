@@ -32,6 +32,7 @@ namespace STB {
 namespace MIDI {
 
 
+// MIDI event types
 static const uint8_t  NOTE_OFF          = 0x80;
 static const uint8_t  NOTE_ON           = 0x90;
 static const uint8_t  POLY_KEY_PRESSURE = 0xA0;
@@ -39,17 +40,32 @@ static const uint8_t  CONTROL_CHANGE    = 0xB0;
 static const uint8_t  PROGRAM_CHANGE    = 0xC0;
 static const uint8_t  CHANNEL_PRESSURE  = 0xD0;
 static const uint8_t  PITCH_BEND        = 0xE0;
-static const uint8_t  SYSEX             = 0xF0;
+static const uint8_t  SYSTEM            = 0xF0;
 
+
+// System event sub-types
 enum SystemEvent
 {
-   TUNE_REQUEST   = 6,
-   CLOCK          = 8,
-   START          = 10,
-   CONTINUE       = 11,
-   STOP           = 12,
-   ACTIVE_SENSING = 14,
-   RESET          = 15
+   TUNE_REQUEST   = 0x6,
+   CLOCK          = 0x8,
+   START          = 0x9,
+   CONTINUE       = 0xB,
+   STOP           = 0xC,
+   ACTIVE_SENSING = 0xE,
+   RESET          = 0xF
+};
+
+
+// System meta event sub-types (with text)
+enum TextEvent
+{
+   TEXT        = 0x01,
+   COPYRIGHT   = 0x02,
+   TRACK_NAME  = 0x03,
+   INSTRUMENT  = 0x04,
+   LYRIC       = 0x05,
+   MARKER      = 0x06,
+   CUE         = 0x07
 };
 
 
@@ -145,6 +161,9 @@ public:
    virtual void sysEvent(SystemEvent event)                   {}
    virtual void songPosition(uint16_t pos)                    {}
    virtual void songSelect(uint8_t song)                      {}
+
+   // File meta messages
+   virtual void textEvent(TextEvent event, const char*, unsigned length) {}
 
    virtual unsigned messageIn(const uint8_t* data, unsigned length);
 

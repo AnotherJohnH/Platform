@@ -34,11 +34,11 @@ unsigned Handler::messageIn(const uint8_t* data, unsigned length)
 {
    if ((data[0] & 0x80) == 0)
    {
+      // Use running status
       return decode(command, data, length);
    }
    else
    {
-      // Running status
       command = data[0];
       return decode(command, data + 1, length - 1) + 1;
    }
@@ -121,10 +121,10 @@ unsigned Handler::decode(uint8_t command_, const uint8_t* data, unsigned length)
       programChange(channel, data[0]);
       return 1;
 
-   case SYSEX:
-      switch(channel)
+   case SYSTEM:
+      switch(command_)
       {
-      case 0:
+      case 0xF0:
          {
             unsigned size;
             for(size = 1; size<length; ++size)
@@ -134,26 +134,76 @@ unsigned Handler::decode(uint8_t command_, const uint8_t* data, unsigned length)
             sysExcl(size - 1, data + 1);
             return size + 1;
          }
-         break;
 
-      case  1: /* undefined */                       return 1;
-      case  2: songPosition((data[1]<<7) | data[0]); return 3;
-      case  3: songSelect(data[0]);                  return 2;
-      case  4: /* undefined */                       return 1;
-      case  5: /* undefined */                       return 1;
-      case  6: sysEvent(TUNE_REQUEST);               return 1;
-      case  7: /* end of SysEx */                    return 1;
-      case  8: sysEvent(CLOCK);                      return 1;
-      case  9: /* undefined */                       return 1;
-      case 10: sysEvent(START);                      return 1;
-      case 11: sysEvent(CONTINUE);                   return 1;
-      case 12: sysEvent(STOP);                       return 1;
-      case 13: /* undefined */                       return 1;
-      case 14: sysEvent(ACTIVE_SENSING);             return 1;
+      case 0xF1: /* undefined */                       return 1;
+      case 0xF2: songPosition((data[1]<<7) | data[0]); return 3;
+      case 0xF3: songSelect(data[0]);                  return 2;
+      case 0xF4: /* undefined */                       return 1;
+      case 0xF5: /* undefined */                       return 1;
+      case 0xF6: sysEvent(TUNE_REQUEST);               return 1;
+      case 0xF7: /* end of SysEx */                    return 1;
+      case 0xF8: sysEvent(CLOCK);                      return 1;
+      case 0xF9: /* undefined */                       return 1;
+      case 0xFA: sysEvent(START);                      return 1;
+      case 0xFB: sysEvent(CONTINUE);                   return 1;
+      case 0xFC: sysEvent(STOP);                       return 1;
+      case 0xFD: /* undefined */                       return 1;
+      case 0xFE: sysEvent(ACTIVE_SENSING);             return 1;
 
-      case 15:
+      case 0xFF:
          sysEvent(RESET);
-         return 1;
+
+         // MIDI file meta events
+         switch(data[0])
+         {
+         case 0x00: // TODO Sequence number
+            return 2;
+
+         case 0x01:
+         case 0x02:
+         case 0x03:
+         case 0x04:
+         case 0x05:
+         case 0x06:
+         case 0x07:
+            {
+               uint32_t length;
+               const uint8_t* ptr = data + 1 + decodeVarLength(data + 1, length);
+               textEvent(TextEvent(data[1]), (const char*)ptr, length);
+               return ptr - data + length;
+            }
+
+         case 0x20:  // TODO MIDI channel prefix
+            return 3;
+
+         case 0x21:
+            return 3;
+
+         case 0x2F: // TODO End of track
+            return 2;
+
+         case 0x51: // TODO Set tempo uS
+            return 5;
+
+         case 0x54: // TODO SMPTE offset
+            return 7;
+
+         case 0x58: // TODO Time signature
+            return 6;
+
+         case 0x59: // TODO Key signature
+            return 4;
+
+         case 0x7F: // TODO Special
+            {
+               uint32_t length;
+               const uint8_t* ptr = data + 1 + decodeVarLength(data + 1, length);
+               return ptr - data + length;
+            }
+
+         default:
+            return 1;
+         }
 
       default:
          break;
