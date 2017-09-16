@@ -29,7 +29,7 @@
 class TestMidiIn : public PLT::MIDI::In
 {
 private:
-   virtual void messageIn(unsigned length, uint8_t* data) override
+   virtual unsigned messageIn(const uint8_t* data, unsigned length) override
    {
       unsigned i;
 
@@ -50,9 +50,11 @@ private:
 
       printf(" : ");
 
-      PLT::MIDI::In::messageIn(length, data);
+      unsigned size = PLT::MIDI::In::messageIn(data, length);
 
       printf("\n");
+
+      return size;
    }
 
    virtual void noteOn(uint8_t channel, uint8_t note,  uint8_t velocity) override

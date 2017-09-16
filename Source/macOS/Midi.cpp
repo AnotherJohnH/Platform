@@ -45,7 +45,7 @@ static void midiInputCallBack(const MIDIPacketList*  pkt_list,
    {
       const MIDIPacket* pkt = &pkt_list->packet[i];
 
-      midi_in->messageIn(pkt->length, (uint8_t*)pkt->data);
+      midi_in->messageIn((uint8_t*)pkt->data, pkt->length);
    }
 }
 

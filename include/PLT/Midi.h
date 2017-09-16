@@ -25,83 +25,21 @@
 
 #include <cstdint>
 
+#include "STB/Midi.h"
+
 namespace PLT {
 
 namespace MIDI {
 
 
-static const uint8_t  NOTE_OFF          = 0x80;
-static const uint8_t  NOTE_ON           = 0x90;
-static const uint8_t  POLY_KEY_PRESSURE = 0xA0;
-static const uint8_t  CONTROL_CHANGE    = 0xB0;
-static const uint8_t  PROGRAM_CHANGE    = 0xC0;
-static const uint8_t  CHANNEL_PRESSURE  = 0xD0;
-static const uint8_t  PITCH_BEND        = 0xE0;
-static const uint8_t  SYSEX             = 0xF0;
-
-
 //! MIDI input stream
-class In
+class In : public STB::MIDI::Handler
 {
 public:
    In(unsigned device_index = 0);
    ~In();
 
    bool isConnected() const { return connected; }
-
-   virtual void noteOn(         uint8_t channel, uint8_t note,  uint8_t velocity) {}
-   virtual void notePressure(   uint8_t channel, uint8_t note,  uint8_t value)    {}
-   virtual void noteOff(        uint8_t channel, uint8_t note,  uint8_t velocity) {}
-   virtual void controlChange(  uint8_t channel, uint8_t index, uint8_t value)    {}
-   virtual void pitchBend(      uint8_t channel, int16_t value)                   {}
-   virtual void channelPressure(uint8_t channel, uint8_t value)                   {}
-   virtual void programChange(  uint8_t channel, uint8_t index)                   {}
-
-   virtual void messageIn(unsigned length, uint8_t* data)
-   {
-      uint8_t channel = data[0] & 0x0F;
-      uint8_t message = data[0] & 0xF0;
-
-      switch(message)
-      {
-      case PLT::MIDI::NOTE_OFF:
-         noteOff(channel, data[1], data[2]);
-         break;
-
-      case PLT::MIDI::POLY_KEY_PRESSURE:
-         notePressure(channel, data[1], data[2]);
-         break;
-
-      case PLT::MIDI::NOTE_ON:
-         if (data[2] != 0)
-         {
-            noteOn(channel, data[1], data[2]);
-         }
-         else
-         {
-            noteOff(channel, data[1], data[2]);
-         }
-         break;
-
-      case PLT::MIDI::CHANNEL_PRESSURE:
-         channelPressure(channel, data[1]);
-         break;
-
-      case PLT::MIDI::PITCH_BEND:
-         pitchBend(channel, ((data[2] << 7) | data[1]) - 0x2000);
-         break;
-
-      case PLT::MIDI::CONTROL_CHANGE:
-         controlChange(channel, data[1], data[2]);
-         break;
-
-      case PLT::MIDI::PROGRAM_CHANGE:
-         programChange(channel, data[1]);
-         break;
-
-      default: break;
-      }
-   }
 
 private:
    bool connected{false};
