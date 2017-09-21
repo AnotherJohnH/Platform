@@ -31,8 +31,30 @@ namespace PLT {
 namespace MIDI {
 
 
-static MIDIClientRef  client;
-static MIDIPortRef    port;
+static MIDIClientRef  input_client;
+static MIDIPortRef    input_port;
+
+static MIDIClientRef  output_client;
+static MIDIPortRef    output_port;
+
+
+static bool createClient(MIDIClientRef& client)
+{
+   CFStringRef name   = CFStringCreateWithCString(nullptr, "PLT_client", kCFStringEncodingASCII);
+   OSStatus    status = MIDIClientCreate(name,
+                             /* notifyProc */   nullptr,
+                             /* notifyRefCon */ nullptr,
+                             &client);
+   if (status != noErr)
+   {
+      fprintf(stderr, "ERROR - MIDIClientCreate() failed[%d]\n", status);
+      return false;
+   }
+
+   CFRelease(name);
+
+   return true;
+}
 
 
 static void midiInputCallBack(const MIDIPacketList*  pkt_list,
@@ -53,7 +75,6 @@ static void midiInputCallBack(const MIDIPacketList*  pkt_list,
 In::In(unsigned device_index)
 {
    OSStatus    status;
-   CFStringRef name;
 
    // Access one of the MIDI sources in the system
    MIDIEndpointRef source = MIDIGetSource(device_index);
@@ -63,38 +84,27 @@ In::In(unsigned device_index)
       return;
    }
 
-   // Create a client
-   name = CFStringCreateWithCString(nullptr, "PLT_client", kCFStringEncodingASCII);
-   status = MIDIClientCreate(name,
-                             /* notifyProc */   nullptr,
-                             /* notifyRefCon */ nullptr,
-                             &client);
-   if (status != noErr)
-   {
-      fprintf(stderr, "ERROR - MIDIClientCreate() failed\n");
-      return;
-   }
-   CFRelease(name);
+   if (!createClient(input_client)) return;
 
    // Create an input port
-   name = CFStringCreateWithCString(nullptr, "PLT_port", kCFStringEncodingASCII);
-   status = MIDIInputPortCreate(client,
+   CFStringRef name = CFStringCreateWithCString(nullptr, "PLT_port", kCFStringEncodingASCII);
+   status = MIDIInputPortCreate(input_client,
                                 name,
                                 midiInputCallBack,
                                 this,
-                                &port);
+                                &input_port);
    if (status != noErr)
    {
-      fprintf(stderr, "ERROR - MIDIInputPortCreate() failed\n");
+      fprintf(stderr, "ERROR - MIDIInputPortCreate() failed [%d]\n", status);
       return;
    }
    CFRelease(name);
 
    // Connect a source to the clients input port
-   status = MIDIPortConnectSource(port, source, /* connRefCon */ nullptr);
+   status = MIDIPortConnectSource(input_port, source, /* connRefCon */ nullptr);
    if (status != noErr)
    {
-      fprintf(stderr, "ERROR - MIDIConnectSource() failed\n");
+      fprintf(stderr, "ERROR - MIDIConnectSource() failed [%d]\n", status);
       return;
    }
 
@@ -120,12 +130,30 @@ Out::Out(unsigned device_index)
       fprintf(stderr, "ERROR - MIDIGetDestination() failed\n");
       return;
    }
+
+   if (!createClient(output_client)) return;
+
+   // Create an output port
+   name = CFStringCreateWithCString(nullptr, "PLT_port", kCFStringEncodingASCII);
+   status = MIDIOutputPortCreate(output_client, name, &output_port);
+   if (status != noErr)
+   {
+      fprintf(stderr, "ERROR - MIDIoutputPortCreate() failed [%d]\n", status);
+      return;
+   }
+   CFRelease(name);
 }
 
 
 Out::~Out()
 {
    // TODO tidy up
+}
+
+
+void Out::messageOut(unsigned length, const uint8_t* data)
+{
+   // TODO
 }
 
 
