@@ -24,6 +24,7 @@
 #define STB_MIDI_H
 
 #include <cstdint>
+#include <cstddef>
 
 #include "STB/Endian.h"
 
