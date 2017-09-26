@@ -20,7 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "PLT/MidiIn.h"
+#include "PLT/Midi.h"
 
 namespace PLT {
 
@@ -29,6 +29,10 @@ namespace MIDI {
 In::In(unsigned) {}
 
 In::~In() {}
+
+Out::Out(unsigned) {}
+
+Out::~Out() {}
 
 } // namespace MIDI
 
