@@ -25,17 +25,17 @@
 
 #include  "PLT/Frame.h"
 
-#include  "GUI/Paper.h"
+#include  "GUI/Canvas.h"
 
 namespace PLT {
 
-//! GUI Paper implementation
-class Paper : public GUI::Paper
+//! GUI Canvas implementation
+class Canvas : public GUI::Canvas
 {
 private:
    PLT::Frame     frame;
 
-   // Implement GUI::Paper
+   // Implement GUI::Canvas
    virtual GUI::Colour paperGetPixel(signed x, signed y) const override
    {
       return frame.getPixel(x, y);
@@ -65,8 +65,8 @@ private:
    }
 
 public:
-   Paper(const char* title_, unsigned width_ = 0, unsigned height_ = 0, uint32_t flags_ = 0)
-      : GUI::Paper(width_, height_)
+   Canvas(const char* title_, unsigned width_ = 0, unsigned height_ = 0, uint32_t flags_ = 0)
+      : GUI::Canvas(width_, height_)
       , frame(title_, width_, height_, flags_)
    {}
 

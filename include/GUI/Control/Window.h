@@ -23,7 +23,7 @@
 #ifndef GUI_CONTROL_WINDOW_H
 #define GUI_CONTROL_WINDOW_H
 
-#include "GUI/Paper.h"
+#include "GUI/Canvas.h"
 #include "GUI/Control/Col.h"
 
 
@@ -35,7 +35,7 @@ const uint32_t FULL_SCREEN = 1<<2;
 
 class Window
    : public Col
-   , public Paper
+   , public Canvas
 {
 private:
    const Font* const  font{nullptr};
@@ -46,12 +46,12 @@ private:
 
    virtual void eventResize() override
    {
-      Paper::resize(Widget::size.x, Widget::size.y);
+      Canvas::resize(Widget::size.x, Widget::size.y);
    }
 
-   virtual void eventDraw(Paper&) override
+   virtual void eventDraw(Canvas&) override
    {
-      Paper::clear(FACE);
+      Canvas::clear(FACE);
    }
 
    virtual const Font* getDefaultFont() const override

@@ -27,7 +27,7 @@
 #include <cstdio>
 #include <cstdarg>
 
-#include "PLT/Paper.h"
+#include "PLT/Canvas.h"
 #include "PLT/Event.h"
 #include "PLT/Ansi.h"
 #include "PLT/Device.h"
@@ -41,10 +41,10 @@
 
 namespace PLT {
 
-//! Terminal device using PLT::Paper back-end
+//! Terminal device using PLT::Canvas back-end
 template <unsigned WIDTH, unsigned HEIGHT>
-class TerminalPaper : public Ansi
-                    , public Device
+class TerminalCanvas : public Ansi
+                     , public Device
 {
 private:
    static const unsigned MIN_FONT_WIDTH  = 6;
@@ -143,7 +143,7 @@ private:
    };
 
    // Resources
-   Paper             paper;
+   Canvas            paper;
    const GUI::Font*  font{};
    unsigned          border{0};
    unsigned          line_space{0};
@@ -707,7 +707,7 @@ private:
    }
 
 public:
-   TerminalPaper(const char* title_)
+   TerminalCanvas(const char* title_)
       : paper(title_, WIDTH, HEIGHT)
       , font(&GUI::font_teletext15)
       , border(0)
@@ -717,7 +717,7 @@ public:
       ansiReset();
    }
 
-   ~TerminalPaper()
+   ~TerminalCanvas()
    {
       paper.refresh();
    }

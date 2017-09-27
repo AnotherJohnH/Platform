@@ -23,13 +23,13 @@
 
 #include <cstdio>
 
-#include "PLT/TerminalPaper.h"
+#include "PLT/TerminalCanvas.h"
 #include "PLT/Curses.h"
 
 
 int main( int argc, char *argv[] )
 {
-   PLT::TerminalPaper<800,600>  term("PLT::TerminalPaper");
+   PLT::TerminalCanvas<800,600>  term("PLT::TerminalCanvas");
    
    PLT::Curses  win(&term);
    

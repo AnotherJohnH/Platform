@@ -36,7 +36,7 @@ private:
    PLT::Frame     frame;
 
 
-// Implement GUI::Paper
+// Implement GUI::Canvas
 
    virtual GUI::Colour paperGetPixel(signed x, signed y) const override
    {

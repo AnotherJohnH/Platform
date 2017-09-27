@@ -23,7 +23,7 @@
 
 #include <cstdio>
 
-#include  "PLT/Paper.h"
+#include  "PLT/Canvas.h"
 #include  "PLT/Event.h"
 
 #include  "GUI/Font/Teletext18.h"
@@ -31,7 +31,7 @@
 
 int main(int argc, const char* argv[])
 {
-   PLT::Paper paper("Paper Test", 400, 300);
+   PLT::Canvas paper("Canvas Test", 400, 300);
 
    paper.clear(GUI::BLACK);
 

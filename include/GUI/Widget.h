@@ -26,7 +26,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "GUI/Paper.h"
+#include "GUI/Canvas.h"
 #include "GUI/Layout.h"
 
 namespace GUI {
@@ -215,7 +215,7 @@ private:
    }
 
 protected:
-   void redraw(Paper& paper)
+   void redraw(Canvas& paper)
    {
       static signed level = 0;
 
@@ -337,7 +337,7 @@ public:
    }
 
    //! Draw widget
-   virtual void eventDraw(Paper& paper)
+   virtual void eventDraw(Canvas& paper)
    {
       //  Default do nothing
    }

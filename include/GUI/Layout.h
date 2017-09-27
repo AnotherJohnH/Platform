@@ -26,7 +26,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "GUI/Paper.h"
+#include "GUI/Canvas.h"
 
 namespace GUI {
 

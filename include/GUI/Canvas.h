@@ -34,13 +34,13 @@
 namespace GUI {
 
 //! Abstract drawable class
-class Paper
+class Canvas
 {
 public:
-   Paper()
+   Canvas()
       : size(0, 0) {}
 
-   Paper(unsigned width_, unsigned height_)
+   Canvas(unsigned width_, unsigned height_)
       : size(width_, height_)
    {}
 

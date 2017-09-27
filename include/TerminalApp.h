@@ -25,7 +25,7 @@
 
 #include  "STB/ConsoleApp.h"
 
-#include  "PLT/TerminalPaper.h"
+#include  "PLT/TerminalCanvas.h"
 #include  "PLT/TerminalStdio.h"
 
 
@@ -91,7 +91,7 @@ private:
    template <unsigned WIDTH, unsigned HEIGHT>
    int launchDisplay()
    {  
-      PLT::TerminalPaper<WIDTH,HEIGHT>  term(program);
+      PLT::TerminalCanvas<WIDTH,HEIGHT>  term(program);
       return startTerminalApp(term);
    }
 
