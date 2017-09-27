@@ -43,7 +43,7 @@ elif NDK_ARCH == 'arm64':
    LIB_ARCH    = 'arm64-v8a'
 
 else:
-   print 'ERROR: Env var NDK_ARCH not recognoised or not set, see "BUILD_ANDROID.env"'
+   print('ERROR: Env var NDK_ARCH not recognoised or not set, see "BUILD_ANDROID.env"')
    Exit(1)
 
 Import('env')
