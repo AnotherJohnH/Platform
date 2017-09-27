@@ -29,7 +29,7 @@ Frame::Frame(const char* title_,
              unsigned    width_,
              unsigned    height_,
              uint32_t    flags_)
-   : FrameBase(width_, height_)
+   : Image(width_, height_)
 {
 }
 
@@ -41,7 +41,7 @@ void Frame::blit(unsigned x,
                  unsigned y,
                  unsigned src_offset,
                  unsigned src_width,
-                 const FrameBase& src)
+                 const Image& src)
 {
 }
 

@@ -25,16 +25,16 @@
 
 #include <stdint.h>
 
-#include "FrameBase.h"
+#include "Image.h"
 
 namespace PLT {
 
 class FrameImpl;
 
-class Frame : public FrameBase
+class Frame : public Image
 {
 private:
-   FrameImpl*  pimpl;
+   FrameImpl*  pimpl{};
 
 public:
    static const uint32_t RESIZABLE   = 1<<0;
@@ -45,12 +45,12 @@ public:
 
    ~Frame();
 
-   // 
-   virtual void blit(unsigned         x,
-                     unsigned         y,
-                     unsigned         src_offset,
-                     unsigned         src_width,
-                     const FrameBase& src);
+   //!
+   virtual void blit(unsigned     x,
+                     unsigned     y,
+                     unsigned     src_offset,
+                     unsigned     src_width,
+                     const Image& src) override;
 
    //! Resize frame buffer
    void resize(unsigned width_, unsigned height_);

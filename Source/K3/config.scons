@@ -20,18 +20,24 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# scons configuration for Kindle3 builds
+# scons configuration for Android (ARM) builds
 
-PREFIX  = 'arm-linux-gnueabihf-'
-MC='armv6l'
+import os
 
-#-------------------------------------------------------------------------------
+# See BUILD_ANDROID.env
+FS_HOME     = '/Users/johnh/OpenSource/PiFileSystem'
+NDK_ARCH    = os.environ.get('NDK_ARCH')
+NDK_API     = os.environ.get('NDK_API')
+NDK_GCC_VER = os.environ.get('NDK_GCC_VER')
+
+# ARMv7 builds
+PREFIX      = 'arm-linux-androideabi-'
+GCC_ARCH    = 'armv6'
+LIB_ARCH    = 'armeabi-v7a'
 
 Import('env')
 
-env['machine'] = MC
-
-obj_path = 'obj/'+env['machine']+'/'
+env['machine'] = GCC_ARCH
 
 env['AS']        = PREFIX+'as'
 env['CC']        = PREFIX+'gcc'
@@ -43,21 +49,19 @@ env['OBJCOPY']   = PREFIX+'objcopy'
 env['OBJDUMP']   = PREFIX+'objdump'
 env['SIZE']      = PREFIX+'size'
 
-env['OBJPREFIX'] = obj_path
-
-env['CCFLAGS']   = ['-Wall']
+env['OBJPREFIX'] = 'obj/'+GCC_ARCH+'/'
+env['CCFLAGS']   = ['-Wall', '-march='+GCC_ARCH, '-fno-rtti', '-mfloat-abi=hard']
 env['CXXFLAGS']  = ['-std=c++11']
-env['CPPPATH']   = ['']
-env['LIBPATH']   = ['']
-env['LIBS']      = ['pthread']
-env['LINKFLAGS'] = ['-static']
-
-
-Import('source')
-
-source+=[env.File('Audio.cpp'),
-         env.File('Event.cpp'),
-         env.File('Frame.cpp'),
-         env.File('Image.cpp'),
-         env.File('Sounder.cpp')]
+env['CPPPATH']   = \
+   [FS_HOME+'/usr/include/c++/'+NDK_GCC_VER,
+    FS_HOME+'/usr/include/arm-linux-gnueabihf/',
+    FS_HOME+'/usr/include/arm-linux-gnueabihf/c++/'+NDK_GCC_VER,
+    FS_HOME+'/usr/lib/gcc/arm-linux-gnueabihf/'+NDK_GCC_VER+'/include',
+    FS_HOME+'/usr/include']
+env['LIBPATH']   = \
+   [FS_HOME+'/usr/lib/arm-linux-gnueabihf',
+    FS_HOME+'/usr//lib/gcc/arm-linux-gnueabihf/'+NDK_GCC_VER]
+env['LIBS']      = ['supc++', 'pthread', 'gcc']
+env['LINKFLAGS'] = ['--sysroot='+FS_HOME,
+                    '-march='+GCC_ARCH, '--static', '-mfloat-abi=hard']
 

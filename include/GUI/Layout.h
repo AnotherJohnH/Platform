@@ -55,7 +55,7 @@ enum Align
 class Layout
 {
 protected:
-   Vector     pos;               //!< Absolute position in root paper
+   Vector     pos;               //!< Absolute position in root canvas
    Vector     size;              //!< Width and height
    Fit        horz_fit{FIX};     //!< Horizontal fit
    Fit        vert_fit{FIX};     //!< Vertical fit

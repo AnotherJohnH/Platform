@@ -20,8 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_PAPER_H
-#define GUI_PAPER_H
+#ifndef GUI_CANVAS_H
+#define GUI_CANVAS_H
 
 #include <cassert>
 #include <cstdlib>
@@ -44,13 +44,13 @@ public:
       : size(width_, height_)
    {}
 
-   //! Get paper width (pixels)
+   //! Get canvas width (pixels)
    unsigned getWidth()  const { return size.x; }
 
-   //! Get paper height (pixels)
+   //! Get canvas height (pixels)
    unsigned getHeight() const { return size.y; }
 
-   //! Test pixel co-ordinates are inside the papers boundaries
+   //! Test pixel co-ordinates are inside the canvass boundaries
    bool isVisible(signed x, signed y) const
    {
       return (x >= 0) && (x < signed(getWidth())) &&
@@ -62,7 +62,7 @@ public:
    {
       if (!isVisible(x, y)) return GUI::HIDDEN;
 
-      return paperGetPixel(x, y);
+      return canvasGetPixel(x, y);
    }
 
    //! Set a single pixel
@@ -70,7 +70,7 @@ public:
    {
       if (isVisible(x, y))
       {
-         paperPoint(colour, x, y);
+         canvasPoint(colour, x, y);
       }
    }
 
@@ -81,7 +81,7 @@ public:
 
       if ((y >= 0) && (y < signed(size.y)))
       {
-         paperSpan(colour, x1, y, x2);
+         canvasSpan(colour, x1, y, x2);
       }
    }
 
@@ -140,7 +140,7 @@ public:
 
       for(signed y=y1; y<y2; y++)
       {
-         paperSpan(colour, x1, y, x2);
+         canvasSpan(colour, x1, y, x2);
       }
    }
 
@@ -407,19 +407,19 @@ public:
       }
    }
 
-   //! Fill the entire paper
+   //! Fill the entire canvas
    void clear(Colour colour)
    {
       fillRect(colour, 0, 0, size.x, size.y);
    }
 
-   //! Refresh the whole paper to the display device
+   //! Refresh the whole canvas to the display device
    void refresh()
    {
-      paperRefresh(0, 0, size.x, size.y);
+      canvasRefresh(0, 0, size.x, size.y);
    }
 
-   //! Resize the paper
+   //! Resize the canvas
    void resize(unsigned width, unsigned height)
    {
       assert((width != 0) && (height != 0));
@@ -427,7 +427,7 @@ public:
       size.x = width;
       size.y = height;
 
-      paperResize(size.x, size.y);
+      canvasResize(size.x, size.y);
    }
 
 private:
@@ -487,33 +487,33 @@ private:
    // Overide the following interface with a frame buffer implementation
 
    //! Get colour of single pixel in the frame buffer
-   virtual Colour paperGetPixel(signed x, signed y) const
+   virtual Colour canvasGetPixel(signed x, signed y) const
    {
       return GUI::HIDDEN;
    }
 
    //! Resize the frame buffer
-   virtual void paperResize(unsigned width, unsigned height)
+   virtual void canvasResize(unsigned width, unsigned height)
    {
       assert(!"no implementation");
    }
 
    //! Refresh a rectangular region of the frame buffer
-   virtual void paperRefresh(signed x1, signed y1, signed x2, signed y2)
+   virtual void canvasRefresh(signed x1, signed y1, signed x2, signed y2)
    {
    }
 
    //! Set a single pixel in the frame buffer
-   virtual void paperPoint(Colour colour, signed x, signed y) = 0;
+   virtual void canvasPoint(Colour colour, signed x, signed y) = 0;
 
    //! Set a horizontal row of pixels in the frame buffer
-   virtual void paperSpan(Colour colour, signed x1, signed y, signed x2)
+   virtual void canvasSpan(Colour colour, signed x1, signed y, signed x2)
    {
       assert(x1 < x2);
 
       for(signed x=x1; x<x2; x++)
       {
-         paperPoint(colour, x, y);
+         canvasPoint(colour, x, y);
       }
    }
 };

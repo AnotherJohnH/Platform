@@ -20,71 +20,70 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_FRAME_BASE_H
-#define PLT_FRAME_BASE_H
+#ifndef PLT_IMAGE_H
+#define PLT_IMAGE_H
 
 #include <cassert>
 #include <stdint.h>
 
 namespace PLT {
 
-//! Raw frame buffer
-class FrameBase
+//! A raw image that may have a platform specific implementation
+class Image
 {
 protected:
-   uint8_t*    buffer;
-   unsigned    pitch;
-   unsigned    width;
-   unsigned    height;
+   uint8_t*    buffer{nullptr};
+   unsigned    pitch{0};
+   unsigned    width{0};
+   unsigned    height{0};
 
-   virtual ~FrameBase() {}
+   virtual ~Image() {}
 
 public:
-   FrameBase(unsigned width_ = 0, unsigned height_ = 0)
-      : buffer(0)
-      , pitch(0)
-      , width(width_)
+   Image(unsigned width_ = 0, unsigned height_ = 0)
+      : width(width_)
       , height(height_)
    {}
 
    //! Returns the number of bits per pixel
    static unsigned getPixelBits();
 
-   virtual void* getHandle() const { return 0; }
-
-   //! Get width (pixels)
+   //! Get frame width (pixels)
    unsigned getWidth() const { return width; }
 
-   //! Get height (pixels)
+   //! Get frame height (pixels)
    unsigned getHeight() const { return height; }
 
-   //! Get pointer to memory mapped frame buffer
-   uint8_t* getPointer(unsigned& pitch_) const
+   //! Get a platform specific handle
+   virtual void* getHandle() const { return 0; }
+
+   //! Get pointer to the storage for the image
+   uint8_t* getStorage(unsigned& pitch_) const
    {
       pitch_ = pitch;
       return buffer;
    }
 
-   //! Get pixel
+   //! Read a pixel
    uint32_t getPixel(unsigned x, unsigned y) const;
 
-   //! Set pixel
+   //! Write a pixel
    void setPixel(unsigned x, unsigned y, uint32_t rgb);
 
-   //! 
+   //! Blit another image into this image
    virtual void blit(unsigned x, unsigned y,
                      unsigned src_offset, unsigned src_width,
-                     const FrameBase& source)
+                     const Image& source)
    {
-       // Back-stop slow implementation
-       // TODO this is broken
-       for(unsigned i=0; i<source.getWidth(); i++)
-       {
-          for(unsigned j=0; j<source.getHeight(); j++)
-          {
-             setPixel(x+i, y+j, source.getPixel(i, j));
-          }
-       }
+      // Back-stop slow implementation
+      // TODO this is broken
+      for(unsigned i=0; i<source.getWidth(); i++)
+      {
+         for(unsigned j=0; j<source.getHeight(); j++)
+         {
+            setPixel(x+i, y+j, source.getPixel(i, j));
+         }
+      }
    }
 };
 

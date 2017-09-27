@@ -35,9 +35,9 @@ private:
    std::string   text;
 
    // Implement Widget events
-   virtual void eventDraw(Canvas& paper) override
+   virtual void eventDraw(Canvas& canvas) override
    {
-      paper.drawText(fg_colour, bg_colour, pos.x, pos.y, getDefaultFont(), text.c_str());
+      canvas.drawText(fg_colour, bg_colour, pos.x, pos.y, getDefaultFont(), text.c_str());
    }
 
 public:

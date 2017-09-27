@@ -38,7 +38,7 @@ Import('source')
 source+=[env.File('../SDL2/Audio.cpp'),
          env.File('../SDL2/Event.cpp'),
          env.File('../SDL2/Frame.cpp'),
-         env.File('../SDL2/FrameBase.cpp'),
+         env.File('../SDL2/Image.cpp'),
          env.File('../SDL2/Sounder.cpp'),
          env.File('Midi.cpp')]
 

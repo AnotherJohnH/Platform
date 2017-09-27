@@ -105,7 +105,7 @@ public:
       close(refresh_fd);
    }
 
-   uint8_t* getPointer(unsigned& pitch)
+   uint8_t* getStorage(unsigned& pitch)
    {
       pitch = width;
       return buffer;
@@ -126,10 +126,10 @@ Frame::Frame(const char* title_,
              unsigned    width_,
              unsigned    height_,
              uint32_t    flags_)
-   : FrameBase(width_, height_)
+   : Image(width_, height_)
 {
    pimpl  = new FrameImpl(title_, width, height, flags_);
-   buffer = pimpl->getPointer(pitch);
+   buffer = pimpl->getStorage(pitch);
 }
 
 Frame::~Frame()
@@ -141,7 +141,7 @@ void Frame::blit(unsigned x,
                  unsigned y,
                  unsigned src_offset,
                  unsigned src_width,
-                 const FrameBase& src)
+                 const Image& src)
 {
 }
 
@@ -153,7 +153,7 @@ void Frame::resize(unsigned width_, unsigned height_)
    height = height_;
 
    pimpl->resize(width_, height_);
-   buffer = pimpl->getPointer(pitch);
+   buffer = pimpl->getStorage(pitch);
 }
 
 void Frame::refresh()

@@ -20,8 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_PAPER_H
-#define PLT_PAPER_H
+#ifndef PLT_CANVAS_H
+#define PLT_CANVAS_H
 
 #include  "PLT/Frame.h"
 
@@ -36,27 +36,27 @@ private:
    PLT::Frame     frame;
 
    // Implement GUI::Canvas
-   virtual GUI::Colour paperGetPixel(signed x, signed y) const override
+   virtual GUI::Colour canvasGetPixel(signed x, signed y) const override
    {
       return frame.getPixel(x, y);
    }
 
-   virtual void paperResize(unsigned width, unsigned height) override
+   virtual void canvasResize(unsigned width, unsigned height) override
    {
       frame.resize(width, height);
    }
 
-   virtual void paperRefresh(signed x1, signed y1, signed x2, signed y2) override
+   virtual void canvasRefresh(signed x1, signed y1, signed x2, signed y2) override
    {
       frame.refresh();
    }
 
-   virtual void paperPoint(GUI::Colour colour, signed x, signed y) override
+   virtual void canvasPoint(GUI::Colour colour, signed x, signed y) override
    {
       frame.setPixel(x, y, colour);
    }
 
-   virtual void paperSpan(GUI::Colour colour, signed x1, signed y, signed x2) override
+   virtual void canvasSpan(GUI::Colour colour, signed x1, signed y, signed x2) override
    {
       for(signed x=x1; x<x2; x++)
       {
@@ -70,7 +70,7 @@ public:
       , frame(title_, width_, height_, flags_)
    {}
 
-   void blit(unsigned x, unsigned y, unsigned offset, unsigned width, const FrameBase& image)
+   void blit(unsigned x, unsigned y, unsigned offset, unsigned width, const Image& image)
    {
       frame.blit(x, y, offset, width, image);
    }

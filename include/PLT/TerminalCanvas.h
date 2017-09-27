@@ -20,8 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_TERMINAL_PAPER_H
-#define PLT_TERMINAL_PAPER_H
+#ifndef PLT_TERMINAL_CANVAS_H
+#define PLT_TERMINAL_CANVAS_H
 
 #include <cassert>
 #include <cstdio>
@@ -143,7 +143,7 @@ private:
    };
 
    // Resources
-   Canvas            paper;
+   Canvas            canvas;
    const GUI::Font*  font{};
    unsigned          border{0};
    unsigned          line_space{0};
@@ -471,22 +471,22 @@ private:
       unsigned x = org.x + (c-1) * font->getWidth();
       unsigned y = org.y + (r-1) * (font->getHeight() + line_space);
 
-      paper.fillRect(bg,
+      canvas.fillRect(bg,
                      x, y,
                      x + font->getWidth(),
                      y + font->getHeight() + line_space);
 
-      paper.drawChar(fg, bg, x, y + line_space, font, ch);
+      canvas.drawChar(fg, bg, x, y + line_space, font, ch);
 
       if (at.isBold())
       {
-         paper.drawChar(fg, bg, x + 1, y + line_space, font, ch);
+         canvas.drawChar(fg, bg, x + 1, y + line_space, font, ch);
       }
 
       // TODO use an italic font for italics
       if (at.isUnderline() || at.isItalic())
       {
-         paper.drawLine(fg,
+         canvas.drawLine(fg,
                         x,                    y + font->getHeight() - 1,
                         x + font->getWidth(), y + font->getHeight() - 1);
       }
@@ -703,12 +703,12 @@ private:
       org.x = (WIDTH  - (num_cols * font->getWidth()))/2;
       org.y = border;
 
-      paper.clear(default_bg_col);
+      canvas.clear(default_bg_col);
    }
 
 public:
    TerminalCanvas(const char* title_)
-      : paper(title_, WIDTH, HEIGHT)
+      : canvas(title_, WIDTH, HEIGHT)
       , font(&GUI::font_teletext15)
       , border(0)
       , line_space(0)
@@ -719,7 +719,7 @@ public:
 
    ~TerminalCanvas()
    {
-      paper.refresh();
+      canvas.refresh();
    }
 
    void setFont(const GUI::Font& font_)
@@ -828,7 +828,7 @@ public:
 
       for(i = 0; i < n; i++)
       {
-         paper.refresh();
+         canvas.refresh();
 
          uint8_t ch{};
 

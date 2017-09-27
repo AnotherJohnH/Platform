@@ -215,22 +215,22 @@ private:
    }
 
 protected:
-   void redraw(Canvas& paper)
+   void redraw(Canvas& canvas)
    {
       static signed level = 0;
 
-      eventDraw(paper);
+      eventDraw(canvas);
 
       level++;
 
       for(size_t i=0; i<children.size(); ++i)
       {
-         children[i]->redraw(paper);
+         children[i]->redraw(canvas);
       }
 
       if (--level == 0)
       {
-         paper.refresh();
+         canvas.refresh();
       }
    }
 
@@ -337,7 +337,7 @@ public:
    }
 
    //! Draw widget
-   virtual void eventDraw(Canvas& paper)
+   virtual void eventDraw(Canvas& canvas)
    {
       //  Default do nothing
    }

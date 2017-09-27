@@ -20,28 +20,39 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# scons configuration for standard SDL2 builds
+# scons configuration for Kindle3 builds
+
+PREFIX  = 'arm-none-eabi-'
+MC='armv7m'
+
+#-------------------------------------------------------------------------------
 
 Import('env')
 
+env['machine'] = MC
+
 obj_path = 'obj/'+env['machine']+'/'
+
+env['AS']        = PREFIX+'as'
+env['CC']        = PREFIX+'gcc'
+env['CXX']       = PREFIX+'g++'
+env['LINK']      = PREFIX+'g++'
+env['AR']        = PREFIX+'ar'
+env['RANLIB']    = PREFIX+'ranlib'
+env['OBJCOPY']   = PREFIX+'objcopy'
+env['OBJDUMP']   = PREFIX+'objdump'
+env['SIZE']      = PREFIX+'size'
 
 env['OBJPREFIX'] = obj_path
 
-env['CCFLAGS']   = ['-Wall']
-env['CXXFLAGS']  = ['-std=c++11']
-
-env.ParseConfig('sdl2-config --cflags --libs')
-
-env.Append(LINKFLAGS = ['-framework', 'CoreMIDI'])
-env.Append(LINKFLAGS = ['-framework', 'CoreFoundation'])
-
-Import('source')
-
-source+=[env.File('../SDL2/Audio.cpp'),
-         env.File('../SDL2/Event.cpp'),
-         env.File('../SDL2/Frame.cpp'),
-         env.File('../SDL2/Image.cpp'),
-         env.File('../SDL2/Sounder.cpp'),
-         env.File('Midi.cpp')]
+env['CCFLAGS']   = ['-Wall'',
+                    '-DNDEBUG', '-DNCONSOLE',
+                    '-mcpu=cortex-m3', '-mthumb', '-mfloat-abi=soft',
+                    '-fno-common', '-fno-builtin', '-fmessage-length=0', '-fno-default-inline',
+                    '-fno-exceptions', '-ffunction-sections', '-fdata-sections']
+env['CXXFLAGS']  = ['-std=c++11', '-fno-rtti']
+env['CPPPATH']   = ['']
+env['LIBPATH']   = ['']
+env['LIBS']      = ['tinyc']
+env['LINKFLAGS'] = ['-static']
 

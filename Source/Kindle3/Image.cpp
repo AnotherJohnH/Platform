@@ -20,23 +20,23 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "PLT/FrameBase.h"
+#include "PLT/Image.h"
 
 namespace PLT {
 
-unsigned FrameBase::getPixelBits()
+unsigned Image::getPixelBits()
 {
    return 4;
 }
 
-uint32_t FrameBase::getPixel(unsigned x, unsigned y) const
+uint32_t Image::getPixel(unsigned x, unsigned y) const
 {  
    uint8_t pair = buffer[(x + y * pitch)/2];
    uint8_t grey = x & 1 ? (pair << 4) : (pair & 0xF0);
    return (grey<<16) | (grey<<8) | grey;
 }
 
-void FrameBase::setPixel(unsigned x, unsigned y, uint32_t rgb)
+void Image::setPixel(unsigned x, unsigned y, uint32_t rgb)
 {
    uint8_t& pair = buffer[(x + y * pitch)/2];
    uint8_t grey = 0xf - ((rgb >> 12) & 0xF);

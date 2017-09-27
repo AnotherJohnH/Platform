@@ -20,21 +20,23 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "PLT/FrameBase.h"
+#include "PLT/Image.h"
 
 namespace PLT {
 
-unsigned FrameBase::getPixelBits()
+// TODO complete and implementation
+
+unsigned Image::getPixelBits()
 {
    return 4;
 }
 
-uint32_t FrameBase::getPixel(unsigned x, unsigned y) const
+uint32_t Image::getPixel(unsigned x, unsigned y) const
 {  
    return 0;
 }
 
-void FrameBase::setPixel(unsigned x, unsigned y, uint32_t rgb)
+void Image::setPixel(unsigned x, unsigned y, uint32_t rgb)
 {
 }
 

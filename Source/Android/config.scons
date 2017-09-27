@@ -80,6 +80,6 @@ Import('source')
 source+=[env.File('Audio.cpp'),
          env.File('Event.cpp'),
          env.File('Frame.cpp'),
-         env.File('FrameBase.cpp'),
+         env.File('Image.cpp'),
          env.File('Sounder.cpp')]
 
