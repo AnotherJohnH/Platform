@@ -25,8 +25,8 @@
 
 #include "STB/ConsoleApp.h"
 
-#define  PROGRAM         "MyApp"
-#define  DESCRIPTION     "A test"
+#define  PROGRAM         "HelloWorld"
+#define  DESCRIPTION     "Confidence test for development environment"
 #define  COPYRIGHT_YEAR  "2017"
 #define  AUTHOR          "John D. Haughton"
 #define  VERSION         PROJ_VERSION
