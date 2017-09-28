@@ -20,8 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_TEXT_H
-#define GUI_CONTROL_TEXT_H
+#ifndef GUI_CONTROL_FIELD_H
+#define GUI_CONTROL_FIELD_H
 
 #include <string>
 
@@ -29,37 +29,76 @@
 
 namespace GUI {
 
-class Text : public Widget
+class Field : public Widget
 {
 private:
-   std::string   text;
+   unsigned      code;
+   unsigned      cols;
+   std::string   value;
 
    // Implement Widget events
    virtual void eventDraw(Canvas& canvas) override
    {
-      canvas.drawText(fg_colour, bg_colour, pos.x, pos.y, getDefaultFont(), text.c_str());
+      canvas.fillRect(BACKGROUND, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+
+      canvas.drawText(FOREGROUND, FACE,
+                     pos.x + top_left.x, top_left.y + pos.y,
+                     getDefaultFont(), value.c_str());
+   }
+
+   virtual void eventBtnPress(unsigned x, unsigned y, bool select, bool down_) override
+   {
+      if (down_)
+      {
+         raiseEvent(this, EVENT_FOCUS);
+      }
+   }
+
+   virtual void eventKeyPress(uint8_t key, bool down_) override
+   {
+      if (down_)
+      {
+         switch(key)
+         {
+         case PLT::LSHIFT:
+         case PLT::RSHIFT:
+            break;
+
+         case PLT::BACKSPACE:
+            if (value.size() > 0)
+            {
+               value.pop_back();
+            }
+            break;
+
+         default:
+            if (value.size() < cols)
+            {
+               value += key;
+            }
+            break;
+         }
+
+         raiseEvent(this, EVENT_REDRAW);
+      }
    }
 
 public:
-   Text(Widget* parent, const std::string& text_)
+   Field(Widget* parent, unsigned code_, unsigned cols_, const char* initial_)
       : Widget(parent)
-      , text(text_)
+      , code(code_)
+      , cols(cols_)
+      , value(initial_)
    {
+      setBorderAndGap(2);
       const Font* font = getDefaultFont();
-      size.x = font->getWidth(text.c_str());
-      size.y = font->getHeight();
+      size.x = font->getWidth() * cols + 4;
+      size.y = font->getHeight() + 4;
    }
 
-   template <typename TYPE>
-   void setText(TYPE text_)
+   void setValue(const char* value_)
    {
-      text = text_;
-   }
-
-   void setWidth(unsigned width_)
-   {
-      const Font* font = getDefaultFont();
-      size.x = font->getWidth(" ") * width_;
+      value = value_;
    }
 };
 

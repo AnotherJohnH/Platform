@@ -20,46 +20,23 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_TEXT_H
-#define GUI_CONTROL_TEXT_H
-
-#include <string>
+#ifndef GUI_CONTROL_ROW_H
+#define GUI_CONTROL_ROW_H
 
 #include "GUI/Widget.h"
 
 namespace GUI {
 
-class Text : public Widget
+//! Horizontal widget container
+class Row : public Widget
 {
-private:
-   std::string   text;
-
-   // Implement Widget events
-   virtual void eventDraw(Canvas& canvas) override
-   {
-      canvas.drawText(fg_colour, bg_colour, pos.x, pos.y, getDefaultFont(), text.c_str());
-   }
-
 public:
-   Text(Widget* parent, const std::string& text_)
+   Row(Widget* parent, unsigned space = 0)
       : Widget(parent)
-      , text(text_)
    {
-      const Font* font = getDefaultFont();
-      size.x = font->getWidth(text.c_str());
-      size.y = font->getHeight();
-   }
-
-   template <typename TYPE>
-   void setText(TYPE text_)
-   {
-      text = text_;
-   }
-
-   void setWidth(unsigned width_)
-   {
-      const Font* font = getDefaultFont();
-      size.x = font->getWidth(" ") * width_;
+      row = true;
+      setBorderAndGap(space);
+      setShrink();
    }
 };
 

@@ -20,47 +20,25 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_TEXT_H
-#define GUI_CONTROL_TEXT_H
+#ifndef GUI_CONTROL_TEXT_BUTTON_H
+#define GUI_CONTROL_TEXT_BUTTON_H
 
-#include <string>
-
-#include "GUI/Widget.h"
+#include "GUI/Control/Button.h"
+#include "GUI/Control/Text.h"
 
 namespace GUI {
 
-class Text : public Widget
+class TextButton : public Button 
 {
-private:
-   std::string   text;
-
-   // Implement Widget events
-   virtual void eventDraw(Canvas& canvas) override
-   {
-      canvas.drawText(fg_colour, bg_colour, pos.x, pos.y, getDefaultFont(), text.c_str());
-   }
-
 public:
-   Text(Widget* parent, const std::string& text_)
-      : Widget(parent)
-      , text(text_)
-   {
-      const Font* font = getDefaultFont();
-      size.x = font->getWidth(text.c_str());
-      size.y = font->getHeight();
-   }
+   Text  text;
 
-   template <typename TYPE>
-   void setText(TYPE text_)
-   {
-      text = text_;
-   }
-
-   void setWidth(unsigned width_)
-   {
-      const Font* font = getDefaultFont();
-      size.x = font->getWidth(" ") * width_;
-   }
+   TextButton(Widget* parent_,
+              unsigned code_,
+              const char* text_)
+      : Button(parent_, code_)
+      , text(this, text_)
+   {}
 };
 
 } // namespace GUI

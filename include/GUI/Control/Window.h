@@ -26,7 +26,6 @@
 #include "GUI/Canvas.h"
 #include "GUI/Control/Col.h"
 
-
 namespace GUI {
 
 const uint32_t RESIZABLE   = 1<<0;
@@ -40,7 +39,7 @@ class Window
 private:
    const Font* const  font{nullptr};
    unsigned           timer_code{0};
-   Widget*            focus;
+   Widget*            focus{nullptr};
 
    // Implement Widget
 

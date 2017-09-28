@@ -23,7 +23,13 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include  "GUI/Control/Window.h"
-#include  "GUI/Control/Text.h"
+#include "Control/Bar.h"
+#include "Control/Button.h"
+#include "Control/Col.h"
+#include "Control/Field.h"
+#include "Control/Row.h"
+#include "Control/Text.h"
+#include "Control/TextButton.h"
+#include "Control/Window.h"
 
 #endif
