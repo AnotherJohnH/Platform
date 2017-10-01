@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2016 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,63 +20,45 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#ifndef GUI_CONTROL_SCROLL_BAR_H
+#define GUI_CONTROL_SCROLL_BAR_H
 
-#include  "PLT/Gui.h"
-#include  "GUI/Font/Teletext18.h"
+#include "GUI/Widget.h"
+#include "GUI/Control/Expand.h"
+#include "GUI/Control/TextButton.h"
 
+namespace GUI {
 
-
-class PopUp : public PLT::Gui
+class ScrollBar : public Widget
 {
 private:
-   GUI::Text  text;
+   static const unsigned LESS = 1;
+   static const unsigned MORE = 2;
 
-public:
-   PopUp()
-      : PLT::Gui("Pop Up", &GUI::font_teletext18)
-      , text(this, "Hello, world!")
-   {}
-};
+   const unsigned  code;
+   TextButton      btn_scroll_less;
+   Expand          spacer;
+   TextButton      btn_scroll_more;
 
-
-class MainWindow : public PLT::Gui
-{
-private:
-   PopUp             popup;
-
-   GUI::Text         text2;
-   GUI::Button       button;
-   GUI::TextButton   txt_btn;
-   GUI::TextButton   btn_a;
-   GUI::TextButton   btn_b;
-   GUI::TickBox      tick;
-   GUI::TextTickBox  text_tick;
-   GUI::Field        field;
-
-   virtual void appEvent(Widget* widget_, unsigned code_) override
+   virtual void eventDraw(Canvas& canvas) override
    {
-      printf("raiseEvent(%u)\n", code_);
-
-      if (code_ == 'B') popup.show();
+      canvas.fillRect(LIGHT,  pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+      canvas.drawRect(SHADOW, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
    }
 
 public:
-   MainWindow()
-      : PLT::Gui("GUI test", &GUI::font_teletext18)
-      , text2(this, "Hello, world!")
-      , button(this, 1)
-      , txt_btn(this, 2, "0123456789")
-      , btn_a(this, 'A', "Cancel")
-      , btn_b(this, 'B', "OK")
-      , tick(this, 3)
-      , text_tick(this, 3, "Do you agree?")
-      , field(this, 4, 16, "")
-   {}
+   ScrollBar(Widget* parent, unsigned code_)
+      : Widget(parent)
+      , code(code_)
+      , btn_scroll_less(this, LESS, "<")
+      , spacer(this)
+      , btn_scroll_more(this, MORE, ">")
+   {
+      row = !parent->isRow();
+      setShrink();
+   }
 };
 
+} // namespace GUI
 
-int main( int argc, char *argv[] )
-{
-   MainWindow().eventLoop();
-}
-
+#endif

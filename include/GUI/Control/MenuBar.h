@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2016 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,63 +20,21 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#ifndef GUI_CONTROL_MENU_BAR_H
+#define GUI_CONTROL_MENU_BAR_H
 
-#include  "PLT/Gui.h"
-#include  "GUI/Font/Teletext18.h"
+#include "GUI/Control/Row.h"
 
+namespace GUI {
 
-
-class PopUp : public PLT::Gui
+class MenuBar : public GUI::Row
 {
-private:
-   GUI::Text  text;
-
 public:
-   PopUp()
-      : PLT::Gui("Pop Up", &GUI::font_teletext18)
-      , text(this, "Hello, world!")
+   MenuBar(Widget* parent)
+      : GUI::Row(parent, 4)
    {}
 };
 
+} // namespace GUI
 
-class MainWindow : public PLT::Gui
-{
-private:
-   PopUp             popup;
-
-   GUI::Text         text2;
-   GUI::Button       button;
-   GUI::TextButton   txt_btn;
-   GUI::TextButton   btn_a;
-   GUI::TextButton   btn_b;
-   GUI::TickBox      tick;
-   GUI::TextTickBox  text_tick;
-   GUI::Field        field;
-
-   virtual void appEvent(Widget* widget_, unsigned code_) override
-   {
-      printf("raiseEvent(%u)\n", code_);
-
-      if (code_ == 'B') popup.show();
-   }
-
-public:
-   MainWindow()
-      : PLT::Gui("GUI test", &GUI::font_teletext18)
-      , text2(this, "Hello, world!")
-      , button(this, 1)
-      , txt_btn(this, 2, "0123456789")
-      , btn_a(this, 'A', "Cancel")
-      , btn_b(this, 'B', "OK")
-      , tick(this, 3)
-      , text_tick(this, 3, "Do you agree?")
-      , field(this, 4, 16, "")
-   {}
-};
-
-
-int main( int argc, char *argv[] )
-{
-   MainWindow().eventLoop();
-}
-
+#endif
