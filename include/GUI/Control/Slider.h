@@ -76,7 +76,7 @@ private:
 
        if (value < 0)
           value = 0;
-       else if (value > length)
+       else if (value > int(length))
           value = length;
 
        raiseEvent(this, code);
