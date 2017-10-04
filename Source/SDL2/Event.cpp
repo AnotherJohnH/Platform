@@ -20,7 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include <cstdint>
+#include <cstring>
 
 #include "SDL.h"
 
@@ -157,10 +158,9 @@ static Uint32 timer_callback(Uint32 period_ms, void* param)
    SDL_Event       event;
    SDL_UserEvent   user_event;
 
+   memset(&user_event, 0, sizeof(user_event));
+
    user_event.type  = SDL_USEREVENT;
-   user_event.code  = 0;
-   user_event.data1 = 0;
-   user_event.data2 = 0;
 
    event.type = SDL_USEREVENT;
    event.user = user_event;
