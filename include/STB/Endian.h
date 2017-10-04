@@ -37,9 +37,14 @@ inline T endianSwap(T data)
    switch(sizeof(T))
    {
    case 1: return data;
+
    case 2: return (data >> 8) | (data << 8);
-   case 4: return (T(endianSwap(uint16_t(data)))<<16) | endianSwap(uint16_t(data>>16));
-   case 8: return (T(endianSwap(uint32_t(data)))<<32) | endianSwap(uint32_t(data>>32));
+
+   case 4: return (uint32_t(endianSwap(uint16_t(data)))<<16) |
+                  endianSwap(uint16_t(uint32_t(data)>>16));
+
+   case 8: return (uint64_t(endianSwap(uint32_t(data)))<<32) |
+                  endianSwap(uint32_t(uint64_t(data)>>32));
 
    default: break;
    }
