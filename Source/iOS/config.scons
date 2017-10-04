@@ -55,7 +55,7 @@ env['OBJPREFIX']  = 'obj/iOS_'+IOS_ARCH+'/'
 env['LIBPREFIX']  = 'lib/'+IOS_ARCH+'/'
 env['PROGPREFIX'] = app+'.app/'
 
-env['CCFLAGS']   = ['-Wall', target_flags, '-fobjc-arc']
+env['CCFLAGS']   = [target_flags, '-fobjc-arc']
 env['CXXFLAGS']  = ['-std=c++11']
 env['CPPPATH']   = [IOS_SDL2_PATH+'/include']
 env['LIBPATH']   = ['Platform/iOS/lib/'+IOS_ARCH]
