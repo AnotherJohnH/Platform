@@ -35,7 +35,7 @@ private:
    static const unsigned LESS = 1;
    static const unsigned MORE = 2;
 
-   const unsigned  code;
+   //const unsigned  code;
    TextButton      btn_scroll_less;
    Expand          spacer;
    TextButton      btn_scroll_more;
@@ -49,7 +49,7 @@ private:
 public:
    ScrollBar(Widget* parent, unsigned code_)
       : Widget(parent)
-      , code(code_)
+      //, code(code_)
       , btn_scroll_less(this, LESS, "<")
       , spacer(this)
       , btn_scroll_more(this, MORE, ">")

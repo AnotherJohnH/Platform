@@ -45,7 +45,7 @@ env['SIZE']      = PREFIX+'size'
 
 env['OBJPREFIX'] = obj_path
 
-env['CCFLAGS']   = ['-Wall']
+env['CCFLAGS']   = ['']
 env['CXXFLAGS']  = ['-std=c++11']
 env['CPPPATH']   = ['']
 env['LIBPATH']   = ['']

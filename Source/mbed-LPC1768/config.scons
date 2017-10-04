@@ -45,8 +45,7 @@ env['SIZE']      = PREFIX+'size'
 
 env['OBJPREFIX'] = obj_path
 
-env['CCFLAGS']   = ['-Wall'',
-                    '-DNDEBUG', '-DNCONSOLE',
+env['CCFLAGS']   = ['-DNDEBUG', '-DNCONSOLE',
                     '-mcpu=cortex-m3', '-mthumb', '-mfloat-abi=soft',
                     '-fno-common', '-fno-builtin', '-fmessage-length=0', '-fno-default-inline',
                     '-fno-exceptions', '-ffunction-sections', '-fdata-sections']

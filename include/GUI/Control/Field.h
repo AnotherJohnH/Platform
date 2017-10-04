@@ -32,7 +32,7 @@ namespace GUI {
 class Field : public Widget
 {
 private:
-   unsigned      code;
+   //unsigned      code;
    unsigned      cols;
    std::string   value;
 
@@ -86,7 +86,7 @@ private:
 public:
    Field(Widget* parent, unsigned code_, unsigned cols_, const char* initial_)
       : Widget(parent)
-      , code(code_)
+      //, code(code_)
       , cols(cols_)
       , value(initial_)
    {

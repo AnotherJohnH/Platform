@@ -61,7 +61,7 @@ env['OBJDUMP']   = PREFIX+'objdump'
 env['SIZE']      = PREFIX+'size'
 
 env['OBJPREFIX'] = 'obj/'+GCC_ARCH+'/'
-env['CCFLAGS']   = ['-Wall', '-march='+GCC_ARCH, '-fno-rtti']
+env['CCFLAGS']   = ['-march='+GCC_ARCH, '-fno-rtti']
 env['CXXFLAGS']  = ['-std=c++11']
 env['CPPPATH']   = \
    [NDK_HOME+'/sources/cxx-stl/gnu-libstdc++/'+NDK_GCC_VER+'/include',

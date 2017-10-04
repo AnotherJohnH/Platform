@@ -28,7 +28,6 @@ obj_path = 'obj/'+env['machine']+'/'
 
 env['OBJPREFIX'] = obj_path
 
-env['CCFLAGS']   = ['-Wall']
 env['CXXFLAGS']  = ['-std=c++11']
 
 env.ParseConfig('sdl2-config --cflags --libs')
