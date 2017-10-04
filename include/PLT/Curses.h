@@ -263,7 +263,7 @@ public:
       if (*s++ != '[')    return;
 
       const char* t  = strchr(s, ';');
-      if (s == 0) return;
+      if (t == nullptr) return;
 
       y = atoi(s);
       x = atoi(t + 1);
