@@ -24,6 +24,7 @@ scons
 ## Status
 
 [![Build Status](https://travis-ci.org/AnotherJohnH/Platform.svg?branch=master)](https://travis-ci.org/AnotherJohnH/Platform)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/13938/badge.svg)](https://scan.coverity.com/projects/anotherjohnh-platform)
 
 ### Linux and macOS
 
