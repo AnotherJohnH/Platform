@@ -49,6 +49,6 @@ int main()
 
    audio.setEnable(true);
 
-   getchar();
+   (void) getchar();
 }
 

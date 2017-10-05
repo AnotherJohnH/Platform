@@ -40,6 +40,6 @@ int main()
 {
    TestMidiIn midi_in;
 
-   getchar();
+   (void) getchar();
 }
 
