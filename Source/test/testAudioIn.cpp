@@ -68,6 +68,6 @@ int main()
    audio_in.setEnable(true);
    audio_out.setEnable(true);
 
-   getchar();
+   (void) getchar();
 }
 
