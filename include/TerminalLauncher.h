@@ -36,7 +36,7 @@
 class TerminalLauncher : public TerminalApp
 {
 protected:
-   PLT::Device*   term;
+   PLT::Device*   term{nullptr};
    PLT::Curses    curses;
 
 private:
