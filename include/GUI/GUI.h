@@ -38,4 +38,6 @@
 #include "Control/TickBox.h"
 #include "Control/Window.h"
 
+#include "Font/Teletext.h"
+
 #endif

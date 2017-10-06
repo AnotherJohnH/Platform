@@ -20,62 +20,18 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#ifndef GUI_FONT_TELETEXT_H
+#define GUI_FONT_TELETEXT_H
 
-#include  "PLT/Gui.h"
-#include  "GUI/GUI.h"
+#include "GUI/Font.h"
 
+namespace GUI {
 
-class PopUp : public PLT::Gui
-{
-private:
-   GUI::Text  text;
+extern const Font font_teletext18;
+extern const Font font_teletext15;
+extern const Font font_teletext12;
+extern const Font font_teletext9;
 
-public:
-   PopUp()
-      : PLT::Gui("Pop Up", &GUI::font_teletext18)
-      , text(this, "Hello, world!")
-   {}
-};
+} // namespace GUI
 
-
-class MainWindow : public PLT::Gui
-{
-private:
-   PopUp             popup;
-
-   GUI::Text         text2;
-   GUI::Button       button;
-   GUI::TextButton   txt_btn;
-   GUI::TextButton   btn_a;
-   GUI::TextButton   btn_b;
-   GUI::TickBox      tick;
-   GUI::TextTickBox  text_tick;
-   GUI::Field        field;
-
-   virtual void appEvent(Widget* widget_, unsigned code_) override
-   {
-      printf("raiseEvent(%u)\n", code_);
-
-      if (code_ == 'B') popup.show();
-   }
-
-public:
-   MainWindow()
-      : PLT::Gui("GUI test", &GUI::font_teletext18)
-      , text2(this, "Hello, world!")
-      , button(this, 1)
-      , txt_btn(this, 2, "0123456789")
-      , btn_a(this, 'A', "Cancel")
-      , btn_b(this, 'B', "OK")
-      , tick(this, 3)
-      , text_tick(this, 3, "Do you agree?")
-      , field(this, 4, 16, "")
-   {}
-};
-
-
-int main( int argc, char *argv[] )
-{
-   MainWindow().eventLoop();
-}
-
+#endif

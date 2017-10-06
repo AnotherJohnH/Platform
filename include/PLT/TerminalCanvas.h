@@ -32,10 +32,7 @@
 #include "PLT/Ansi.h"
 #include "PLT/Device.h"
 
-#include "GUI/Font/Teletext9.h"
-#include "GUI/Font/Teletext12.h"
-#include "GUI/Font/Teletext15.h"
-#include "GUI/Font/Teletext18.h"
+#include "GUI/Font/Teletext.h"
 
 #include "STB/Fifo.h"
 

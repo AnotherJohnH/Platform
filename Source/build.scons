@@ -77,6 +77,10 @@ env.Append(CPPPATH = env.Dir('../include'))
 # Add target sources to project sources
 source+=[env.File('STB/Option.cpp')]
 source+=[env.File('STB/Midi.cpp')]
+source+=[env.File('GUI/Teletext18.cpp')]
+source+=[env.File('GUI/Teletext15.cpp')]
+source+=[env.File('GUI/Teletext12.cpp')]
+source+=[env.File('GUI/Teletext9.cpp')]
 
 # Return state to top level
 Return('env')
