@@ -27,10 +27,7 @@
 // Adapted from, but not identical to, the font published in pixel detail in the
 // SAA5050 datasheet.
 
-#ifndef GUI_FONT_TELETEXT_9_H
-#define GUI_FONT_TELETEXT_9_H
-
-#include "GUI/Font.h"
+#include "GUI/Font/Teletext.h"
 
 namespace GUI {
 
@@ -164,11 +161,10 @@ static const uint8_t font_teletext9_data[] =
    0x0C, 0x00, 0x6C, 0x6C, 0x00, 0x6C, 0x6C, 0x00, 0x6C, 0x6C, 0x00, 0x6C, 0x6C, 0x00, 0x6C, 0x6C
 };
 
-static const Font font_teletext9 =
+const Font font_teletext9 =
 {
    { 6, 9 }, 0x20, 0xFF, 1, font_teletext9_data
 };
 
-}
+} // namespace GUI
 
-#endif

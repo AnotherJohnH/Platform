@@ -22,7 +22,7 @@
 
 
 #include  "PLT/Gui.h"
-#include  "GUI/Font/Teletext18.h"
+#include  "GUI/GUI.h"
 
 
 int main(int argc, const char* argv[])
