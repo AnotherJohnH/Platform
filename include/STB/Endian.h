@@ -29,28 +29,24 @@
 namespace STB {
 
 
-//! Endian swap a value
-//  T is assumed to be an integer type
-template <typename T>
-inline T endianSwap(T data)
+//! Endian swap a 16-bit value
+inline uint16_t endianSwap(uint16_t data)
 {
-   switch(sizeof(T))
-   {
-   case 1: return data;
+   return (data >> 8) | (data << 8);
+}
 
-   case 2: return (data >> 8) | (data << 8);
+//! Endian swap a 32-bit value
+inline uint32_t endianSwap(uint32_t data)
+{
+   return (uint32_t(endianSwap(uint16_t(data)))<<16) |
+          endianSwap(uint16_t(uint32_t(data)>>16));
+}
 
-   case 4: return (uint32_t(endianSwap(uint16_t(data)))<<16) |
-                  endianSwap(uint16_t(uint32_t(data)>>16));
-
-   case 8: return (uint64_t(endianSwap(uint32_t(data)))<<32) |
-                  endianSwap(uint32_t(uint64_t(data)>>32));
-
-   default: break;
-   }
-
-   assert(!"unexpected type");
-   return 0;
+//! Endian swap a 64-bit value
+inline uint64_t endianSwap(uint64_t data)
+{
+   return (uint64_t(endianSwap(uint32_t(data)))<<32) |
+          endianSwap(uint32_t(uint64_t(data)>>32));
 }
 
 
