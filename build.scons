@@ -61,6 +61,8 @@ env['machine'] = machine
 env['target']  = target
 env['app']     = app
 
+env.Append(LIBS    = 'PLT')
+
 # Configure for the target platform
 source = []
 SConscript('Source/PLT/'+target+'/config.scons', exports=['env','source'])
@@ -72,10 +74,8 @@ env.Append(CCFLAGS = '-DPROJ_TARGET_'+target)
 env.Append(CCFLAGS = '-Wall')
 env.Append(CCFLAGS = '-Werror')
 
-env.Append(LIBS    = 'PLT')
-env.Append(LIBPATH = env.Dir('lib/'+env['machine']))
-
 env.Append(CPPPATH = env.Dir('include'))
+env.Append(LIBPATH = env.Dir('lib/'+env['machine']))
 
 # Add target sources to project sources
 source+=[env.File('Source/STB/Option.cpp')]

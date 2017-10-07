@@ -42,8 +42,9 @@ env['OBJDUMP']   = PREFIX+'objdump'
 env['SIZE']      = PREFIX+'size'
 
 env['CXXFLAGS']  = ['-std=c++11']
-env['LIBS']      = ['pthread']
 env['LINKFLAGS'] = ['-static']
+
+env.Append(LIBS  = ['pthread'])
 
 Import('source')
 
