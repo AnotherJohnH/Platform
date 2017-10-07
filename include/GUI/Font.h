@@ -24,6 +24,7 @@
 #define GUI_FONT_H
 
 #include <cassert>
+#include <cstdint>
 
 #include "GUI/Vector.h"
 
