@@ -63,7 +63,8 @@ env['CPPPATH']   = \
 env['LIBPATH']   = \
    [FS_HOME+'/usr/lib/arm-linux-gnueabihf',
     FS_HOME+'/usr//lib/gcc/arm-linux-gnueabihf/'+NDK_GCC_VER]
-env['LIBS']      = ['supc++', 'pthread', 'gcc']
 env['LINKFLAGS'] = ['--sysroot='+FS_HOME,
                     '-march='+GCC_ARCH, '--static', '-mfloat-abi=hard']
+
+env.Append(LIBS = ['supc++', 'pthread', 'gcc'])
 

@@ -59,7 +59,6 @@ env['CCFLAGS']   = [target_flags, '-fobjc-arc']
 env['CXXFLAGS']  = ['-std=c++11']
 env['CPPPATH']   = [IOS_SDL2_PATH+'/include']
 env['LIBPATH']   = ['Platform/iOS/lib/'+IOS_ARCH]
-env['LIBS']      = ['SDL2', 'c++']
 env['LINKFLAGS'] = [target_flags,
                     '-dead_strip',
                     '-Xlinker', '-no_deduplicate',
@@ -74,6 +73,8 @@ env['LINKFLAGS'] = [target_flags,
                     '-framework', 'CoreGraphics',
                     '-framework', 'OpenGLES',
                     '-framework', 'QuartzCore']
+
+env.Append(LIBS = ['SDL2', 'c++'])
 
 #-------------------------------------------------------------------------------
 # Build the SDL2 library for iOS
