@@ -24,6 +24,8 @@
 
 #include "SND/SND.h"
 
+#include <cstdio>
+
 int main(int argc, const char* argv[])
 {
    // Construct components

@@ -27,7 +27,6 @@
 Import('env')
 
 env['machine']        = 'embc'
-env['platform_files'] = ['app/zif.js']
 
 obj_path = 'obj/'+env['machine']+'/'
 
