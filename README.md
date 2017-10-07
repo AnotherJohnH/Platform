@@ -1,7 +1,9 @@
 # Platform
 
-A platform abstraction layer for building portable applications and provides APIs for
-* Basic level 2D rendering
+A platform abstraction layer for building portable applications.
+
+Provides APIs for...
+* Low-level 2D rendering
 * Simple GUIs
 * Audio processing and synthesis
 * MIDI
@@ -33,7 +35,7 @@ scons
 
 The following small projects are using Platform...
 * [MineSweeper](https://github.com/AnotherJohnH/MineSweeper/)
-* [Sternhalms](https://github.com/AnotherJohnH/Sternhalma/)
+* [Sternhalma](https://github.com/AnotherJohnH/Sternhalma/)
 * [Zif](https://github.com/AnotherJohnH/Zif/)
 
 ## Status
