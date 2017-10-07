@@ -20,9 +20,6 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-
-#include <cstdio>
-
 #include  "PLT/Canvas.h"
 #include  "PLT/Event.h"
 #include  "GUI/GUI.h"

@@ -147,7 +147,7 @@ public:
         static const char* local_argv[] = {"fred", "-v"};
 
         argc = 2;
-        argv = lcoal_argv;
+        argv = local_argv;
 #endif
         name = extractFilename(argv[0]);
 
