@@ -2,7 +2,7 @@
 
 A platform abstraction layer for building portable applications.
 
-The intended use of Platform is as a submodule inside other projects.
+The intended deployment of Platform is as a submodule inside other projects.
 
 ## Starting a new project using Platform
 
