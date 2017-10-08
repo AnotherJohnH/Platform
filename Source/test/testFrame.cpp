@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,31 +20,32 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// Stub event
+#include  "PLT/Frame.h"
+#include  "PLT/Event.h"
 
-#include "PLT/Event.h"
+//#include  "emscripten.h"
 
+void callback() {}
 
-namespace PLT {
-
-
-static EventType getEvent(Event& event, bool wait)
+int main(int argc, const char* argv[])
 {
-   return PLT::NONE;
+   PLT::Frame frame("Frame Test", 400, 300);
+
+   for(unsigned y=0; y<frame.getHeight(); y++)
+   {
+      for(unsigned x=0; x<frame.getWidth(); x++)
+      {
+         frame.setPixel(x, y, (x ^ y) & 8 ? 0xFFFFFF : 0x000000);
+      }
+   }
+
+   frame.refresh();
+
+   PLT::Event  event;
+
+   //emscripten_set_main_loop(callback, 0, 1);
+   while(PLT::waitEvent(event) != PLT::QUIT);
+
+   return 0;
 }
 
-EventType pollEvent(Event& event)
-{
-   return PLT::NONE;
-}
-
-EventType waitEvent(Event& event)
-{
-   return PLT::NONE;
-}
-
-void setTimer(unsigned period_ms)
-{
-}
-
-} // namespace PLT

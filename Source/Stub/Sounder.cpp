@@ -20,12 +20,10 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+// Stub Sounder implementation
 
 #include "PLT/Sounder.h"
 
-
 void PLT::Sounder::enable(bool set)
 {
-   // TODO
 }
-

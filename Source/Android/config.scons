@@ -77,9 +77,10 @@ env['LINKFLAGS'] = ['--sysroot='+NDK_HOME+'/platforms/android-'+NDK_API+'/arch-'
 
 Import('source')
 
-source+=[env.File('Audio.cpp'),
-         env.File('Event.cpp'),
-         env.File('Frame.cpp'),
-         env.File('Image.cpp'),
-         env.File('Sounder.cpp')]
+source+=[env.File('../Stub/Audio.cpp'),
+         env.File('../Stub/Event.cpp'),
+         env.File('../Stub/Frame.cpp'),
+         env.File('../Stub/Image.cpp'),
+         env.File('../Stub/Midi.cpp'),
+         env.File('../Stub/Sounder.cpp')]
 

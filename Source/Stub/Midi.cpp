@@ -20,6 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+// Stub MIDI implementation
+
 #include "PLT/Midi.h"
 
 namespace PLT {
@@ -37,4 +39,3 @@ Out::~Out() {}
 } // namespace MIDI
 
 } // namespace PLT
-
