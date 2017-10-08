@@ -32,6 +32,7 @@ Frame::Frame(const char* title_,
              uint32_t    flags_)
    : Image(width_, height_)
 {
+   pimpl = nullptr;
 }
 
 Frame::~Frame()
