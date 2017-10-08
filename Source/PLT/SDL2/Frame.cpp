@@ -26,44 +26,18 @@
 
 namespace PLT {
 
+
 class FrameImpl
 {
-private:
-   SDL_Window*    window;
-   SDL_Renderer*  renderer;
-   SDL_Surface*   surface;
-   SDL_Texture*   texture;
-
-   static bool init;
-
-   void createTexture(unsigned width_, unsigned height_)
-   {
-      texture = SDL_CreateTexture(renderer,
-                                  SDL_PIXELFORMAT_ARGB8888,
-                                  SDL_TEXTUREACCESS_STREAMING,
-                                  width_, height_);
-
-      surface = SDL_CreateRGBSurface(0, width_, height_, 32,
-                                     0x00FF0000,
-                                     0x0000FF00,
-                                     0x000000FF,
-                                     0xFF000000);
-   }
-
-   void destroyTexture()
-   {
-      SDL_FreeSurface(surface);
-      SDL_DestroyTexture(texture);
-   }
-
 public:
    FrameImpl(const char*  title_, unsigned width_, unsigned height_, uint32_t flags_)
    {
-      if (!init)
-      {
-         SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+      static bool sdl_init = false;
 
-         init = true;
+      if (!sdl_init)
+      {
+         SDL_Init(SDL_INIT_VIDEO);
+         sdl_init = true;
       }
 
       Uint32  sdl_flags = 0;
@@ -84,19 +58,25 @@ public:
 
       renderer = SDL_CreateRenderer(window, -1, 0);
 
-      createTexture(width_, height_);
-
       SDL_RaiseWindow(window);
+
+      createSurface(width_, height_);
    }
 
    ~FrameImpl()
    {
-      destroyTexture();
+      destroySurface();
 
+#ifndef PROJ_TARGET_Emscripten
       SDL_DestroyRenderer(renderer);
+#endif
+
       SDL_DestroyWindow(window);
 
+#ifndef PROJ_TARGET_Emscripten
+      // TODO is this the right thing to do? what if more than one Frame is in use?
       SDL_Quit();
+#endif
    }
 
    uint8_t* getStorage(unsigned& pitch)
@@ -135,22 +115,49 @@ public:
 
    void resize(unsigned width_, unsigned height_)
    {
-      destroyTexture();
+      destroySurface();
       SDL_SetWindowSize(window, width_, height_);
-      createTexture(width_, height_);
+      createSurface(width_, height_);
    }
 
    void refresh()
    {
-      SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
-      SDL_RenderClear(renderer);
-      SDL_RenderCopy(renderer, texture, NULL, NULL);
+      SDL_UpdateTexture(texture, nullptr, surface->pixels, surface->pitch);
+      SDL_RenderCopy(renderer, texture, nullptr, nullptr);
       SDL_RenderPresent(renderer);
    }
+
+private:
+   SDL_Window*    window{nullptr};
+   SDL_Renderer*  renderer{nullptr};
+   SDL_Surface*   surface{nullptr};
+   SDL_Texture*   texture{nullptr};
+
+   void createSurface(unsigned width_, unsigned height_)
+   {
+      surface = SDL_CreateRGBSurface(0, width_, height_, 32,
+                                     0x00FF0000,
+                                     0x0000FF00,
+                                     0x000000FF,
+                                     0xFF000000);
+
+      // TODO understand what's going on here!
+#ifdef PROJ_TARGET_Emscripten
+      texture = SDL_CreateTextureFromSurface(renderer, surface);
+#else
+      texture = SDL_CreateTexture(renderer,
+                                  SDL_PIXELFORMAT_ARGB8888,
+                                  SDL_TEXTUREACCESS_STREAMING,
+                                  width_, height_);
+#endif
+   }
+
+   void destroySurface()
+   {
+      SDL_DestroyTexture(texture);
+      SDL_FreeSurface(surface);
+   }
 };
-
-
-bool FrameImpl::init = false;
 
 
 Frame::Frame(const char* title_,
@@ -193,5 +200,4 @@ void Frame::refresh()
    pimpl->refresh();
 }
 
-} // PLT
-
+} // namespace PLT
