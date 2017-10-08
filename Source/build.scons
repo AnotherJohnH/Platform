@@ -52,7 +52,7 @@ if "PROJ_TARGET" in os.environ:
    if target == 'Darwin':
       target = 'macOS'
 
-if not os.path.isdir(target):
+if not os.path.isdir('PLT/'+target):
    print('ERROR: Target platform "'+target+'" is not supported')
    Exit(1)
 
@@ -63,7 +63,7 @@ env['app']     = app
 
 # Configure for the target platform
 Import('source')
-SConscript(target+'/config.scons', exports=['env','source'])
+SConscript('PLT/'+target+'/config.scons', exports=['env','source'])
 
 Import('version')
 env.Append(CCFLAGS = '-DPROJ_VERSION=\\"'+version+'\\"')
