@@ -20,29 +20,22 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "PLT/Image.h"
+#include "PLT/Event.h"
 
 namespace PLT {
 
-unsigned Image::getPixelBits()
+EventType pollEvent(Event& event)
 {
-   return 32;
+   return PLT::QUIT;
 }
 
-uint32_t Image::getPixel(unsigned x, unsigned y) const
+EventType waitEvent(Event& event)
 {
-   uint32_t* pixels = reinterpret_cast<uint32_t*>(buffer);
-   return pixels[x + y*pitch/4];
+   return PLT::QUIT;
 }
 
-void Image::setPixel(unsigned x, unsigned y, uint32_t rgb)
+void setTimer(unsigned period_ms)
 {
-   uint32_t* pixels = reinterpret_cast<uint32_t*>(buffer);
-#ifdef PROJ_TARGET_Emscripten
-   pixels[x + y*pitch/4] = 0xFF000000 | rgb;
-#else
-   pixels[x + y*pitch/4] = rgb;
-#endif
 }
 
 } // namespace PLT
