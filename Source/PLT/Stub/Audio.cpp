@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2015 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,29 +20,28 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// Stub Event implementation
+// Stub Audio implementation
 
-#include "PLT/Event.h"
+#include "PLT/Audio.h"
 
 namespace PLT {
 
-static EventType getEvent(Event& event, bool wait)
+namespace Audio {
+
+Base::Base(unsigned freq_, Format format_, unsigned channels_, bool input_)
 {
-   return PLT::NONE;
+    handle = 0;
 }
 
-EventType pollEvent(Event& event)
+Base::~Base()
 {
-   return PLT::NONE;
 }
 
-EventType waitEvent(Event& event)
+bool Base::setEnable(bool enable_)
 {
-   return PLT::NONE;
+   return false;
 }
 
-void setTimer(unsigned period_ms)
-{
-}
+} // namespace Audio
 
 } // namespace PLT
