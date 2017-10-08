@@ -23,10 +23,6 @@
 #include  "PLT/Frame.h"
 #include  "PLT/Event.h"
 
-//#include  "emscripten.h"
-
-void callback() {}
-
 int main(int argc, const char* argv[])
 {
    PLT::Frame frame("Frame Test", 400, 300);
@@ -43,7 +39,6 @@ int main(int argc, const char* argv[])
 
    PLT::Event  event;
 
-   //emscripten_set_main_loop(callback, 0, 1);
    while(PLT::waitEvent(event) != PLT::QUIT);
 
    return 0;
