@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2015 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,27 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+// Stub Audio implementation
 
-#include "PLT/Sounder.h"
+#include "PLT/Audio.h"
 
+namespace PLT {
 
-void PLT::Sounder::enable(bool set)
+namespace Audio {
+
+Base::Base(unsigned freq_, AudioFormat format_, unsigned channels_)
 {
-   // TODO
 }
 
+Base::~Base()
+{
+}
+
+bool Base::setEnable(bool enable_)
+{
+   return false;
+}
+
+} // namespace Audio
+
+} // namespace PLT

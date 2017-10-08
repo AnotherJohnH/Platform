@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2016 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,12 +20,24 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+// Stub Image implementation 
 
-#include "PLT/Sounder.h"
+#include "PLT/Image.h"
 
+namespace PLT {
 
-void PLT::Sounder::enable(bool set)
+unsigned Image::getPixelBits()
 {
-   // TODO
+   return 4;
 }
 
+uint32_t Image::getPixel(unsigned x, unsigned y) const
+{  
+   return 0;
+}
+
+void Image::setPixel(unsigned x, unsigned y, uint32_t rgb)
+{
+}
+
+} // namespace PLT

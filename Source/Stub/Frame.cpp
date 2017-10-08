@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2015 John D. Haughton
+// Copyright (c) 2016 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,26 +20,38 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "PLT/Audio.h"
+// Stub Frame implementation
+
+#include "PLT/Frame.h"
 
 namespace PLT {
 
-namespace Audio {
-
-Base::Base(unsigned freq_, AudioFormat format_, unsigned channels_)
+Frame::Frame(const char* title_,
+             unsigned    width_,
+             unsigned    height_,
+             uint32_t    flags_)
+   : Image(width_, height_)
 {
 }
 
-Base::~Base()
+Frame::~Frame()
 {
 }
 
-bool Base::setEnable(bool enable_)
+void Frame::blit(unsigned x,
+                 unsigned y,
+                 unsigned src_offset,
+                 unsigned src_width,
+                 const Image& src)
 {
-   return false;
 }
 
-} // namespace Audio
+void Frame::resize(unsigned width_, unsigned height_)
+{
+}
+
+void Frame::refresh()
+{
+}
 
 } // namespace PLT
-
