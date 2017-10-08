@@ -144,9 +144,9 @@ public:
     {
 #if defined(PROJ_TARGET_Emscripten)
         // TODO this is just a confidence test
-        static const char* local_argv[] = {"fred", "-v"};
+        static const char* local_argv[] = {"fred"};
 
-        argc = 2;
+        argc = 1;
         argv = local_argv;
 #endif
         name = extractFilename(argv[0]);
