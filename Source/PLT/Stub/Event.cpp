@@ -36,6 +36,11 @@ EventType waitEvent(Event& event)
    return PLT::NONE;
 }
 
+int eventLoop(void (*callback)(const Event& event, void*), void* user_data)
+{
+   return 0;
+}
+
 void setTimer(unsigned period_ms)
 {
 }

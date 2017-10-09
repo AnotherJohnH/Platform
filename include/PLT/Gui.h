@@ -35,7 +35,6 @@ class Gui : public GUI::Window
 private:
    PLT::Frame     frame;
 
-
 // Implement GUI::Canvas
 
    virtual GUI::Colour canvasGetPixel(signed x, signed y) const override
@@ -68,7 +67,6 @@ private:
 
 // -------------------
 
-
    static uint32_t guiFlagsToFrameFlags(uint32_t gui_flags)
    {
       uint32_t frame_flags = 0;
@@ -78,27 +76,10 @@ private:
       return frame_flags;
    }
 
-
-public:
-   Gui(const char* title_, const GUI::Font* font_, uint32_t flags_ = 0)
-      : GUI::Window(font_)
-      , frame(title_, 1, 1, guiFlagsToFrameFlags(flags_))
-   {}
-
-   Gui(const char* title_, unsigned width_, unsigned height_, uint32_t flags_ = 0)
-      : GUI::Window()
-      , frame(title_, width_, height_, guiFlagsToFrameFlags(flags_))
+   void handleEvent(const Event& event)
    {
-      setSize(width_, height_);
-   }
-
-   bool waitEvent()
-   {
-      PLT::Event  event;
-
-      switch(PLT::waitEvent(event))
+      switch(event.type)
       {
-      case PLT::QUIT:         return true; 
       case PLT::RESIZE:       winResize(event.x, event.y); break;
       case PLT::KEY_DOWN:     keyPress(event.code, true ); break;
       case PLT::KEY_UP:       keyPress(event.code, false); break;
@@ -107,19 +88,37 @@ public:
       case PLT::BUTTON_UP:    btnPress(event.x, event.y, event.code == 1, false); break;
       case PLT::TIMER:        timerEvent(); break;
 
-      default: break;
+      case PLT::QUIT:
+      default:
+         break;
       }
+   }
 
-      return false;
+   static void eventCallBack(const Event& event, void* ptr)
+   {
+      Gui* gui = reinterpret_cast<Gui*>(ptr);
+      gui->handleEvent(event);
+   }
+
+public:
+   Gui(const char* title_, const GUI::Font* font_, uint32_t flags_ = 0)
+      : GUI::Window(font_)
+      , frame(title_, 1, 1, guiFlagsToFrameFlags(flags_))
+   {
+   }
+
+   Gui(const char* title_, unsigned width_, unsigned height_, uint32_t flags_ = 0)
+      : GUI::Window()
+      , frame(title_, width_, height_, guiFlagsToFrameFlags(flags_))
+   {
+      setSize(width_, height_);
    }
 
    int eventLoop()
    {
       show();
 
-      while(!waitEvent());
-
-      return 0;
+      return PLT::eventLoop(eventCallBack, this);
    }
 
    void setTimer(unsigned code, unsigned period_ms)

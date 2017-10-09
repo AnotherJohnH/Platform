@@ -27,8 +27,37 @@
 
 #include "PLT/Event.h"
 
+#ifdef PROJ_TARGET_Emscripten
+#include "emscripten.h"
+#endif
+
 
 namespace PLT {
+
+
+static void (*event_callback)(const Event&, void*) = nullptr;
+static void* event_user_data = nullptr;
+
+static bool eventLoopIter()
+{
+   Event     event;
+   EventType type = waitEvent(event);
+
+   if (type != NONE)
+   {
+      if (event_callback != nullptr) (*event_callback)(event, event_user_data);
+   }
+
+   return type != QUIT;
+}
+
+#ifdef PROJ_TARGET_Emscripten
+static void wrapEventLoopIter()
+{
+   (void)eventLoopIter();
+}
+#endif
+
 
 static uint8_t translate_key(SDL_Keycode key)
 {
@@ -149,7 +178,25 @@ EventType pollEvent(Event& event)
 
 EventType waitEvent(Event& event)
 {
+#ifdef PROJ_TARGET_Emscripten
+   return getEvent(event, false);
+#else
    return getEvent(event, true);
+#endif
+}
+
+int eventLoop(void (*callback)(const Event&, void*), void* user_data)
+{
+   event_callback  = callback;
+   event_user_data = user_data;
+
+#ifdef PROJ_TARGET_Emscripten
+   emscripten_set_main_loop(wrapEventLoopIter, 0, 1);
+#else
+   while(eventLoopIter());
+#endif
+
+   return 0;
 }
 
 
