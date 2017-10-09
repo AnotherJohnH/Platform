@@ -72,6 +72,9 @@ EventType pollEvent(Event& event);
 //  \return the type of event
 EventType waitEvent(Event& event);
 
+//! Enter an event loop until the application quits
+int eventLoop(void (*callback)(const Event&, void*) = nullptr, void* user_ptr = nullptr);
+
 
 void setTimer(unsigned period_ms);
 

@@ -37,10 +37,6 @@ int main(int argc, const char* argv[])
 
    frame.refresh();
 
-   PLT::Event  event;
-
-   while(PLT::waitEvent(event) != PLT::QUIT);
-
-   return 0;
+   return PLT::eventLoop();
 }
 

@@ -86,9 +86,6 @@ int main(int argc, const char* argv[])
 
    canvas.refresh();
 
-   PLT::Event  event;
-   while(PLT::waitEvent(event) != PLT::QUIT);
-
-   return 0;
+   return PLT::eventLoop();
 }
 

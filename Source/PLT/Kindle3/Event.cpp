@@ -277,6 +277,19 @@ EventType waitEvent(Event& event)
    return getEvent(event, /* block */ true);
 }
 
+int eventLoop(void (*callback)(const Event&, void*), void* user_data)
+{
+   while(true)
+   {
+      Event     event;
+      EventType type = waitEvent(event);
+
+      if (callback != nullptr) (*callback)(event, user_data);
+
+      if (type == QUIT) return 0;
+   }
+}
+
 void setTimer(unsigned period_ms)
 {
    impl.setTimer(period_ms);
