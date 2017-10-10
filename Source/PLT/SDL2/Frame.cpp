@@ -24,6 +24,8 @@
 
 #include "PLT/Frame.h"
 
+#include <string>
+
 namespace PLT {
 
 
@@ -31,6 +33,8 @@ class FrameImpl
 {
 public:
    FrameImpl(const char*  title_, unsigned width_, unsigned height_, uint32_t flags_)
+      : title(title_)
+      , flags(flags_)
    {
       static bool sdl_init = false;
 
@@ -40,17 +44,25 @@ public:
          sdl_init = true;
       }
 
+      if ((width_ != 0) && (height_ != 0))
+      {
+         createWindow(width_, height_);
+      }
+   }
+
+   void createWindow(unsigned width_, unsigned height_)
+   {
       Uint32  sdl_flags = 0;
 
 #ifndef PROJ_TARGET_Emscripten
-     sdl_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
+      sdl_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
 #endif
 
-      if (flags_ & Frame::FULL_SCREEN)  sdl_flags |= SDL_WINDOW_FULLSCREEN;
-      if (flags_ & Frame::RESIZABLE)    sdl_flags |= SDL_WINDOW_RESIZABLE;
-      if (flags_ & Frame::NO_BORDER)    sdl_flags |= SDL_WINDOW_BORDERLESS;
+      if (flags & Frame::FULL_SCREEN)  sdl_flags |= SDL_WINDOW_FULLSCREEN;
+      if (flags & Frame::RESIZABLE)    sdl_flags |= SDL_WINDOW_RESIZABLE;
+      if (flags & Frame::NO_BORDER)    sdl_flags |= SDL_WINDOW_BORDERLESS;
 
-      window = SDL_CreateWindow(title_,
+      window = SDL_CreateWindow(title.c_str(),
                                 SDL_WINDOWPOS_UNDEFINED,
                                 SDL_WINDOWPOS_UNDEFINED,
                                 width_, height_,
@@ -81,6 +93,8 @@ public:
 
    uint8_t* getStorage(unsigned& pitch)
    {
+      if (surface == nullptr) return nullptr;
+
       pitch = surface->pitch;
       return (uint8_t*)surface->pixels;
    }
@@ -115,6 +129,15 @@ public:
 
    void resize(unsigned width_, unsigned height_)
    {
+      if (window == nullptr)
+      {
+         if ((width_ != 0) && (height_ != 0))
+         {
+            createWindow(width_, height_);
+         }
+         return;
+      }
+
       destroySurface();
       SDL_SetWindowSize(window, width_, height_);
       createSurface(width_, height_);
@@ -128,6 +151,8 @@ public:
    }
 
 private:
+   std::string    title;
+   uint32_t       flags;
    SDL_Window*    window{nullptr};
    SDL_Renderer*  renderer{nullptr};
    SDL_Surface*   surface{nullptr};

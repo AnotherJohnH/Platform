@@ -103,7 +103,7 @@ private:
 public:
    Gui(const char* title_, const GUI::Font* font_, uint32_t flags_ = 0)
       : GUI::Window(font_)
-      , frame(title_, 1, 1, guiFlagsToFrameFlags(flags_))
+      , frame(title_, 0, 0, guiFlagsToFrameFlags(flags_))
    {
    }
 
