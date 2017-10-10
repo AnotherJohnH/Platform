@@ -44,17 +44,7 @@ void callback(const PLT::Event& event, void* ptr)
 
 int main(int argc, const char* argv[])
 {
-   PLT::Frame frame("Frame Test", 400, 300);
-
-   for(unsigned y=0; y<frame.getHeight(); y++)
-   {
-      for(unsigned x=0; x<frame.getWidth(); x++)
-      {
-         frame.setPixel(x, y, (x ^ y) & 8 ? 0xFFFFFF : 0x000000);
-      }
-   }
-
-   frame.refresh();
+   PLT::Frame frame("Event Test", 100, 100);
 
    return PLT::eventLoop(callback);
 }
