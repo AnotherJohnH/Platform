@@ -21,6 +21,7 @@
 //------------------------------------------------------------------------------
 
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 
 #include "SDL.h"
@@ -203,7 +204,15 @@ int mainLoop(bool (*callback_)(void*), void* user_data_)
 #ifdef PROJ_TARGET_Emscripten
    emscripten_set_main_loop(wrapLoopIter, 0, 1);
 #else
-   while(loopIter());
+   if (main_callback == nullptr)
+   {
+       printf("Press ENTER to quit\n");
+       (void)getchar();
+   }
+   else
+   {
+      while(loopIter());
+   }
 #endif
 
    return 0;

@@ -22,9 +22,9 @@
 
 
 #include <cstdint>
-#include <cstdio>
 
 #include "PLT/Audio.h"
+#include "PLT/Event.h"
 
 
 static int16_t data[1024];
@@ -68,6 +68,6 @@ int main()
    audio_in.setEnable(true);
    audio_out.setEnable(true);
 
-   (void) getchar();
+   return PLT::mainLoop();
 }
 

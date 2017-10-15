@@ -25,6 +25,7 @@
 #include <cstdio>
 
 #include "SND/SND.h"
+#include "PLT/Event.h"
 
 int main(int argc, const char* argv[])
 {
@@ -38,7 +39,7 @@ int main(int argc, const char* argv[])
    // Start audio sampling
    monitor.play();
 
-   // Wait fo keyboard return
-   (void) getchar();
+   // Wait here for application exit
+   PLT::mainLoop();
 }
 

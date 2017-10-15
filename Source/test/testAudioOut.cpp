@@ -21,9 +21,8 @@
 //------------------------------------------------------------------------------
 
 
-#include <cstdio>
-
 #include "PLT/Audio.h"
+#include "PLT/Event.h"
 
 
 class TestAudio : public PLT::Audio::Out
@@ -49,6 +48,6 @@ int main()
 
    audio.setEnable(true);
 
-   (void) getchar();
+   return PLT::mainLoop();
 }
 
