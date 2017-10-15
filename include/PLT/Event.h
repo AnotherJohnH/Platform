@@ -72,6 +72,9 @@ EventType pollEvent(Event& event);
 //  \return the type of event
 EventType waitEvent(Event& event);
 
+//! Enter an infinite loop until the application quits
+int mainLoop(bool (*callback)(void*) = nullptr, void* user_ptr = nullptr);
+
 //! Enter an event loop until the application quits
 int eventLoop(void (*callback)(const Event&, void*) = nullptr, void* user_ptr = nullptr);
 
