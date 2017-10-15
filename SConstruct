@@ -20,7 +20,8 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-binaries = ['testAudioOut',
+binaries = ['testHelloWorld',
+            'testAudioOut',
             'testAudioIn',
             'testMidiIn',
             'testCanvas',
