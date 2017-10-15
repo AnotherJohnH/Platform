@@ -213,7 +213,7 @@ int eventLoop(void (*callback_)(const Event&, void*), void* user_data_)
 {
    event_callback = callback_;
 
-   return mainLoop(eventLoopIter, user_data);
+   return mainLoop(eventLoopIter, user_data_);
 }
 
 static Uint32 timer_callback(Uint32 period_ms, void* param)
