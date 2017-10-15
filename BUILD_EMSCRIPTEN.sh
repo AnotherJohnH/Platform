@@ -4,6 +4,7 @@
 
 export PROJ_TARGET=Emscripten
 
+# XXX edit to the actual location that the EMSDK is installed
 EMSDK_PATH=$HOME/OpenSource/emsdk_portable
 
 echo
@@ -16,6 +17,5 @@ echo
 echo "----------------------------------------------------------------------"
 echo
 
-# XXX edit to the actual location that the EMSDK is installed
 source $EMSDK_PATH/emsdk_env.sh
 
