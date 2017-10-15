@@ -21,9 +21,8 @@
 //------------------------------------------------------------------------------
 
 
-#include <cstdio>
-
 #include "PLT/Midi.h"
+#include "PLT/Event.h"
 
 
 class TestMidiIn : public PLT::MIDI::In
@@ -40,6 +39,6 @@ int main()
 {
    TestMidiIn midi_in;
 
-   (void) getchar();
+   return PLT::mainLoop();
 }
 

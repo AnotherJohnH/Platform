@@ -23,8 +23,7 @@
 // Test expression building
 
 #include "SND/SND.h"
-
-#include <cstdio>
+#include "PLT/Event.h"
 
 int main(int argc, const char* argv[])
 {
@@ -39,6 +38,6 @@ int main(int argc, const char* argv[])
 
    monitor.play();
 
-   (void) getchar();
+   return PLT::mainLoop();
 }
 

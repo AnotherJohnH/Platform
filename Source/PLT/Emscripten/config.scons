@@ -48,7 +48,7 @@ env['LINKFLAGS'] = ['-s', 'USE_SDL=2', '-O3']
 
 Import('source')
 
-source+=[env.File('../Stub/Audio.cpp'),
+source+=[env.File('../SDL2/Audio.cpp'),
          env.File('../SDL2/Event.cpp'),
          env.File('../SDL2/Frame.cpp'),
          env.File('../SDL2/Image.cpp'),
