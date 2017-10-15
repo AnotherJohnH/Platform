@@ -46,6 +46,8 @@ int main(int argc, const char* argv[])
 {
    PLT::Frame frame("Event Test", 100, 100);
 
+   PLT::setTimer(1000);
+
    return PLT::eventLoop(callback);
 }
 
