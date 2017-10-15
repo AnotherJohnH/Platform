@@ -36,25 +36,35 @@ namespace PLT {
 
 
 static void (*event_callback)(const Event&, void*) = nullptr;
-static void* event_user_data = nullptr;
+static bool (*main_callback)(void*) = nullptr;
+static void* user_data = nullptr;
 
-static bool eventLoopIter()
+
+static bool eventLoopIter(void* user_data_)
 {
    Event     event;
    EventType type = waitEvent(event);
 
    if (type != NONE)
    {
-      if (event_callback != nullptr) (*event_callback)(event, event_user_data);
+      if (event_callback != nullptr) (*event_callback)(event, user_data_);
    }
 
    return type != QUIT;
 }
 
-#ifdef PROJ_TARGET_Emscripten
-static void wrapEventLoopIter()
+
+static bool loopIter()
 {
-   (void)eventLoopIter();
+   return main_callback != nullptr ? (*main_callback)(user_data)
+                                   : true;
+}
+
+
+#ifdef PROJ_TARGET_Emscripten
+static void wrapLoopIter()
+{
+   (void)loopIter();
 }
 #endif
 
@@ -185,20 +195,26 @@ EventType waitEvent(Event& event)
 #endif
 }
 
-int eventLoop(void (*callback)(const Event&, void*), void* user_data)
+int mainLoop(bool (*callback_)(void*), void* user_data_)
 {
-   event_callback  = callback;
-   event_user_data = user_data;
+   main_callback = callback_;
+   user_data     = user_data_;
 
 #ifdef PROJ_TARGET_Emscripten
-   emscripten_set_main_loop(wrapEventLoopIter, 0, 1);
+   emscripten_set_main_loop(wrapLoopIter, 0, 1);
 #else
-   while(eventLoopIter());
+   while(loopIter());
 #endif
 
    return 0;
 }
 
+int eventLoop(void (*callback_)(const Event&, void*), void* user_data_)
+{
+   event_callback = callback_;
+
+   return mainLoop(eventLoopIter, user_data);
+}
 
 static Uint32 timer_callback(Uint32 period_ms, void* param)
 {
