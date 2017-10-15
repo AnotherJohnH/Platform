@@ -70,7 +70,7 @@ env['CPPPATH']   = \
 env['LIBPATH']   = \
    [NDK_HOME+'/sources/cxx-stl/gnu-libstdc++/'+NDK_GCC_VER+'/libs/'+LIB_ARCH,
     NDK_HOME+'/platforms/android-'+NDK_API+'/arch-'+NDK_ARCH+'/usr/lib']
-env['LIBS']      = ['supc++']
+env['LIBS']      = ['supc++', 'gnustl_static']
 env['LINKFLAGS'] = ['--sysroot='+NDK_HOME+'/platforms/android-'+NDK_API+'/arch-'+NDK_ARCH,
                     '-march='+GCC_ARCH]
 
