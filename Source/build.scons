@@ -67,7 +67,7 @@ SConscript('PLT/'+target+'/config.scons', exports=['env','source'])
 
 Import('version')
 env.Append(CCFLAGS = '-DPROJ_VERSION=\\"'+version+'\\"')
-env.Append(CCFLAGS = '-DPROJ_MACHINE_='+env['machine'])
+env.Append(CCFLAGS = '-DPROJ_MACHINE='+env['machine'])
 env.Append(CCFLAGS = '-DPROJ_TARGET_'+target)
 env.Append(CCFLAGS = '-Wall')
 env.Append(CCFLAGS = '-Werror')
