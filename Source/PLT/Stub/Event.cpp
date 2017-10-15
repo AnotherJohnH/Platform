@@ -41,6 +41,11 @@ int eventLoop(void (*callback)(const Event& event, void*), void* user_data)
    return 0;
 }
 
+int mainLoop(bool (*callback)(void*), void* user_data)
+{
+   return 0;
+}
+
 void setTimer(unsigned period_ms)
 {
 }
