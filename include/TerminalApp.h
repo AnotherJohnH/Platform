@@ -23,10 +23,10 @@
 #ifndef TERMINAL_APP_H
 #define TERMINAL_APP_H
 
-#include  "STB/ConsoleApp.h"
+#include "STB/ConsoleApp.h"
 
-#include  "PLT/TerminalCanvas.h"
-#include  "PLT/TerminalStdio.h"
+#include "PLT/TerminalCanvas.h"
+#include "PLT/TerminalStdio.h"
 
 
 class TerminalApp : public STB::ConsoleApp
@@ -34,7 +34,7 @@ class TerminalApp : public STB::ConsoleApp
 private:
 #ifndef NO_TERMINAL_EMULATOR
    enum Display
-   {  
+   {
       DISP_KINDLE3,
       DISP_VGA,
       DISP_SVGA,
@@ -47,26 +47,26 @@ private:
    Display display = DISP_SVGA;
 #endif
 
-   STB::Option<bool>         opt_term{'t', "term", "Use the parent terminal (not the built in terminal)"};
-   STB::Option<bool>         opt_k3{  'K', "k3",   "Kindle 3 display 600x800"};
-   STB::Option<bool>         opt_vga{ 'V', "vga",  "VGA display      640x480"};
-   STB::Option<bool>         opt_svga{'S', "svga", "SVGA display     800x600"};
-   STB::Option<bool>         opt_xga{ 'X', "xga",  "XGA display     1024x768"};
+   STB::Option<bool> opt_term{'t', "term", "Use the parent terminal (not the built in terminal)"};
+   STB::Option<bool> opt_k3{  'K', "k3",   "Kindle 3 display 600x800"};
+   STB::Option<bool> opt_vga{ 'V', "vga",  "VGA display      640x480"};
+   STB::Option<bool> opt_svga{'S', "svga", "SVGA display     800x600"};
+   STB::Option<bool> opt_xga{ 'X', "xga",  "XGA display     1024x768"};
 #endif
 
    virtual int startConsoleApp() override
-   {  
+   {
 #ifndef NO_TERMINAL_EMULATOR
-      if (opt_term)
+      if(opt_term)
 #endif
-      {  
+      {
          // Use the parent terminal
-         PLT::TerminalStdio  term(program);
+         PLT::TerminalStdio term(program);
          return startTerminalApp(term);
       }
 #ifndef NO_TERMINAL_EMULATOR
       else
-      {  
+      {
          // Use the built in terminal
               
               if (opt_k3)   display = DISP_KINDLE3;
@@ -81,7 +81,7 @@ private:
          case DISP_SVGA:    return launchDisplay< 800,600>();
          case DISP_XGA:     return launchDisplay<1024,768>();
          }
-         
+
          assert(!"Display selection bug");
          return 1;
       }
@@ -90,8 +90,8 @@ private:
 
    template <unsigned WIDTH, unsigned HEIGHT>
    int launchDisplay()
-   {  
-      PLT::TerminalCanvas<WIDTH,HEIGHT>  term(program);
+   {
+      PLT::TerminalCanvas<WIDTH,HEIGHT> term(program);
       return startTerminalApp(term);
    }
 
@@ -100,12 +100,12 @@ protected:
    virtual int startTerminalApp(PLT::Device& term) = 0;
 
 public:
-    TerminalApp(const char*  program_,
-                const char*  author_,
-                const char*  description_,
-                const char*  version_,
-                const char*  copyright_year_,
-                const char*  args_help_ = nullptr)
+    TerminalApp(const char* program_,
+                const char* author_,
+                const char* description_,
+                const char* version_,
+                const char* copyright_year_,
+                const char* args_help_ = nullptr)
       : ConsoleApp(program_, author_, description_, version_, copyright_year_, args_help_)
    {}
 };

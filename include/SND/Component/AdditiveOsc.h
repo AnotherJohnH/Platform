@@ -23,7 +23,7 @@
 #ifndef SND_ADDITIVE_OSC_H
 #define SND_ADDITIVE_OSC_H
 
-#include "Osc.h"
+#include "WaveTableOsc.h"
 
 namespace SND {
 
@@ -32,11 +32,12 @@ template <unsigned NUM_HARMONICS>
 class AdditiveOsc : public WaveTableOsc
 {
 public:
-   ControlIn<double>  harmonic[NUM_HARMONICS];
+   ControlIn<double> harmonic[NUM_HARMONICS];
 
-   AdditiveOsc(Freq freq_hz = 0.0) : WaveTableOsc(freq_hz)
+   AdditiveOsc(Freq freq_hz = 0.0)
+      : WaveTableOsc(freq_hz)
    {
-      for(unsigned i=0; i<NUM_HARMONICS; i++)
+      for(unsigned i = 0; i < NUM_HARMONICS; i++)
       {
          harmonic[i].setObserver(this);
       }
@@ -48,14 +49,14 @@ private:
       WaveTableOsc::controlEvent(control);
 
       computeWave([this](double t) -> double
-                  {
-                      double value = 0.0;
-                      for(unsigned i=1; i<=NUM_HARMONICS; i++)
-                      {
-                         value += harmonic[i - 1] * MTH::Waveform::sine(i * t);
-                      }
-                      return value;
-                  });
+      {
+         double value = 0.0;
+         for(unsigned i = 1; i <= NUM_HARMONICS; i++)
+         {
+            value += harmonic[i - 1] * MTH::Waveform::sine(i * t);
+         }
+         return value;
+      });
    }
 };
 

@@ -31,9 +31,11 @@ namespace SND {
 class Gain : public UnaryOp
 {
 public:
-   ControlIn<Signal>  control;
+   ControlIn<Signal> control;
 
-   Gain(Signal initial = 0.0) : control(initial) {}
+   Gain(Signal initial = 0.0)
+      : control(initial)
+   {}
 
 private:
    virtual Signal output() override { return in * control; }

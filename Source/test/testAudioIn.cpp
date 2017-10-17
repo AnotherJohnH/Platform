@@ -33,11 +33,13 @@ static int16_t data[1024];
 class TestAudioIn : public PLT::Audio::In
 {
 public:
-   TestAudioIn() : PLT::Audio::In(44100, PLT::Audio::SINT16, 1) {}
+   TestAudioIn()
+      : PLT::Audio::In(44100, PLT::Audio::SINT16, 1)
+   {}
 
    virtual void setSamples(const int16_t* buffer, unsigned n) override
    {
-      for(unsigned i=0; i<n; ++i)
+      for(unsigned i = 0; i < n; ++i)
       {
          data[i] = buffer[i];
       }
@@ -48,11 +50,13 @@ public:
 class TestAudioOut : public PLT::Audio::Out
 {
 public:
-   TestAudioOut() : PLT::Audio::Out(44100, PLT::Audio::SINT16, 1) {}
+   TestAudioOut()
+      : PLT::Audio::Out(44100, PLT::Audio::SINT16, 1)
+   {}
 
    virtual void getSamples(int16_t* buffer, unsigned n) override
    {
-      for(unsigned i=0; i<n; ++i)
+      for(unsigned i = 0; i < n; ++i)
       {
          buffer[i] = data[i];
       }
@@ -62,12 +66,11 @@ public:
 
 int main()
 {
-   TestAudioIn   audio_in;
-   TestAudioOut  audio_out;
+   TestAudioIn  audio_in;
+   TestAudioOut audio_out;
 
    audio_in.setEnable(true);
    audio_out.setEnable(true);
 
    return PLT::mainLoop();
 }
-

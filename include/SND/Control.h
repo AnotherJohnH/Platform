@@ -26,8 +26,10 @@
 #define SND_CONTROL_H
 
 
-namespace SND {
+#include <cassert>
 
+
+namespace SND {
 
 //! Base class for ControlIn
 class Control
@@ -39,21 +41,20 @@ public:
       virtual void controlEvent(Control* control) = 0;
    };
 
-   void setObserver(Observer* observer_)
-   {
-      observer = observer_;
-   }
+   void setObserver(Observer* observer_) { observer = observer_; }
 
 protected:
-   Control(Observer* observer_ = nullptr) : observer(observer_) {}
+   Control(Observer* observer_ = nullptr)
+      : observer(observer_)
+   {}
 
    void notifyObserver()
    {
-      if (observer != nullptr)
+      if(observer != nullptr)
       {
          // Temporarily clear then restore observer to prevent infinite recursion
          Observer* save_observer = observer;
-         observer = nullptr;
+         observer                = nullptr;
 
          save_observer->controlEvent(this);
 
@@ -62,7 +63,7 @@ protected:
    }
 
 private:
-   Observer*  observer{nullptr};
+   Observer* observer{nullptr};
 };
 
 
@@ -75,9 +76,13 @@ template <typename TYPE>
 class ControlIn : public Control
 {
 public:
-   ControlIn(Control::Observer* observer_ = nullptr) : Control(observer_) {}
+   ControlIn(Control::Observer* observer_ = nullptr)
+      : Control(observer_)
+   {}
 
-   ControlIn(const TYPE& initial) : value(initial) {}
+   ControlIn(const TYPE& initial)
+      : value(initial)
+   {}
 
    //! The current value of this input
    const TYPE& recv() const { return value; }
@@ -116,14 +121,14 @@ private:
    {
       operator=(value_);
 
-      if (next)
+      if(next)
       {
          next->deliver(value_);
       }
    }
 
-   ControlIn<TYPE>*  next{nullptr};
-   TYPE              value{};
+   ControlIn<TYPE>* next{nullptr};
+   TYPE             value{};
 };
 
 
@@ -132,13 +137,15 @@ template <typename TYPE>
 class ControlOut
 {
 public:
-   ControlOut(const TYPE& value_ = TYPE{}) : value(value_) {}
+   ControlOut(const TYPE& value_ = TYPE{})
+      : value(value_)
+   {}
 
    void operator>>(ControlIn<TYPE>& in)
    {
       in.link(list);
 
-      //in = value;
+      // in = value;
    }
 
    //! The current value of this input
@@ -147,11 +154,11 @@ public:
    //! Drive the value of this output
    void send(const TYPE& value_)
    {
-      if (value == value_) return;
+      if(value == value_) return;
 
       value = value_;
 
-      if (list)
+      if(list)
       {
          list->deliver(value);
       }
@@ -164,8 +171,8 @@ public:
    void operator=(const TYPE& value_) { send(value_); }
 
 private:
-   ControlIn<TYPE>*  list{nullptr};
-   TYPE              value{};
+   ControlIn<TYPE>* list{nullptr};
+   TYPE             value{};
 };
 
 
@@ -182,7 +189,9 @@ private:
    }
 
 public:
-   ControlPort() : ControlIn<TYPE>(this) {}
+   ControlPort()
+      : ControlIn<TYPE>(this)
+   {}
 
    //! Set the value of this port
    void operator=(const TYPE& value_)
@@ -190,7 +199,6 @@ public:
       this->send(value_);
    }
 };
-
 
 } // namespace SND
 

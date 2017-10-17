@@ -27,11 +27,11 @@
 
 namespace SND {
 
-//! Gate control 
+//! Gate control
 class Gate : public UnaryOp
 {
 public:
-   ControlIn<bool>  control;
+   ControlIn<bool> control;
 
 private:
    virtual Signal output() override { return control ? Signal(in) : Signal(0); }

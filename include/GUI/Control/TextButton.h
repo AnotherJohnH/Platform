@@ -28,17 +28,16 @@
 
 namespace GUI {
 
-class TextButton : public Button 
+class TextButton : public Button
 {
 public:
-   Text  text;
+   Text text;
 
-   TextButton(Widget* parent_,
-              unsigned code_,
-              const char* text_)
+   TextButton(Widget* parent_, unsigned code_, const char* text_)
       : Button(parent_, code_)
       , text(this, text_)
-   {}
+   {
+   }
 };
 
 } // namespace GUI

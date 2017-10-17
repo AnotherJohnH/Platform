@@ -44,18 +44,17 @@ private:
 
       curses.addstr("Hello, world!\n");
 
-      while(curses.getch() != -1);
+      while(curses.getch() != -1) {}
 
       return 0;
    }
 
 public:
    MyApp(int argc, const char* argv[])
-      : TerminalLauncher(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR,
-                         "<file>", "cfg")
+      : TerminalLauncher(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR, "<file>", "cfg")
    {
       parseArgsAndStart(argc, argv);
-   } 
+   }
 };
 
 

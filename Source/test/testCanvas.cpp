@@ -20,9 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include  "PLT/Canvas.h"
-#include  "PLT/Event.h"
-#include  "GUI/GUI.h"
+#include "GUI/GUI.h"
+#include "PLT/Canvas.h"
+#include "PLT/Event.h"
 
 int main(int argc, const char* argv[])
 {
@@ -46,34 +46,31 @@ int main(int argc, const char* argv[])
    canvas.fillRect(GUI::LIGHT,      170,  50, 202,  82);
    canvas.fillRect(GUI::HILIGHT,    202,  50, 234,  82);
 
-   for(unsigned x=0; x<256; x++)
+   for(unsigned x = 0; x < 256; x++)
    {
-      canvas.drawLine(GUI::GREY(x), 10+x, 90, 10+x, 122);
+      canvas.drawLine(GUI::GREY(x), 10 + x, 90, 10 + x, 122);
    }
 
-   for(unsigned x=0; x<256; x += 4)
+   for(unsigned x = 0; x < 256; x += 4)
    {
-      canvas.drawPoint(GUI::WHITE, 10+x, 130);
+      canvas.drawPoint(GUI::WHITE, 10 + x, 130);
    }
 
-   canvas.fillRect(GUI::WHITE,   10,  140, 70, 200);
-   canvas.drawRect(GUI::BLACK,   11,  141, 68, 198);
-   canvas.drawRect(GUI::BLACK,   14,  144, 65, 195);
+   canvas.fillRect(GUI::WHITE, 10, 140, 70, 200);
+   canvas.drawRect(GUI::BLACK, 11, 141, 68, 198);
+   canvas.drawRect(GUI::BLACK, 14, 144, 65, 195);
 
-   for(unsigned i=0; i<=60; i += 10)
+   for(unsigned i = 0; i <= 60; i += 10)
    {
       canvas.drawLine(GUI::WHITE, 140, 170, 110 + i, 140);
-      canvas.drawLine(GUI::WHITE, 140, 170, 170,     140 + i);
+      canvas.drawLine(GUI::WHITE, 140, 170, 170, 140 + i);
       canvas.drawLine(GUI::WHITE, 140, 170, 110 + i, 200);
-      canvas.drawLine(GUI::WHITE, 140, 170, 110,     140 + i);
+      canvas.drawLine(GUI::WHITE, 140, 170, 110, 140 + i);
    }
 
-   canvas.fillTriangle(GUI::WHITE,
-                      300, 200,
-                      100, 350,
-                      350, 260);
+   canvas.fillTriangle(GUI::WHITE, 300, 200, 100, 350, 350, 260);
 
-   for(unsigned i=0; i<60; i += 3)
+   for(unsigned i = 0; i < 60; i += 3)
    {
       canvas.drawSpan(GUI::WHITE, 210, 140 + i, 220 + i);
    }
@@ -81,11 +78,9 @@ int main(int argc, const char* argv[])
    canvas.drawCircle(GUI::CYAN, 40, 250, 20);
    canvas.fillCircle(GUI::CYAN, 40, 250, 15);
 
-   canvas.drawText(GUI::YELLOW, 0x000000, 100, 210, &GUI::font_teletext18,
-                  "Hello, world!");
+   canvas.drawText(GUI::YELLOW, 0x000000, 100, 210, &GUI::font_teletext18, "Hello, world!");
 
    canvas.refresh();
 
    return PLT::eventLoop();
 }
-

@@ -31,18 +31,18 @@ namespace GUI {
 class Button : public Row
 {
 private:
-   unsigned  code{0};
-   unsigned  alt_code{0};
-   bool      down{false};
-   bool      select{false};
-   bool      flat{false};
+   unsigned code{0};
+   unsigned alt_code{0};
+   bool     down{false};
+   bool     select{false};
+   bool     flat{false};
 
    void operate(bool down_, bool over_, bool select_)
    {
-      if (down != down_)
+      if(down != down_)
       {
          down = down_;
-         if (down)
+         if(down)
          {
             nudgeChildren(+1, +1);
             raiseEvent(this, EVENT_FOCUS);
@@ -52,7 +52,7 @@ private:
             nudgeChildren(-1, -1);
 
             unsigned c = select_ ? code : alt_code;
-            if (c && over_)
+            if(c && over_)
             {
                raiseEvent(this, c);
             }
@@ -71,7 +71,7 @@ private:
 
       canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
-      if (!flat || down)
+      if(!flat || down)
       {
          canvas.drawLine(tl, pos.x, pos.y, pos.x + size.x - 1, pos.y);
          canvas.drawLine(tl, pos.x, pos.y, pos.x, pos.y + size.y - 1);
@@ -89,7 +89,7 @@ private:
 
    virtual void eventKeyPress(uint8_t key, bool down_) override
    {
-      if (key == ' ')
+      if(key == ' ')
       {
          operate(down_, true, true);
       }
@@ -101,20 +101,11 @@ public:
       , code(code_)
    {}
 
-   void setSelect(bool set=true)
-   {
-      select = set;
-   }
+   void setSelect(bool set = true) { select = set; }
 
-   void setFlat(bool set=true)
-   {
-      flat = set;
-   }
+   void setFlat(bool set = true) { flat = set; }
 
-   void setAltCode(bool select, unsigned code_)
-   {
-      alt_code = code_;
-   }
+   void setAltCode(bool select, unsigned code_) { alt_code = code_; }
 };
 
 } // namespace GUI

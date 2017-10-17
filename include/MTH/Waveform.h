@@ -54,8 +54,8 @@ inline double reverseSawTooth(double t)
 
 inline double triangle(double t)
 {
-   return t < 0.5 ? (+4*t - 1)
-                  : (-4*t + 3);
+   return t < 0.5 ? (+4 * t - 1)
+                  : (-4 * t + 3);
 }
 
 inline double sine(double t)
@@ -74,4 +74,3 @@ inline double cosine(double t)
 } // namespace MTH
 
 #endif
-

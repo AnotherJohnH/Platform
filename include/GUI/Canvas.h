@@ -38,14 +38,17 @@ class Canvas
 {
 public:
    Canvas()
-      : size(0, 0) {}
+      : size(0, 0)
+   {
+   }
 
    Canvas(unsigned width_, unsigned height_)
       : size(width_, height_)
-   {}
+   {
+   }
 
    //! Get canvas width (pixels)
-   unsigned getWidth()  const { return size.x; }
+   unsigned getWidth() const { return size.x; }
 
    //! Get canvas height (pixels)
    unsigned getHeight() const { return size.y; }
@@ -53,14 +56,13 @@ public:
    //! Test pixel co-ordinates are inside the canvass boundaries
    bool isVisible(signed x, signed y) const
    {
-      return (x >= 0) && (x < signed(getWidth())) &&
-             (y >= 0) && (y < signed(getHeight()));
+      return (x >= 0) && (x < signed(getWidth())) && (y >= 0) && (y < signed(getHeight()));
    }
 
    //! Get colour of single pixel in the frame buffer
    Colour getPixel(signed x, signed y) const
    {
-      if (!isVisible(x, y)) return GUI::HIDDEN;
+      if(!isVisible(x, y)) return GUI::HIDDEN;
 
       return canvasGetPixel(x, y);
    }
@@ -68,7 +70,7 @@ public:
    //! Set a single pixel
    void drawPoint(Colour colour, signed x, signed y)
    {
-      if (isVisible(x, y))
+      if(isVisible(x, y))
       {
          canvasPoint(colour, x, y);
       }
@@ -79,50 +81,46 @@ public:
    {
       clipAndSort(x1, x2, size.x);
 
-      if ((y >= 0) && (y < signed(size.y)))
+      if((y >= 0) && (y < signed(size.y)))
       {
          canvasSpan(colour, x1, y, x2);
       }
    }
 
    //! Draw a straight line between two points
-   void drawLine(Colour colour,
-                 signed x1, signed y1,
-                 signed x2, signed y2)
+   void drawLine(Colour colour, signed x1, signed y1, signed x2, signed y2)
    {
       signed dx = x2 - x1;
       signed dy = y2 - y1;
 
-      if (abs(dx) >= abs(dy))
+      if(abs(dx) >= abs(dy))
       {
          signed ix = dx < 0 ? -1 : +1;
-         signed iy = (dy<<16)/abs(dx);
-         signed y  = y1<<16;
+         signed iy = (dy << 16) / abs(dx);
+         signed y  = y1 << 16;
 
-         for(signed x=x1; x != x2; x += ix)
+         for(signed x = x1; x != x2; x += ix)
          {
-            drawPoint(colour, x, y>>16);
+            drawPoint(colour, x, y >> 16);
             y += iy;
          }
       }
       else
       {
          signed iy = dy < 0 ? -1 : +1;
-         signed ix = (dx<<16)/abs(dy);
-         signed x  = x1<<16;
+         signed ix = (dx << 16) / abs(dy);
+         signed x  = x1 << 16;
 
-         for(signed y=y1; y != y2; y += iy)
+         for(signed y = y1; y != y2; y += iy)
          {
-            drawPoint(colour, x>>16, y);
+            drawPoint(colour, x >> 16, y);
             x += ix;
          }
       }
    }
 
    //! Draw a rectangle outline
-   void drawRect(Colour colour,
-                 signed x1, signed y1,
-                 signed x2, signed y2)
+   void drawRect(Colour colour, signed x1, signed y1, signed x2, signed y2)
    {
       drawLine(colour, x1, y1, x2, y1);
       drawLine(colour, x2, y1, x2, y2);
@@ -131,64 +129,60 @@ public:
    }
 
    //! Fill a rectangle
-   void fillRect(Colour colour,
-                 signed x1, signed y1,
-                 signed x2, signed y2)
+   void fillRect(Colour colour, signed x1, signed y1, signed x2, signed y2)
    {
       clipAndSort(x1, x2, size.x);
       clipAndSort(y1, y2, size.y);
 
-      for(signed y=y1; y<y2; y++)
+      for(signed y = y1; y < y2; y++)
       {
          canvasSpan(colour, x1, y, x2);
       }
    }
 
    //! Fill a triangle
-   void fillTriangle(Colour colour,
-                     signed x1, signed y1,
-                     signed x2, signed y2,
-                     signed x3, signed y3)
+   void fillTriangle(Colour colour, signed x1, signed y1, signed x2, signed y2, signed x3,
+                     signed y3)
    {
-      if (y2 < y1)
+      if(y2 < y1)
       {
          std::swap(y2, y1);
          std::swap(x2, x1);
       }
 
-      if (y3 < y1)
+      if(y3 < y1)
       {
          std::swap(y3, y1);
          std::swap(x3, x1);
       }
 
-      if (y3 < y2)
+      if(y3 < y2)
       {
          std::swap(y3, y2);
          std::swap(x3, x2);
       }
 
-      if (y3 == y1) return;
+      if(y3 == y1) return;
 
-      signed dxe=((x3-x1)<<16)/(y3 - y1);
+      signed dxe = ((x3 - x1) << 16) / (y3 - y1);
       signed dxs;
 
-      signed y=y1;
-      signed xs=x1<<16;
+      signed y  = y1;
+      signed xs = x1 << 16;
       signed xe;
 
-      if (y2 > y1)
+      if(y2 > y1)
       {
-         xe=x1<<16;
+         xe = x1 << 16;
 
-         dxs=((x2-x1)<<16)/(y2 - y1);
+         dxs = ((x2 - x1) << 16) / (y2 - y1);
 
-         for(; y<y2; ++y)
+         for(; y < y2; ++y)
          {
-            if (xs < xe)
-               drawSpan(colour, xs>>16, y, xe>>16);
+            if(xs < xe)
+               drawSpan(colour, xs >> 16, y, xe >> 16);
             else
-               drawSpan(colour, xe>>16, y, xs>>16);
+               drawSpan(colour, xe >> 16, y, xs >> 16);
 
             xs += dxs;
             xe += dxe;
@@ -196,19 +190,19 @@ public:
       }
       else
       {
-         xe = x2<<16;
+         xe = x2 << 16;
       }
 
-      if (y3 == y2) return;
+      if(y3 == y2) return;
 
-      dxs=((x3-x2)<<16)/(y3 - y2);
+      dxs = ((x3 - x2) << 16) / (y3 - y2);
 
-      for(; y<y3; ++y)
+      for(; y < y3; ++y)
       {
-         if (xs < xe)
-            drawSpan(colour, xs>>16, y, xe>>16);
+         if(xs < xe)
+            drawSpan(colour, xs >> 16, y, xe >> 16);
          else
-            drawSpan(colour, xe>>16, y, xs>>16);
+            drawSpan(colour, xe >> 16, y, xs >> 16);
 
          xs += dxs;
          xe += dxe;
@@ -216,9 +210,7 @@ public:
    }
 
    //! Draw a circle
-   void drawCircle(Colour colour,
-                   signed cx, signed cy,
-                   unsigned r)
+   void drawCircle(Colour colour, signed cx, signed cy, unsigned r)
    {
       drawPoint(colour, cx, cy + r);
       drawPoint(colour, cx, cy - r);
@@ -232,7 +224,7 @@ public:
 
       for(signed x = 0; x < y;)
       {
-         if (f >= 0)
+         if(f >= 0)
          {
             y--;
             ddf_y += 2;
@@ -257,9 +249,7 @@ public:
    }
 
    //! Fill a circle
-   void fillCircle(Colour colour,
-                   signed cx, signed cy,
-                   unsigned r)
+   void fillCircle(Colour colour, signed cx, signed cy, unsigned r)
    {
       drawSpan(colour, cx, cy + r, cx);
       drawSpan(colour, cx - r, cy, cx + r);
@@ -272,7 +262,7 @@ public:
 
       for(int x = 0; x < y;)
       {
-         if (f >= 0)
+         if(f >= 0)
          {
             y--;
             ddf_y += 2;
@@ -289,10 +279,8 @@ public:
       }
    }
 
-   void drawCurve(signed x1,  signed y1,
-                  signed x2,  signed y2,
-                  signed cx1, signed cy1,
-                  signed cx2, signed cy2)
+   void drawCurve(signed x1, signed y1, signed x2, signed y2, signed cx1, signed cy1, signed cx2,
+                  signed cy2)
    {
       // TODO implementation
       assert(!"no implementation");
@@ -300,14 +288,11 @@ public:
 
    //! Draw an alphamap
    template <unsigned BPP>
-   void drawAlphaMap(Colour   fg,
-                     Colour   bg,
-                     signed   x, signed  y,
-                     unsigned w, unsigned h,
+   void drawAlphaMap(Colour fg, Colour bg, signed x, signed y, unsigned w, unsigned h,
                      const uint8_t* alphamap)
    {
       unsigned shift;
-      if (BPP > MAX_ALPHA_BPP)
+      if(BPP > MAX_ALPHA_BPP)
       {
          shift = BPP - MAX_ALPHA_BPP;
          preComputeAlpha(fg, bg, MAX_ALPHA_BPP);
@@ -318,34 +303,34 @@ public:
          preComputeAlpha(fg, bg, BPP);
       }
 
-      for(unsigned v=0; v<h; v++)
+      for(unsigned v = 0; v < h; v++)
       {
-         uint8_t  byte = *alphamap++;
-         uint8_t  alpha = byte >> (8 - BPP);
-         uint8_t  last_alpha = alpha;
-         signed   x1 = x;
-         signed   x2 = x1;
+         uint8_t byte       = *alphamap++;
+         uint8_t alpha      = byte >> (8 - BPP);
+         uint8_t last_alpha = alpha;
+         signed  x1         = x;
+         signed  x2         = x1;
 
-         for(unsigned u=0; true;)
+         for(unsigned u = 0; true;)
          {
-            if (alpha != last_alpha)
+            if(alpha != last_alpha)
             {
                last_alpha >>= shift;
-               if (last_alpha)
+               if(last_alpha)
                {
                   drawSpan(alpha_table[last_alpha], x1, y + v, x2);
                }
                last_alpha = alpha;
-               x1 = x2;
+               x1         = x2;
             }
             x2++;
 
-            if (++u == w)
+            if(++u == w)
             {
-               if (x1 != x2)
+               if(x1 != x2)
                {
                   alpha >>= shift;
-                  if (alpha)
+                  if(alpha)
                   {
                      drawSpan(alpha_table[alpha], x1, y + v, x2);
                   }
@@ -353,11 +338,11 @@ public:
                break;
             }
 
-            if ((u % (8/BPP)) == 0)
+            if((u % (8 / BPP)) == 0)
             {
                byte = *alphamap++;
             }
-            else if (BPP < 8)
+            else if(BPP < 8)
             {
                byte <<= BPP;
             }
@@ -367,14 +352,10 @@ public:
    }
 
    //! Draw a single character from a font
-   unsigned drawChar(Colour       fg,
-                     Colour       bg,
-                     signed       x, signed  y,
-                     const Font*  font,
-                     uint8_t      ch)
+   unsigned drawChar(Colour fg, Colour bg, signed x, signed y, const Font* font, uint8_t ch)
    {
       const uint8_t* map = font->getAlphaMap(ch);
-      if (map == 0) return 0;
+      if(map == 0) return 0;
 
       unsigned w = font->getWidth();
 
@@ -385,19 +366,14 @@ public:
       case 4: drawAlphaMap<4>(fg, bg, x, y, w, font->getHeight(), map); break;
       case 8: drawAlphaMap<8>(fg, bg, x, y, w, font->getHeight(), map); break;
 
-      default:
-         break;
+      default: break;
       }
 
       return w;
    }
 
    //! Draw a string of text
-   void drawText(Colour       fg,
-                 Colour       bg,
-                 signed       x, signed  y,
-                 const Font*  font,
-                 const char*  s)
+   void drawText(Colour fg, Colour bg, signed x, signed y, const Font* font, const char* s)
    {
       assert(s);
 
@@ -408,16 +384,10 @@ public:
    }
 
    //! Fill the entire canvas
-   void clear(Colour colour)
-   {
-      fillRect(colour, 0, 0, size.x, size.y);
-   }
+   void clear(Colour colour) { fillRect(colour, 0, 0, size.x, size.y); }
 
    //! Refresh the whole canvas to the display device
-   void refresh()
-   {
-      canvasRefresh(0, 0, size.x, size.y);
-   }
+   void refresh() { canvasRefresh(0, 0, size.x, size.y); }
 
    //! Resize the canvas
    void resize(unsigned width, unsigned height)
@@ -433,15 +403,15 @@ public:
 private:
    static const unsigned MAX_ALPHA_BPP = 4;
 
-   Vector    size;
-   Colour    alpha_table[1<<MAX_ALPHA_BPP] = {};
+   Vector size;
+   Colour alpha_table[1 << MAX_ALPHA_BPP] = {};
 
    //! Clip value to between 0 and limit (inclusive range)
    void clip(signed& value, unsigned limit)
    {
-      if (value < 0)
+      if(value < 0)
          value = 0;
-      else if (value > signed(limit))
+      else if(value > signed(limit))
          value = limit;
    }
 
@@ -452,7 +422,7 @@ private:
       clip(value1, limit);
       clip(value2, limit);
 
-      if (value2 < value1)
+      if(value2 < value1)
       {
          std::swap(value1, value2);
       }
@@ -463,23 +433,24 @@ private:
    {
       assert(bpp <= MAX_ALPHA_BPP);
 
-      unsigned max_alpha = (1<<bpp) - 1;
+      unsigned max_alpha = (1 << bpp) - 1;
 
-      if ((alpha_table[0] != bg_) || (alpha_table[max_alpha] != fg_))
+      if((alpha_table[0] != bg_) || (alpha_table[max_alpha] != fg_))
       {
          // Not already computed
 
-         ColourDecode  fg(fg_);
-         ColourDecode  bg(bg_);
+         ColourDecode fg(fg_);
+         ColourDecode bg(bg_);
 
          alpha_table[0]         = bg_;
          alpha_table[max_alpha] = fg_;
 
          for(unsigned alpha = 1; alpha < max_alpha; ++alpha)
          {
-            alpha_table[alpha] = RGB((fg.red() * alpha + bg.red() * (max_alpha - alpha)) / max_alpha,
-                                     (fg.grn() * alpha + bg.grn() * (max_alpha - alpha)) / max_alpha,
-                                     (fg.blu() * alpha + bg.blu() * (max_alpha - alpha)) / max_alpha);
+            alpha_table[alpha] =
+               RGB((fg.red() * alpha + bg.red() * (max_alpha - alpha)) / max_alpha,
+                   (fg.grn() * alpha + bg.grn() * (max_alpha - alpha)) / max_alpha,
+                   (fg.blu() * alpha + bg.blu() * (max_alpha - alpha)) / max_alpha);
          }
       }
    }
@@ -487,21 +458,13 @@ private:
    // Overide the following interface with a frame buffer implementation
 
    //! Get colour of single pixel in the frame buffer
-   virtual Colour canvasGetPixel(signed x, signed y) const
-   {
-      return GUI::HIDDEN;
-   }
+   virtual Colour canvasGetPixel(signed x, signed y) const { return GUI::HIDDEN; }
 
    //! Resize the frame buffer
-   virtual void canvasResize(unsigned width, unsigned height)
-   {
-      assert(!"no implementation");
-   }
+   virtual void canvasResize(unsigned width, unsigned height) { assert(!"no implementation"); }
 
    //! Refresh a rectangular region of the frame buffer
-   virtual void canvasRefresh(signed x1, signed y1, signed x2, signed y2)
-   {
-   }
+   virtual void canvasRefresh(signed x1, signed y1, signed x2, signed y2) {}
 
    //! Set a single pixel in the frame buffer
    virtual void canvasPoint(Colour colour, signed x, signed y) = 0;
@@ -511,7 +474,7 @@ private:
    {
       assert(x1 < x2);
 
-      for(signed x=x1; x<x2; x++)
+      for(signed x = x1; x < x2; x++)
       {
          canvasPoint(colour, x, y);
       }

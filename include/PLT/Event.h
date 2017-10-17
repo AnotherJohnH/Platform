@@ -55,10 +55,10 @@ enum class Button : uint8_t
 class Event
 {
 public:
-   EventType   type = NONE;
-   uint8_t     code{};
-   uint16_t    x{};
-   uint16_t    y{};
+   EventType type = NONE;
+   uint8_t   code{};
+   uint16_t  x{};
+   uint16_t  y{};
 };
 
 

@@ -24,14 +24,14 @@
 
 #include <cstdio>
 
-#include "SND/SND.h"
 #include "PLT/Event.h"
+#include "SND/SND.h"
 
 int main(int argc, const char* argv[])
 {
    // Construct components
-   SND::SineOsc  osc{440.0};
-   SND::Monitor  monitor;
+   SND::SineOsc osc{440.0};
+   SND::Monitor monitor;
 
    // Connect components
    monitor.in = osc;
@@ -42,4 +42,3 @@ int main(int argc, const char* argv[])
    // Wait here for application exit
    PLT::mainLoop();
 }
-

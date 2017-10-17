@@ -34,22 +34,19 @@ class FrameImpl;
 class Frame : public Image
 {
 private:
-   FrameImpl*  pimpl{};
+   FrameImpl* pimpl{};
 
 public:
-   static const uint32_t RESIZABLE   = 1<<0;
-   static const uint32_t NO_BORDER   = 1<<1;
-   static const uint32_t FULL_SCREEN = 1<<2;
+   static const uint32_t RESIZABLE   = 1 << 0;
+   static const uint32_t NO_BORDER   = 1 << 1;
+   static const uint32_t FULL_SCREEN = 1 << 2;
 
    Frame(const char* title, unsigned width_, unsigned height_, uint32_t flags_ = 0);
 
    ~Frame();
 
    //!
-   virtual void blit(unsigned     x,
-                     unsigned     y,
-                     unsigned     src_offset,
-                     unsigned     src_width,
+   virtual void blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
                      const Image& src) override;
 
    //! Resize frame buffer

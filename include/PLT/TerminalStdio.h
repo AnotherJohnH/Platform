@@ -23,10 +23,10 @@
 #ifndef PLT_TERMINAL_STDIO_H
 #define PLT_TERMINAL_STDIO_H
 
-#include <termios.h>
-#include <cstdlib>
 #include <cstdarg>
 #include <cstdio>
+#include <cstdlib>
+#include <termios.h>
 
 #include <sys/select.h>
 
@@ -41,8 +41,8 @@ namespace PLT {
 class TerminalStdio : public PLT::Device
 {
 private:
-   STB::Fifo<int,2>  input;
-   unsigned          timeout_ms{0};
+   STB::Fifo<int, 2> input;
+   unsigned timeout_ms{0};
 
    static termios* getTio()
    {
@@ -50,10 +50,7 @@ private:
       return &tio;
    }
 
-   static void restoreTio()
-   {
-      tcsetattr(0, TCSANOW, getTio());
-   }
+   static void restoreTio() { tcsetattr(0, TCSANOW, getTio()); }
 
    static void saveTio()
    {
@@ -68,7 +65,7 @@ private:
 
       tcgetattr(0, &tio);
 
-      if (set)
+      if(set)
          tio.c_lflag |= flag;
       else
          tio.c_lflag &= ~flag;
@@ -78,9 +75,9 @@ private:
 
    int readStdin()
    {
-      if (timeout_ms != 0)
+      if(timeout_ms != 0)
       {
-         fd_set  fds;
+         fd_set fds;
          FD_ZERO(&fds);
          FD_SET(0, &fds); // fd 0 is assumed to be stdin
 
@@ -89,7 +86,7 @@ private:
          timeout.tv_usec = (timeout_ms % 1000) * 1000;
 
          int status = select(1, &fds, nullptr, nullptr, &timeout);
-         if (status <= 0) return status;
+         if(status <= 0) return status;
       }
 
       return ::fgetc(stdin);
@@ -104,11 +101,11 @@ private:
 
    int getNextChar()
    {
-      if (input.empty())
+      if(input.empty())
       {
-         if (inputPush() == 0x1B)
+         if(inputPush() == 0x1B)
          {
-            if (inputPush() == 0x5B)
+            if(inputPush() == 0x5B)
             {
                switch(inputPush())
                {
@@ -127,15 +124,9 @@ private:
    }
 
 public:
-   TerminalStdio(const char* title_)
-   {
-      saveTio();
-   }
+   TerminalStdio(const char* title_) { saveTio(); }
 
-   ~TerminalStdio()
-   {
-      restoreTio();
-   }
+   ~TerminalStdio() { restoreTio(); }
 
    // Implement PLT::Device
 
@@ -160,7 +151,7 @@ public:
 
       case IOCTL_TERM_TIMEOUT_MS:
          timeout_ms = va_arg(ap, unsigned);
-         status = 0;
+         status     = 0;
          break;
 
       case IOCTL_TERM_COLOURS:
@@ -204,7 +195,7 @@ public:
       for(i = 0; i < n; i++)
       {
          int ch = getNextChar();
-         if (ch <= 0) return ch;
+         if(ch <= 0) return ch;
 
          *ptr++ = ch;
       }

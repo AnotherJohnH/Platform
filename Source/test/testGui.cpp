@@ -21,14 +21,14 @@
 //------------------------------------------------------------------------------
 
 
-#include  "PLT/Gui.h"
-#include  "GUI/GUI.h"
+#include "GUI/GUI.h"
+#include "PLT/Gui.h"
 
 
 class PopUp : public PLT::Gui
 {
 private:
-   GUI::Text  text;
+   GUI::Text text;
 
 public:
    PopUp()
@@ -41,22 +41,22 @@ public:
 class MainWindow : public PLT::Gui
 {
 private:
-   PopUp             popup;
+   PopUp popup;
 
-   GUI::Text         text2;
-   GUI::Button       button;
-   GUI::TextButton   txt_btn;
-   GUI::TextButton   btn_a;
-   GUI::TextButton   btn_b;
-   GUI::TickBox      tick;
-   GUI::TextTickBox  text_tick;
-   GUI::Field        field;
+   GUI::Text        text2;
+   GUI::Button      button;
+   GUI::TextButton  txt_btn;
+   GUI::TextButton  btn_a;
+   GUI::TextButton  btn_b;
+   GUI::TickBox     tick;
+   GUI::TextTickBox text_tick;
+   GUI::Field       field;
 
    virtual void appEvent(Widget* widget_, unsigned code_) override
    {
       printf("raiseEvent(%u)\n", code_);
 
-      if (code_ == 'B') popup.show();
+      if(code_ == 'B') popup.show();
    }
 
 public:

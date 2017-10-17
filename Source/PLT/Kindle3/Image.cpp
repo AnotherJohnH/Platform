@@ -24,31 +24,27 @@
 
 namespace PLT {
 
-unsigned Image::getPixelBits()
-{
-   return 4;
-}
+unsigned Image::getPixelBits() { return 4; }
 
 uint32_t Image::getPixel(unsigned x, unsigned y) const
-{  
-   uint8_t pair = buffer[(x + y * pitch)/2];
+{
+   uint8_t pair = buffer[(x + y * pitch) / 2];
    uint8_t grey = x & 1 ? (pair << 4) : (pair & 0xF0);
-   return (grey<<16) | (grey<<8) | grey;
+   return (grey << 16) | (grey << 8) | grey;
 }
 
 void Image::setPixel(unsigned x, unsigned y, uint32_t rgb)
 {
-   uint8_t& pair = buffer[(x + y * pitch)/2];
-   uint8_t grey = 0xf - ((rgb >> 12) & 0xF);
-   if (x & 1)
+   uint8_t& pair = buffer[(x + y * pitch) / 2];
+   uint8_t  grey = 0xf - ((rgb >> 12) & 0xF);
+   if(x & 1)
    {
       pair = (pair & 0xF0) | grey;
    }
    else
    {
-      pair = (pair & 0x0F) | (grey<<4);
+      pair = (pair & 0x0F) | (grey << 4);
    }
 }
 
 } // namespace PLT
-

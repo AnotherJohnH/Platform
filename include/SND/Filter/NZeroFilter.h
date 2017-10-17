@@ -32,23 +32,22 @@ template <unsigned N>
 class NZeroFilter : public UnaryOp
 {
 public:
-   ControlIn<Signal>  b[N + 1];
-   
+   ControlIn<Signal> b[N + 1];
+
    NZeroFilter(Signal b_[N + 1])
       : b(b_)
    {}
 
 private:
    double x[N + 1] = {0.0};
-   
+
    Signal output()
    {
       Signal y0 = 0.0;
 
-      for(int i=N; i>=0; --i)
+      for(int i = N; i >= 0; --i)
       {
-         x[i] = i == 0 ? in
-                       : x[i - 1];
+         x[i] = i == 0 ? in : x[i - 1];
 
          y0 += b[i] * x[i];
       }

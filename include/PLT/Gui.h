@@ -23,19 +23,19 @@
 #ifndef PLT_GUI_H
 #define PLT_GUI_H
 
-#include  "PLT/Frame.h"
-#include  "PLT/Event.h"
+#include "PLT/Event.h"
+#include "PLT/Frame.h"
 
-#include  "GUI/GUI.h"
+#include "GUI/GUI.h"
 
 namespace PLT {
 
 class Gui : public GUI::Window
 {
 private:
-   PLT::Frame     frame;
+   PLT::Frame frame;
 
-// Implement GUI::Canvas
+   // Implement GUI::Canvas
 
    virtual GUI::Colour canvasGetPixel(signed x, signed y) const override
    {
@@ -59,20 +59,20 @@ private:
 
    virtual void canvasSpan(GUI::Colour colour, signed x1, signed y, signed x2) override
    {
-      for(signed x=x1; x<x2; x++)
+      for(signed x = x1; x < x2; x++)
       {
          frame.setPixel(x, y, colour);
       }
    }
 
-// -------------------
+   // -------------------
 
    static uint32_t guiFlagsToFrameFlags(uint32_t gui_flags)
    {
       uint32_t frame_flags = 0;
-      if (gui_flags & GUI::RESIZABLE)   frame_flags |= Frame::RESIZABLE;
-      if (gui_flags & GUI::NO_BORDER)   frame_flags |= Frame::NO_BORDER;
-      if (gui_flags & GUI::FULL_SCREEN) frame_flags |= Frame::FULL_SCREEN;
+      if(gui_flags & GUI::RESIZABLE)   frame_flags |= Frame::RESIZABLE;
+      if(gui_flags & GUI::NO_BORDER)   frame_flags |= Frame::NO_BORDER;
+      if(gui_flags & GUI::FULL_SCREEN) frame_flags |= Frame::FULL_SCREEN;
       return frame_flags;
    }
 

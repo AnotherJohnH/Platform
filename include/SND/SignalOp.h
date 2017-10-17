@@ -23,9 +23,9 @@
 #ifndef SND_SIGNAL_OP_H
 #define SND_SIGNAL_OP_H
 
-#include <cstdlib>
-#include <cmath>
 #include <cassert>
+#include <cmath>
+#include <cstdlib>
 
 #include "SND/Signal.h"
 
@@ -36,9 +36,9 @@ namespace SND {
 class UnaryOp : public SignalOut
 {
 public:
-   SignalIn  in;
+   SignalIn in;
 
-   template<typename ARG>
+   template <typename ARG>
    SignalOut& operator()(ARG&& arg)
    {
       in = arg;
@@ -60,9 +60,9 @@ private:
 class UnaryComponent : public SignalPort
 {
 public:
-   SignalPort   in;
+   SignalPort in;
 
-   template<typename ARG>
+   template <typename ARG>
    SignalPort& operator()(ARG&& arg)
    {
       in = arg;
@@ -75,9 +75,9 @@ public:
 class BinaryOp : public SignalOut
 {
 public:
-   SignalIn  in1, in2;
+   SignalIn in1, in2;
 
-   template<typename ARG1, typename ARG2>
+   template <typename ARG1, typename ARG2>
    SignalOut& operator()(ARG1&& arg1, ARG2&& arg2)
    {
       in1 = arg1;
@@ -101,10 +101,10 @@ private:
 class BinaryComponent : public SignalPort
 {
 public:
-   SignalPort   in1;
-   SignalPort   in2;
+   SignalPort in1;
+   SignalPort in2;
 
-   template<typename ARG1, typename ARG2>
+   template <typename ARG1, typename ARG2>
    SignalPort& operator()(ARG1&& arg1, ARG2&& arg2)
    {
       in1 = arg1;
@@ -119,19 +119,16 @@ template <unsigned N>
 class NaryOp : public SignalOut
 {
 public:
-   SignalIn  in[N];
+   SignalIn in[N];
 
-   SignalOut& operator()()
-   {
-      return *this;
-   }
+   SignalOut& operator()() { return *this; }
 
-   template<typename FIRST_ARG, typename ...ARGS>
+   template <typename FIRST_ARG, typename... ARGS>
    SignalOut& operator()(FIRST_ARG& first_arg, ARGS&&... args)
    {
       const size_t n = sizeof...(ARGS);
       assert(n < N);
-      in[N-n-1] = first_arg;
+      in[N - n - 1] = first_arg;
       return operator()(args...);
    }
 
@@ -141,13 +138,12 @@ protected:
 private:
    virtual void init(const SignalSink* sink)
    {
-      for(unsigned i=0; i<N; i++)
+      for(unsigned i = 0; i < N; i++)
       {
          in[i].init(sink);
       }
    }
 };
-
 
 
 //! Add two signals
@@ -193,12 +189,12 @@ class Sum : public NaryOp<N>
    {
       Signal sample = 0;
 
-      for(unsigned i=0; i<N; i++)
+      for(unsigned i = 0; i < N; i++)
       {
          sample += this->in[i];
       }
 
-      return sample/N;
+      return sample / N;
    }
 };
 

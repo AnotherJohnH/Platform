@@ -34,7 +34,7 @@ template <typename TYPE>
 class ControlMul : public ControlPort<TYPE>
 {
 public:
-   ControlIn<TYPE>  control;
+   ControlIn<TYPE> control;
 
    ControlMul(const TYPE& initial = 1.0)
       : control(this)
@@ -54,7 +54,7 @@ template <typename TYPE>
 class ControlAdd : public ControlPort<TYPE>
 {
 public:
-   ControlIn<TYPE>  control;
+   ControlIn<TYPE> control;
 
    ControlAdd(const TYPE& initial = 0.0)
       : control(this)

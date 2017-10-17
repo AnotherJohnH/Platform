@@ -26,10 +26,7 @@
 
 namespace PLT {
 
-Frame::Frame(const char* title_,
-             unsigned    width_,
-             unsigned    height_,
-             uint32_t    flags_)
+Frame::Frame(const char* title_, unsigned width_, unsigned height_, uint32_t flags_)
    : Image(width_, height_)
 {
    pimpl = nullptr;

@@ -24,24 +24,21 @@
 
 namespace PLT {
 
-unsigned Image::getPixelBits()
-{
-   return 32;
-}
+unsigned Image::getPixelBits() { return 32; }
 
 uint32_t Image::getPixel(unsigned x, unsigned y) const
 {
    uint32_t* pixels = reinterpret_cast<uint32_t*>(buffer);
-   return pixels[x + y*pitch/4];
+   return pixels[x + y * pitch / 4];
 }
 
 void Image::setPixel(unsigned x, unsigned y, uint32_t rgb)
 {
    uint32_t* pixels = reinterpret_cast<uint32_t*>(buffer);
 #ifdef PROJ_TARGET_Emscripten
-   pixels[x + y*pitch/4] = 0xFF000000 | rgb;
+   pixels[x + y * pitch / 4] = 0xFF000000 | rgb;
 #else
-   pixels[x + y*pitch/4] = rgb;
+   pixels[x + y * pitch / 4] = rgb;
 #endif
 }
 

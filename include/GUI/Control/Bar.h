@@ -33,7 +33,7 @@ class Bar : public Widget
 private:
    virtual void eventDraw(Canvas& canvas) override
    {
-      if (isParentRow())
+      if(isParentRow())
       {
          canvas.drawLine(LIGHT,  pos.x,     pos.y, pos.x,     pos.y + size.y - 1);
          canvas.drawLine(SHADOW, pos.x + 1, pos.y, pos.x + 1, pos.y + size.y - 1);
@@ -49,15 +49,15 @@ public:
    Bar(Widget* parent)
       : Widget(parent)
    {
-      if (isParentRow())
+      if(isParentRow())
       {
-          vert_fit = EXPAND;
-          size.x = 2;
+         vert_fit = EXPAND;
+         size.x   = 2;
       }
       else
       {
-          horz_fit = EXPAND;
-          size.y = 2;
+         horz_fit = EXPAND;
+         size.y   = 2;
       }
    }
 };

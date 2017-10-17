@@ -23,19 +23,19 @@
 
 #include <cstdio>
 
-#include "PLT/TerminalStdio.h"
 #include "PLT/Curses.h"
+#include "PLT/TerminalStdio.h"
 
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
-   PLT::TerminalStdio  term("PLT::TerminalStdio");
-   
-   PLT::Curses  win(&term);
-   
+   PLT::TerminalStdio term("PLT::TerminalStdio");
+
+   PLT::Curses win(&term);
+
    win.clear();
    win.addstr("Hello, world!\n");
-   
+
    win.addstr("\033[30mBLACK\n");
    win.addstr("\033[31mRED\n");
    win.addstr("\033[32mGREEN\n");
@@ -53,36 +53,35 @@ int main( int argc, char *argv[] )
    win.addstr("\033[45mMAGENTA\n");
    win.addstr("\033[46mCYAN\n");
    win.addstr("\033[47mWHITE\n");
-   
+
    win.attrset(0);
-   
+
    win.attron(PLT::A_BOLD);
    win.addstr("bold      ");
    win.attroff(PLT::A_BOLD);
    win.addstr("  off\n");
-   
+
    win.attron(PLT::A_DIM);
    win.addstr("faint     ");
    win.attroff(PLT::A_DIM);
    win.addstr("  off\n");
-   
+
    win.attron(PLT::A_ITALIC);
    win.addstr("italic    ");
    win.attroff(PLT::A_ITALIC);
    win.addstr("  off\n");
-   
+
    win.attron(PLT::A_REVERSE);
    win.addstr("invert    ");
    win.attroff(PLT::A_REVERSE);
    win.addstr("  off\n");
-   
+
    win.attron(PLT::A_UNDERLINE);
    win.addstr("underline ");
    win.attroff(PLT::A_UNDERLINE);
    win.addstr("  off\n");
-   
-   while(win.getch() != -1);
-   
+
+   while(win.getch() != -1) {}
+
    return 0;
 }
-

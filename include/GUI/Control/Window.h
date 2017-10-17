@@ -28,40 +28,27 @@
 
 namespace GUI {
 
-const uint32_t RESIZABLE   = 1<<0;
-const uint32_t NO_BORDER   = 1<<1;
-const uint32_t FULL_SCREEN = 1<<2;
+const uint32_t RESIZABLE   = 1 << 0;
+const uint32_t NO_BORDER   = 1 << 1;
+const uint32_t FULL_SCREEN = 1 << 2;
 
-class Window
-   : public Col
-   , public Canvas
+class Window : public Col, public Canvas
 {
 private:
-   const Font* const  font{nullptr};
-   unsigned           timer_code{0};
-   Widget*            focus{nullptr};
+   const Font* const font{nullptr};
+   unsigned          timer_code{0};
+   Widget*           focus{nullptr};
 
    // Implement Widget
 
-   virtual void eventResize() override
-   {
-      Canvas::resize(Widget::size.x, Widget::size.y);
-   }
+   virtual void eventResize() override { Canvas::resize(Widget::size.x, Widget::size.y); }
 
-   virtual void eventDraw(Canvas&) override
-   {
-      Canvas::clear(FACE);
-   }
+   virtual void eventDraw(Canvas&) override { Canvas::clear(FACE); }
 
-   virtual const Font* getDefaultFont() const override
-   {
-      return font;
-   }
+   virtual const Font* getDefaultFont() const override { return font; }
 
 
-   virtual void appEvent(Widget* item_, unsigned code_)
-   {
-   }
+   virtual void appEvent(Widget* item_, unsigned code_) {}
 
 protected:
    virtual void raiseEvent(Widget* focus_, unsigned code_) final override
@@ -78,13 +65,11 @@ public:
    Window(const Font* font_ = 0)
       : Col(0, 8)
       , font(font_)
-   {}
+   {
+   }
 
    //! Set event code for timer events
-   void setTimerEvent(unsigned timer_code_)
-   {
-      timer_code = timer_code_;
-   }
+   void setTimerEvent(unsigned timer_code_) { timer_code = timer_code_; }
 
    //! External notification of window resize
    void winResize(unsigned width, unsigned height)
@@ -97,7 +82,7 @@ public:
    //! External notification of a timer event
    void timerEvent()
    {
-      if (timer_code)
+      if(timer_code)
       {
          raiseEvent(this, timer_code);
          raiseEvent(this, EVENT_REDRAW);
@@ -108,7 +93,7 @@ public:
    void ptrMove(unsigned x, unsigned y)
    {
       Widget* item = focus ? focus : find(x, y);
-      if (item)
+      if(item)
       {
          item->eventPtrMove(x, y);
       }
@@ -118,7 +103,7 @@ public:
    void btnPress(unsigned x, unsigned y, bool select, bool down)
    {
       Widget* hit = down ? find(x, y) : focus;
-      if (hit)
+      if(hit)
       {
          hit->eventBtnPress(x, y, select, down);
       }
@@ -127,7 +112,7 @@ public:
    //! External notification of a key press
    void keyPress(uint8_t key, bool down)
    {
-      if (focus)
+      if(focus)
       {
          focus->eventKeyPress(key, down);
       }

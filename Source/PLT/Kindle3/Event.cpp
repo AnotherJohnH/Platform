@@ -22,14 +22,14 @@
 
 // Kindle3 Linux event
 
-#include <stdio.h>
-#include <sys/stat.h>
+#include <assert.h>
 #include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <pthread.h>
 #include <stdint.h>
-#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "PLT/Event.h"
 #include "STB/Fifo.h"
@@ -40,22 +40,22 @@
 static const uint8_t DEL = PLT::BACKSPACE;
 static const uint8_t RET = PLT::RETURN;
 static const uint8_t LSH = PLT::LSHIFT;
-static const uint8_t UP  = PLT::UP;            // Cursor up
-static const uint8_t DWN = PLT::DOWN;          // Cursor down
-static const uint8_t LFT = PLT::LEFT;          // Cursor left
-static const uint8_t RGT = PLT::RIGHT;         // Cursor ritgh
-static const uint8_t HME = PLT::ESCAPE;        // Home
-static const uint8_t LPR = PLT::HOME;          // Left previous
-static const uint8_t LNX = PLT::END;           // Left next
-static const uint8_t RPR = PLT::PAGE_UP;       // Right previous
-static const uint8_t RNX = PLT::PAGE_DOWN;     // Right next
-static const uint8_t SEL = PLT::SELECT;        // Select (center of cursor keys)
-static const uint8_t MNU = PLT::MENU;          // Menu
-static const uint8_t BAK = PLT::BACK;          // Back
-static const uint8_t AA  = PLT::CAPSLOCK;      // Aa
-static const uint8_t SYM = PLT::RALT;          // Sym
-static const uint8_t VLD = PLT::VOL_DOWN;      // Volume -
-static const uint8_t VLU = PLT::VOL_UP;        // Volume +
+static const uint8_t UP  = PLT::UP;        // Cursor up
+static const uint8_t DWN = PLT::DOWN;      // Cursor down
+static const uint8_t LFT = PLT::LEFT;      // Cursor left
+static const uint8_t RGT = PLT::RIGHT;     // Cursor ritgh
+static const uint8_t HME = PLT::ESCAPE;    // Home
+static const uint8_t LPR = PLT::HOME;      // Left previous
+static const uint8_t LNX = PLT::END;       // Left next
+static const uint8_t RPR = PLT::PAGE_UP;   // Right previous
+static const uint8_t RNX = PLT::PAGE_DOWN; // Right next
+static const uint8_t SEL = PLT::SELECT;    // Select (center of cursor keys)
+static const uint8_t MNU = PLT::MENU;      // Menu
+static const uint8_t BAK = PLT::BACK;      // Back
+static const uint8_t AA  = PLT::CAPSLOCK;  // Aa
+static const uint8_t SYM = PLT::RALT;      // Sym
+static const uint8_t VLD = PLT::VOL_DOWN;  // Volume -
+static const uint8_t VLU = PLT::VOL_UP;    // Volume +
 
 
 static const uint8_t event_decode[0xD0] =
@@ -84,16 +84,16 @@ class EventImpl
 private:
    static const uint16_t TIMER_EV = 0xFF00;
 
-   pthread_t              key_td;
-   pthread_t              tmr_td;
-   volatile uint32_t      tmr_period_ms;
-   pthread_mutex_t        fifo_mutex;
-   STB::Fifo<uint16_t,4>  fifo;
+   pthread_t             key_td;
+   pthread_t             tmr_td;
+   volatile uint32_t     tmr_period_ms;
+   pthread_mutex_t       fifo_mutex;
+   STB::Fifo<uint16_t,4> fifo;
 
    //! Push an event in a thread safe manner
    void pushEvent(EventType type, uint8_t code = 0)
    {
-      uint16_t ev  = (uint16_t(type) << 8) | code;
+      uint16_t ev = (uint16_t(type) << 8) | code;
 
       pthread_mutex_lock(&fifo_mutex);
       fifo.push(ev);
@@ -109,21 +109,21 @@ private:
 
          pthread_mutex_lock(&fifo_mutex);
          bool ok = !fifo.empty();
-         if (ok)
+         if(ok)
          {
             ev = fifo.back();
             fifo.pop();
          }
          pthread_mutex_unlock(&fifo_mutex);
 
-         if (ok)
+         if(ok)
          {
             type = PLT::EventType(ev >> 8);
             code = uint8_t(ev);
             return true;
          }
 
-         if (!block)
+         if(!block)
          {
             return false;
          }
@@ -142,38 +142,38 @@ private:
       fd[2] = open("/dev/input/event2", O_RDONLY | O_NONBLOCK);
 
       int nfds = 0;
-      for(unsigned i=0; i<NUM_FD; ++i)
+      for(unsigned i = 0; i < NUM_FD; ++i)
       {
-         if (fd[i] > nfds) nfds = fd[i];
+         if(fd[i] > nfds) nfds = fd[i];
       }
       nfds++;
 
       while(true)
       {
-         fd_set  read_fds;
+         fd_set read_fds;
 
          FD_ZERO(&read_fds);
 
-         for(unsigned i=0; i<NUM_FD; ++i)
+         for(unsigned i = 0; i < NUM_FD; ++i)
          {
             FD_SET(fd[i], &read_fds);
          }
 
-         if (select(nfds, &read_fds, NULL, NULL, NULL) < 0) break;
+         if(select(nfds, &read_fds, NULL, NULL, NULL) < 0) break;
 
-         for(unsigned i=0; i<NUM_FD; ++i)
+         for(unsigned i = 0; i < NUM_FD; ++i)
          {
-            if (FD_ISSET(fd[i], &read_fds))
+            if(FD_ISSET(fd[i], &read_fds))
             {
-               uint8_t  buffer[16];
+               uint8_t buffer[16];
 
-               if (read(fd[i], buffer, 16) != 16) break;;
+               if(read(fd[i], buffer, 16) != 16) break;
 
-               if (buffer[10] < 0xD0)
+               if(buffer[10] < 0xD0)
                {
                   switch(buffer[12])
                   {
-                  case 0: pushEvent(KEY_UP,   event_decode[buffer[10]]); break;
+                  case 0: pushEvent(KEY_UP, event_decode[buffer[10]]); break;
                   case 1: pushEvent(KEY_DOWN, event_decode[buffer[10]]); break;
                   default: break;
                   }
@@ -182,7 +182,7 @@ private:
          }
       }
 
-      for(unsigned i=0; i<NUM_FD; ++i)
+      for(unsigned i = 0; i < NUM_FD; ++i)
       {
          close(fd[i]);
       }
@@ -190,9 +190,9 @@ private:
 
    static void* thunkKeyEventLoop(void* ptr)
    {
-       EventImpl* impl = (EventImpl*)ptr;
-       impl->keyEventLoop();
-       return 0;
+      EventImpl* impl = (EventImpl*)ptr;
+      impl->keyEventLoop();
+      return 0;
    }
 
    //! Loop to wait for periodic timer events
@@ -207,9 +207,9 @@ private:
 
    static void* thunkTmrEventLoop(void* ptr)
    {
-       EventImpl* impl = (EventImpl*)ptr;
-       impl->tmrEventLoop();
-       return 0;
+      EventImpl* impl = (EventImpl*)ptr;
+      impl->tmrEventLoop();
+      return 0;
    }
 
 public:
@@ -220,7 +220,7 @@ public:
    {
       pthread_mutex_init(&fifo_mutex, 0);
 
-      pthread_attr_t  attr;
+      pthread_attr_t attr;
       pthread_attr_init(&attr);
       pthread_create(&key_td, &attr, thunkKeyEventLoop, this);
    }
@@ -235,9 +235,9 @@ public:
    {
       tmr_period_ms = period_ms;
 
-      if (tmr_td == 0)
+      if(tmr_td == 0)
       {
-         pthread_attr_t  attr;
+         pthread_attr_t attr;
          pthread_attr_init(&attr);
          pthread_create(&tmr_td, &attr, thunkTmrEventLoop, this);
       }
@@ -249,9 +249,9 @@ public:
       event.x    = 0;
       event.y    = 0;
 
-      if (popEvent(block, event.type, event.code))
+      if(popEvent(block, event.type, event.code))
       {
-         //printf("getEvent() => EV %x:%02x\n", event.type, event.code);
+         // printf("getEvent() => EV %x:%02x\n", event.type, event.code);
       }
 
       return EventType(event.type);
@@ -259,7 +259,7 @@ public:
 };
 
 
-static EventImpl  impl;
+static EventImpl impl;
 
 
 static EventType getEvent(Event& event, bool wait)
@@ -284,9 +284,9 @@ int eventLoop(void (*callback)(const Event&, void*), void* user_data)
       Event     event;
       EventType type = waitEvent(event);
 
-      if (callback != nullptr) (*callback)(event, user_data);
+      if(callback != nullptr) (*callback)(event, user_data);
 
-      if (type == QUIT) return 0;
+      if(type == QUIT) return 0;
    }
 }
 

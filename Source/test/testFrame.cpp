@@ -20,16 +20,16 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include  "PLT/Frame.h"
-#include  "PLT/Event.h"
+#include "PLT/Event.h"
+#include "PLT/Frame.h"
 
 int main(int argc, const char* argv[])
 {
    PLT::Frame frame("Frame Test", 400, 300);
 
-   for(unsigned y=0; y<frame.getHeight(); y++)
+   for(unsigned y = 0; y < frame.getHeight(); y++)
    {
-      for(unsigned x=0; x<frame.getWidth(); x++)
+      for(unsigned x = 0; x < frame.getWidth(); x++)
       {
          frame.setPixel(x, y, (x ^ y) & 8 ? 0xFFFFFF : 0x000000);
       }
@@ -39,4 +39,3 @@ int main(int argc, const char* argv[])
 
    return PLT::eventLoop();
 }
-

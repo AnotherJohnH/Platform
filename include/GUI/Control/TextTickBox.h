@@ -24,8 +24,8 @@
 #define GUI_CONTROL_TEXT_TICK_BOX_H
 
 #include "GUI/Control/Row.h"
-#include "GUI/Control/TickBox.h"
 #include "GUI/Control/Text.h"
+#include "GUI/Control/TickBox.h"
 
 
 namespace GUI {
@@ -33,18 +33,16 @@ namespace GUI {
 class TextTickBox : public Row
 {
 private:
-   TickBox  tick_box;
-   Text     text;
+   TickBox tick_box;
+   Text    text;
 
 public:
-   TextTickBox(Widget* parent_,
-               unsigned code_,
-               const char* text_)
+   TextTickBox(Widget* parent_, unsigned code_, const char* text_)
       : Row(parent_)
       , tick_box(this, code_)
       , text(this, text_)
    {
-      gap = 8;
+      gap        = 8;
       vert_align = CENTER;
    }
 };

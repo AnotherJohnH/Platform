@@ -34,24 +34,24 @@ template <unsigned N>
 class NPoleFilter : public UnaryOp
 {
 public:
-   std::array<ControlIn<Signal>,N>  a;
-   ControlIn<Signal>  b0;
-   
+   std::array<ControlIn<Signal>, N> a;
+   ControlIn<Signal> b0;
+
    NPoleFilter() {}
 
-   NPoleFilter(const std::array<Signal,N>& a_, Signal b0_)
+   NPoleFilter(const std::array<Signal, N>& a_, Signal b0_)
       : a(a_)
       , b0(b0_)
    {}
 
 private:
    double y[N + 1] = {0.0};
-   
+
    Signal output()
    {
       y[0] = b0 * in;
 
-      for(unsigned i=N; i>0; --i)
+      for(unsigned i = N; i > 0; --i)
       {
          y[0] -= a[i - 1] * y[i];
          y[i] = y[i - 1];

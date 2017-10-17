@@ -27,15 +27,17 @@
 
 namespace SND {
 
-//! Select one of multiple inputs 
+//! Select one of multiple inputs
 template <unsigned N>
-class Switch : public NaryOp<N>
-             , public Control::Observer
+class Switch : public NaryOp<N>, public Control::Observer
 {
 public:
-   ControlIn<unsigned>  control;
+   ControlIn<unsigned> control;
 
-   Switch() : control(this) {}
+   Switch()
+      : control(this)
+   {
+   }
 
 private:
    virtual void controlEvent(Control*) override

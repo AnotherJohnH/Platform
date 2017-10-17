@@ -31,7 +31,7 @@ class Device
 {
 public:
 
-#define IOCTL_TERM(N) (0x100|N)
+#define IOCTL_TERM(N) (0x100 | N)
 
    static const unsigned long IOCTL_TERM_ECHO       = IOCTL_TERM(0);
    static const unsigned long IOCTL_TERM_ICANON     = IOCTL_TERM(2);

@@ -35,14 +35,14 @@ using Colour = uint32_t;
 //! Least significant bit for fields in the packed pixel colour type Colour
 const unsigned ALP_LSB = 24;
 const unsigned RED_LSB = 16;
-const unsigned GRN_LSB =  8;
-const unsigned BLU_LSB =  0;
+const unsigned GRN_LSB = 8;
+const unsigned BLU_LSB = 0;
 
 
 //! Compute a Colour value from red, green, blu and alpha components
 static constexpr Colour RGBA(uint8_t red, uint8_t grn, uint8_t blu, uint8_t alpha)
 {
-   return (alpha<<ALP_LSB) | (red<<RED_LSB) | (grn<<GRN_LSB) | (blu<<BLU_LSB);
+   return (alpha << ALP_LSB) | (red << RED_LSB) | (grn << GRN_LSB) | (blu << BLU_LSB);
 }
 
 
@@ -54,20 +54,18 @@ static constexpr Colour RGB(uint8_t red, uint8_t grn, uint8_t blu)
 
 
 //! Compute a Colour value for a grey level
-static constexpr Colour GREY(uint8_t level)
-{
-   return RGB(level, level, level);
-}
+static constexpr Colour GREY(uint8_t level) { return RGB(level, level, level); }
 
 
 //! Helper class to extract fields from packed colour type Colour
 struct ColourDecode
 {
-   Colour  colour;
+   Colour colour;
 
    ColourDecode(Colour colour_)
       : colour(colour_)
-   {}
+   {
+   }
 
    uint8_t alp() const { return colour >> ALP_LSB; }
    uint8_t red() const { return colour >> RED_LSB; }
@@ -78,14 +76,14 @@ struct ColourDecode
 
 // Some pre-defined packed colour values
 
-const Colour BLACK      = RGB(0x00, 0x00, 0x00);
-const Colour BLUE       = RGB(0x00, 0x00, 0xFF);
-const Colour GREEN      = RGB(0x00, 0xFF, 0x00);
-const Colour CYAN       = RGB(0x00, 0xFF, 0xFF);
-const Colour RED        = RGB(0xFF, 0x00, 0x00);
-const Colour MAGENTA    = RGB(0xFF, 0x00, 0xFF);
-const Colour YELLOW     = RGB(0xFF, 0xFF, 0x00);
-const Colour WHITE      = RGB(0xFF, 0xFF, 0xFF);
+const Colour BLACK   = RGB(0x00, 0x00, 0x00);
+const Colour BLUE    = RGB(0x00, 0x00, 0xFF);
+const Colour GREEN   = RGB(0x00, 0xFF, 0x00);
+const Colour CYAN    = RGB(0x00, 0xFF, 0xFF);
+const Colour RED     = RGB(0xFF, 0x00, 0x00);
+const Colour MAGENTA = RGB(0xFF, 0x00, 0xFF);
+const Colour YELLOW  = RGB(0xFF, 0xFF, 0x00);
+const Colour WHITE   = RGB(0xFF, 0xFF, 0xFF);
 
 const Colour BACKGROUND = WHITE;
 const Colour FOREGROUND = BLACK;
