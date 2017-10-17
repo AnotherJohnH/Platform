@@ -23,8 +23,8 @@
 #ifndef TERMINAL_LAUNCHER_H
 #define TERMINAL_LAUNCHER_H
 
-#include <cstdio>
 #include <cctype>
+#include <cstdio>
 #include <cstring>
 
 #include "PLT/Curses.h"
@@ -36,30 +36,28 @@
 class TerminalLauncher : public TerminalApp
 {
 protected:
-   PLT::Device*   term{nullptr};
-   PLT::Curses    curses;
+   PLT::Device* term{nullptr};
+   PLT::Curses  curses;
 
 private:
-   STB::Option<const char*>  opt_config{ 'c', "config",
-                                         "Use alternate config file",
-                                         "zif.cfg"};
-   const char*    filename{nullptr};
-   unsigned       cursor{0};
-   unsigned       cursor_limit{0};
-   bool           quit{false};
-   char           path[FILENAME_MAX] = {};
-   char           selection[FILENAME_MAX] = {};
-   bool           selection_is_dir{false};
+   STB::Option<const char*> opt_config{'c', "config", "Use alternate config file", "zif.cfg"};
+   const char*              filename{nullptr};
+   unsigned                 cursor{0};
+   unsigned                 cursor_limit{0};
+   bool                     quit{false};
+   char                     path[FILENAME_MAX]      = {};
+   char                     selection[FILENAME_MAX] = {};
+   bool                     selection_is_dir{false};
 
    //! Get the next line with content from the given file stream
    static bool getLine(FILE* fp, char* file, size_t size)
    {
       while(fgets(file, size, fp))
       {
-         if (file[0] != '#')
+         if(file[0] != '#')
          {
-            char* s = strchr(file, '\n');
-            if (s) *s = '\0';
+            char* s  = strchr(file, '\n');
+            if(s) *s = '\0';
             return true;
          }
       }
@@ -67,15 +65,15 @@ private:
       return false;
    }
 
-   //! 
+   //!
    void drawHeader()
    {
       curses.clear();
 
       curses.attron(PLT::A_REVERSE);
 
-      curses.move(1,1);
-      for(unsigned i=0; i<curses.cols; ++i)
+      curses.move(1, 1);
+      for(unsigned i = 0; i < curses.cols; ++i)
       {
          curses.addch(' ');
       }
@@ -89,7 +87,7 @@ private:
       curses.attroff(PLT::A_REVERSE);
    }
 
-   //! 
+   //!
    void drawList()
    {
       selection_is_dir = false;
@@ -98,7 +96,7 @@ private:
       const unsigned first_row = 3;
 
       FILE* fp = fopen(opt_config, "r");
-      if (fp == nullptr)
+      if(fp == nullptr)
       {
          curses.mvaddstr(first_row, 3, "ERROR - failed to open \"");
          curses.addstr(opt_config);
@@ -109,37 +107,37 @@ private:
       char prev[FILENAME_MAX];
       prev[0] = '\0';
 
-      for(unsigned index = 0; (first_row + index)<curses.lines; )
+      for(unsigned index = 0; (first_row + index) < curses.lines;)
       {
          // Read one line from the config gile
          char line[FILENAME_MAX];
-         if (!getLine(fp, line, sizeof(line)))
+         if(!getLine(fp, line, sizeof(line)))
          {
             cursor_limit = index - 1;
             break;
          }
 
          // Does the start of the line match the current path
-         if (strncmp(line, path, strlen(path)) == 0)
+         if(strncmp(line, path, strlen(path)) == 0)
          {
             char* entry = line + strlen(path);
 
             // Extract entry and check if it is a directory
-            bool is_dir = false;
-            char* slash = strchr(entry, '/');
-            if (slash != nullptr)
+            bool  is_dir = false;
+            char* slash  = strchr(entry, '/');
+            if(slash != nullptr)
             {
                *slash = '\0';
                is_dir = true;
             }
 
             // Is this entry different to the previous entry
-            if (strcmp(entry, prev) != 0)
+            if(strcmp(entry, prev) != 0)
             {
                strcpy(prev, entry);
 
                // Is this the currently selected entry
-               if (index++ == cursor)
+               if(index++ == cursor)
                {
                   strcpy(selection, entry);
                   selection_is_dir = is_dir;
@@ -147,7 +145,7 @@ private:
                   curses.attron(PLT::A_REVERSE);
                }
 
-               if (entry[0] == '!')
+               if(entry[0] == '!')
                {
                   entry++;
                }
@@ -169,36 +167,38 @@ private:
       const char* s = text;
       const char* o = s;
 
-      for(unsigned x=3; true; x++)
+      for(unsigned x = 3; true; x++)
       {
-         if (isspace(*s) || (*s == '\0'))
+         if(isspace(*s) || (*s == '\0'))
          {
-            if ((s - o) == 1)
+            if((s - o) == 1)
             {
                curses.addstr("\n\n");
-               for(x = 1; x < c; ++x) curses.addch(' ');
+               for(x = 1; x < c; ++x)
+                  curses.addch(' ');
                o = s + 1;
             }
             else
             {
-               if (x >= curses.cols)
+               if(x >= curses.cols)
                {
                   curses.addch('\n');
-                  for(x = 1; x < c; ++x) curses.addch(' ');
+                  for(x = 1; x < c; ++x)
+                     curses.addch(' ');
                   o++;
                   x += s - o;
                }
 
                for(; o != s; o++)
                {
-                  char ch = *o;
-                  if (ch == '\n') ch = ' ';
+                  char ch           = *o;
+                  if(ch == '\n') ch = ' ';
                   curses.addch(ch);
                }
             }
          }
 
-         if (*s++ == '\0') break;
+         if(*s++ == '\0') break;
       }
    }
 
@@ -207,39 +207,41 @@ private:
    {
       drawHeader();
 
-      curses.mvaddstr( 3, 3, "Program     : "); curses.addstr(program);
-      curses.mvaddstr( 4, 3, "Description : "); curses.addstr(description);
-      curses.mvaddstr( 5, 3, "Author      : "); curses.addstr(author);
-      curses.mvaddstr( 6, 3, "Version     : "); curses.addstr(version);
+      curses.mvaddstr(3, 3, "Program     : "); curses.addstr(program);
+      curses.mvaddstr(4, 3, "Description : "); curses.addstr(description);
+      curses.mvaddstr(5, 3, "Author      : "); curses.addstr(author);
+      curses.mvaddstr(6, 3, "Version     : "); curses.addstr(version);
 
-      curses.mvaddstr( 7, 3, "Built       : ");
+      curses.mvaddstr(7, 3, "Built       : ");
       curses.addstr(__TIME__); curses.addstr(" "); curses.addstr(__DATE__);
 
-      curses.mvaddstr( 8, 3, "Compiler    : "); layoutText(8, 17, __VERSION__);
+      curses.mvaddstr(8, 3, "Compiler    : "); layoutText(8, 17, __VERSION__);
 
       curses.attron(PLT::A_BOLD);
       curses.mvaddstr(10, 3, "Copyright (c) ");
-      curses.addstr(copyright_year); curses.addstr(" "); curses.addstr(author);
+      curses.addstr(copyright_year);
+      curses.addstr(" ");
+      curses.addstr(author);
 
       curses.attroff(PLT::A_BOLD);
 
       layoutText(12, 3, MIT_LICENSE);
 
-      (void) curses.getch();
+      (void)curses.getch();
    }
 
    //! Implement an action
    void doAction(const char* cmd, const char* value = "")
    {
-      if (strcmp(cmd, "Quit") == 0)
+      if(strcmp(cmd, "Quit") == 0)
       {
          quit = true;
       }
-      else if (strcmp(cmd, "Info") == 0)
+      else if(strcmp(cmd, "Info") == 0)
       {
          doInfo();
       }
-      else if (strcmp(cmd, "Video") == 0)
+      else if(strcmp(cmd, "Video") == 0)
       {
 #ifdef PROJ_TARGET_Kindle3
          const uint32_t dark  = 0x000000;
@@ -249,28 +251,28 @@ private:
          const uint32_t light = 0xF0F0E0;
 #endif
 
-         if (strcmp(value, "Inverse") == 0)
+         if(strcmp(value, "Inverse") == 0)
          {
             term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 0, light);
             term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 1, dark);
          }
-         else if (strcmp(value, "Normal") == 0)
+         else if(strcmp(value, "Normal") == 0)
          {
             term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 0, dark);
             term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 1, light);
          }
       }
-      else if (strcmp(cmd, "Border") == 0)
+      else if(strcmp(cmd, "Border") == 0)
       {
          term->ioctl(PLT::Device::IOCTL_TERM_BORDER, atoi(value));
          curses.init();
       }
-      else if (strcmp(cmd, "LineSpace") == 0)
+      else if(strcmp(cmd, "LineSpace") == 0)
       {
          term->ioctl(PLT::Device::IOCTL_TERM_LINE_SPACE, atoi(value));
          curses.init();
       }
-      else if (strcmp(cmd, "FontSize") == 0)
+      else if(strcmp(cmd, "FontSize") == 0)
       {
          term->ioctl(PLT::Device::IOCTL_TERM_FONT_SIZE, atoi(value));
          curses.init();
@@ -290,12 +292,12 @@ private:
    void closeDir()
    {
       char* s = strrchr(path, '/');
-      if (s)
+      if(s)
       {
          *s = '\0';
 
          s = strrchr(path, '/');
-         if (s)
+         if(s)
          {
             s[1] = '\0';
          }
@@ -311,12 +313,12 @@ private:
    //! Select
    void doSelect(char* selection)
    {
-      if (selection[0] == '!')
+      if(selection[0] == '!')
       {
          char* cmd = selection + 1;
 
          char* value = strchr(cmd, '=');
-         if (value)
+         if(value)
          {
             *value = '\0';
 
@@ -340,20 +342,17 @@ private:
       }
    }
 
-   virtual void parseArg(const char* arg_) override
-   {
-      filename = arg_;
-   }
+   virtual void parseArg(const char* arg_) override { filename = arg_; }
 
    virtual int startTerminalApp(PLT::Device& term_) override
-   {  
+   {
       term = &term_;
       curses.setDevice(&term_);
 
-      doAction("Border",    "0");
-      doAction("FontSize",  "18");
+      doAction("Border", "0");
+      doAction("FontSize", "18");
       doAction("LineSpace", "0");
-      doAction("Video",     "Inverse");
+      doAction("Video", "Inverse");
 
       return filename ? startTerminalLauncher(filename)
                       : menu();
@@ -390,7 +389,7 @@ private:
          case PLT::SELECT:
          case PLT::RIGHT:
          case PLT::PAGE_DOWN:
-            if (selection_is_dir)
+            if(selection_is_dir)
             {
                openDir(selection);
             }
@@ -406,7 +405,7 @@ private:
             break;
 
          default:
-            if (key < 0)
+            if(key < 0)
             {
                doAction("Quit");
             }

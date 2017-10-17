@@ -34,9 +34,9 @@ public:
 
    virtual void getSamples(int16_t* buffer, unsigned n) override
    {
-      for(unsigned i=0; i<n; ++i)
+      for(unsigned i = 0; i < n; ++i)
       {
-         buffer[i] = i<<5;
+         buffer[i] = i << 5;
       }
    }
 };
@@ -44,10 +44,9 @@ public:
 
 int main()
 {
-   TestAudio  audio;
+   TestAudio audio;
 
    audio.setEnable(true);
 
    return PLT::mainLoop();
 }
-

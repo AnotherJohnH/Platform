@@ -49,12 +49,13 @@ class SignalPort;
 
 struct SignalSink
 {
-   SignalSink(unsigned sample_freq_) : sample_freq(sample_freq_) {}
+   SignalSink(unsigned sample_freq_)
+      : sample_freq(sample_freq_)
+   {}
 
-   uint32_t  sequence{0};
-   unsigned  sample_freq;
+   uint32_t sequence{0};
+   unsigned sample_freq;
 };
-
 
 
 //! A signal source
@@ -62,15 +63,10 @@ class SignalOut
 {
 public:
    //! Compute and return the next sample
-   virtual Signal output()
-   {
-      return 0;
-   }
+   virtual Signal output() { return 0; }
 
    //! Backwards initialise signal path from the final sink
-   virtual void init(const SignalSink* sink)
-   {
-   }
+   virtual void init(const SignalSink* sink) {}
 };
 
 
@@ -78,20 +74,17 @@ public:
 class SignalConst : public SignalOut
 {
 public:
-   SignalConst(Signal initial=0) : value(initial) {}
-
-   void operator=(Signal value_)
+   SignalConst(Signal initial = 0)
+      : value(initial)
    {
-      value = value_;
    }
 
-   virtual Signal output() override
-   {
-      return value;
-   }
+   void operator=(Signal value_) { value = value_; }
+
+   virtual Signal output() override { return value; }
 
 private:
-   Signal  value{0};
+   Signal value{0};
 };
 
 
@@ -141,8 +134,8 @@ public:
    }
 
 private:
-   SignalConst  fixed;
-   SignalOut*   source{&fixed};
+   SignalConst fixed;
+   SignalOut*  source{&fixed};
 };
 
 
@@ -150,27 +143,26 @@ private:
 class SignalJunc : public SignalOut
 {
 public:
-   SignalIn  in;
+   SignalIn in;
 
-   template<typename ARG>
-   SignalOut& operator()(ARG& arg)
+   template <typename ARG> SignalOut& operator()(ARG& arg)
    {
       in = arg;
       return *this;
    }
 
 private:
-   uint32_t           value_sequence{0xFFFFffff};
-   Signal             value{0};
-   const SignalSink*  sink{nullptr};
+   uint32_t          value_sequence{0xFFFFffff};
+   Signal            value{0};
+   const SignalSink* sink{nullptr};
 
    virtual Signal output() override
    {
-      if (sink->sequence != value_sequence)
+      if(sink->sequence != value_sequence)
       {
          // Get a fresh inout
          value_sequence = sink->sequence;
-         value = in;
+         value          = in;
       }
 
       return value;
@@ -178,7 +170,7 @@ private:
 
    virtual void init(const SignalSink* sink_) override
    {
-      if (sink == nullptr)
+      if(sink == nullptr)
       {
          sink = sink_;
 
@@ -192,14 +184,11 @@ private:
 class SignalPort
 {
 private:
-   SignalOut*   source{nullptr};
-   SignalIn*    sink{nullptr};
+   SignalOut* source{nullptr};
+   SignalIn*  sink{nullptr};
 
 public:
-   SignalPort& port()
-   {
-      return *this;
-   }
+   SignalPort& port() { return *this; }
 
    //! Connect this port to a signal source
    void linkOutput(SignalOut* source_)
@@ -207,7 +196,7 @@ public:
       assert(source == nullptr); // Not already connected
 
       source = source_;
-      if (sink)
+      if(sink)
       {
          sink->linkOutput(source);
       }
@@ -219,7 +208,7 @@ public:
       assert(sink == nullptr); // Not already connected
 
       sink = sink_;
-      if (source)
+      if(source)
       {
          sink->linkOutput(source);
       }
@@ -230,11 +219,11 @@ public:
    {
       assert(sink == nullptr); // Not already connected
 
-      if (source)
+      if(source)
       {
          sink_port->linkOutput(source);
       }
-      else if (sink_port->sink)
+      else if(sink_port->sink)
       {
          linkInput(sink_port->sink);
       }
@@ -263,4 +252,3 @@ inline void SignalIn::operator=(SignalPort& port)
 } // namespace SND
 
 #endif
-

@@ -21,8 +21,8 @@
 //------------------------------------------------------------------------------
 
 
-#include "PLT/Midi.h"
 #include "PLT/Event.h"
+#include "PLT/Midi.h"
 
 
 class TestMidiIn : public PLT::MIDI::In
@@ -41,4 +41,3 @@ int main()
 
    return PLT::mainLoop();
 }
-

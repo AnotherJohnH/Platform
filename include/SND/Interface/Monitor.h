@@ -34,13 +34,13 @@ namespace SND {
 class Monitor : public PLT::Audio::Out
 {
 public:
-   SignalIn               in;
-   ControlOut<uint32_t>   ticks;
+   SignalIn             in;
+   ControlOut<uint32_t> ticks;
 
    Monitor(Freq tick_freq = 1000.0, Freq sample_freq = 44100.0)
       : PLT::Audio::Out(sample_freq, PLT::Audio::SINT16, /* channels */ 1)
       , sink(sample_freq)
-      , tick_period(sample_freq/tick_freq)
+      , tick_period(sample_freq / tick_freq)
    {}
 
    void play()
@@ -50,20 +50,17 @@ public:
       setEnable(true);
    }
 
-   void stop()
-   {
-      setEnable(false);
-   }
+   void stop() { setEnable(false); }
 
 protected:
    virtual void getSamples(int16_t* buffer, unsigned n) override
    {
-      for(unsigned i=0; i<n; ++i)
+      for(unsigned i = 0; i < n; ++i)
       {
-         if (--tick_count == 0)
+         if(--tick_count == 0)
          {
             tick_count = tick_period;
-            ticks = ticks + 1;
+            ticks      = ticks + 1;
          }
 
          buffer[i] = in * 0x7FFF;
@@ -72,9 +69,9 @@ protected:
    }
 
 private:
-   SignalSink  sink;
-   uint32_t    tick_period{};
-   uint32_t    tick_count{1};
+   SignalSink sink;
+   uint32_t   tick_period{};
+   uint32_t   tick_count{1};
 };
 
 

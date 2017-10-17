@@ -20,18 +20,18 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <linux/fb.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/mman.h>
-#include <sys/ioctl.h>
+#include <stdarg.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "PLT/Frame.h"
 
@@ -40,10 +40,10 @@ namespace PLT {
 class FrameImpl
 {
 private:
-   unsigned  width;
-   unsigned  height;
-   uint8_t*  buffer;
-   int       refresh_fd;
+   unsigned width;
+   unsigned height;
+   uint8_t* buffer;
+   int      refresh_fd;
 
    size_t getSize() const { return width * height / 2; }
 
@@ -62,38 +62,36 @@ private:
    }
 
    static int openDev(const char* filename)
-   {  
+   {
       int fd = open(filename, O_RDWR);
-      if (-1 == fd)
-      {  
+      if(-1 == fd)
+      {
          error("Failed to open \"%s\"", filename);
       }
       return fd;
    }
 
 public:
-   FrameImpl(const char*  title_, unsigned width_, unsigned height_, uint32_t flags_)
+   FrameImpl(const char* title_, unsigned width_, unsigned height_, uint32_t flags_)
    {
       int fd = openDev("/dev/fb0");
-      
+
       struct fb_var_screeninfo screeninfo;
-      int status = ioctl(fd, FBIOGET_VSCREENINFO, &screeninfo);
-      if (-1 == status)
-      {  
+      int                      status = ioctl(fd, FBIOGET_VSCREENINFO, &screeninfo);
+      if(-1 == status)
+      {
          error("ioctl(.. FBIOGET_VSCREENINFO) failed");
       }
-      
+
       width  = screeninfo.xres;
       height = screeninfo.yres;
-      
-      buffer = (uint8_t*) mmap(0, getSize(),
-                               PROT_READ | PROT_WRITE,
-                               MAP_SHARED, fd, 0);
-      if (0 == buffer)
-      {  
+
+      buffer = (uint8_t*)mmap(0, getSize(), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+      if(0 == buffer)
+      {
          error("mmap() failed");
       }
-      
+
       close(fd);
 
       refresh_fd = openDev("/proc/eink_fb/update_display");
@@ -111,43 +109,31 @@ public:
       return buffer;
    }
 
-   void resize(unsigned width_, unsigned height_)
-   {
-   }
+   void resize(unsigned width_, unsigned height_) {}
 
    void refresh()
    {
-      (void) write(refresh_fd, "2", 1);
+      (void)write(refresh_fd, "2", 1);
    }
 };
 
 
-Frame::Frame(const char* title_,
-             unsigned    width_,
-             unsigned    height_,
-             uint32_t    flags_)
+Frame::Frame(const char* title_, unsigned width_, unsigned height_, uint32_t flags_)
    : Image(width_, height_)
 {
    pimpl  = new FrameImpl(title_, width, height, flags_);
    buffer = pimpl->getStorage(pitch);
 }
 
-Frame::~Frame()
-{
-   delete pimpl;
-}
+Frame::~Frame() { delete pimpl; }
 
-void Frame::blit(unsigned x,
-                 unsigned y,
-                 unsigned src_offset,
-                 unsigned src_width,
-                 const Image& src)
+void Frame::blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width, const Image& src)
 {
 }
 
 void Frame::resize(unsigned width_, unsigned height_)
 {
-   if ((width == width_) && (height == height_)) return;
+   if((width == width_) && (height == height_)) return;
 
    width  = width_;
    height = height_;
@@ -156,10 +142,6 @@ void Frame::resize(unsigned width_, unsigned height_)
    buffer = pimpl->getStorage(pitch);
 }
 
-void Frame::refresh()
-{
-   pimpl->refresh();
-}
+void Frame::refresh() { pimpl->refresh(); }
 
 } // namespace PLT
-

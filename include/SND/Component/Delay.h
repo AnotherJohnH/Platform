@@ -25,18 +25,17 @@
 
 #include <vector>
 
-#include "SND/SignalOp.h"
 #include "SND/Control.h"
+#include "SND/SignalOp.h"
 
 namespace SND {
 
 
 //! Delay line
-class Delay : public UnaryOp
-            , public Control::Observer
+class Delay : public UnaryOp, public Control::Observer
 {
 public:
-   ControlIn<unsigned>  control;
+   ControlIn<unsigned> control;
 
    Delay(unsigned initial = 1)
       : control(this)
@@ -45,12 +44,15 @@ public:
    }
 
 private:
-   std::vector<Signal>  buffer;
-   unsigned             index{0};
+   std::vector<Signal> buffer;
+   unsigned            index{0};
 
    virtual void controlEvent(Control*) override
    {
-      if (control == 0) { control = 1; }
+      if(control == 0)
+      {
+         control = 1;
+      }
 
       buffer.resize(control);
 
@@ -62,10 +64,10 @@ private:
 
    virtual Signal output() override
    {
-      Signal out = buffer[index];
+      Signal out    = buffer[index];
       buffer[index] = in;
 
-      if (++index >= buffer.size())
+      if(++index >= buffer.size())
       {
          index = 0;
       }

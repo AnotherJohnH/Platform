@@ -20,7 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// Stub Image implementation 
+// Stub Image implementation
 
 #include "PLT/Image.h"
 

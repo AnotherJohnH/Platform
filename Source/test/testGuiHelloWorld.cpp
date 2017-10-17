@@ -21,15 +21,14 @@
 //------------------------------------------------------------------------------
 
 
-#include  "PLT/Gui.h"
-#include  "GUI/GUI.h"
+#include "GUI/GUI.h"
+#include "PLT/Gui.h"
 
 
 int main(int argc, const char* argv[])
 {
-   PLT::Gui   gui("Hi", &GUI::font_teletext18);
-   GUI::Text  text(&gui, "Hello, world!");
+   PLT::Gui  gui("Hi", &GUI::font_teletext18);
+   GUI::Text text(&gui, "Hello, world!");
 
    return gui.eventLoop();
 }
-

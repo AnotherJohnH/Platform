@@ -26,29 +26,29 @@
 #include <string>
 
 #include "GUI/Widget.h"
+#include "PLT/Event.h"
 
 namespace GUI {
 
 class Field : public Widget
 {
 private:
-   //unsigned      code;
-   unsigned      cols;
-   std::string   value;
+   // unsigned      code;
+   unsigned    cols;
+   std::string value;
 
    // Implement Widget events
    virtual void eventDraw(Canvas& canvas) override
    {
       canvas.fillRect(BACKGROUND, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
-      canvas.drawText(FOREGROUND, FACE,
-                     pos.x + top_left.x, top_left.y + pos.y,
-                     getDefaultFont(), value.c_str());
+      canvas.drawText(FOREGROUND, FACE, pos.x + top_left.x, top_left.y + pos.y, getDefaultFont(),
+                      value.c_str());
    }
 
    virtual void eventBtnPress(unsigned x, unsigned y, bool select, bool down_) override
    {
-      if (down_)
+      if(down_)
       {
          raiseEvent(this, EVENT_FOCUS);
       }
@@ -56,7 +56,7 @@ private:
 
    virtual void eventKeyPress(uint8_t key, bool down_) override
    {
-      if (down_)
+      if(down_)
       {
          switch(key)
          {
@@ -65,14 +65,14 @@ private:
             break;
 
          case PLT::BACKSPACE:
-            if (value.size() > 0)
+            if(value.size() > 0)
             {
                value.pop_back();
             }
             break;
 
          default:
-            if (value.size() < cols)
+            if(value.size() < cols)
             {
                value += key;
             }
@@ -92,14 +92,11 @@ public:
    {
       setBorderAndGap(2);
       const Font* font = getDefaultFont();
-      size.x = font->getWidth() * cols + 4;
-      size.y = font->getHeight() + 4;
+      size.x           = font->getWidth() * cols + 4;
+      size.y           = font->getHeight() + 4;
    }
 
-   void setValue(const char* value_)
-   {
-      value = value_;
-   }
+   void setValue(const char* value_) { value = value_; }
 };
 
 } // namespace GUI

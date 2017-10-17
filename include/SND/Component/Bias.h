@@ -31,9 +31,11 @@ namespace SND {
 class Bias : public UnaryOp
 {
 public:
-   ControlIn<Signal>  control;
+   ControlIn<Signal> control;
 
-   Bias(Signal initial = 0.0) : control(initial) {}
+   Bias(Signal initial = 0.0)
+      : control(initial)
+   {}
 
 private:
    virtual Signal output() override { return in + control; }

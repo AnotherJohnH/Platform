@@ -40,14 +40,14 @@ class Microphone : public PLT::Audio::In
 public:
    static const unsigned SAMPLE_FREQ = 44100;
 
-   STB::Fifo<Signal,11>  fifo;
+   STB::Fifo<Signal, 11> fifo;
 
    Microphone()
-      : In(SAMPLE_FREQ, PLT::Audio::SINT16, /* channels */1)
+      : In(SAMPLE_FREQ, PLT::Audio::SINT16, /* channels */ 1)
    {}
 
 private:
-   virtual void init(const SignalSink *sink) override
+   virtual void init(const SignalSink* sink) override
    {
       assert(sink->sample_freq == SAMPLE_FREQ);
 
@@ -56,7 +56,7 @@ private:
 
    virtual Signal output() override
    {
-      if (fifo.empty()) return 0;
+      if(fifo.empty()) return 0;
 
       Signal sample = fifo.back();
 
@@ -68,11 +68,11 @@ private:
 private:
    virtual void setSamples(const int16_t* buffer, unsigned n) override
    {
-      for(unsigned i=0; i<n; ++i)
+      for(unsigned i = 0; i < n; ++i)
       {
-         if (!fifo.full())
+         if(!fifo.full())
          {
-            fifo.push(Signal(buffer[i])/0x8000);
+            fifo.push(Signal(buffer[i]) / 0x8000);
          }
       }
    }

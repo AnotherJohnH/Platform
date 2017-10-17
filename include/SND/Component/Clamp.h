@@ -23,8 +23,8 @@
 #ifndef SND_CLAMP_H
 #define SND_CLAMP_H
 
-#include "SND/SignalOp.h"
 #include "SND/Control.h"
+#include "SND/SignalOp.h"
 
 namespace SND {
 
@@ -32,8 +32,8 @@ namespace SND {
 class Clamp : public UnaryOp
 {
 public:
-   ControlIn<Signal>  max;
-   ControlIn<Signal>  min;
+   ControlIn<Signal> max;
+   ControlIn<Signal> min;
 
    Clamp(Signal max_ = +1.0, Signal min_ = -1.0)
       : max(max_)
@@ -45,11 +45,11 @@ private:
    {
       Signal value = in;
 
-      if (value > max)
+      if(value > max)
       {
          value = max;
       }
-      else if (value < min)
+      else if(value < min)
       {
          value = min;
       }

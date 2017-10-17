@@ -23,9 +23,9 @@
 #ifndef PLT_CURSES_H
 #define PLT_CURSES_H
 
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
-#include <cstdint>
 
 #include "PLT/Device.h"
 
@@ -33,39 +33,33 @@ namespace PLT {
 
 enum : unsigned
 {
-   A_UNDERLINE = 1<<0,
-   A_REVERSE   = 1<<1,
-   A_NORMAL    = 1<<2,
-   A_BOLD      = 1<<3,
-   A_DIM       = 1<<4,
-   A_ITALIC    = 1<<5,
-   A_FIXED     = 1<<6
+   A_UNDERLINE = 1 << 0,
+   A_REVERSE   = 1 << 1,
+   A_NORMAL    = 1 << 2,
+   A_BOLD      = 1 << 3,
+   A_DIM       = 1 << 4,
+   A_ITALIC    = 1 << 5,
+   A_FIXED     = 1 << 6
 };
 
 //! Very small curses 'like' wrapper for PLT devices
 class Curses
 {
 public:
-   unsigned  lines{};
-   unsigned  cols{};
+   unsigned lines{};
+   unsigned cols{};
 
-   Curses(Device* dev_ = nullptr)
-   {
-      setDevice(dev_);
-   }
+   Curses(Device* dev_ = nullptr) { setDevice(dev_); }
 
-   ~Curses()
-   {
-      setDevice(nullptr);
-   }
+   ~Curses() { setDevice(nullptr); }
 
    void setDevice(Device* dev_)
    {
-      if (dev != nullptr) dev->close();
+      if(dev != nullptr) dev->close();
 
       dev = dev_;
 
-      if (dev != nullptr)
+      if(dev != nullptr)
       {
          dev->open(0);
 
@@ -81,22 +75,13 @@ public:
    }
 
    //! Set raw mode
-   void raw()
-   {
-      dev->ioctl(Device::IOCTL_TERM_ICANON, 0);
-   }
+   void raw() { dev->ioctl(Device::IOCTL_TERM_ICANON, 0); }
 
    //! Enable echo
-   void echo()
-   {
-      dev->ioctl(Device::IOCTL_TERM_ECHO, 1);
-   }
+   void echo() { dev->ioctl(Device::IOCTL_TERM_ECHO, 1); }
 
    //! Disable echo
-   void noecho()
-   {
-      dev->ioctl(Device::IOCTL_TERM_ECHO, 0);
-   }
+   void noecho() { dev->ioctl(Device::IOCTL_TERM_ECHO, 0); }
 
    //! Move cursor to the specified position
    void move(int r, int c)
@@ -109,10 +94,7 @@ public:
    }
 
    //! Add a character and advance the cursor
-   void addch(const char ch)
-   {
-      dev->write(&ch, 1);
-   }
+   void addch(const char ch) { dev->write(&ch, 1); }
 
    //! Add a null terminated string of characters and advance the cursor
    void addstr(const char* s)
@@ -126,7 +108,7 @@ public:
    //! Add a string of n characters and advance the cursor
    void addnstr(const char* s, int n)
    {
-      for(int i=0; s[i] && (i<n); i++)
+      for(int i = 0; s[i] && (i < n); i++)
       {
          addch(s[i]);
       }
@@ -154,49 +136,37 @@ public:
    }
 
    //! Clear the screen
-   void clear()
-   {
-      addstr("\033[2J\033[H");
-   }
+   void clear() { addstr("\033[2J\033[H"); }
 
    //! Clear to the end of the line
-   void clrtoeol()
-   {
-      addstr("\033[2K");
-   }
+   void clrtoeol() { addstr("\033[2K"); }
 
    //! Turn on all the attributes in the mask
-   void attron(unsigned attr_)
-   {
-      attrset(attr | attr_);
-   }
+   void attron(unsigned attr_) { attrset(attr | attr_); }
 
    //! Turn off all the attributes in the mask
-   void attroff(unsigned attr_)
-   {
-      attrset(attr & ~attr_);
-   }
+   void attroff(unsigned attr_) { attrset(attr & ~attr_); }
 
    //! Set all the attributes in the mask
    void attrset(unsigned attr_)
    {
       attr = attr_;
       addstr("\033[0");
-      if (attr & A_BOLD)       addstr(";1");
-      if (attr & A_ITALIC)     addstr(";3");
-      if (attr & A_UNDERLINE)  addstr(";4");
-      if (attr & A_REVERSE)    addstr(";7");
-      if (attr & A_FIXED)      addstr(";11");
+      if(attr & A_BOLD)      addstr(";1");
+      if(attr & A_ITALIC)    addstr(";3");
+      if(attr & A_UNDERLINE) addstr(";4");
+      if(attr & A_REVERSE)   addstr(";7");
+      if(attr & A_FIXED)     addstr(";11");
       addstr("m");
    }
 
    //! Set the foreground colour (0-7 or 9)
    void fgcolour(unsigned col)
    {
-      if ((col == 8) || (col > 9)) return;
+      if((col == 8) || (col > 9)) return;
 
       addstr("\033[");
-      adduint(30+col);
+      adduint(30 + col);
       addch('m');
    }
 
@@ -211,10 +181,10 @@ public:
    //! Set the background colour (0-7 or 9)
    void bgcolour(unsigned col)
    {
-      if ((col == 8) || (col > 9)) return;
+      if((col == 8) || (col > 9)) return;
 
       addstr("\033[");
-      adduint(40+col);
+      adduint(40 + col);
       addch('m');
    }
 
@@ -229,10 +199,10 @@ public:
    //! Select a font
    void fontset(unsigned font)
    {
-      if (font > 10) return;
+      if(font > 10) return;
 
       addstr("\033[");
-      adduint(10+font);
+      adduint(10 + font);
       addch('m');
    }
 
@@ -249,21 +219,20 @@ public:
 
       char response[16];
 
-      for(unsigned i=0; true; i++)
+      for(unsigned i = 0; true; i++)
       {
-         if ((i == sizeof(response)) ||
-             (dev->read(response + i, 1) == -1)) return;
+         if((i == sizeof(response)) || (dev->read(response + i, 1) == -1)) return;
 
-         if (response[i] == 'R') break;
+         if(response[i] == 'R') break;
       }
 
       const char* s = response;
 
-      if (*s++ != '\033') return;
-      if (*s++ != '[')    return;
+      if(*s++ != '\033') return;
+      if(*s++ != '[') return;
 
-      const char* t  = strchr(s, ';');
-      if (t == nullptr) return;
+      const char* t = strchr(s, ';');
+      if(t == nullptr) return;
 
       y = atoi(s);
       x = atoi(t + 1);
@@ -273,7 +242,7 @@ public:
    int timeout(int timeout_ms_)
    {
       int prev_timeout_ms = timeout_ms;
-      timeout_ms = timeout_ms_;
+      timeout_ms          = timeout_ms_;
       return prev_timeout_ms;
    }
 
@@ -283,7 +252,7 @@ public:
       uint8_t ch;
       int     status;
 
-      if (timeout_ms != 0)
+      if(timeout_ms != 0)
       {
          dev->ioctl(Device::IOCTL_TERM_TIMEOUT_MS, timeout_ms);
          status = dev->read(&ch, 1);
@@ -298,17 +267,17 @@ public:
    }
 
 private:
-   Device*   dev{nullptr};
-   unsigned  attr{0};
-   unsigned  timeout_ms{0};
+   Device*  dev{nullptr};
+   unsigned attr{0};
+   unsigned timeout_ms{0};
 
    void adduint(unsigned value)
    {
       unsigned v = value;
-      for(unsigned place=1000000000; place != 0; place = place / 10)
+      for(unsigned place = 1000000000; place != 0; place = place / 10)
       {
          unsigned digit = v / place;
-         if ((digit > 0) || (value > place))
+         if((digit > 0) || (value > place))
          {
             addch('0' + digit);
          }

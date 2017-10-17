@@ -46,7 +46,7 @@ private:
 
       printf("Hello, world!\n");
 
-      if (isDebug())
+      if(isDebug())
       {
          printf("HERE %s:%u\n", __FILE__, __LINE__);
       }
@@ -59,7 +59,7 @@ public:
       : ConsoleApp(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR)
    {
       parseArgsAndStart(argc, argv);
-   } 
+   }
 };
 
 

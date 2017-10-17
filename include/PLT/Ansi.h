@@ -23,13 +23,13 @@
 #ifndef PLT_ANSI_H
 #define PLT_ANSI_H
 
-#include <stdint.h>
 #include <ctype.h>
+#include <stdint.h>
 
 namespace PLT {
 
 //! State machine to help interpret ANSI/VT100 character streams
-class Ansi 
+class Ansi
 {
 private:
    static const size_t MAX_STRING_SIZE = 16;
@@ -54,24 +54,24 @@ private:
       APPLICATION_PROGRAM_COMMAND
    };
 
-   bool    escape;
-   State   state;
-   size_t  string_size;
-   char    string[MAX_STRING_SIZE + 1];
+   bool   escape;
+   State  state;
+   size_t string_size;
+   char   string[MAX_STRING_SIZE + 1];
 
    //! Handle char in a CSI
    void csiChar(uint8_t ch)
    {
-      if ((ch >= 0x40) && (ch <= 0x7E))
+      if((ch >= 0x40) && (ch <= 0x7E))
       {
          string[string_size] = '\0';
 
          ansiCsi(ch, string);
 
-         state = BASE;
+         state       = BASE;
          string_size = 0;
       }
-      else if (string_size < MAX_STRING_SIZE)
+      else if(string_size < MAX_STRING_SIZE)
       {
          string[string_size++] = ch;
       }
@@ -80,7 +80,7 @@ private:
    //! Handle char in a string
    void stringChar(uint8_t ch)
    {
-      if (ch == ST)
+      if(ch == ST)
       {
          string[string_size] = '\0';
 
@@ -104,14 +104,14 @@ private:
             break;
          }
 
-         state = BASE;
+         state       = BASE;
          string_size = 0;
       }
-      else if (string_size < MAX_STRING_SIZE)
+      else if(string_size < MAX_STRING_SIZE)
       {
          string[string_size++] = ch;
       }
-  }
+   }
 
 public:
    Ansi()
@@ -123,21 +123,21 @@ public:
    //! Supply next character to the state machine
    void ansiWrite(uint8_t ch)
    {
-      if (ch == ESC)
+      if(ch == ESC)
       {
          escape = true;
       }
-      else if (escape)
+      else if(escape)
       {
          escape = false;
 
-         if ((ch >= 0x40) && (ch <= 0x5F))
+         if((ch >= 0x40) && (ch <= 0x5F))
          {
             ansiWrite(ch + 0x40);
          }
-         else if (ch == 'c')
+         else if(ch == 'c')
          {
-            state = BASE;
+            state       = BASE;
             string_size = 0;
             ansiReset();
          }
@@ -190,16 +190,16 @@ public:
 
    bool parseUInt(const char*& s, unsigned& value)
    {
-      if (!isdigit(*s)) return false;
+      if(!isdigit(*s)) return false;
 
       value = 0;
 
       while(true)
       {
          unsigned digit = *s - '0';
-         value = (value*10) + digit;
+         value          = (value * 10) + digit;
          ++s;
-         if (!isdigit(*s)) break;
+         if(!isdigit(*s)) break;
       }
 
       return true;

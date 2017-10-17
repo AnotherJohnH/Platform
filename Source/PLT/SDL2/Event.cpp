@@ -38,7 +38,7 @@ namespace PLT {
 
 static void (*event_callback)(const Event&, void*) = nullptr;
 static bool (*main_callback)(void*) = nullptr;
-static void* user_data = nullptr;
+static void* user_data              = nullptr;
 
 
 static bool eventLoopIter(void* user_data_)
@@ -46,9 +46,9 @@ static bool eventLoopIter(void* user_data_)
    Event     event;
    EventType type = waitEvent(event);
 
-   if (type != NONE)
+   if(type != NONE)
    {
-      if (event_callback != nullptr) (*event_callback)(event, user_data_);
+      if(event_callback != nullptr) (*event_callback)(event, user_data_);
    }
 
    return type != QUIT;
@@ -110,10 +110,10 @@ static EventType getEvent(Event& event, bool wait)
    event.x    = 0;
    event.y    = 0;
 
-   SDL_Event  sdl_event;
+   SDL_Event sdl_event;
 
-   if (wait ? SDL_WaitEvent(&sdl_event)
-            : SDL_PollEvent(&sdl_event))
+   if(wait ? SDL_WaitEvent(&sdl_event)
+           : SDL_PollEvent(&sdl_event))
    {
       switch(sdl_event.type)
       {
@@ -204,14 +204,14 @@ int mainLoop(bool (*callback_)(void*), void* user_data_)
 #ifdef PROJ_TARGET_Emscripten
    emscripten_set_main_loop(wrapLoopIter, 0, 1);
 #else
-   if (main_callback == nullptr)
+   if(main_callback == nullptr)
    {
-       printf("Press ENTER to quit\n");
-       (void)getchar();
+      printf("Press ENTER to quit\n");
+      (void)getchar();
    }
    else
    {
-      while(loopIter());
+      while(loopIter()) {}
    }
 #endif
 
@@ -227,12 +227,12 @@ int eventLoop(void (*callback_)(const Event&, void*), void* user_data_)
 
 static Uint32 timer_callback(Uint32 period_ms, void* param)
 {
-   SDL_Event       event;
-   SDL_UserEvent   user_event;
+   SDL_Event     event;
+   SDL_UserEvent user_event;
 
    memset(&user_event, 0, sizeof(user_event));
 
-   user_event.type  = SDL_USEREVENT;
+   user_event.type = SDL_USEREVENT;
 
    event.type = SDL_USEREVENT;
    event.user = user_event;
@@ -247,12 +247,12 @@ void setTimer(unsigned period_ms)
 {
    static SDL_TimerID id = 0;
 
-   if (id != 0)
+   if(id != 0)
    {
       SDL_RemoveTimer(id);
    }
 
-   if (period_ms != 0)
+   if(period_ms != 0)
    {
       id = SDL_AddTimer(period_ms, timer_callback, 0);
    }

@@ -33,18 +33,18 @@ class TickBox : public Widget
 private:
    static const unsigned SIZE = 8;
 
-   const unsigned  code{};
-   bool            set{false};
+   const unsigned code{};
+   bool           set{false};
 
    void operate(bool down_, bool over_)
    {
-      if (down_)
+      if(down_)
       {
          raiseEvent(this, EVENT_FOCUS);
       }
       else
       {
-         if (over_)
+         if(over_)
          {
             set = !set;
             raiseEvent(this, code);
@@ -65,7 +65,7 @@ private:
       canvas.drawLine(HILIGHT, pos.x + size.x, pos.y + size.y, pos.x + size.x, pos.y);
       canvas.drawLine(HILIGHT, pos.x + size.x, pos.y + size.y, pos.x, pos.y + size.y);
 
-      if (set)
+      if(set)
       {
          canvas.drawLine(FOREGROUND, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
          canvas.drawLine(FOREGROUND, pos.x, pos.y + size.y, pos.x + size.x, pos.y);
@@ -81,7 +81,7 @@ private:
 
    virtual void eventKeyPress(uint8_t key, bool down_) override
    {
-      if (key == ' ')
+      if(key == ' ')
       {
          operate(down_, true);
       }

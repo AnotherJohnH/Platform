@@ -23,8 +23,8 @@
 #ifndef STB_ENDIAN_H
 #define STB_ENDIAN_H
 
-#include <cstdint>
 #include <cassert>
+#include <cstdint>
 
 namespace STB {
 
@@ -38,24 +38,23 @@ inline uint16_t endianSwap(uint16_t data)
 //! Endian swap a 32-bit value
 inline uint32_t endianSwap(uint32_t data)
 {
-   return (uint32_t(endianSwap(uint16_t(data)))<<16) |
-          endianSwap(uint16_t(uint32_t(data)>>16));
+   return (uint32_t(endianSwap(uint16_t(data))) << 16) |
+          endianSwap(uint16_t(uint32_t(data) >> 16));
 }
 
 //! Endian swap a 64-bit value
 inline uint64_t endianSwap(uint64_t data)
 {
-   return (uint64_t(endianSwap(uint32_t(data)))<<32) |
-          endianSwap(uint32_t(uint64_t(data)>>32));
+   return (uint64_t(endianSwap(uint32_t(data))) << 32) |
+          endianSwap(uint32_t(uint64_t(data) >> 32));
 }
 
 
 //! Base class helper for endian sensative storage of integers
-template <typename WHOLE, typename HALF, bool BIG>
-class EndianHelper
+template <typename WHOLE, typename HALF, bool BIG> class EndianHelper
 {
 protected:
-   static const unsigned SHIFT = sizeof(HALF)*8;
+   static const unsigned SHIFT = sizeof(HALF) * 8;
    static const unsigned LS    = BIG ? 0 : 1;
    static const unsigned MS    = BIG ? 1 : 0;
 
@@ -74,12 +73,12 @@ protected:
    }
 
 private:
-   HALF  half[2];
+   HALF half[2];
 };
 
 
 //! A 16-bit unsigned integer that is stored in big-endian format
-class Big16 : public EndianHelper<uint16_t,uint8_t,/* BIG */true>
+class Big16 : public EndianHelper<uint16_t, uint8_t, /* BIG */ true>
 {
 public:
    Big16(const uint16_t value = 0) { write(value); }
@@ -91,7 +90,7 @@ public:
 
 
 //! A 32-bit unsigned integer that is stored in big-endian format
-class Big32 : public EndianHelper<uint32_t,Big16,/* BIG */true>
+class Big32 : public EndianHelper<uint32_t, Big16, /* BIG */ true>
 {
 public:
    Big32(const uint32_t value = 0) { write(value); }
@@ -103,7 +102,7 @@ public:
 
 
 //! A 64-bit unsigned integer that is stored in big-endian format
-class Big64 : public EndianHelper<uint64_t,Big32,/* BIG */true>
+class Big64 : public EndianHelper<uint64_t, Big32, /* BIG */ true>
 {
 public:
    Big64(const uint64_t value = 0) { write(value); }
@@ -115,7 +114,7 @@ public:
 
 
 //! A 16-bit unsigned integer that is stored in little-endian format
-class Ltl16 : public EndianHelper<uint16_t,uint8_t,/* BIG */false>
+class Ltl16 : public EndianHelper<uint16_t, uint8_t, /* BIG */ false>
 {
 public:
    Ltl16(const uint16_t value = 0) { write(value); }
@@ -127,7 +126,7 @@ public:
 
 
 //! A 32-bit unsigned integer that is stored in little-endian format
-class Ltl32 : public EndianHelper<uint32_t,Ltl16,/* BIG */false>
+class Ltl32 : public EndianHelper<uint32_t, Ltl16, /* BIG */ false>
 {
 public:
    Ltl32(const uint32_t value = 0) { write(value); }
@@ -139,7 +138,7 @@ public:
 
 
 //! A 64-bit unsigned integer that is stored in little-endian format
-class Ltl64 : public EndianHelper<uint64_t,Ltl32,/* BIG */false>
+class Ltl64 : public EndianHelper<uint64_t, Ltl32, /* BIG */ false>
 {
 public:
    Ltl64(const uint64_t value = 0) { write(value); }

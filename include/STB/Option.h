@@ -32,10 +32,10 @@ namespace STB {
 class OptionBase
 {
 private:
-   OptionBase*   next = nullptr;
-   char          short_opt;
-   const char*   long_opt;
-   const char*   description;
+   OptionBase* next = nullptr;
+   char        short_opt;
+   const char* long_opt;
+   const char* description;
 
    //! Access to the global list of options
    static OptionBase*& getSingletonList()
@@ -48,7 +48,7 @@ private:
    void addToList()
    {
       OptionBase* ref = getSingletonList();
-      if (ref == nullptr)
+      if(ref == nullptr)
       {
          getSingletonList() = this;
       }
@@ -67,7 +67,7 @@ private:
    {
       printf("     ");
 
-      if (short_opt != '\0')
+      if(short_opt != '\0')
       {
          printf("-%c", short_opt);
       }
@@ -76,7 +76,7 @@ private:
          printf("  ");
       }
 
-      if (long_opt != nullptr)
+      if(long_opt != nullptr)
       {
          printf("%c", short_opt ? ',' : ' ');
          printf(" --%-15s", long_opt);
@@ -92,19 +92,17 @@ private:
    //! Check if the given command line argument matches this option
    bool isMatch(const char* arg_) const
    {
-      if (arg_[0] != '-') return false;
+      if(arg_[0] != '-') return false;
 
-      if (short_opt && (arg_[1] == short_opt)) return true;
+      if(short_opt && (arg_[1] == short_opt)) return true;
 
-      if (arg_[1] != '-') return false;
+      if(arg_[1] != '-') return false;
 
       return long_opt && (strcmp(arg_ + 2, long_opt) == 0);
    }
 
 public:
-   OptionBase(char        short_opt_,
-              const char* long_opt_,
-              const char* description_)
+   OptionBase(char short_opt_, const char* long_opt_, const char* description_)
       : short_opt(short_opt_)
       , long_opt(long_opt_)
       , description(description_)
@@ -112,7 +110,7 @@ public:
       addToList();
    }
 
-   const char* getLongOpt()  const { return long_opt; }
+   const char* getLongOpt() const { return long_opt; }
    char        getShortOpt() const { return short_opt; }
 
    //! Print help for all the options
@@ -129,7 +127,7 @@ public:
    {
       for(OptionBase* opt = getSingletonList(); opt; opt = opt->next)
       {
-         if (opt->isMatch(arg_)) return opt;
+         if(opt->isMatch(arg_)) return opt;
       }
 
       return nullptr;
@@ -145,14 +143,12 @@ template <typename TYPE>
 class Option : public OptionBase
 {
 private:
-   TYPE   value;
+   TYPE value;
 
    virtual bool set(const char* arg) override;
 
 public:
-   Option(char        short_opt_,
-          const char* long_opt_,
-          const char* description_,
+   Option(char short_opt_, const char* long_opt_, const char* description_,
           const TYPE& default_value_ = TYPE())
       : OptionBase(short_opt_, long_opt_, description_)
       , value(default_value_)

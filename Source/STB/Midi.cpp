@@ -20,9 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include <cstdlib>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 
 #include "STB/Midi.h"
 
@@ -33,7 +33,7 @@ namespace MIDI {
 
 unsigned Decoder::decode(const uint8_t* data, unsigned length)
 {
-   if ((data[0] & 0x80) == 0)
+   if((data[0] & 0x80) == 0)
    {
       // Use running status
       return decodeCommand(data, length);
@@ -63,7 +63,7 @@ unsigned Decoder::decodeCommand(const uint8_t* data, unsigned length)
       return 2;
 
    case NOTE_ON:
-      if (data[1] != 0)
+      if(data[1] != 0)
       {
          noteOn(channel, data[0], data[1]);
       }
@@ -127,15 +127,15 @@ unsigned Decoder::decodeCommand(const uint8_t* data, unsigned length)
       switch(state.command)
       {
       case 0xF0:
+      {
+         unsigned size;
+         for(size = 1; size < length; ++size)
          {
-            unsigned size;
-            for(size = 1; size<length; ++size)
-            {
-               if (data[size] == 0xF7) break;
-            }
-            sysExcl(size - 1, data + 1);
-            return size + 1;
+            if(data[size] == 0xF7) break;
          }
+         sysExcl(size - 1, data + 1);
+         return size + 1;
+      }
 
       case 0xF1: /* undefined */                       return 1;
       case 0xF2: songPosition((data[1]<<7) | data[0]); return 3;
@@ -175,14 +175,14 @@ unsigned Decoder::decodeCommand(const uint8_t* data, unsigned length)
          case 0x05:
          case 0x06:
          case 0x07:
-            {
-               uint32_t length;
-               const uint8_t* ptr = data + 1 + decodeVarLength(data + 1, length);
-               textEvent(TextEvent(data[1]), (const char*)ptr, length);
-               return ptr - data + length;
-            }
+         {
+            uint32_t       length;
+            const uint8_t* ptr = data + 1 + decodeVarLength(data + 1, length);
+            textEvent(TextEvent(data[1]), (const char*)ptr, length);
+            return ptr - data + length;
+         }
 
-         case 0x20:  // TODO MIDI channel prefix
+         case 0x20: // TODO MIDI channel prefix
             todo();
             return 3;
 
@@ -211,12 +211,12 @@ unsigned Decoder::decodeCommand(const uint8_t* data, unsigned length)
             return 4;
 
          case 0x7F: // TODO Special
-            {
-               uint32_t length;
-               const uint8_t* ptr = data + 1 + decodeVarLength(data + 1, length);
-               todo();
-               return ptr - data + length;
-            }
+         {
+            uint32_t       length;
+            const uint8_t* ptr = data + 1 + decodeVarLength(data + 1, length);
+            todo();
+            return ptr - data + length;
+         }
 
          default:
             todo();
@@ -243,14 +243,14 @@ public:
 
       bool running_status = (data[0] & 0x80) == 0;
 
-      if (running_status)
+      if(running_status)
       {
          printf("   ");
       }
 
-      for(unsigned i=0; i<(running_status ? 7 : 8); ++i)
+      for(unsigned i = 0; i < (running_status ? 7 : 8); ++i)
       {
-         if (i < size)
+         if(i < size)
             printf(" %02X", data[i]);
          else
             printf("   ");
@@ -262,17 +262,17 @@ public:
    }
 
 private:
-   virtual void noteOn(uint8_t channel, uint8_t note,  uint8_t velocity) override
+   virtual void noteOn(uint8_t channel, uint8_t note, uint8_t velocity) override
    {
       printf("CH%u NOTE ON  %3u %3u\n", channel, note, velocity);
    }
 
-   virtual void notePressure(uint8_t channel, uint8_t note,  uint8_t value) override
+   virtual void notePressure(uint8_t channel, uint8_t note, uint8_t value) override
    {
       printf("CH%u NOTE AFT %3u %3u\n", channel, note, value);
    }
 
-   virtual void noteOff(uint8_t channel, uint8_t note,  uint8_t velocity) override
+   virtual void noteOff(uint8_t channel, uint8_t note, uint8_t velocity) override
    {
       printf("CH%u NOTE OFF %3u %3u\n", channel, note, velocity);
    }
@@ -300,7 +300,7 @@ private:
    virtual void textEvent(STB::MIDI::TextEvent event, const char* s, unsigned length) override
    {
       printf("TEXT %u ", unsigned(event));
-      for(unsigned i = 0; i<length; i++)
+      for(unsigned i = 0; i < length; i++)
       {
          putchar(s[i]);
       }
@@ -358,7 +358,7 @@ private:
    }
 
    // Empty decoder just used to determine the length of each event
-   Decoder  get_size;
+   Decoder get_size;
 };
 
 
@@ -373,4 +373,3 @@ unsigned disassemble(const uint8_t* data, unsigned length)
 } // namespace MIDI
 
 } // namespace STB
-

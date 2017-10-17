@@ -30,21 +30,20 @@ namespace STB {
 
 //! Small, portable, statically sized queue
 //  Note, when full, one element is wasted
-template <typename T, std::size_t LOG2_N, typename INDEX=std::size_t>
+template <typename T, std::size_t LOG2_N, typename INDEX = std::size_t>
 class Fifo
 {
 public:
+   //------------------------------------------------------------------
+   // Member types
 
-//------------------------------------------------------------------
-// Member types
+   typedef T           value_type;
+   typedef T&          reference;
+   typedef const T&    const_reference;
+   typedef std::size_t size_type;
 
-   typedef T            value_type;
-   typedef T&           reference;
-   typedef const T&     const_reference;
-   typedef std::size_t  size_type;
-
-//------------------------------------------------------------------
-// Element access
+   //------------------------------------------------------------------
+   // Element access
 
    //! Get writable reference to newest element
    reference front() { return buffer[prevIndex(write)]; }
@@ -59,15 +58,14 @@ public:
    const_reference back() const { return buffer[read]; }
 
 
-//------------------------------------------------------------------
-// Capacity
+   //------------------------------------------------------------------
+   // Capacity
 
    //! Returns true if the FIFO is empty
    bool empty() const { return read == write; }
 
    //! Returns current number of elements in the FIFO
-   size_type size() const { return write >= read ? write - read
-                                                 : write - read + N; }
+   size_type size() const { return write >= read ? write - read : write - read + N; }
 
    //! Returns true if the FIFO is full
    bool full() const { return nextIndex(write) == read; }
@@ -76,13 +74,13 @@ public:
    size_type max_size() const { return N - 1; }
 
 
-//------------------------------------------------------------------
-// Modifiers
+   //------------------------------------------------------------------
+   // Modifiers
 
    //! Push new element into the FIFO
    void push(const value_type& value)
    {
-      if (full())
+      if(full())
       {
          // TODO throw something or other
          assert(!"Fifo is full");
@@ -97,7 +95,7 @@ public:
    //! Remove oldest element from the FIFO
    void pop()
    {
-      if (empty())
+      if(empty())
       {
          // TODO throw something or other
          assert(!"Fifo is empty");
@@ -108,31 +106,22 @@ public:
    }
 
    //! Remove all elements
-   void clear()
-   {
-       read = write;
-   }
+   void clear() { read = write; }
 
-//------------------------------------------------------------------
+   //------------------------------------------------------------------
 
 private:
-   static const INDEX N    = INDEX(1)<<LOG2_N;
+   static const INDEX N    = INDEX(1) << LOG2_N;
    static const INDEX MASK = N - 1;
 
    T buffer[N];
 
-   volatile INDEX   read  = 0;
-   volatile INDEX   write = 0;
+   volatile INDEX read  = 0;
+   volatile INDEX write = 0;
 
-   static INDEX nextIndex(INDEX index)
-   {
-       return (index + 1) & MASK;
-   }
+   static INDEX nextIndex(INDEX index) { return (index + 1) & MASK; }
 
-   static INDEX prevIndex(INDEX index)
-   {
-       return (index - 1) & MASK;
-   }
+   static INDEX prevIndex(INDEX index) { return (index - 1) & MASK; }
 };
 
 } // namespace STB

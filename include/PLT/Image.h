@@ -32,10 +32,10 @@ namespace PLT {
 class Image
 {
 protected:
-   uint8_t*    buffer{nullptr};
-   unsigned    pitch{0};
-   unsigned    width{0};
-   unsigned    height{0};
+   uint8_t* buffer{nullptr};
+   unsigned pitch{0};
+   unsigned width{0};
+   unsigned height{0};
 
    virtual ~Image() {}
 
@@ -71,17 +71,16 @@ public:
    void setPixel(unsigned x, unsigned y, uint32_t rgb);
 
    //! Blit another image into this image
-   virtual void blit(unsigned x, unsigned y,
-                     unsigned src_offset, unsigned src_width,
+   virtual void blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
                      const Image& source)
    {
       // Back-stop slow implementation
       // TODO this is broken
-      for(unsigned i=0; i<source.getWidth(); i++)
+      for(unsigned i = 0; i < source.getWidth(); i++)
       {
-         for(unsigned j=0; j<source.getHeight(); j++)
+         for(unsigned j = 0; j < source.getHeight(); j++)
          {
-            setPixel(x+i, y+j, source.getPixel(i, j));
+            setPixel(x + i, y + j, source.getPixel(i, j));
          }
       }
    }

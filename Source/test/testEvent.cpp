@@ -20,10 +20,10 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include  <cstdio>
+#include <cstdio>
 
-#include  "PLT/Frame.h"
-#include  "PLT/Event.h"
+#include "PLT/Event.h"
+#include "PLT/Frame.h"
 
 void callback(const PLT::Event& event, void* ptr)
 {
@@ -50,4 +50,3 @@ int main(int argc, const char* argv[])
 
    return PLT::eventLoop(callback);
 }
-

@@ -25,8 +25,8 @@
 
 #include <functional>
 
-#include "Osc.h"
 #include "MTH/Waveform.h"
+#include "Osc.h"
 
 
 namespace SND {
@@ -37,9 +37,12 @@ class WaveTableOsc : public Osc
 protected:
    Signal table[PHASE_PERIOD];
 
-   WaveTableOsc(Freq freq_hz) : Osc(freq_hz) {}
+   WaveTableOsc(Freq freq_hz)
+      : Osc(freq_hz)
+   {}
 
-   WaveTableOsc(Freq freq_hz, std::function<double(double)> func) : Osc(freq_hz)
+   WaveTableOsc(Freq freq_hz, std::function<double(double)> func)
+      : Osc(freq_hz)
    {
       computeWave(func);
    }
@@ -51,22 +54,24 @@ protected:
       double min = +1.0;
       double max = -1.0;
 
-      for(unsigned i=0; i<PHASE_PERIOD; ++i)
+      for(unsigned i = 0; i < PHASE_PERIOD; ++i)
       {
-         double value = func(double(i)/PHASE_PERIOD);
-         if (value > max) max = value;
-         if (value < min) min = value;
+         double value = func(double(i) / PHASE_PERIOD);
+
+         if(value > max) max = value;
+         if(value < min) min = value;
+
          local[i] = value;
       }
 
       // Rescale to -1..+1
-      for(unsigned i=0; i<PHASE_PERIOD; ++i)
+      for(unsigned i = 0; i < PHASE_PERIOD; ++i)
       {
          local[i] = (2.0 * (local[i] - min) / (max - min)) - 1.0;
       }
 
       // Final copy to live wave table
-      for(unsigned i=0; i<PHASE_PERIOD; ++i)
+      for(unsigned i = 0; i < PHASE_PERIOD; ++i)
       {
          table[i] = local[i];
       }
@@ -83,35 +88,45 @@ private:
 class SquareOsc : public WaveTableOsc
 {
 public:
-   SquareOsc(Freq freq_hz = 0.0) : WaveTableOsc(freq_hz, MTH::Waveform::square) {}
+   SquareOsc(Freq freq_hz = 0.0)
+      : WaveTableOsc(freq_hz, MTH::Waveform::square)
+   {}
 };
 
 
 class SawToothOsc : public WaveTableOsc
 {
 public:
-   SawToothOsc(Freq freq_hz = 0.0) : WaveTableOsc(freq_hz, MTH::Waveform::sawTooth) {}
+   SawToothOsc(Freq freq_hz = 0.0)
+      : WaveTableOsc(freq_hz, MTH::Waveform::sawTooth)
+   {}
 };
 
 
 class TriangleOsc : public WaveTableOsc
 {
 public:
-   TriangleOsc(Freq freq_hz = 0.0) : WaveTableOsc(freq_hz, MTH::Waveform::triangle) {}
+   TriangleOsc(Freq freq_hz = 0.0)
+      : WaveTableOsc(freq_hz, MTH::Waveform::triangle)
+   {}
 };
 
 
 class SineOsc : public WaveTableOsc
 {
 public:
-   SineOsc(Freq freq_hz = 0.0) : WaveTableOsc(freq_hz, MTH::Waveform::sine) {}
+   SineOsc(Freq freq_hz = 0.0)
+      : WaveTableOsc(freq_hz, MTH::Waveform::sine)
+   {}
 };
 
 
 class CosineOsc : public WaveTableOsc
 {
 public:
-   CosineOsc(Freq freq_hz = 0.0) : WaveTableOsc(freq_hz, MTH::Waveform::cosine) {}
+   CosineOsc(Freq freq_hz = 0.0)
+      : WaveTableOsc(freq_hz, MTH::Waveform::cosine)
+   {}
 };
 
 

@@ -21,17 +21,16 @@
 //------------------------------------------------------------------------------
 
 
-#include  <cstdio>
-#include  <cstring>
-#include  <cstdlib>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
-#include  "STB/Endian.h"
+#include "STB/Endian.h"
 
 
-template <typename T, typename U>
-void checkEQ(T value, U exp, const char* file, unsigned line)
+template <typename T, typename U> void checkEQ(T value, U exp, const char* file, unsigned line)
 {
-   if (value != T(exp))
+   if(value != T(exp))
    {
       fprintf(stderr, "FAILED: %s:%u expected %u got %u\n", file, line, exp, value);
       abort();
@@ -39,13 +38,13 @@ void checkEQ(T value, U exp, const char* file, unsigned line)
 }
 
 
-#define EQ(A, B)  checkEQ(A, B, __FILE__, __LINE__)
+#define EQ(A, B) checkEQ(A, B, __FILE__, __LINE__)
 
 
 void testBig32()
 {
-   STB::Big32      big32;
-   const uint8_t*  byte = (const uint8_t*)&big32;
+   STB::Big32     big32;
+   const uint8_t* byte = (const uint8_t*)&big32;
 
    big32 = 0x12345678;
 
@@ -65,8 +64,8 @@ void testBig32()
 
 void testLtl32()
 {
-   STB::Ltl32      ltl32;
-   const uint8_t*  byte = (const uint8_t*)&ltl32;
+   STB::Ltl32     ltl32;
+   const uint8_t* byte = (const uint8_t*)&ltl32;
 
    ltl32 = 0x12345678;
 
@@ -91,6 +90,5 @@ int main(int argc, const char* argv[])
 
    printf("OK\n");
 
-   return 0; 
+   return 0;
 }
-

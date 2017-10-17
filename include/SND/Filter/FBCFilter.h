@@ -32,8 +32,8 @@ namespace SND {
 class FBCFilter : public UnaryComponent
 {
 public:
-   ControlPort<Signal>    a;  // Feedback coefficient
-   ControlPort<unsigned>  m;  // Delay (samples)
+   ControlPort<Signal>   a; // Feedback coefficient
+   ControlPort<unsigned> m; // Delay (samples)
 
    FBCFilter(Signal a_ = 1.0, unsigned m_ = 1)
    {
@@ -53,10 +53,10 @@ public:
    }
 
 private:
-   Add         add;
-   SignalJunc  junc;
-   Gain        fb_gain;
-   Delay       delay;
+   Add        add;
+   SignalJunc junc;
+   Gain       fb_gain;
+   Delay      delay;
 };
 
 

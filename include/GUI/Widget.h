@@ -35,59 +35,59 @@ namespace GUI {
 class Widget : public Layout
 {
 private:
-   bool                   auto_delete{false};
-   Widget*                parent{nullptr};
-   std::vector<Widget*>   children;
+   bool                 auto_delete{false};
+   Widget*              parent{nullptr};
+   std::vector<Widget*> children;
 
 protected:
    static const unsigned EVENT_PRIVATE = 0xFFFFFFFF;
    static const unsigned EVENT_REDRAW  = EVENT_PRIVATE - 1;
    static const unsigned EVENT_FOCUS   = EVENT_PRIVATE - 2;
 
-   Colour  fg_colour{FOREGROUND};
-   Colour  bg_colour{FACE};
+   Colour fg_colour{FOREGROUND};
+   Colour bg_colour{FACE};
 
 private:
    //! Recursively determine the minimum size of this item and this items children
    void layoutSizeShrink()
    {
-      unsigned width = 0;
+      unsigned width  = 0;
       unsigned height = 0;
 
-      for(size_t i=0; i<children.size(); ++i)
+      for(size_t i = 0; i < children.size(); ++i)
       {
          Widget* child = children[i];
 
          child->layoutSizeShrink();
 
-         if (row)
+         if(row)
          {
             width += child->size.x;
-            if (i != 0) width += gap;
+            if(i != 0) width += gap;
 
-            if (child->size.y > height)
+            if(child->size.y > height)
             {
                height = child->size.y;
             }
          }
          else
          {
-            if (child->size.x > width)
+            if(child->size.x > width)
             {
                width = child->size.x;
             }
 
             height += child->size.y;
-            if (i != 0) height += gap;
+            if(i != 0) height += gap;
          }
       }
 
-      if (horz_fit != FIX)
+      if(horz_fit != FIX)
       {
          size.x = width + top_left.x + btm_right.x;
       }
 
-      if (vert_fit != FIX)
+      if(vert_fit != FIX)
       {
          size.y = height + top_left.y + btm_right.y;
       }
@@ -98,31 +98,31 @@ private:
    //! Recursively resize this item and this items children
    void layoutSizeExpand()
    {
-      unsigned n = 0;
+      unsigned n     = 0;
       unsigned total = 0;
 
-      for(size_t i=0; i<children.size(); ++i)
+      for(size_t i = 0; i < children.size(); ++i)
       {
          Widget* child = children[i];
 
-         if (row)
+         if(row)
          {
-            if (child->horz_fit == EXPAND) ++n;
+            if(child->horz_fit == EXPAND) ++n;
             total += child->size.x;
          }
          else
          {
-            if (child->vert_fit == EXPAND) ++n;
+            if(child->vert_fit == EXPAND) ++n;
             total += child->size.y;
          }
       }
 
-      if (n > 0)
+      if(n > 0)
       {
          unsigned width  = 0;
          unsigned height = 0;
 
-         if (row)
+         if(row)
          {
             width  = (size.x - top_left.x - btm_right.x - total) / n;
             height = size.y - top_left.y - btm_right.y;
@@ -133,23 +133,23 @@ private:
             height = (size.y - top_left.y - btm_right.y - total) / n;
          }
 
-         for(size_t i=0; i<children.size(); ++i)
+         for(size_t i = 0; i < children.size(); ++i)
          {
             Widget* child = children[i];
 
-            if (child->horz_fit == EXPAND)
+            if(child->horz_fit == EXPAND)
             {
                child->size.x = width;
             }
 
-            if (child->vert_fit == EXPAND)
+            if(child->vert_fit == EXPAND)
             {
                child->size.y = height;
             }
          }
       }
 
-      for(size_t i=0; i<children.size(); ++i)
+      for(size_t i = 0; i < children.size(); ++i)
       {
          Widget* child = children[i];
 
@@ -177,13 +177,13 @@ private:
       case BOTTOM: y += size.y - btm_right.y;                  break;
       }
 
-      for(size_t i=0; i<children.size(); ++i)
+      for(size_t i = 0; i < children.size(); ++i)
       {
          Widget* child = children[i];
 
-         if (row)
+         if(row)
          {
-            if (i != 0) x += gap;
+            if(i != 0) x += gap;
             child->pos.x = x;
 
             switch(vert_align)
@@ -204,7 +204,7 @@ private:
             case RIGHT:  child->pos.x = x - child->size.x;     break;
             }
 
-            if (i != 0) y += gap;
+            if(i != 0) y += gap;
             child->pos.y = y;
 
             y += child->size.y;
@@ -223,12 +223,12 @@ protected:
 
       level++;
 
-      for(size_t i=0; i<children.size(); ++i)
+      for(size_t i = 0; i < children.size(); ++i)
       {
          children[i]->redraw(canvas);
       }
 
-      if (--level == 0)
+      if(--level == 0)
       {
          canvas.refresh();
       }
@@ -236,12 +236,12 @@ protected:
 
    Widget* find(unsigned x_, unsigned y_)
    {
-      if (!isHit(x_, y_)) return 0;
+      if(!isHit(x_, y_)) return 0;
 
-      for(size_t i=0; i<children.size(); ++i)
+      for(size_t i = 0; i < children.size(); ++i)
       {
          Widget* hit = children[i]->find(x_, y_);
-         if (hit)
+         if(hit)
          {
             return hit;
          }
@@ -254,7 +254,7 @@ protected:
    virtual void raiseEvent(Widget* source_, unsigned code_)
    {
       //  Default float up
-      if (parent)
+      if(parent)
       {
          parent->raiseEvent(source_, code_);
       }
@@ -270,7 +270,7 @@ protected:
 public:
    Widget(Widget* parent_ = nullptr)
    {
-      if (parent_)
+      if(parent_)
       {
          assert(parent_ != this);
          parent_->pushBack(this);
@@ -279,24 +279,18 @@ public:
 
    virtual ~Widget()
    {
-      if (auto_delete)
+      if(auto_delete)
       {
-         for(size_t i=0; i<children.size(); ++i)
+         for(size_t i = 0; i < children.size(); ++i)
          {
             delete children[i];
          }
       }
    }
 
-   bool isParentRow() const
-   {
-      return parent ? parent->isRow() : false;
-   }
+   bool isParentRow() const { return parent ? parent->isRow() : false; }
 
-   void setAutoDelete()
-   {
-      auto_delete = true;
-   }
+   void setAutoDelete() { auto_delete = true; }
 
    void pushBack(Widget* child_)
    {
@@ -304,15 +298,9 @@ public:
       children.push_back(child_);
    }
 
-   void setForegroundColour(Colour colour)
-   {
-      fg_colour = colour;
-   }
+   void setForegroundColour(Colour colour) { fg_colour = colour; }
 
-   void setBackgroundColour(Colour colour)
-   {
-      bg_colour = colour;
-   }
+   void setBackgroundColour(Colour colour) { bg_colour = colour; }
 
    void show()
    {
@@ -346,7 +334,7 @@ public:
    virtual void eventBtnPress(unsigned x, unsigned y, bool select, bool down)
    {
       //  Default float up to top level
-      if (parent)
+      if(parent)
       {
          parent->eventBtnPress(x, y, select, down);
       }

@@ -29,42 +29,65 @@
 namespace STB {
 
 //! Small, portable, statically sized stack
-template <typename T, std::size_t N, typename INDEX=std::size_t>
+template <typename T, std::size_t N, typename INDEX = std::size_t>
 class Stack
 {
 public:
+   //------------------------------------------------------------------
+   // Member types
 
-//------------------------------------------------------------------
-// Member types
+   typedef T           value_type;
+   typedef T&          reference;
+   typedef const T&    const_reference;
+   typedef std::size_t size_type;
 
-   typedef T            value_type;
-   typedef T&           reference;
-   typedef const T&     const_reference;
-   typedef std::size_t  size_type;
-
-//------------------------------------------------------------------
-// Element access
+   //------------------------------------------------------------------
+   // Element access
 
    //! Get writable reference to the oldest element
-   reference       front()       { assert(!empty()); return buffer[0]; }
+   reference front()
+   {
+      assert(!empty());
+      return buffer[0];
+   }
 
    //! Get read-only reference to oldest element
-   const_reference front() const { assert(!empty()); return buffer[0]; }
+   const_reference front() const
+   {
+      assert(!empty());
+      return buffer[0];
+   }
 
    //! Get writable reference to the newest element
-   reference       back()        { assert(!empty()); return buffer[n - 1]; }
+   reference back()
+   {
+      assert(!empty());
+      return buffer[n - 1];
+   }
 
    //! Get read-only reference to newest element
-   const_reference back()  const { assert(!empty()); return buffer[n - 1]; }
+   const_reference back() const
+   {
+      assert(!empty());
+      return buffer[n - 1];
+   }
 
    //! Get writable reference to any element
-   reference       operator[](size_type index)       { assert(index < n); return buffer[index]; }
+   reference operator[](size_type index)
+   {
+      assert(index < n);
+      return buffer[index];
+   }
 
    //! Get read-only reference to any element
-   const_reference operator[](size_type index) const { assert(index < n); return buffer[index]; }
+   const_reference operator[](size_type index) const
+   {
+      assert(index < n);
+      return buffer[index];
+   }
 
-//------------------------------------------------------------------
-// Capacity
+   //------------------------------------------------------------------
+   // Capacity
 
    //! Returns true if the stack is empty
    bool empty() const { return n == 0; }
@@ -78,13 +101,13 @@ public:
    //! Returns true if the stack is full
    bool full() const { return n == N; }
 
-//------------------------------------------------------------------
-// Modifiers
+   //------------------------------------------------------------------
+   // Modifiers
 
    //! Push new element into the stack
    void push_back(const value_type& value)
    {
-      if (full())
+      if(full())
       {
          // TODO throw something or other
          assert(!"Stack is full");
@@ -97,7 +120,7 @@ public:
    //! Remove newest element from the stack
    void pop_back()
    {
-      if (empty())
+      if(empty())
       {
          // TODO throw something or other
          assert(!"Stack is empty");
@@ -108,10 +131,7 @@ public:
    }
 
    //! Remove all elements
-   void clear()
-   {
-      n = 0;
-   }
+   void clear() { n = 0; }
 
    //! Resize stack
    void resize(size_type n_)
@@ -120,7 +140,7 @@ public:
       n = n_;
    }
 
-//------------------------------------------------------------------
+   //------------------------------------------------------------------
 
 private:
    T buffer[N];

@@ -38,7 +38,7 @@ static void mixAudioIn(void* userdata, uint8_t* stream, int len)
 {
    In*      in     = (In*)userdata;
    TYPE*    buffer = reinterpret_cast<TYPE*>(stream);
-   unsigned n      = len/sizeof(TYPE);
+   unsigned n      = len / sizeof(TYPE);
 
    in->setSamples(buffer, n);
 }
@@ -49,7 +49,7 @@ static void mixAudioOut(void* userdata, uint8_t* stream, int len)
 {
    Out*     out    = (Out*)userdata;
    TYPE*    buffer = reinterpret_cast<TYPE*>(stream);
-   unsigned n      = len/sizeof(TYPE);
+   unsigned n      = len / sizeof(TYPE);
 
    out->getSamples(buffer, n);
 }
@@ -60,19 +60,19 @@ Base::Base(unsigned freq_, Format format_, unsigned channels_, bool input)
    , format(format_)
    , channels(channels_)
 {
-   if (!sdl_init)
+   if(!sdl_init)
    {
       SDL_InitSubSystem(SDL_INIT_AUDIO);
       sdl_init = true;
    }
 
-   SDL_AudioSpec  requested;
+   SDL_AudioSpec requested;
 
    requested.freq     = freq;
    requested.channels = channels;
    requested.samples  = 1024;
 
-   if (input)
+   if(input)
       requested.userdata = (In*)this;
    else
       requested.userdata = (Out*)this;
@@ -101,13 +101,13 @@ Base::Base(unsigned freq_, Format format_, unsigned channels_, bool input)
       return;
    }
 
-   SDL_AudioSpec  obtained;
+   SDL_AudioSpec obtained;
 
    handle = SDL_OpenAudioDevice(nullptr,
                                 input ? 1 : 0,
                                 &requested, &obtained,
                                 SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
-   if (handle == 0)
+   if(handle == 0)
    {
       SDL_Log("SDL_OpenAudioDevice() failed : %s", SDL_GetError());
       return;
@@ -120,7 +120,7 @@ Base::Base(unsigned freq_, Format format_, unsigned channels_, bool input)
 
 Base::~Base()
 {
-   if (open)
+   if(open)
    {
       SDL_CloseAudioDevice(handle);
    }
@@ -128,9 +128,9 @@ Base::~Base()
 
 bool Base::setEnable(bool enable_)
 {
-   if (!open) return false;
+   if(!open) return false;
 
-   if (enable_ != enable)
+   if(enable_ != enable)
    {
       enable = enable_;
 
@@ -143,4 +143,3 @@ bool Base::setEnable(bool enable_)
 } // namespace Audio
 
 } // namespace PLT
-

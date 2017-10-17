@@ -46,7 +46,7 @@ private:
       term.write(text, strlen(text));
 
       char ch;
-      while(term.read(&ch, 1) != -1);
+      while(term.read(&ch, 1) != -1) {}
 
       return 0;
    }
@@ -56,7 +56,7 @@ public:
       : TerminalApp(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR)
    {
       parseArgsAndStart(argc, argv);
-   } 
+   }
 };
 
 

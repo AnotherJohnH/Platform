@@ -24,8 +24,8 @@
 #define MTH_VECTOR2_H
 
 #include <cassert>
-#include <cstddef>
 #include <cmath>
+#include <cstddef>
 
 namespace MTH {
 
@@ -34,69 +34,149 @@ template <typename T>
 class Vector2
 {
 private:
-   static const unsigned N=2;
+   static const unsigned N = 2;
 
 protected:
    using Function = T (*)(T);
    using This     = Vector2<T>;
 
 public:
-   union { T e[N]; struct { T x, y; }; };
+   union
+   {
+      T e[N];
+      struct
+      {
+         T x, y;
+      };
+   };
 
-   Vector2()               {}
-   Vector2(const T& v)     { operator=(v); }
-   Vector2(const This& v)  { operator=(v); }
-   Vector2(Function f)     { operator=(f); }
-   Vector2(const T& x_, const T& y_) : e{ x_, y_ } {}
+   Vector2() {}
+   Vector2(const T& v) { operator=(v); }
+   Vector2(const This& v) { operator=(v); }
+   Vector2(Function f) { operator=(f); }
+   Vector2(const T& x_, const T& y_) : e{x_, y_} {}
 
    size_t size() const { return N; }
 
-         T& operator[](unsigned i)       { assert(i<N); return e[i]; }
-   const T& operator[](unsigned i) const { assert(i<N); return e[i]; }
+   T& operator[](unsigned i)
+   {
+      assert(i < N);
+      return e[i];
+   }
+   const T& operator[](unsigned i) const
+   {
+      assert(i < N);
+      return e[i];
+   }
 
-   void operator= (const T& v)    { for(unsigned i=0; i<N; ++i) e[i] =  v; }
-   void operator+=(const T& v)    { for(unsigned i=0; i<N; ++i) e[i] += v; }
-   void operator-=(const T& v)    { for(unsigned i=0; i<N; ++i) e[i] -= v; }
-   void operator*=(const T& v)    { for(unsigned i=0; i<N; ++i) e[i] *= v; }
+   void operator=(const T& v)
+   {
+      for(unsigned i = 0; i < N; ++i)
+         e[i]        = v;
+   }
+   void operator+=(const T& v)
+   {
+      for(unsigned i = 0; i < N; ++i)
+         e[i] += v;
+   }
+   void operator-=(const T& v)
+   {
+      for(unsigned i = 0; i < N; ++i)
+         e[i] -= v;
+   }
+   void operator*=(const T& v)
+   {
+      for(unsigned i = 0; i < N; ++i)
+         e[i] *= v;
+   }
 
-   void operator= (const This& v) { for(unsigned i=0; i<N; ++i) e[i] =  v[i]; }
-   void operator+=(const This& v) { for(unsigned i=0; i<N; ++i) e[i] += v[i]; }
-   void operator-=(const This& v) { for(unsigned i=0; i<N; ++i) e[i] -= v[i]; }
-   void operator*=(const This& v) { for(unsigned i=0; i<N; ++i) e[i] *= v[i]; }
+   void operator=(const This& v)
+   {
+      for(unsigned i = 0; i < N; ++i)
+         e[i]        = v[i];
+   }
+   void operator+=(const This& v)
+   {
+      for(unsigned i = 0; i < N; ++i)
+         e[i] += v[i];
+   }
+   void operator-=(const This& v)
+   {
+      for(unsigned i = 0; i < N; ++i)
+         e[i] -= v[i];
+   }
+   void operator*=(const This& v)
+   {
+      for(unsigned i = 0; i < N; ++i)
+         e[i] *= v[i];
+   }
    void operator^=(const This& v) { *this = getCrossProduct(v); }
 
    This operator-() const
-   { This r; for(unsigned i=0; i<N; ++i) r[i] = -e[i]; return r; }
+   {
+      This r;
+      for(unsigned i = 0; i < N; ++i)
+         r[i]        = -e[i];
+      return r;
+   }
 
    This operator+(const T& v) const
-   { This r; for(unsigned i=0; i<N; ++i) r[i] = e[i] + v; return r; }
+   {
+      This r;
+      for(unsigned i = 0; i < N; ++i)
+         r[i]        = e[i] + v;
+      return r;
+   }
 
    This operator-(const T& v) const
-   { This r; for(unsigned i=0; i<N; ++i) r[i] = e[i] - v; return r; }
+   {
+      This r;
+      for(unsigned i = 0; i < N; ++i)
+         r[i]        = e[i] - v;
+      return r;
+   }
 
    This operator*(const T& v) const
-   { This r; for(unsigned i=0; i<N; ++i) r[i] = e[i] * v; return r; }
+   {
+      This r;
+      for(unsigned i = 0; i < N; ++i)
+         r[i]        = e[i] * v;
+      return r;
+   }
 
    This operator+(const This& v) const
-   { This r; for(unsigned i=0; i<N; ++i) r[i] = e[i] + v[i]; return r; }
+   {
+      This r;
+      for(unsigned i = 0; i < N; ++i)
+         r[i]        = e[i] + v[i];
+      return r;
+   }
 
    This operator-(const This& v) const
-   { This r; for(unsigned i=0; i<N; ++i) r[i] = e[i] - v[i]; return r; }
+   {
+      This r;
+      for(unsigned i = 0; i < N; ++i)
+         r[i]        = e[i] - v[i];
+      return r;
+   }
 
    This operator*(const This& v) const
-   { This r; for(unsigned i=0; i<N; ++i) r[i] = e[i] * v[i]; return r; }
+   {
+      This r;
+      for(unsigned i = 0; i < N; ++i)
+         r[i]        = e[i] * v[i];
+      return r;
+   }
 
-   T operator&(const This& v) const
-   { return getDotProduct(v); }
+   T operator&(const This& v) const { return getDotProduct(v); }
 
-   This operator^(const This& v) const
-   { return getCrossProduct(v); }
+   This operator^(const This& v) const { return getCrossProduct(v); }
 
    void operator=(Function f)
    {
-      for(unsigned i=0; i<N; ++i)
+      for(unsigned i = 0; i < N; ++i)
       {
-          e[i] = (*f)((T)i / N);
+         e[i] = (*f)((T)i / N);
       }
    }
 
@@ -107,16 +187,13 @@ public:
       return operator*(1 / getMagnitude());
    }
 
-   void normalise()
-   {
-      *this = getNormal();
-   }
+   void normalise() { *this = getNormal(); }
 
    T getDotProduct(const This& v) const
    {
       T sum = 0;
 
-      for(unsigned i=0; i<N; ++i)
+      for(unsigned i = 0; i < N; ++i)
       {
          sum += e[i] * v[i];
       }
@@ -124,20 +201,14 @@ public:
       return sum;
    }
 
-   T getSquare() const
-   {
-      return getDotProduct(*this);
-   }
+   T getSquare() const { return getDotProduct(*this); }
 
-   T getMagnitude() const
-   {
-      return sqrt(getSquare());
-   }
+   T getMagnitude() const { return sqrt(getSquare()); }
 
    This getCrossProduct(const This& v) const
    {
       assert(N == 3);
-      This  r;
+      This r;
       r[0] = e[1] * v[2] - e[2] * v[1];
       r[1] = e[2] * v[0] - e[0] * v[2];
       r[2] = e[0] * v[1] - e[1] * v[0];

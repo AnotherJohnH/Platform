@@ -43,64 +43,68 @@ enum Format
 class Base
 {
 public:
-   unsigned     getFreq()     const { return freq;     }
-   Format       getFormat()   const { return format;   }
-   unsigned     getCHannels() const { return channels; }
-   bool         isOpen()      const { return open;     }
-   bool         isEnabled()   const { return enable;   }
+   unsigned getFreq()     const { return freq; }
+   Format   getFormat()   const { return format; }
+   unsigned getCHannels() const { return channels; }
+   bool     isOpen()      const { return open; }
+   bool     isEnabled()   const { return enable; }
 
-   bool         setEnable(bool enable_);
+   bool setEnable(bool enable_);
 
 protected:
-   Base(unsigned  freq_,
-        Format    format_,
-        unsigned  channels_,
-        bool      input_);
+   Base(unsigned freq_, Format format_, unsigned channels_, bool input_);
 
    ~Base();
 
 private:
-   unsigned     freq{0};
-   Format       format{NONE};
-   unsigned     channels{0};
-   bool         open{false};
-   bool         enable{false};
-   unsigned     handle{0};
+   unsigned freq{0};
+   Format   format{NONE};
+   unsigned channels{0};
+   bool     open{false};
+   bool     enable{false};
+   unsigned handle{0};
 };
 
 
 class Out : public Base
 {
 public:
-   Out(unsigned    freq_,
-       Format      format_,
-       unsigned    channels_)
-      : Base(freq_, format_, channels_, /* input */ false) {}
+   Out(unsigned freq_, Format format_, unsigned channels_)
+      : Base(freq_, format_, channels_, /* input */ false)
+   {}
 
-   virtual void getSamples(int8_t*   buffer, unsigned n)
-   { for(unsigned i=0; i<n; ++i) buffer[i] = 0; }
+   virtual void getSamples(int8_t* buffer, unsigned n)
+   {
+      for(unsigned i = 0; i < n; ++i)
+         buffer[i]   = 0;
+   }
 
-   virtual void getSamples(int16_t*  buffer, unsigned n)
-   { for(unsigned i=0; i<n; ++i) buffer[i] = 0; }
+   virtual void getSamples(int16_t* buffer, unsigned n)
+   {
+      for(unsigned i = 0; i < n; ++i)
+         buffer[i]   = 0;
+   }
 
-   virtual void getSamples(int32_t*  buffer, unsigned n)
-   { for(unsigned i=0; i<n; ++i) buffer[i] = 0; }
+   virtual void getSamples(int32_t* buffer, unsigned n)
+   {
+      for(unsigned i = 0; i < n; ++i)
+         buffer[i]   = 0;
+   }
 };
 
 
 class In : public Base
 {
 public:
-   In(unsigned    freq_,
-      Format      format_,
-      unsigned    channels_)
-      : Base(freq_, format_, channels_, /* input */ true) {}
+   In(unsigned freq_, Format format_, unsigned channels_)
+      : Base(freq_, format_, channels_, /* input */ true)
+   {}
 
-   virtual void setSamples(const int8_t*   buffer, unsigned n) {}
+   virtual void setSamples(const int8_t* buffer, unsigned n) {}
 
-   virtual void setSamples(const int16_t*  buffer, unsigned n) {}
+   virtual void setSamples(const int16_t* buffer, unsigned n) {}
 
-   virtual void setSamples(const int32_t*  buffer, unsigned n) {}
+   virtual void setSamples(const int32_t* buffer, unsigned n) {}
 };
 
 

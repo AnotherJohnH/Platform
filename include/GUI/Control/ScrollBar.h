@@ -23,9 +23,9 @@
 #ifndef GUI_CONTROL_SCROLL_BAR_H
 #define GUI_CONTROL_SCROLL_BAR_H
 
-#include "GUI/Widget.h"
 #include "GUI/Control/Expand.h"
 #include "GUI/Control/TextButton.h"
+#include "GUI/Widget.h"
 
 namespace GUI {
 
@@ -35,10 +35,10 @@ private:
    static const unsigned LESS = 1;
    static const unsigned MORE = 2;
 
-   //const unsigned  code;
-   TextButton      btn_scroll_less;
-   Expand          spacer;
-   TextButton      btn_scroll_more;
+   // const unsigned  code;
+   TextButton btn_scroll_less;
+   Expand     spacer;
+   TextButton btn_scroll_more;
 
    virtual void eventDraw(Canvas& canvas) override
    {

@@ -30,7 +30,7 @@ namespace SND {
 class PulseOsc : public Osc
 {
 public:
-   ControlIn<Signal>  width;
+   ControlIn<Signal> width;
 
    PulseOsc(Freq freq_hz = 0.0)
       : Osc(freq_hz)
@@ -38,7 +38,7 @@ public:
    {}
 
 private:
-   unsigned phase_width{PHASE_PERIOD/2};
+   unsigned phase_width{PHASE_PERIOD / 2};
 
    void setWidth(Signal width_)
    {
@@ -47,7 +47,7 @@ private:
 
    virtual void controlEvent(Control* control) override
    {
-      if (control == &width)
+      if(control == &width)
       {
          setWidth(width);
       }

@@ -29,18 +29,18 @@ namespace SND {
 
 using Freq = double;
 
-class Osc : public SignalOut
-          , public Control::Observer
+class Osc : public SignalOut, public Control::Observer
 {
 public:
-   ControlIn<bool>   sync;
-   ControlIn<Freq>   freq;
+   ControlIn<bool> sync;
+   ControlIn<Freq> freq;
 
 protected:
    using Phase  = uint32_t;
+
    static const unsigned LOG2_PHASE_PERIOD = 10;
-   static const unsigned PHASE_PERIOD      = 1<<LOG2_PHASE_PERIOD;
-   static const unsigned PHASE_FRAC_BITS   = sizeof(Phase)*8 - LOG2_PHASE_PERIOD;
+   static const unsigned PHASE_PERIOD      = 1 << LOG2_PHASE_PERIOD;
+   static const unsigned PHASE_FRAC_BITS   = sizeof(Phase) * 8 - LOG2_PHASE_PERIOD;
 
    Osc(Freq freq_)
       : freq(this)
@@ -58,9 +58,9 @@ protected:
 
    virtual void controlEvent(Control* control) override
    {
-      if (control == &sync)
+      if(control == &sync)
       {
-         if (sync) accum = 0;
+         if(sync) accum = 0;
       }
       else
       {
@@ -69,14 +69,14 @@ protected:
    }
 
 private:
-   unsigned  sample_freq{0};
-   Phase     accum{0};
-   Phase     delta{1<<PHASE_FRAC_BITS};
+   unsigned sample_freq{0};
+   Phase    accum{0};
+   Phase    delta{1 << PHASE_FRAC_BITS};
 
    //! Set the frequency
    void setFreq(Freq freq_hz)
    {
-      delta = freq_hz * PHASE_PERIOD * (1<<PHASE_FRAC_BITS) / sample_freq;
+      delta = freq_hz * PHASE_PERIOD * (1 << PHASE_FRAC_BITS) / sample_freq;
    }
 
    virtual void init(const SignalSink* sink) override

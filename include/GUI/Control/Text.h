@@ -32,7 +32,7 @@ namespace GUI {
 class Text : public Widget
 {
 private:
-   std::string   text;
+   std::string text;
 
    // Implement Widget events
    virtual void eventDraw(Canvas& canvas) override
@@ -46,20 +46,17 @@ public:
       , text(text_)
    {
       const Font* font = getDefaultFont();
-      size.x = font->getWidth(text.c_str());
-      size.y = font->getHeight();
+      size.x           = font->getWidth(text.c_str());
+      size.y           = font->getHeight();
    }
 
    template <typename TYPE>
-   void setText(TYPE text_)
-   {
-      text = text_;
-   }
+   void setText(TYPE text_) { text = text_; }
 
    void setWidth(unsigned width_)
    {
       const Font* font = getDefaultFont();
-      size.x = font->getWidth(" ") * width_;
+      size.x           = font->getWidth(" ") * width_;
    }
 };
 

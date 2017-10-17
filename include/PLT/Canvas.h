@@ -23,9 +23,9 @@
 #ifndef PLT_CANVAS_H
 #define PLT_CANVAS_H
 
-#include  "PLT/Frame.h"
+#include "PLT/Frame.h"
 
-#include  "GUI/Canvas.h"
+#include "GUI/Canvas.h"
 
 namespace PLT {
 
@@ -33,7 +33,7 @@ namespace PLT {
 class Canvas : public GUI::Canvas
 {
 private:
-   PLT::Frame     frame;
+   PLT::Frame frame;
 
    // Implement GUI::Canvas
    virtual GUI::Colour canvasGetPixel(signed x, signed y) const override
@@ -58,7 +58,7 @@ private:
 
    virtual void canvasSpan(GUI::Colour colour, signed x1, signed y, signed x2) override
    {
-      for(signed x=x1; x<x2; x++)
+      for(signed x = x1; x < x2; x++)
       {
          frame.setPixel(x, y, colour);
       }

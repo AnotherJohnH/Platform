@@ -33,9 +33,7 @@ Base::Base(unsigned freq_, Format format_, unsigned channels_, bool input_)
     handle = 0;
 }
 
-Base::~Base()
-{
-}
+Base::~Base() {}
 
 bool Base::setEnable(bool enable_)
 {

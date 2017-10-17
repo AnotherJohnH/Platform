@@ -20,8 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include <cstdlib>
 #include <cstdint>
+#include <cstdlib>
 
 #include "STB/Option.h"
 
@@ -37,37 +37,36 @@ bool Option<bool>::set(const char* arg_)
 template <>
 bool Option<int32_t>::set(const char* arg_)
 {
-   if (arg_ != nullptr) value = int32_t(strtol(arg_, nullptr, 0));
+   if(arg_ != nullptr) value = int32_t(strtol(arg_, nullptr, 0));
    return true;
 }
 
 template <>
 bool Option<int64_t>::set(const char* arg_)
 {
-   if (arg_ != nullptr) value = strtol(arg_, nullptr, 0);
+   if(arg_ != nullptr) value = strtol(arg_, nullptr, 0);
    return true;
 }
 
 template <>
 bool Option<uint32_t>::set(const char* arg_)
 {
-   if (arg_ != nullptr) value = uint32_t(strtoul(arg_, nullptr, 0));
+   if(arg_ != nullptr) value = uint32_t(strtoul(arg_, nullptr, 0));
    return true;
 }
 
 template <>
 bool Option<uint64_t>::set(const char* arg_)
 {
-   if (arg_ != nullptr) value = strtoul(arg_, nullptr, 0);
+   if(arg_ != nullptr) value = strtoul(arg_, nullptr, 0);
    return true;
 }
 
 template <>
 bool Option<const char*>::set(const char* arg_)
 {
-   if (arg_ != nullptr) value = arg_;
+   if(arg_ != nullptr) value = arg_;
    return true;
 }
 
 } // namespace STB
-
