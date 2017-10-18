@@ -39,6 +39,9 @@ Import('env')
 
 env['machine'] = GCC_ARCH
 
+env['OBJPREFIX'] = 'obj/'+env['machine']+'/'
+env['LIBPREFIX'] = 'lib/'+env['machine']+'/lib'
+
 env['AS']        = PREFIX+'as'
 env['CC']        = PREFIX+'gcc'
 env['CXX']       = PREFIX+'g++'
@@ -49,7 +52,6 @@ env['OBJCOPY']   = PREFIX+'objcopy'
 env['OBJDUMP']   = PREFIX+'objdump'
 env['SIZE']      = PREFIX+'size'
 
-env['OBJPREFIX'] = 'obj/'+GCC_ARCH+'/'
 env['CCFLAGS']   = ['-march='+GCC_ARCH, '-fno-rtti', '-mfloat-abi=hard']
 env['CXXFLAGS']  = ['-std=c++11']
 env['CPPPATH']   = \

@@ -22,16 +22,14 @@
 
 # scons configuration for Kindle3 builds
 
-PREFIX  = 'arm-linux-gnueabihf-'
-MC='armv6l'
-
-#-------------------------------------------------------------------------------
-
 Import('env')
 
-env['machine'] = MC
+env['machine'] = 'armv6l'
 
-obj_path = 'obj/'+env['machine']+'/'
+env['OBJPREFIX'] = 'obj/'+env['machine']+'/'
+env['LIBPREFIX'] = 'lib/'+env['machine']+'/lib'
+
+PREFIX  = 'arm-linux-gnueabihf-'
 
 env['AS']        = PREFIX+'as'
 env['CC']        = PREFIX+'gcc'
@@ -43,15 +41,9 @@ env['OBJCOPY']   = PREFIX+'objcopy'
 env['OBJDUMP']   = PREFIX+'objdump'
 env['SIZE']      = PREFIX+'size'
 
-env['OBJPREFIX'] = obj_path
-
-env['CCFLAGS']   = ['']
 env['CXXFLAGS']  = ['-std=c++11']
-env['CPPPATH']   = ['']
-env['LIBPATH']   = ['']
 env['LIBS']      = ['pthread']
 env['LINKFLAGS'] = ['-static']
-
 
 Import('source')
 
@@ -61,4 +53,3 @@ source+=[env.File('../Stub/Audio.cpp'),
          env.File('Image.cpp'),
          env.File('../Stub/Midi.cpp'),
          env.File('../Stub/Sounder.cpp')]
-
