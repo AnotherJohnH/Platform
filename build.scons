@@ -52,7 +52,7 @@ if "PROJ_TARGET" in os.environ:
    if target == 'Darwin':
       target = 'macOS'
 
-if not os.path.isdir('PLT/'+target):
+if not os.path.isdir('Source/PLT/'+target):
    print('ERROR: Target platform "'+target+'" is not supported')
    Exit(1)
 
@@ -62,8 +62,8 @@ env['target']  = target
 env['app']     = app
 
 # Configure for the target platform
-Import('source')
-SConscript('PLT/'+target+'/config.scons', exports=['env','source'])
+source = []
+SConscript('Source/PLT/'+target+'/config.scons', exports=['env','source'])
 
 Import('version')
 env.Append(CCFLAGS = '-DPROJ_VERSION=\\"'+version+'\\"')
@@ -72,15 +72,20 @@ env.Append(CCFLAGS = '-DPROJ_TARGET_'+target)
 env.Append(CCFLAGS = '-Wall')
 env.Append(CCFLAGS = '-Werror')
 
-env.Append(CPPPATH = env.Dir('../include'))
+env.Append(LIBS    = 'PLT')
+env.Append(LIBPATH = env.Dir('lib/'+env['machine']))
+
+env.Append(CPPPATH = env.Dir('include'))
 
 # Add target sources to project sources
-source+=[env.File('STB/Option.cpp')]
-source+=[env.File('STB/Midi.cpp')]
-source+=[env.File('GUI/Teletext18.cpp')]
-source+=[env.File('GUI/Teletext15.cpp')]
-source+=[env.File('GUI/Teletext12.cpp')]
-source+=[env.File('GUI/Teletext9.cpp')]
+source+=[env.File('Source/STB/Option.cpp')]
+source+=[env.File('Source/STB/Midi.cpp')]
+source+=[env.File('Source/GUI/Teletext18.cpp')]
+source+=[env.File('Source/GUI/Teletext15.cpp')]
+source+=[env.File('Source/GUI/Teletext12.cpp')]
+source+=[env.File('Source/GUI/Teletext9.cpp')]
+
+lib = env.Library('PLT', source)
 
 # Return state to top level
-Return('env')
+Return('env', 'lib')

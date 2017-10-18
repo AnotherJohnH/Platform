@@ -20,13 +20,12 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# scons configuration for standard SDL2 builds
+# scons configuration for Linux builds
 
 Import('env')
 
-obj_path = 'obj/'+env['machine']+'/'
-
-env['OBJPREFIX'] = obj_path
+env['OBJPREFIX'] = 'obj/'+env['machine']+'/'
+env['LIBPREFIX'] = 'lib/'+env['machine']+'/lib'
 
 env['CXXFLAGS']  = ['-std=c++11']
 
@@ -40,4 +39,3 @@ source+=[env.File('../SDL2/Audio.cpp'),
          env.File('../SDL2/Image.cpp'),
          env.File('../Stub/Midi.cpp'),
          env.File('../Stub/Sounder.cpp')]
-

@@ -20,31 +20,27 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# scons configuration for Emscripten builds
-
-#-------------------------------------------------------------------------------
+# scons configuration for Web Assembly builds
 
 Import('env')
 
 env['machine']   = 'wasm'
 
-obj_path = 'obj/'+env['machine']+'/'
+env['OBJPREFIX'] = 'obj/'+env['machine']+'/'
+env['LIBPREFIX'] = 'lib/'+env['machine']+'/lib'
 
 env['CC']        = 'emcc'
 env['CXX']       = 'emcc'
+env['AR']        = 'emar'
+env['RANLIB']    = 'emranlib'
 
-env['OBJPREFIX']  = obj_path
 env['OBJSUFFIX']  = '.bc'
-env['LIBPREFIX']  = obj_path+'lib'
 env['PROGPREFIX'] = 'docs/'+env['machine']+'/'
 env['PROGSUFFIX'] = '.html'
 
 env['CCFLAGS']   = ['-Wno-main', '-DCO_OP_MULTI_TASK', '-s', 'USE_SDL=2', 
                     '-DPROJ_TARGET_Emscripten']
 env['CXXFLAGS']  = ['-std=c++11']
-env['CPPPATH']   = ['']
-env['LIBPATH']   = ['']
-env['LIBS']      = ['']
 env['LINKFLAGS'] = ['-s', 'USE_SDL=2', '-O3', '-s', 'WASM=1']
 
 Import('source')
@@ -55,4 +51,3 @@ source+=[env.File('../SDL2/Audio.cpp'),
          env.File('../SDL2/Image.cpp'),
          env.File('../Stub/Midi.cpp'),
          env.File('../Stub/Sounder.cpp')]
-
