@@ -24,10 +24,10 @@
 #define TERMINAL_LAUNCHER_H
 
 #include <cctype>
-#include <cstdio>
 #include <cstring>
 
 #include "PLT/Curses.h"
+#include "PLT/File.h"
 #include "PLT/KeyCode.h"
 
 #include "TerminalApp.h"
@@ -50,13 +50,13 @@ private:
    bool                     selection_is_dir{false};
 
    //! Get the next line with content from the given file stream
-   static bool getLine(FILE* fp, char* file, size_t size)
+   static bool getLine(PLT::File& file, char* buffer, size_t size)
    {
-      while(fgets(file, size, fp))
+      while(file.getLine(buffer, size))
       {
-         if(file[0] != '#')
+         if(buffer[0] != '#')
          {
-            char* s  = strchr(file, '\n');
+            char* s  = strchr(buffer, '\n');
             if(s) *s = '\0';
             return true;
          }
@@ -95,8 +95,9 @@ private:
 
       const unsigned first_row = 3;
 
-      FILE* fp = fopen(opt_config, "r");
-      if(fp == nullptr)
+      PLT::File file(opt_config, "r");
+
+      if(!file.isOpen())
       {
          curses.mvaddstr(first_row, 3, "ERROR - failed to open \"");
          curses.addstr(opt_config);
@@ -111,7 +112,7 @@ private:
       {
          // Read one line from the config gile
          char line[FILENAME_MAX];
-         if(!getLine(fp, line, sizeof(line)))
+         if(!getLine(file, line, sizeof(line)))
          {
             cursor_limit = index - 1;
             break;
@@ -156,8 +157,6 @@ private:
             }
          }
       }
-
-      fclose(fp);
    }
 
    void layoutText(unsigned l, unsigned c, const char* text)
