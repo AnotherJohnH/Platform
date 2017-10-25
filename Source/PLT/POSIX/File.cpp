@@ -94,7 +94,7 @@ public:
    }
 
    //! Formated output
-   void vprintf(const char* format, va_list ap)
+   void vprint(const char* format, va_list ap)
    {
       vfprintf(fp, format, ap);
    }
@@ -148,11 +148,11 @@ bool File::read(void* data, size_t bytes) { return pimpl->read(data, bytes); }
 
 bool File::getLine(char* buffer, size_t size) { return pimpl->getLine(buffer, size); }
 
-void File::printf(const char* format, ...)
+void File::print(const char* format, ...)
 {
    va_list ap;
    va_start(ap, format);
-   pimpl->vprintf(format, ap);
+   pimpl->vprint(format, ap);
    va_end(ap);
 }
 

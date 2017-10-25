@@ -56,7 +56,7 @@ public:
    bool read(void* data, size_t size);
 
    //! Formated output
-   void printf(const char* format, ...);
+   void print(const char* format, ...);
 
    //! Write raw data
    bool write(const void* data, size_t size);
