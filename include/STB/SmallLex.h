@@ -35,10 +35,12 @@ namespace STB {
 class SmallLex : public PLT::File
 {
 private:
-   static const char DIGIT       = 1;
-   static const char IDENT_START = 2;
-   static const char IDENT_BODY  = 3;
-   static const char SIGN        = 4;
+   static const char DEC_DIGIT   = 1;
+   static const char OCT_DIGIT   = 2;
+   static const char HEX_DIGIT   = 3;
+   static const char IDENT_START = 4;
+   static const char IDENT_BODY  = 5;
+   static const char SIGN        = 6;
 
    bool getc(char& ch)
    {
@@ -115,6 +117,7 @@ public:
 
    bool doMatch(const char* token, const char* description, bool err)
    {
+      printf("\n");
       bool is_regex = description != nullptr;
 
       char  ch;
@@ -130,7 +133,10 @@ public:
 
          switch(*t)
          {
-         case DIGIT:       is_match = isdigit(ch); break;
+         case DEC_DIGIT:   is_match = isdigit(ch); break;
+         case OCT_DIGIT:   is_match = ((ch >= '0') && (ch <= '7')); break;
+         case HEX_DIGIT:   is_match = isdigit(ch) || ((ch >= 'A') && (ch <= 'F'))
+                                                  || ((ch >= 'a') && (ch <= 'f')); break;
          case IDENT_START: is_match = isalpha(ch) || (ch == '_'); break;
          case IDENT_BODY:  is_match = isalpha(ch) || isdigit(ch) || (ch == '_'); break;
          case SIGN:        is_match = (ch == '+') || (ch == '-'); break;
@@ -236,25 +242,36 @@ public:
    //! Match an identifier
    bool matchIdent(bool err=true)
    {
-      return doMatch("\2\3*", "identifier", err);
+      return doMatch("\4\5*", "identifier", err);
    }
 
    //! Match an unsigned integer 
    bool matchUnsigned(bool err=true)
    {
-      return doMatch("\1+", "unsigned number", err);
+      if (doMatch("0x\3+", "unsigned number", false))
+      {
+         return true;
+      }
+      else if (doMatch("0\2+", "unsigned number", false))
+      {
+         return true;
+      }
+      else
+      {
+         return doMatch("\1+", "unsigned number", err);
+      }
    }
 
    //! Match a signed integer
    bool matchSigned(bool err=true)
    {
-      return doMatch("\4?\1+", "signed number", err);
+      return doMatch("\6?\1+", "signed number", err);
    }
 
    //! Match a floating point number
    bool matchFloat(bool err=true)
    {
-      return doMatch("\4?\1+.\1+", "float-point number", err);
+      return doMatch("\6?\1+.\1+", "float-point number", err);
    }
 
    bool tryMatch(const char* token) { return match(token, false);  }
