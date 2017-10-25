@@ -25,12 +25,40 @@
 
 #include <cctype>
 #include <cstring>
+#include <utility>
 
 #include "PLT/Curses.h"
 #include "PLT/File.h"
 #include "PLT/KeyCode.h"
+#include "STB/Oil.h"
 
 #include "TerminalApp.h"
+
+
+struct TerminalConfig : public STB::Oil<TerminalConfig>
+{
+   unsigned font_size{18};
+   unsigned border_pixels{0};
+   unsigned line_space{0};
+   bool invert_video{false};
+#ifdef PROJ_TARGET_Kindle3
+   uint32_t bg_colour{0xFFFFFF};
+   uint32_t fg_colour{0x000000};
+#else
+   uint32_t bg_colour{0xF0F0E0};
+   uint32_t fg_colour{0x382800};
+#endif
+};
+
+BOIL(TerminalConfig)
+{
+   MOIL(font_size);
+   MOIL(border_pixels);
+   MOIL(line_space);
+   MOIL(bg_colour); FOIL(bg_colour, HEX);
+   MOIL(fg_colour); FOIL(fg_colour, HEX);
+}
+EOIL(TerminalConfig)
 
 
 class TerminalLauncher : public TerminalApp
@@ -41,6 +69,7 @@ protected:
 
 private:
    STB::Option<const char*> opt_config{'c', "config", "Use alternate config file", "zif.cfg"};
+   TerminalConfig           config;
    const char*              filename{nullptr};
    unsigned                 cursor{0};
    unsigned                 cursor_limit{0};
@@ -240,44 +269,48 @@ private:
       {
          doInfo();
       }
-      else if(strcmp(cmd, "Video") == 0)
+      else
       {
-#ifdef PROJ_TARGET_Kindle3
-         const uint32_t dark  = 0x000000;
-         const uint32_t light = 0xFFFFFF;
-#else
-         const uint32_t dark  = 0x382800;
-         const uint32_t light = 0xF0F0E0;
-#endif
+         if(strcmp(cmd, "Video") == 0)
+         {
+            bool invert = strcmp(value, "Inverse") == 0;
 
-         if(strcmp(value, "Inverse") == 0)
-         {
-            term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 0, light);
-            term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 1, dark);
+            if(config.invert_video != invert)
+            {
+               config.invert_video = invert;
+               std::swap(config.bg_colour, config.fg_colour);
+            }
          }
-         else if(strcmp(value, "Normal") == 0)
+         else if(strcmp(cmd, "Border") == 0)
          {
-            term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 0, dark);
-            term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 1, light);
+            config.border_pixels = atoi(value);
          }
-      }
-      else if(strcmp(cmd, "Border") == 0)
-      {
-         term->ioctl(PLT::Device::IOCTL_TERM_BORDER, atoi(value));
-         curses.init();
-      }
-      else if(strcmp(cmd, "LineSpace") == 0)
-      {
-         term->ioctl(PLT::Device::IOCTL_TERM_LINE_SPACE, atoi(value));
-         curses.init();
-      }
-      else if(strcmp(cmd, "FontSize") == 0)
-      {
-         term->ioctl(PLT::Device::IOCTL_TERM_FONT_SIZE, atoi(value));
-         curses.init();
+         else if(strcmp(cmd, "LineSpace") == 0)
+         {
+            config.line_space = atoi(value);
+         }
+         else if(strcmp(cmd, "FontSize") == 0)
+         {
+            config.font_size = atoi(value);
+         }
+
+         configTerminal();
+
+         config.write();
       }
    }
 
+   //! update the terminal configuration
+   void configTerminal()
+   {
+       term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 0, config.bg_colour);
+       term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 1, config.fg_colour);
+       term->ioctl(PLT::Device::IOCTL_TERM_BORDER, config.border_pixels);
+       term->ioctl(PLT::Device::IOCTL_TERM_LINE_SPACE, config.line_space);
+       term->ioctl(PLT::Device::IOCTL_TERM_FONT_SIZE, config.font_size);
+
+       curses.init();
+   }
 
    //! Open a config directory (not a real directory)
    void openDir(const char* sub_directory)
@@ -348,10 +381,9 @@ private:
       term = &term_;
       curses.setDevice(&term_);
 
-      doAction("Border", "0");
-      doAction("FontSize", "18");
-      doAction("LineSpace", "0");
-      doAction("Video", "Inverse");
+      config.read();
+
+      configTerminal();
 
       return filename ? startTerminalLauncher(filename)
                       : menu();
