@@ -21,6 +21,7 @@
 //------------------------------------------------------------------------------
 
 #include <cstdio>
+#include <cstdarg>
 #include <string>
 
 #include "PLT/File.h"
