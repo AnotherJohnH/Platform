@@ -26,6 +26,7 @@
 #include <vector>
 #include <typeinfo>
 #include <cassert>
+#include <cstring>
 
 namespace PLT { class File; }
 
