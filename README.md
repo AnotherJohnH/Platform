@@ -28,23 +28,23 @@ Project dir [/Users/fred/MyProjects/Foo] : <project root directory>
 Copyright owner [John D. Haughton] : <copyright owner>
 Copyright year [2017] : <copyright year>
 User name [AnotherJohnH] : <GitHub user id>
-Application [HelloW] : <name of application>
+Application [Foo] : <name of application>
 Version [0.0.0] : <initial version>
 Description [Empty application] : <application purpose>
-Binary [hellow] : <filename of application binary>
+Binary [foo] : <filename of application binary>
 
 Install template/.clang-format to <project root directory>/.clang-format
 Install template/.gitignore to <project root directory>/.gitignore
 Install template/.travis.yml to <project root directory>/.travis.yml
+Install template/Doxyfile to <project root directory>/Doxyfile
 Install template/LICENSE to <project root directory>/LICENSE
 Install template/README.md to <project root directory>/README.md
 Install template/SConstruct to <project root directory>/SConstruct
 Install template/Source/consoleApp.cpp to <project root directory>/Source/<filename of application binary>.cpp
 ```
 
-Edit the copies of `README.md` and `LICENSE` as appropriate.
-
 ```
+cd ..
 git add .
 git commit -m Initial
 scons
