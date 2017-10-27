@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) YEAR AUTHOR
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,35 @@
 
 #include <cstdio>
 
-int main()
-{
-   printf("Hello, world!\n");
-}
+#include "STB/ConsoleApp.h"
 
+
+`#'define  PROGRAM         "APPLICATION"
+`#'define  `DESCRIPTION'     "DESCRIPTION"
+`#'define  COPYRIGHT_YEAR  "YEAR"
+`#'define  `AUTHOR'          "AUTHOR"
+`#'define  `VERSION'         PROJ_VERSION
+
+
+class APPLICATION`App' : public STB::ConsoleApp
+{
+private:
+   virtual int startConsoleApp() override
+   {
+      printf("Hello, world!\n");
+      return 0;
+   }
+
+public:
+   APPLICATION`App'(int argc, const char* argv[])
+      : ConsoleApp(PROGRAM, `AUTHOR', `DESCRIPTION', `VERSION', COPYRIGHT_YEAR)
+   {
+      parseArgsAndStart(argc, argv);
+   }
+};
+
+
+int main(int argc, const char* argv[])
+{
+   APPLICATION`App'(argc, argv);
+}

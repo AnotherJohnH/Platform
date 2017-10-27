@@ -1,8 +1,8 @@
 
-source  = ['Source/hellow.cpp']
-binary  = 'hellow'
-app     = 'HelloW'
-version = '0.0.0'
+source  = ['Source/BINARY.cpp']
+binary  = 'BINARY'
+app     = 'APPLICATION'
+version = 'VERSION'
 
 # Get a build environment
 env,lib = SConscript('Platform/build.scons', ['app', 'version'])
