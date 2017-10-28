@@ -24,6 +24,8 @@
 #include "STB/SmallLex.h"
 #include "STB/Oil.h"
 
+#include <cstdlib>
+
 namespace STB {
 
 namespace OIL {
