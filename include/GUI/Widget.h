@@ -44,8 +44,9 @@ protected:
    static const unsigned EVENT_REDRAW  = EVENT_PRIVATE - 1;
    static const unsigned EVENT_FOCUS   = EVENT_PRIVATE - 2;
 
-   Colour fg_colour{FOREGROUND};
-   Colour bg_colour{FACE};
+   Colour      fg_colour{FOREGROUND};
+   Colour      bg_colour{FACE};
+   const Font* font{nullptr};
 
 private:
    //! Recursively determine the minimum size of this item and this items children
@@ -236,7 +237,7 @@ protected:
 
    Widget* find(unsigned x_, unsigned y_)
    {
-      if(!isHit(x_, y_)) return 0;
+      if(!isHit(x_, y_)) return nullptr;
 
       for(size_t i = 0; i < children.size(); ++i)
       {
@@ -263,9 +264,8 @@ protected:
    //! Get default font fro, top level
    virtual const Font* getDefaultFont() const
    {
-      return parent ? parent->getDefaultFont() : 0;
+      return parent ? parent->getDefaultFont() : nullptr;
    }
-
 
 public:
    Widget(Widget* parent_ = nullptr)
@@ -275,6 +275,8 @@ public:
          assert(parent_ != this);
          parent_->pushBack(this);
       }
+
+      font = getDefaultFont();
    }
 
    virtual ~Widget()
@@ -301,6 +303,11 @@ public:
    void setForegroundColour(Colour colour) { fg_colour = colour; }
 
    void setBackgroundColour(Colour colour) { bg_colour = colour; }
+
+   void setFont(const Font* font_)
+   {
+      font = font_ != nullptr ? font_ : getDefaultFont();
+   }
 
    void show()
    {

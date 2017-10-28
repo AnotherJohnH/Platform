@@ -55,25 +55,17 @@ enum Align
 class Layout
 {
 protected:
-   Vector pos;           //!< Absolute position in root canvas
-   Vector size;          //!< Width and height
+   Vector pos{0, 0};     //!< Absolute position in root canvas
+   Vector size{0, 0};    //!< Width and height
    Fit    horz_fit{FIX}; //!< Horizontal fit
    Fit    vert_fit{FIX}; //!< Vertical fit
 
    bool     row{false};       //!< Layout children in a row not a column
-   Vector   top_left;         //!< Top left border for children
-   Vector   btm_right;        //!< Bottom right border for children
+   Vector   top_left{0,0};    //!< Top left border for children
+   Vector   btm_right{0,0};   //!< Bottom right border for children
    unsigned gap{0};           //!< Gap between children
    Align    horz_align{LEFT}; //!< Horizontal alignment mode for children
    Align    vert_align{TOP};  //!< Vertical alignment mode for children
-
-   Layout()
-      : pos(0, 0)
-      , size(0, 0)
-      , top_left(0, 0)
-      , btm_right(0, 0)
-   {
-   }
 
 public:
    unsigned getX() const { return pos.x; }

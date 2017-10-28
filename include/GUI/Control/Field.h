@@ -42,7 +42,7 @@ private:
    {
       canvas.fillRect(BACKGROUND, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
-      canvas.drawText(FOREGROUND, FACE, pos.x + top_left.x, top_left.y + pos.y, getDefaultFont(),
+      canvas.drawText(FOREGROUND, FACE, pos.x + top_left.x, top_left.y + pos.y, font,
                       value.c_str());
    }
 
@@ -91,9 +91,8 @@ public:
       , value(initial_)
    {
       setBorderAndGap(2);
-      const Font* font = getDefaultFont();
-      size.x           = font->getWidth() * cols + 4;
-      size.y           = font->getHeight() + 4;
+      size.x = font->getWidth() * cols + 4;
+      size.y = font->getHeight() + 4;
    }
 
    void setValue(const char* value_) { value = value_; }

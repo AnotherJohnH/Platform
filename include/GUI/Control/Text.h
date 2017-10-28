@@ -37,7 +37,7 @@ private:
    // Implement Widget events
    virtual void eventDraw(Canvas& canvas) override
    {
-      canvas.drawText(fg_colour, bg_colour, pos.x, pos.y, getDefaultFont(), text.c_str());
+      canvas.drawText(fg_colour, bg_colour, pos.x, pos.y, font, text.c_str());
    }
 
 public:
@@ -45,7 +45,6 @@ public:
       : Widget(parent)
       , text(text_)
    {
-      const Font* font = getDefaultFont();
       size.x           = font->getWidth(text.c_str());
       size.y           = font->getHeight();
    }
@@ -55,8 +54,7 @@ public:
 
    void setWidth(unsigned width_)
    {
-      const Font* font = getDefaultFont();
-      size.x           = font->getWidth(" ") * width_;
+      size.x = font->getWidth(" ") * width_;
    }
 };
 
