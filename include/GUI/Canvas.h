@@ -354,20 +354,21 @@ public:
    //! Draw a single character from a font
    unsigned drawChar(Colour fg, Colour bg, signed x, signed y, const Font* font, uint8_t ch)
    {
-      const uint8_t* map = font->getAlphaMap(ch);
-      if(map == 0) return 0;
-
       unsigned w = font->getWidth();
 
-      switch(font->getBPP())
+      const uint8_t* map = font->getAlphaMap(ch);
+      if(map != nullptr)
       {
-      case 1: drawAlphaMap<1>(fg, bg, x, y, w, font->getHeight(), map); break;
-      case 2: drawAlphaMap<2>(fg, bg, x, y, w, font->getHeight(), map); break;
-      case 4: drawAlphaMap<4>(fg, bg, x, y, w, font->getHeight(), map); break;
-      case 8: drawAlphaMap<8>(fg, bg, x, y, w, font->getHeight(), map); break;
+          switch(font->getBPP())
+          {
+          case 1: drawAlphaMap<1>(fg, bg, x, y, w, font->getHeight(), map); break;
+          case 2: drawAlphaMap<2>(fg, bg, x, y, w, font->getHeight(), map); break;
+          case 4: drawAlphaMap<4>(fg, bg, x, y, w, font->getHeight(), map); break;
+          case 8: drawAlphaMap<8>(fg, bg, x, y, w, font->getHeight(), map); break;
 
-      default: break;
-      }
+          default: break;
+          }
+       }
 
       return w;
    }
