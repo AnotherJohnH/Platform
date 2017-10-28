@@ -32,29 +32,55 @@ namespace GUI {
 class Text : public Widget
 {
 private:
-   std::string text;
+   std::string  text;
+   unsigned     cols{0};
+   Align        text_align{LEFT};
 
+protected:
    // Implement Widget events
+   virtual void eventSize() override
+   {
+      size.x = font->getWidth(" ") * cols;
+      size.y = font->getHeight();
+   }
+
    virtual void eventDraw(Canvas& canvas) override
    {
-      canvas.drawText(fg_colour, bg_colour, pos.x, pos.y, font, text.c_str());
+      signed x = pos.x;
+
+      switch(text_align)
+      {
+      case LEFT:   break;
+      case CENTER: x += (cols - text.size()) * font->getWidth(" ")/ 2; break;
+      case RIGHT:  x += (cols - text.size()) * font->getWidth(" "); break;
+      default: assert(!"unexpected"); break;
+      }
+
+      canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+      canvas.drawText(fg_colour, bg_colour, x, pos.y, font, text.c_str());
    }
 
 public:
    Text(Widget* parent, const std::string& text_)
       : Widget(parent)
       , text(text_)
+      , cols(text.size())
    {
-      size.x           = font->getWidth(text.c_str());
-      size.y           = font->getHeight();
+      eventSize();
    }
 
    template <typename TYPE>
    void setText(TYPE text_) { text = text_; }
 
-   void setWidth(unsigned width_)
+   void setCols(unsigned cols_)
    {
-      size.x = font->getWidth(" ") * width_;
+      cols = cols_;
+      eventSize();
+   }
+
+   void setAlign(Align text_align_)
+   {
+      text_align = text_align_;
    }
 };
 

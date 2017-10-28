@@ -307,6 +307,8 @@ public:
    void setFont(const Font* font_)
    {
       font = font_ != nullptr ? font_ : getDefaultFont();
+
+      eventSize();
    }
 
    void show()
@@ -327,6 +329,12 @@ public:
 
    //! Widget has been resized
    virtual void eventResize()
+   {
+      //  Default do nothing
+   }
+
+   //! Update widget size
+   virtual void eventSize()
    {
       //  Default do nothing
    }

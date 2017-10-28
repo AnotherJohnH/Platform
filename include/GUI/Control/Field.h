@@ -37,12 +37,20 @@ private:
    unsigned    cols;
    std::string value;
 
+protected:
    // Implement Widget events
+   virtual void eventSize() override
+   {
+      setBorderAndGap(2);
+      size.x = font->getWidth() * cols + 4;
+      size.y = font->getHeight() + 4;
+   }
+
    virtual void eventDraw(Canvas& canvas) override
    {
-      canvas.fillRect(BACKGROUND, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+      canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
-      canvas.drawText(FOREGROUND, FACE, pos.x + top_left.x, top_left.y + pos.y, font,
+      canvas.drawText(fg_colour, FACE, pos.x + top_left.x, top_left.y + pos.y, font,
                       value.c_str());
    }
 
@@ -90,9 +98,10 @@ public:
       , cols(cols_)
       , value(initial_)
    {
-      setBorderAndGap(2);
-      size.x = font->getWidth() * cols + 4;
-      size.y = font->getHeight() + 4;
+      setBackgroundColour(BACKGROUND);
+      setForegroundColour(FOREGROUND);
+
+      eventSize();
    }
 
    void setValue(const char* value_) { value = value_; }
