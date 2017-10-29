@@ -20,6 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \file Midi.h
 //! \brief Platform abstraction layer for access to MIDI devices
 
 #ifndef PLT_MIDI_H
@@ -31,6 +32,7 @@
 
 namespace PLT {
 
+//! Access to MIDI devices
 namespace MIDI {
 
 

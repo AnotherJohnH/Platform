@@ -20,6 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \file Sounder.h
 //! \brief Platform abstraction interface for simple "beep" audio hardware
 
 #ifndef PLT_SOUNDER_H

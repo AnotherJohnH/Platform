@@ -20,6 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \file Audio.h
 //! \brief Platform abstraction interface for raw audio hardware
 
 #ifndef PLT_AUDIO_H
@@ -29,6 +30,7 @@
 
 namespace PLT {
 
+//! Interface for raw audio hardware
 namespace Audio {
 
 
