@@ -20,16 +20,17 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TERMINAL_APP_H
-#define TERMINAL_APP_H
+#ifndef TRM_APP_H
+#define TRM_APP_H
 
 #include "STB/ConsoleApp.h"
 
-#include "TerminalCanvas.h"
-#include "TerminalStdio.h"
+#include "TRM/Canvas.h"
+#include "TRM/Stdio.h"
 
+namespace TRM {
 
-class TerminalApp : public STB::ConsoleApp
+class App : public STB::ConsoleApp
 {
 private:
 #ifndef NO_TERMINAL_EMULATOR
@@ -61,7 +62,7 @@ private:
 #endif
       {
          // Use the parent terminal
-         TerminalStdio term(program);
+         Stdio term(program);
          return startTerminalApp(term);
       }
 #ifndef NO_TERMINAL_EMULATOR
@@ -91,16 +92,16 @@ private:
    template <unsigned WIDTH, unsigned HEIGHT>
    int launchDisplay()
    {
-      TerminalCanvas<WIDTH,HEIGHT> term(program);
+      Canvas<WIDTH,HEIGHT> term(program);
       return startTerminalApp(term);
    }
 
 protected:
    //! App entry point with constructed terminal
-   virtual int startTerminalApp(TerminalDevice& term) = 0;
+   virtual int startTerminalApp(Device& term) = 0;
 
 public:
-    TerminalApp(const char* program_,
+    App(const char* program_,
                 const char* author_,
                 const char* description_,
                 const char* version_,
@@ -110,4 +111,6 @@ public:
    {}
 };
 
-#endif
+} // namespace TRM
+
+#endif // TRM_APP_H

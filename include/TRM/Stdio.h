@@ -20,25 +20,26 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TERMINAL_STDIO_H
-#define TERMINAL_STDIO_H
+#ifndef TRM_STDIO_H
+#define TRM_STDIO_H
 
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
-#include <termios.h>
 
+#include <termios.h>
 #include <sys/select.h>
 
 #include "PLT/KeyCode.h"
 
 #include "STB/Fifo.h"
 
-#include "TerminalDevice.h"
+#include "TRM/Device.h"
 
+namespace TRM {
 
 //! Terminal device using stdio as the back-end
-class TerminalStdio : public TerminalDevice
+class Stdio : public Device
 {
 private:
    STB::Fifo<int, 2> input;
@@ -56,7 +57,7 @@ private:
    {
       tcgetattr(0, getTio());
 
-      atexit(TerminalStdio::restoreTio);
+      atexit(Stdio::restoreTio);
    }
 
    static void modifyTioFlag(unsigned flag, bool set)
@@ -124,11 +125,11 @@ private:
    }
 
 public:
-   TerminalStdio(const char* title_) { saveTio(); }
+   Stdio(const char* title_) { saveTio(); }
 
-   ~TerminalStdio() { restoreTio(); }
+   ~Stdio() { restoreTio(); }
 
-   // Implement TerminalDevice
+   // Implement TRM::Device
 
    virtual int ioctl(unsigned request, ...) override
    {
@@ -204,4 +205,6 @@ public:
    }
 };
 
-#endif
+} // namesapce TRM
+
+#endif // TRM_STDIO_H

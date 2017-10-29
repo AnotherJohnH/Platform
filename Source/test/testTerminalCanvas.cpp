@@ -23,15 +23,14 @@
 
 #include <cstdio>
 
-#include "PLT/Curses.h"
-#include "TerminalCanvas.h"
+#include "TRM/Curses.h"
+#include "TRM/Canvas.h"
 
 
 int main(int argc, char *argv[])
 {
-   TerminalCanvas<800, 600> term("TerminalCanvas");
-
-   PLT::Curses win(&term);
+   TRM::Canvas<800, 600> term("TRM::Canvas");
+   TRM::Curses win(&term);
 
    win.clear();
    win.addstr("Hello, world!\n");
@@ -56,29 +55,29 @@ int main(int argc, char *argv[])
 
    win.attrset(0);
 
-   win.attron(PLT::A_BOLD);
+   win.attron(TRM::A_BOLD);
    win.addstr("bold      ");
-   win.attroff(PLT::A_BOLD);
+   win.attroff(TRM::A_BOLD);
    win.addstr("  off\n");
 
-   win.attron(PLT::A_DIM);
+   win.attron(TRM::A_DIM);
    win.addstr("faint     ");
-   win.attroff(PLT::A_DIM);
+   win.attroff(TRM::A_DIM);
    win.addstr("  off\n");
 
-   win.attron(PLT::A_ITALIC);
+   win.attron(TRM::A_ITALIC);
    win.addstr("italic    ");
-   win.attroff(PLT::A_ITALIC);
+   win.attroff(TRM::A_ITALIC);
    win.addstr("  off\n");
 
-   win.attron(PLT::A_REVERSE);
+   win.attron(TRM::A_REVERSE);
    win.addstr("invert    ");
-   win.attroff(PLT::A_REVERSE);
+   win.attroff(TRM::A_REVERSE);
    win.addstr("  off\n");
 
-   win.attron(PLT::A_UNDERLINE);
+   win.attron(TRM::A_UNDERLINE);
    win.addstr("underline ");
-   win.attroff(PLT::A_UNDERLINE);
+   win.attroff(TRM::A_UNDERLINE);
    win.addstr("  off\n");
 
    while(win.getch() != -1) {}

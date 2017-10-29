@@ -20,13 +20,13 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef STB_ANSI_H
-#define STB_ANSI_H
+#ifndef TRM_ANSI_H
+#define TRM_ANSI_H
 
-#include <ctype.h>
-#include <stdint.h>
+#include <cctype>
+#include <cstdint>
 
-namespace STB {
+namespace TRM {
 
 //! State machine to help interpret ANSI/VT100 character streams
 class Ansi
@@ -216,4 +216,4 @@ public:
 
 } // namespace PLT
 
-#endif
+#endif // TRM_ANSI_H

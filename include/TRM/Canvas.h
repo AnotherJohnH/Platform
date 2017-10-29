@@ -20,8 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TERMINAL_CANVAS_H
-#define TERMINAL_CANVAS_H
+#ifndef TRM_CANVAS_H
+#define TRM_CANVAS_H
 
 #include <cassert>
 #include <cstdarg>
@@ -32,15 +32,17 @@
 
 #include "GUI/Font/Teletext.h"
 
-#include "STB/Ansi.h"
 #include "STB/Fifo.h"
 
-#include "TerminalDevice.h"
+#include "TRM/Ansi.h"
+#include "TRM/Device.h"
+
+namespace TRM {
 
 //! Terminal device using PLT::Canvas back-end
 template <unsigned WIDTH, unsigned HEIGHT>
-class TerminalCanvas : public STB::Ansi
-                     , public TerminalDevice
+class Canvas : public Ansi
+             , public Device
 {
 private:
    static const unsigned MIN_FONT_WIDTH  = 6;
@@ -690,7 +692,7 @@ private:
    }
 
 public:
-   TerminalCanvas(const char* title_)
+   Canvas(const char* title_)
       : canvas(title_, WIDTH, HEIGHT)
       , font(&GUI::font_teletext15)
       , border(0)
@@ -700,7 +702,7 @@ public:
       ansiReset();
    }
 
-   ~TerminalCanvas() { canvas.refresh(); }
+   ~Canvas() { canvas.refresh(); }
 
    void setFont(const GUI::Font& font_)
    {
@@ -822,4 +824,6 @@ public:
    }
 };
 
-#endif
+} // namesapce TRM
+
+#endif // TRM_CANVAS_H

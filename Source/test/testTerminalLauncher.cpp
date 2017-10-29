@@ -21,7 +21,7 @@
 //------------------------------------------------------------------------------
 
 
-#include "TerminalLauncher.h"
+#include "TRM/Launcher.h"
 
 #define  PROGRAM         "MyApp"
 #define  DESCRIPTION     "A test"
@@ -29,7 +29,7 @@
 #define  AUTHOR          "John D. Haughton"
 #define  VERSION         PROJ_VERSION
 
-class MyApp : public TerminalLauncher
+class MyApp : public TRM::Launcher
 {
 private:
    // TODO remove this override if not required
@@ -51,7 +51,7 @@ private:
 
 public:
    MyApp(int argc, const char* argv[])
-      : TerminalLauncher(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR, "<file>", "cfg")
+      : TRM::Launcher(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR, "<file>", "cfg")
    {
       parseArgsAndStart(argc, argv);
    }

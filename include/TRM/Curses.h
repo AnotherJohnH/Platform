@@ -20,16 +20,16 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_CURSES_H
-#define PLT_CURSES_H
+#ifndef TRM_CURSES_H
+#define TRM_CURSES_H
 
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
 
-#include "TerminalDevice.h"
+#include "Device.h"
 
-namespace PLT {
+namespace TRM {
 
 enum : unsigned
 {
@@ -42,18 +42,18 @@ enum : unsigned
    A_FIXED     = 1 << 6
 };
 
-//! Very small curses 'like' wrapper for PLT devices
+//! Very small curses 'like' wrapper for TRM devices
 class Curses
 {
 public:
    unsigned lines{};
    unsigned cols{};
 
-   Curses(TerminalDevice* dev_ = nullptr) { setDevice(dev_); }
+   Curses(Device* dev_ = nullptr) { setDevice(dev_); }
 
    ~Curses() { setDevice(nullptr); }
 
-   void setDevice(TerminalDevice* dev_)
+   void setDevice(Device* dev_)
    {
       if(dev != nullptr) dev->close();
 
@@ -75,13 +75,13 @@ public:
    }
 
    //! Set raw mode
-   void raw() { dev->ioctl(TerminalDevice::IOCTL_TERM_ICANON, 0); }
+   void raw() { dev->ioctl(Device::IOCTL_TERM_ICANON, 0); }
 
    //! Enable echo
-   void echo() { dev->ioctl(TerminalDevice::IOCTL_TERM_ECHO, 1); }
+   void echo() { dev->ioctl(Device::IOCTL_TERM_ECHO, 1); }
 
    //! Disable echo
-   void noecho() { dev->ioctl(TerminalDevice::IOCTL_TERM_ECHO, 0); }
+   void noecho() { dev->ioctl(Device::IOCTL_TERM_ECHO, 0); }
 
    //! Move cursor to the specified position
    void move(int r, int c)
@@ -254,9 +254,9 @@ public:
 
       if(timeout_ms != 0)
       {
-         dev->ioctl(TerminalDevice::IOCTL_TERM_TIMEOUT_MS, timeout_ms);
+         dev->ioctl(Device::IOCTL_TERM_TIMEOUT_MS, timeout_ms);
          status = dev->read(&ch, 1);
-         dev->ioctl(TerminalDevice::IOCTL_TERM_TIMEOUT_MS, 0);
+         dev->ioctl(Device::IOCTL_TERM_TIMEOUT_MS, 0);
       }
       else
       {
@@ -267,7 +267,7 @@ public:
    }
 
 private:
-   TerminalDevice* dev{nullptr};
+   Device* dev{nullptr};
    unsigned attr{0};
    unsigned timeout_ms{0};
 
@@ -286,6 +286,6 @@ private:
    }
 };
 
-} // namespace PLT
+} // namespace TRM
 
-#endif
+#endif // TRM_CURSES_H

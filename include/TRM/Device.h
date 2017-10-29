@@ -20,12 +20,14 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TERMINAL_DEVICE_H
-#define TERMINAL_DEVICE_H
+#ifndef TRM_DEVICE_H
+#define TRM_DEVICE_H
 
 #include <cstdlib>
 
-class TerminalDevice
+namespace TRM {
+
+class Device
 {
 public:
 
@@ -52,4 +54,6 @@ public:
    virtual int close() { return 0; }
 };
 
-#endif
+} // namesapce TRM
+
+#endif // TRM_DEVICE_H

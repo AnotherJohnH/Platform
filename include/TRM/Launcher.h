@@ -20,22 +20,24 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TERMINAL_LAUNCHER_H
-#define TERMINAL_LAUNCHER_H
+#ifndef TRM_LAUNCHER_H
+#define TRM_LAUNCHER_H
 
 #include <cctype>
 #include <cstring>
 #include <utility>
 
-#include "PLT/Curses.h"
 #include "PLT/File.h"
 #include "PLT/KeyCode.h"
+
 #include "STB/Oil.h"
 
-#include "TerminalApp.h"
+#include "TRM/Curses.h"
+#include "TRM/App.h"
 
+namespace TRM {
 
-struct TerminalConfig : public STB::Oil<TerminalConfig>
+struct Config : public STB::Oil<Config>
 {
    unsigned font_size{18};
    unsigned border_pixels{0};
@@ -50,7 +52,7 @@ struct TerminalConfig : public STB::Oil<TerminalConfig>
 #endif
 };
 
-BOIL(TerminalConfig)
+BOIL(Config)
 {
    MOIL(font_size);
    MOIL(border_pixels);
@@ -58,18 +60,18 @@ BOIL(TerminalConfig)
    MOIL(bg_colour); FOIL(bg_colour, HEX);
    MOIL(fg_colour); FOIL(fg_colour, HEX);
 }
-EOIL(TerminalConfig)
+EOIL(Config)
 
 
-class TerminalLauncher : public TerminalApp
+class Launcher : public App
 {
 protected:
-   TerminalDevice* term{nullptr};
-   PLT::Curses  curses;
+   Device* term{nullptr};
+   TRM::Curses  curses;
 
 private:
    STB::Option<const char*> opt_config{'c', "config", "Use alternate config file", "zif.cfg"};
-   TerminalConfig           config;
+   Config                   config;
    const char*              filename{nullptr};
    unsigned                 cursor{0};
    unsigned                 cursor_limit{0};
@@ -99,7 +101,7 @@ private:
    {
       curses.clear();
 
-      curses.attron(PLT::A_REVERSE);
+      curses.attron(A_REVERSE);
 
       curses.move(1, 1);
       for(unsigned i = 0; i < curses.cols; ++i)
@@ -107,13 +109,13 @@ private:
          curses.addch(' ');
       }
 
-      curses.attron(PLT::A_BOLD);
+      curses.attron(A_BOLD);
       curses.mvaddstr(1, 3, program);
-      curses.attroff(PLT::A_BOLD);
+      curses.attroff(A_BOLD);
 
       curses.mvaddstr(1, 3 + strlen(program) + 2, path);
 
-      curses.attroff(PLT::A_REVERSE);
+      curses.attroff(A_REVERSE);
    }
 
    //!
@@ -172,7 +174,7 @@ private:
                   strcpy(selection, entry);
                   selection_is_dir = is_dir;
 
-                  curses.attron(PLT::A_REVERSE);
+                  curses.attron(A_REVERSE);
                }
 
                if(entry[0] == '!')
@@ -182,7 +184,7 @@ private:
 
                curses.mvaddstr(first_row + index, 3, entry);
 
-               curses.attroff(PLT::A_REVERSE);
+               curses.attroff(A_REVERSE);
             }
          }
       }
@@ -245,13 +247,13 @@ private:
 
       curses.mvaddstr(8, 3, "Compiler    : "); layoutText(8, 17, __VERSION__);
 
-      curses.attron(PLT::A_BOLD);
+      curses.attron(A_BOLD);
       curses.mvaddstr(10, 3, "Copyright (c) ");
       curses.addstr(copyright_year);
       curses.addstr(" ");
       curses.addstr(author);
 
-      curses.attroff(PLT::A_BOLD);
+      curses.attroff(A_BOLD);
 
       layoutText(12, 3, MIT_LICENSE);
 
@@ -303,11 +305,11 @@ private:
    //! update the terminal configuration
    void configTerminal()
    {
-       term->ioctl(TerminalDevice::IOCTL_TERM_PALETTE, 0, config.bg_colour);
-       term->ioctl(TerminalDevice::IOCTL_TERM_PALETTE, 1, config.fg_colour);
-       term->ioctl(TerminalDevice::IOCTL_TERM_BORDER, config.border_pixels);
-       term->ioctl(TerminalDevice::IOCTL_TERM_LINE_SPACE, config.line_space);
-       term->ioctl(TerminalDevice::IOCTL_TERM_FONT_SIZE, config.font_size);
+       term->ioctl(Device::IOCTL_TERM_PALETTE, 0, config.bg_colour);
+       term->ioctl(Device::IOCTL_TERM_PALETTE, 1, config.fg_colour);
+       term->ioctl(Device::IOCTL_TERM_BORDER, config.border_pixels);
+       term->ioctl(Device::IOCTL_TERM_LINE_SPACE, config.line_space);
+       term->ioctl(Device::IOCTL_TERM_FONT_SIZE, config.font_size);
 
        curses.init();
    }
@@ -376,7 +378,7 @@ private:
 
    virtual void parseArg(const char* arg_) override { filename = arg_; }
 
-   virtual int startTerminalApp(TerminalDevice& term_) override
+   virtual int startTerminalApp(Device& term_) override
    {
       term = &term_;
       curses.setDevice(&term_);
@@ -450,16 +452,18 @@ private:
    }
 
 public:
-   TerminalLauncher(const char*  program,
-                    const char*  author,
-                    const char*  description,
-                    const char*  version,
-                    const char*  copyright_year,
-                    const char*  args_help,
-                    const char*  config_file)
-      : TerminalApp(program, author, description, version, copyright_year, args_help)
+   Launcher(const char*  program,
+            const char*  author,
+            const char*  description,
+            const char*  version,
+            const char*  copyright_year,
+            const char*  args_help,
+            const char*  config_file)
+      : App(program, author, description, version, copyright_year, args_help)
       , opt_config('c', "config", "Use alternate config file", config_file)
    {}
 };
 
-#endif
+} // namespace TRM
+
+#endif // TRM_LAUNCHER_H

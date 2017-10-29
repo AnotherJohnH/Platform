@@ -21,7 +21,7 @@
 //------------------------------------------------------------------------------
 
 
-#include "TerminalApp.h"
+#include "TRM/App.h"
 
 #define  PROGRAM         "MyApp"
 #define  DESCRIPTION     "A test"
@@ -29,7 +29,7 @@
 #define  AUTHOR          "John D. Haughton"
 #define  VERSION         PROJ_VERSION
 
-class MyApp : public TerminalApp
+class MyApp : public TRM::App
 {
 private:
    // TODO remove this override if not required
@@ -38,7 +38,7 @@ private:
       printf("Some extra help text.\n");
    }
 
-   virtual int startTerminalApp(TerminalDevice& term) override
+   virtual int startTerminalApp(TRM::Device& term) override
    {
       // TODO Body of application goes here
 
@@ -53,7 +53,7 @@ private:
 
 public:
    MyApp(int argc, const char* argv[])
-      : TerminalApp(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR)
+      : TRM::App(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR)
    {
       parseArgsAndStart(argc, argv);
    }
