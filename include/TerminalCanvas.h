@@ -27,18 +27,18 @@
 #include <cstdarg>
 #include <cstdio>
 
-#include "PLT/Ansi.h"
 #include "PLT/Canvas.h"
 #include "PLT/Device.h"
 #include "PLT/Event.h"
 
 #include "GUI/Font/Teletext.h"
 
+#include "STB/Ansi.h"
 #include "STB/Fifo.h"
 
 //! Terminal device using PLT::Canvas back-end
 template <unsigned WIDTH, unsigned HEIGHT>
-class TerminalCanvas : public PLT::Ansi
+class TerminalCanvas : public STB::Ansi
                      , public PLT::Device
 {
 private:

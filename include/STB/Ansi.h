@@ -20,13 +20,13 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_ANSI_H
-#define PLT_ANSI_H
+#ifndef STB_ANSI_H
+#define STB_ANSI_H
 
 #include <ctype.h>
 #include <stdint.h>
 
-namespace PLT {
+namespace STB {
 
 //! State machine to help interpret ANSI/VT100 character streams
 class Ansi
