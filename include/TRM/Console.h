@@ -20,12 +20,12 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TRM_STDIO_H
-#define TRM_STDIO_H
+#ifndef TRM_CONSOLE_H
+#define TRM_CONSOLE_H
 
 #include <cstdarg>
-#include <cstdio>
 #include <cstdlib>
+#include <cstdio>
 
 #include <termios.h>
 #include <sys/select.h>
@@ -38,8 +38,8 @@
 
 namespace TRM {
 
-//! Terminal device using stdio as the back-end
-class Stdio : public Device
+//! Terminal device using the console as the back-end
+class Console : public Device
 {
 private:
    STB::Fifo<int, 2> input;
@@ -57,7 +57,7 @@ private:
    {
       tcgetattr(0, getTio());
 
-      atexit(Stdio::restoreTio);
+      atexit(Console::restoreTio);
    }
 
    static void modifyTioFlag(unsigned flag, bool set)
@@ -125,9 +125,9 @@ private:
    }
 
 public:
-   Stdio(const char* title_) { saveTio(); }
+   Console(const char* title_) { saveTio(); }
 
-   ~Stdio() { restoreTio(); }
+   ~Console() { restoreTio(); }
 
    // Implement TRM::Device
 
@@ -207,4 +207,4 @@ public:
 
 } // namesapce TRM
 
-#endif // TRM_STDIO_H
+#endif // TRM_CONSOLE_H

@@ -24,12 +24,12 @@
 #include <cstdio>
 
 #include "TRM/Curses.h"
-#include "TRM/Stdio.h"
+#include "TRM/Console.h"
 
 
 int main(int argc, char *argv[])
 {
-   TRM::Stdio term("TRM::Stdio");
+   TRM::Console term("TRM::Console");
    TRM::Curses win(&term);
 
    win.clear();

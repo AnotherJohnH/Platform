@@ -26,7 +26,7 @@
 #include "STB/ConsoleApp.h"
 
 #include "TRM/Canvas.h"
-#include "TRM/Stdio.h"
+#include "TRM/Console.h"
 
 namespace TRM {
 
@@ -62,7 +62,7 @@ private:
 #endif
       {
          // Use the parent terminal
-         Stdio term(program);
+         Console term(program);
          return startTerminalApp(term);
       }
 #ifndef NO_TERMINAL_EMULATOR

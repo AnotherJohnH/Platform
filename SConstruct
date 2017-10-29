@@ -33,7 +33,7 @@ binaries = ['testHelloWorld',
             'testSND_Expr',
             'testSND_Sine',
             'testTerminalCanvas',
-            'testTerminalStdio',
+            'testTerminalConsole',
             'testTerminalApp',
             'testTerminalLauncher',
             'testEndian']
