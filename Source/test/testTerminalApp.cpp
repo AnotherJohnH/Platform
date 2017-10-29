@@ -38,7 +38,7 @@ private:
       printf("Some extra help text.\n");
    }
 
-   virtual int startTerminalApp(PLT::Device& term) override
+   virtual int startTerminalApp(TerminalDevice& term) override
    {
       // TODO Body of application goes here
 

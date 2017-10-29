@@ -64,7 +64,7 @@ EOIL(TerminalConfig)
 class TerminalLauncher : public TerminalApp
 {
 protected:
-   PLT::Device* term{nullptr};
+   TerminalDevice* term{nullptr};
    PLT::Curses  curses;
 
 private:
@@ -303,11 +303,11 @@ private:
    //! update the terminal configuration
    void configTerminal()
    {
-       term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 0, config.bg_colour);
-       term->ioctl(PLT::Device::IOCTL_TERM_PALETTE, 1, config.fg_colour);
-       term->ioctl(PLT::Device::IOCTL_TERM_BORDER, config.border_pixels);
-       term->ioctl(PLT::Device::IOCTL_TERM_LINE_SPACE, config.line_space);
-       term->ioctl(PLT::Device::IOCTL_TERM_FONT_SIZE, config.font_size);
+       term->ioctl(TerminalDevice::IOCTL_TERM_PALETTE, 0, config.bg_colour);
+       term->ioctl(TerminalDevice::IOCTL_TERM_PALETTE, 1, config.fg_colour);
+       term->ioctl(TerminalDevice::IOCTL_TERM_BORDER, config.border_pixels);
+       term->ioctl(TerminalDevice::IOCTL_TERM_LINE_SPACE, config.line_space);
+       term->ioctl(TerminalDevice::IOCTL_TERM_FONT_SIZE, config.font_size);
 
        curses.init();
    }
@@ -376,7 +376,7 @@ private:
 
    virtual void parseArg(const char* arg_) override { filename = arg_; }
 
-   virtual int startTerminalApp(PLT::Device& term_) override
+   virtual int startTerminalApp(TerminalDevice& term_) override
    {
       term = &term_;
       curses.setDevice(&term_);

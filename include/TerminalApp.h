@@ -97,7 +97,7 @@ private:
 
 protected:
    //! App entry point with constructed terminal
-   virtual int startTerminalApp(PLT::Device& term) = 0;
+   virtual int startTerminalApp(TerminalDevice& term) = 0;
 
 public:
     TerminalApp(const char* program_,

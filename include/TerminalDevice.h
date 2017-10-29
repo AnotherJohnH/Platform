@@ -20,14 +20,12 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_DEVICE_H
-#define PLT_DEVICE_H
+#ifndef TERMINAL_DEVICE_H
+#define TERMINAL_DEVICE_H
 
 #include <cstdlib>
 
-namespace PLT {
-
-class Device
+class TerminalDevice
 {
 public:
 
@@ -53,7 +51,5 @@ public:
 
    virtual int close() { return 0; }
 };
-
-} // namespace PLT
 
 #endif

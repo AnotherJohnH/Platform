@@ -30,13 +30,15 @@
 
 #include <sys/select.h>
 
-#include "PLT/Device.h"
 #include "PLT/KeyCode.h"
 
 #include "STB/Fifo.h"
 
+#include "TerminalDevice.h"
+
+
 //! Terminal device using stdio as the back-end
-class TerminalStdio : public PLT::Device
+class TerminalStdio : public TerminalDevice
 {
 private:
    STB::Fifo<int, 2> input;
@@ -126,7 +128,7 @@ public:
 
    ~TerminalStdio() { restoreTio(); }
 
-   // Implement PLT::Device
+   // Implement TerminalDevice
 
    virtual int ioctl(unsigned request, ...) override
    {

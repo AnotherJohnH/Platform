@@ -27,7 +27,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "PLT/Device.h"
+#include "TerminalDevice.h"
 
 namespace PLT {
 
@@ -49,11 +49,11 @@ public:
    unsigned lines{};
    unsigned cols{};
 
-   Curses(Device* dev_ = nullptr) { setDevice(dev_); }
+   Curses(TerminalDevice* dev_ = nullptr) { setDevice(dev_); }
 
    ~Curses() { setDevice(nullptr); }
 
-   void setDevice(Device* dev_)
+   void setDevice(TerminalDevice* dev_)
    {
       if(dev != nullptr) dev->close();
 
@@ -75,13 +75,13 @@ public:
    }
 
    //! Set raw mode
-   void raw() { dev->ioctl(Device::IOCTL_TERM_ICANON, 0); }
+   void raw() { dev->ioctl(TerminalDevice::IOCTL_TERM_ICANON, 0); }
 
    //! Enable echo
-   void echo() { dev->ioctl(Device::IOCTL_TERM_ECHO, 1); }
+   void echo() { dev->ioctl(TerminalDevice::IOCTL_TERM_ECHO, 1); }
 
    //! Disable echo
-   void noecho() { dev->ioctl(Device::IOCTL_TERM_ECHO, 0); }
+   void noecho() { dev->ioctl(TerminalDevice::IOCTL_TERM_ECHO, 0); }
 
    //! Move cursor to the specified position
    void move(int r, int c)
@@ -254,9 +254,9 @@ public:
 
       if(timeout_ms != 0)
       {
-         dev->ioctl(Device::IOCTL_TERM_TIMEOUT_MS, timeout_ms);
+         dev->ioctl(TerminalDevice::IOCTL_TERM_TIMEOUT_MS, timeout_ms);
          status = dev->read(&ch, 1);
-         dev->ioctl(Device::IOCTL_TERM_TIMEOUT_MS, 0);
+         dev->ioctl(TerminalDevice::IOCTL_TERM_TIMEOUT_MS, 0);
       }
       else
       {
@@ -267,7 +267,7 @@ public:
    }
 
 private:
-   Device*  dev{nullptr};
+   TerminalDevice* dev{nullptr};
    unsigned attr{0};
    unsigned timeout_ms{0};
 
