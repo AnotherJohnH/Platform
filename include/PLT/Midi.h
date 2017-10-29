@@ -20,6 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \brief Platform abstraction layer for access to MIDI devices
+
 #ifndef PLT_MIDI_H
 #define PLT_MIDI_H
 
@@ -32,33 +34,47 @@ namespace PLT {
 namespace MIDI {
 
 
-//! MIDI input stream
-class In : public STB::MIDI::Decoder
+//! Base class for MIDI I/O streams
+class IOBase
 {
 public:
-   In(unsigned device_index = 0);
-   ~In();
-
+   //! Check for successfully opened connection
    bool isConnected() const { return connected; }
 
-private:
+protected:
    bool connected{false};
 };
 
 
-//! MIDI output stream
-class Out
+//! MIDI input stream
+class In : public IOBase
+         , public STB::MIDI::Decoder
 {
 public:
+   //! Open MIDI input stream
+   //
+   // \param device_index Platform specific device id
+   In(unsigned device_index = 0);
+
+   //! Close MIDI input stream
+   ~In();
+};
+
+
+//! MIDI output stream
+class Out : public IOBase
+{
+public:
+   //! Open MIDI output stream
+   //
+   // \param device_index Platform specific device id
    Out(unsigned device_index = 0);
+
+   //! Close MIDI output stream
    ~Out();
 
-   bool isConnected() const { return connected; }
-
+   //! Send a MIDI message
    void messageOut(unsigned length, const uint8_t* data);
-
-private:
-   bool connected{false};
 };
 
 

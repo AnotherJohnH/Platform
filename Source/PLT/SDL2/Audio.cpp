@@ -55,7 +55,7 @@ static void mixAudioOut(void* userdata, uint8_t* stream, int len)
 }
 
 
-Base::Base(unsigned freq_, Format format_, unsigned channels_, bool input)
+IOBase::IOBase(unsigned freq_, Format format_, unsigned channels_, bool input)
    : freq(freq_)
    , format(format_)
    , channels(channels_)
@@ -118,7 +118,7 @@ Base::Base(unsigned freq_, Format format_, unsigned channels_, bool input)
    open = true;
 }
 
-Base::~Base()
+IOBase::~IOBase()
 {
    if(open)
    {
@@ -126,7 +126,7 @@ Base::~Base()
    }
 }
 
-bool Base::setEnable(bool enable_)
+bool IOBase::setEnable(bool enable_)
 {
    if(!open) return false;
 

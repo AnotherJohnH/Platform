@@ -25,8 +25,8 @@
 
 #include "STB/ConsoleApp.h"
 
-#include "PLT/TerminalCanvas.h"
-#include "PLT/TerminalStdio.h"
+#include "TerminalCanvas.h"
+#include "TerminalStdio.h"
 
 
 class TerminalApp : public STB::ConsoleApp
@@ -61,7 +61,7 @@ private:
 #endif
       {
          // Use the parent terminal
-         PLT::TerminalStdio term(program);
+         TerminalStdio term(program);
          return startTerminalApp(term);
       }
 #ifndef NO_TERMINAL_EMULATOR
@@ -91,7 +91,7 @@ private:
    template <unsigned WIDTH, unsigned HEIGHT>
    int launchDisplay()
    {
-      PLT::TerminalCanvas<WIDTH,HEIGHT> term(program);
+      TerminalCanvas<WIDTH,HEIGHT> term(program);
       return startTerminalApp(term);
    }
 

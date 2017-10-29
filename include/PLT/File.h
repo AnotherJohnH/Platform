@@ -31,10 +31,20 @@ namespace PLT {
 class File
 {
 public:
+   //! Open a file stream
+   //
+   // \param filename full filename
+   // \param mode fopen() style mode
    File(const char* filename, const char* mode);
 
+   //! Open a file stream
+   //
+   // \param filename filename
+   // \param ext filename extension
+   // \param mode fopen() style mode
    File(const char* filename, const char* ext, const char* mode);
 
+   //! Close the file stream
    ~File();
 
    //! Return the filename
@@ -61,7 +71,7 @@ public:
    //! Write raw data
    bool write(const void* data, size_t size);
 
-   //! Flush output stream
+   //! Flush an output stream
    void flush();
 
    //! Report an error

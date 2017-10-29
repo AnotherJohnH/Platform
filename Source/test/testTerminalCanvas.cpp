@@ -24,12 +24,12 @@
 #include <cstdio>
 
 #include "PLT/Curses.h"
-#include "PLT/TerminalCanvas.h"
+#include "TerminalCanvas.h"
 
 
 int main(int argc, char *argv[])
 {
-   PLT::TerminalCanvas<800, 600> term("PLT::TerminalCanvas");
+   TerminalCanvas<800, 600> term("TerminalCanvas");
 
    PLT::Curses win(&term);
 

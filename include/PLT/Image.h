@@ -24,7 +24,7 @@
 #define PLT_IMAGE_H
 
 #include <cassert>
-#include <stdint.h>
+#include <cstdint>
 
 namespace PLT {
 
@@ -58,6 +58,8 @@ public:
    virtual void* getHandle() const { return 0; }
 
    //! Get pointer to the storage for the image
+   //
+   // \param pitch_ Number of bytes in each line of the image
    uint8_t* getStorage(unsigned& pitch_) const
    {
       pitch_ = pitch;

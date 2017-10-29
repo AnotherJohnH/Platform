@@ -24,6 +24,6 @@
 
 #include "PLT/Sounder.h"
 
-void PLT::Sounder::enable(bool set)
+void PLT::Sounder::setEnable(bool enable)
 {
 }

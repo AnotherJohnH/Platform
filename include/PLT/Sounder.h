@@ -20,6 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \brief Platform abstraction interface for simple "beep" audio hardware
+
 #ifndef PLT_SOUNDER_H
 #define PLT_SOUNDER_H
 
@@ -29,9 +31,12 @@ namespace PLT {
 class Sounder
 {
 public:
-   void enable(bool set);
+   //! Enable or disable the sounder
+   //
+   //! \param enable true => enable, false => disable
+   void setEnable(bool enable);
 };
 
 } // namespace PLT
 
-#endif
+#endif // PLT_SOUNDER_H

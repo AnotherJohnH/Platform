@@ -28,14 +28,14 @@ namespace PLT {
 
 namespace Audio {
 
-Base::Base(unsigned freq_, Format format_, unsigned channels_, bool input_)
+IOBase::IOBase(unsigned freq_, Format format_, unsigned channels_, bool input_)
 {
     handle = 0;
 }
 
-Base::~Base() {}
+IOBase::~IOBase() {}
 
-bool Base::setEnable(bool enable_)
+bool IOBase::setEnable(bool enable_)
 {
    return false;
 }

@@ -24,12 +24,12 @@
 #include <cstdio>
 
 #include "PLT/Curses.h"
-#include "PLT/TerminalStdio.h"
+#include "TerminalStdio.h"
 
 
 int main(int argc, char *argv[])
 {
-   PLT::TerminalStdio term("PLT::TerminalStdio");
+   TerminalStdio term("TerminalStdio");
 
    PLT::Curses win(&term);
 

@@ -20,8 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_TERMINAL_CANVAS_H
-#define PLT_TERMINAL_CANVAS_H
+#ifndef TERMINAL_CANVAS_H
+#define TERMINAL_CANVAS_H
 
 #include <cassert>
 #include <cstdarg>
@@ -36,12 +36,10 @@
 
 #include "STB/Fifo.h"
 
-namespace PLT {
-
 //! Terminal device using PLT::Canvas back-end
 template <unsigned WIDTH, unsigned HEIGHT>
-class TerminalCanvas : public Ansi
-                     , public Device
+class TerminalCanvas : public PLT::Ansi
+                     , public PLT::Device
 {
 private:
    static const unsigned MIN_FONT_WIDTH  = 6;
@@ -131,7 +129,7 @@ private:
    };
 
    // Resources
-   Canvas           canvas;
+   PLT::Canvas      canvas;
    const GUI::Font* font{};
    unsigned         border{0};
    unsigned         line_space{0};
@@ -822,7 +820,5 @@ public:
       return i;
    }
 };
-
-} // namespace PLT
 
 #endif

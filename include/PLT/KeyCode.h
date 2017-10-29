@@ -23,11 +23,11 @@
 #ifndef PLT_KEY_CODE_H
 #define PLT_KEY_CODE_H
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace PLT {
 
-//! User interface key codes
+//! Event codes for special keys
 enum KeyCode : uint8_t
 {
    BACKSPACE = 0x08,
@@ -51,25 +51,25 @@ enum KeyCode : uint8_t
 
    CAPSLOCK  = 0x8E,
    BACK      = 0x8F,
-   UP        = 0x90,
-   DOWN      = 0x91,
-   LEFT      = 0x92,
-   RIGHT     = 0x93,
-   LSHIFT    = 0x94,
-   RSHIFT    = 0x95,
-   LCTRL     = 0x96,
-   LALT      = 0x98,
-   RALT      = 0x99,
+   UP        = 0x90,  //!< Cursor up
+   DOWN      = 0x91,  //!< Cursor down
+   LEFT      = 0x92,  //!< Cursor left
+   RIGHT     = 0x93,  //!< Cursor right
+   LSHIFT    = 0x94,  //!< Left shift
+   RSHIFT    = 0x95,  //!< Right shift
+   LCTRL     = 0x96,  //!< Left ctrl
+   LALT      = 0x98,  //!< Left alt
+   RALT      = 0x99,  //!< Right alt
    HOME      = 0x9A,
    END       = 0x9B,
    PAGE_UP   = 0x9C,
    PAGE_DOWN = 0x9D,
    SELECT    = 0x9E,
    MENU      = 0x9F,
-   VOL_DOWN  = 0xA0,
-   VOL_UP    = 0xA1
+   VOL_DOWN  = 0xA0,  //!< Volume down
+   VOL_UP    = 0xA1   //!< Volume up
 };
 
 } // PLT
 
-#endif
+#endif // PLT_KEY_CODE_H

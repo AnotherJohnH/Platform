@@ -20,8 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_TERMINAL_STDIO_H
-#define PLT_TERMINAL_STDIO_H
+#ifndef TERMINAL_STDIO_H
+#define TERMINAL_STDIO_H
 
 #include <cstdarg>
 #include <cstdio>
@@ -34,8 +34,6 @@
 #include "PLT/KeyCode.h"
 
 #include "STB/Fifo.h"
-
-namespace PLT {
 
 //! Terminal device using stdio as the back-end
 class TerminalStdio : public PLT::Device
@@ -203,7 +201,5 @@ public:
       return i;
    }
 };
-
-} // namespace PLT
 
 #endif
