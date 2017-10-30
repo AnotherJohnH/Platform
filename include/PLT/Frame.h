@@ -20,6 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \file Frame.h
+//! \brief Platform abstraction interface for raw frame buffer
+
 #ifndef PLT_FRAME_H
 #define PLT_FRAME_H
 
@@ -29,23 +32,20 @@
 
 namespace PLT {
 
-class FrameImpl;
-
+//! A raw frame buffer
 class Frame : public Image
 {
-private:
-   FrameImpl* pimpl{};
-
 public:
-   static const uint32_t RESIZABLE   = 1 << 0;
-   static const uint32_t NO_BORDER   = 1 << 1;
-   static const uint32_t FULL_SCREEN = 1 << 2;
+   static const uint32_t NO_FLAGS    = 0;
+   static const uint32_t RESIZABLE   = 1 << 0; //!< Frame can be resized
+   static const uint32_t NO_BORDER   = 1 << 1; //!< Frame has no external border pixels
+   static const uint32_t FULL_SCREEN = 1 << 2; //!< Frame should cover the whole screen
 
-   Frame(const char* title, unsigned width_, unsigned height_, uint32_t flags_ = 0);
+   Frame(const char* title, unsigned width_, unsigned height_, uint32_t flags_ = NO_FLAGS);
 
    ~Frame();
 
-   //!
+   //! Render an image onto the frame buffer
    virtual void blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
                      const Image& src) override;
 
@@ -54,6 +54,11 @@ public:
 
    //! Ensure changes in frame buffer are displayed
    void refresh();
+
+private:
+   class Impl;
+
+   Impl* pimpl{nullptr};
 };
 
 } // namespace PLT

@@ -20,6 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \file File.h
+//! \brief Platform abstraction interface for file I/O
+
 #ifndef PLT_FILE_H
 #define PLT_FILE_H
 
@@ -27,7 +30,7 @@
 
 namespace PLT {
 
-//! Abstraction layer for file access
+//! A file stream
 class File
 {
 public:
@@ -86,4 +89,4 @@ private:
 
 } // namespace STB 
 
-#endif
+#endif // PLT_FILE_H

@@ -37,7 +37,7 @@
 
 namespace PLT {
 
-class FrameImpl
+class Frame::Impl
 {
 private:
    unsigned width;
@@ -121,7 +121,7 @@ public:
 Frame::Frame(const char* title_, unsigned width_, unsigned height_, uint32_t flags_)
    : Image(width_, height_)
 {
-   pimpl  = new FrameImpl(title_, width, height, flags_);
+   pimpl  = new Impl(title_, width, height, flags_);
    buffer = pimpl->getStorage(pitch);
 }
 

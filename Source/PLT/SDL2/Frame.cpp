@@ -29,10 +29,10 @@
 namespace PLT {
 
 
-class FrameImpl
+class Frame::Impl
 {
 public:
-   FrameImpl(const char* title_, unsigned width_, unsigned height_, uint32_t flags_)
+   Impl(const char* title_, unsigned width_, unsigned height_, uint32_t flags_)
       : title(title_)
       , flags(flags_)
    {
@@ -75,7 +75,7 @@ public:
       createSurface(width_, height_);
    }
 
-   ~FrameImpl()
+   ~Impl()
    {
       destroySurface();
 
@@ -188,7 +188,7 @@ private:
 Frame::Frame(const char* title_, unsigned width_, unsigned height_, uint32_t flags_)
    : Image(width_, height_)
 {
-   pimpl  = new FrameImpl(title_, width, height, flags_);
+   pimpl  = new Impl(title_, width, height, flags_);
    buffer = pimpl->getStorage(pitch);
 }
 

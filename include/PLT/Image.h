@@ -20,25 +20,21 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \file Image.h
+//! \brief Platform specific bitmap image representation
+
 #ifndef PLT_IMAGE_H
 #define PLT_IMAGE_H
 
-#include <cassert>
 #include <cstdint>
 
 namespace PLT {
 
-//! A raw image that may have a platform specific implementation
+//! A rectangular bitmap image
+//
+// Internal representation will be platform specific
 class Image
 {
-protected:
-   uint8_t* buffer{nullptr};
-   unsigned pitch{0};
-   unsigned width{0};
-   unsigned height{0};
-
-   virtual ~Image() {}
-
 public:
    Image(unsigned width_ = 0, unsigned height_ = 0)
       : width(width_)
@@ -48,14 +44,14 @@ public:
    //! Returns the number of bits per pixel
    static unsigned getPixelBits();
 
-   //! Get frame width (pixels)
+   //! Get image width (pixels)
    unsigned getWidth() const { return width; }
 
-   //! Get frame height (pixels)
+   //! Get image height (pixels)
    unsigned getHeight() const { return height; }
 
-   //! Get a platform specific handle
-   virtual void* getHandle() const { return 0; }
+   //! Get a platform specific handle for the image
+   virtual void* getHandle() const { return nullptr; }
 
    //! Get pointer to the storage for the image
    //
@@ -66,10 +62,10 @@ public:
       return buffer;
    }
 
-   //! Read a pixel
+   //! Read a pixel from the image
    uint32_t getPixel(unsigned x, unsigned y) const;
 
-   //! Write a pixel
+   //! Write a pixel in the image
    void setPixel(unsigned x, unsigned y, uint32_t rgb);
 
    //! Blit another image into this image
@@ -86,6 +82,14 @@ public:
          }
       }
    }
+
+protected:
+   uint8_t* buffer{nullptr};
+   unsigned pitch{0};
+   unsigned width{0};
+   unsigned height{0};
+
+   virtual ~Image() {}
 };
 
 } // namespace PLT

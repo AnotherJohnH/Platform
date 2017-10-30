@@ -77,8 +77,6 @@ static const uint8_t event_decode[0xD0] =
 };
 
 
-namespace PLT {
-
 class EventImpl
 {
 private:
@@ -243,7 +241,7 @@ public:
       }
    }
 
-   EventType getEvent(Event& event, bool block)
+   EventType getEvent(PLT::Event& event, bool block)
    {
       event.type = NONE;
       event.x    = 0;
@@ -261,6 +259,8 @@ public:
 
 static EventImpl impl;
 
+
+namespace PLT {
 
 static EventType getEvent(Event& event, bool wait)
 {

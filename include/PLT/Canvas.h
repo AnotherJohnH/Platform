@@ -20,6 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \file Canvas.h
+//! \brief Platform abstraction interface for 2D rendering on a frame buffer
+
 #ifndef PLT_CANVAS_H
 #define PLT_CANVAS_H
 
@@ -29,7 +32,7 @@
 
 namespace PLT {
 
-//! GUI Canvas implementation
+//! A frame buffer with 2D rendering primitive support
 class Canvas : public GUI::Canvas
 {
 private:
@@ -78,4 +81,4 @@ public:
 
 } // namespace PLT
 
-#endif
+#endif // PLT_CANVAS_H

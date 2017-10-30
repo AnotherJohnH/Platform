@@ -20,6 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \file Event.h
+//! \brief Platform abstraction interface user interface events
+
 #ifndef PLT_EVENT_H
 #define PLT_EVENT_H
 
@@ -30,7 +33,7 @@
 namespace PLT {
 
 
-//! Identify type of a user interface event
+//! Type of a user interface event
 enum EventType : uint8_t
 {
    NONE = 0,     //!< No event
@@ -54,7 +57,7 @@ enum class Button : uint8_t
 };
 
 
-//! A record of an event
+//! An event record
 struct Event
 {
    EventType type{NONE};   //!< Event type
@@ -90,4 +93,4 @@ void setTimer(unsigned period_ms);
 
 } // namespace PLT
 
-#endif
+#endif // PLT_EVENT_H
