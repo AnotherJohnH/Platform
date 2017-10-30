@@ -107,7 +107,7 @@ static bool loopIter()
 static bool eventLoopIter(void* user_data_)
 {
    PLT::Event::Message event;
-   PLT::Event::Type    type = PLT::Event::waitEvent(event);
+   PLT::Event::Type    type = PLT::Event::wait(event);
 
    if(type != PLT::Event::NONE)
    {
@@ -209,12 +209,12 @@ static Event::Type getEvent(Event::Message& event, bool wait)
 
 namespace Event {
 
-Type pollEvent(Message& event)
+Type poll(Message& event)
 {
    return getEvent(event, false);
 }
 
-Type waitEvent(Message& event)
+Type wait(Message& event)
 {
 #ifdef PROJ_TARGET_Emscripten
    return getEvent(event, false);

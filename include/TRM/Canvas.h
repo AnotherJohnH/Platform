@@ -645,7 +645,7 @@ private:
       while(true)
       {
          PLT::Event::Message  event;
-         PLT::Event::Type     type = PLT::Event::waitEvent(event);
+         PLT::Event::Type     type = PLT::Event::wait(event);
 
          if(type == PLT::Event::QUIT)
          {

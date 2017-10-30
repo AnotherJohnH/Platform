@@ -21,7 +21,7 @@
 //------------------------------------------------------------------------------
 
 //! \file Event.h
-//! \brief Platform abstraction interface user interface events
+//! \brief Platform abstraction layer for user interface events
 
 #ifndef PLT_EVENT_H
 #define PLT_EVENT_H
@@ -74,16 +74,16 @@ struct Message
 //! This method will not block if there are no events
 //! \param event Event record for next event
 //! \return the type of event
-Type pollEvent(Message& event);
+Type poll(Message& event);
 
 //! Wait for the next user interface event from the event queue
 //
-//! This method will block until an event arrives.
+//! This method will block until an event arrives
 //! \param event event
 //! \return the type of event
-Type waitEvent(Message& event);
+Type wait(Message& event);
 
-//! Enter an infinite loop until the application quits
+//! Enter a loop until the application quits
 int mainLoop(bool (*callback)(void*) = nullptr, void* user_ptr = nullptr);
 
 //! Enter an event loop until the application quits
@@ -91,6 +91,7 @@ int eventLoop(void (*callback)(const Message&, void*) = nullptr, void* user_ptr 
 
 //! Request repeating timer events
 void setTimer(unsigned period_ms);
+
 
 } // namespace Event
 

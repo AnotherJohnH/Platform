@@ -28,12 +28,12 @@ namespace PLT {
 
 namespace Event {
 
-Type pollEvent(Message& event)
+Type poll(Message& event)
 {
    return PLT::NONE;
 }
 
-Type waitEvent(Message& event)
+Type wait(Message& event)
 {
    return PLT::NONE;
 }

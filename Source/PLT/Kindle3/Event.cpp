@@ -270,12 +270,12 @@ namespace PLT {
 
 namespace Event {
 
-Type pollEvent(Message& event)
+Type poll(Message& event)
 {
    return getEvent(event, /* block */ false);
 }
 
-Type waitEvent(Message& event)
+Type wait(Message& event)
 {
    return getEvent(event, /* block */ true);
 }
@@ -285,7 +285,7 @@ int eventLoop(void (*callback)(const Message&, void*), void* user_data)
    while(true)
    {
       Message event;
-      Type    type = waitEvent(event);
+      Type    type = wait(event);
 
       if(callback != nullptr) (*callback)(event, user_data);
 
