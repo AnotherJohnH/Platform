@@ -72,5 +72,5 @@ int main()
    audio_in.setEnable(true);
    audio_out.setEnable(true);
 
-   return PLT::mainLoop();
+   return PLT::Event::mainLoop();
 }

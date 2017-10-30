@@ -32,9 +32,11 @@
 
 namespace PLT {
 
+namespace Event {
+
 
 //! Type of a user interface event
-enum EventType : uint8_t
+enum Type : uint8_t
 {
    NONE = 0,     //!< No event
    KEY_DOWN,     //!< A key has been pressed
@@ -58,12 +60,12 @@ enum class Button : uint8_t
 
 
 //! An event record
-struct Event
+struct Message
 {
-   EventType type{NONE};   //!< Event type
-   uint8_t   code{0};      //!< Identify key or mouse button
-   uint16_t  x{0};         //!< Mouse pointer or touch x co-ordinate
-   uint16_t  y{0};         //!< Mouse pointer or touch y-co-ordinate
+   Type     type{NONE};   //!< Event type
+   uint8_t  code{0};      //!< Identify key or mouse button
+   uint16_t x{0};         //!< Mouse pointer or touch x co-ordinate
+   uint16_t y{0};         //!< Mouse pointer or touch y-co-ordinate
 };
 
 
@@ -72,24 +74,25 @@ struct Event
 //! This method will not block if there are no events
 //! \param event Event record for next event
 //! \return the type of event
-EventType pollEvent(Event& event);
+Type pollEvent(Message& event);
 
 //! Wait for the next user interface event from the event queue
 //
 //! This method will block until an event arrives.
 //! \param event event
 //! \return the type of event
-EventType waitEvent(Event& event);
+Type waitEvent(Message& event);
 
 //! Enter an infinite loop until the application quits
 int mainLoop(bool (*callback)(void*) = nullptr, void* user_ptr = nullptr);
 
 //! Enter an event loop until the application quits
-int eventLoop(void (*callback)(const Event&, void*) = nullptr, void* user_ptr = nullptr);
+int eventLoop(void (*callback)(const Message&, void*) = nullptr, void* user_ptr = nullptr);
 
 //! Request repeating timer events
 void setTimer(unsigned period_ms);
 
+} // namespace Event
 
 } // namespace PLT
 

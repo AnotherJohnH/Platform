@@ -26,17 +26,19 @@
 
 namespace PLT {
 
-EventType pollEvent(Event& event)
+namespace Event {
+
+Type pollEvent(Message& event)
 {
    return PLT::NONE;
 }
 
-EventType waitEvent(Event& event)
+Type waitEvent(Message& event)
 {
    return PLT::NONE;
 }
 
-int eventLoop(void (*callback)(const Event& event, void*), void* user_data)
+int eventLoop(void (*callback)(const Message& event, void*), void* user_data)
 {
    return 0;
 }

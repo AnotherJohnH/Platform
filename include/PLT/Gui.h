@@ -76,25 +76,25 @@ private:
       return frame_flags;
    }
 
-   void handleEvent(const Event& event)
+   void handleEvent(const Event::Message& event)
    {
       switch(event.type)
       {
-      case PLT::RESIZE:       winResize(event.x, event.y); break;
-      case PLT::KEY_DOWN:     keyPress(event.code, true ); break;
-      case PLT::KEY_UP:       keyPress(event.code, false); break;
-      case PLT::POINTER_MOVE: ptrMove(event.x, event.y); break;
-      case PLT::BUTTON_DOWN:  btnPress(event.x, event.y, event.code == 1, true);  break;
-      case PLT::BUTTON_UP:    btnPress(event.x, event.y, event.code == 1, false); break;
-      case PLT::TIMER:        timerEvent(); break;
+      case PLT::Event::RESIZE:       winResize(event.x, event.y); break;
+      case PLT::Event::KEY_DOWN:     keyPress(event.code, true ); break;
+      case PLT::Event::KEY_UP:       keyPress(event.code, false); break;
+      case PLT::Event::POINTER_MOVE: ptrMove(event.x, event.y); break;
+      case PLT::Event::BUTTON_DOWN:  btnPress(event.x, event.y, event.code == 1, true);  break;
+      case PLT::Event::BUTTON_UP:    btnPress(event.x, event.y, event.code == 1, false); break;
+      case PLT::Event::TIMER:        timerEvent(); break;
 
-      case PLT::QUIT:
+      case PLT::Event::QUIT:
       default:
          break;
       }
    }
 
-   static void eventCallBack(const Event& event, void* ptr)
+   static void eventCallBack(const Event::Message& event, void* ptr)
    {
       Gui* gui = reinterpret_cast<Gui*>(ptr);
       gui->handleEvent(event);
@@ -118,13 +118,13 @@ public:
    {
       show();
 
-      return PLT::eventLoop(eventCallBack, this);
+      return PLT::Event::eventLoop(eventCallBack, this);
    }
 
    void setTimer(unsigned code, unsigned period_ms)
    {
       setTimerEvent(code);
-      PLT::setTimer(period_ms);
+      PLT::Event::setTimer(period_ms);
    }
 };
 

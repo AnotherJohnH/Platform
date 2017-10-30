@@ -39,5 +39,5 @@ int main()
 {
    TestMidiIn midi_in;
 
-   return PLT::mainLoop();
+   return PLT::Event::mainLoop();
 }

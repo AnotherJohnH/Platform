@@ -25,18 +25,18 @@
 #include "PLT/Event.h"
 #include "PLT/Frame.h"
 
-void callback(const PLT::Event& event, void* ptr)
+void callback(const PLT::Event::Message& event, void* ptr)
 {
    switch(event.type)
    {
-   case PLT::KEY_DOWN:     printf("KEY_DOWN     %02X\n",     event.code); break;
-   case PLT::KEY_UP:       printf("KEY_UP       %02X\n",     event.code); break;
-   case PLT::BUTTON_DOWN:  printf("BUTTON_DOWN  %d %u %u\n", event.code, event.x, event.y); break;
-   case PLT::BUTTON_UP:    printf("BUTTON_UP    %d %u %u\n", event.code, event.x, event.y); break;
-   case PLT::POINTER_MOVE: printf("POINTER_MOVE %u %u\n",    event.x, event.y); break;
-   case PLT::TIMER:        printf("TIMER\n"); break;
-   case PLT::RESIZE:       printf("RESIZE\n"); break;
-   case PLT::QUIT:         printf("QUIT\n"); break;
+   case PLT::Event::KEY_DOWN:     printf("KEY_DOWN     %02X\n",     event.code); break;
+   case PLT::Event::KEY_UP:       printf("KEY_UP       %02X\n",     event.code); break;
+   case PLT::Event::BUTTON_DOWN:  printf("BUTTON_DOWN  %d %u %u\n", event.code, event.x, event.y); break;
+   case PLT::Event::BUTTON_UP:    printf("BUTTON_UP    %d %u %u\n", event.code, event.x, event.y); break;
+   case PLT::Event::POINTER_MOVE: printf("POINTER_MOVE %u %u\n",    event.x, event.y); break;
+   case PLT::Event::TIMER:        printf("TIMER\n"); break;
+   case PLT::Event::RESIZE:       printf("RESIZE\n"); break;
+   case PLT::Event::QUIT:         printf("QUIT\n"); break;
 
    default: break;
    }
@@ -46,7 +46,7 @@ int main(int argc, const char* argv[])
 {
    PLT::Frame frame("Event Test", 100, 100);
 
-   PLT::setTimer(1000);
+   PLT::Event::setTimer(1000);
 
-   return PLT::eventLoop(callback);
+   return PLT::Event::eventLoop(callback);
 }

@@ -639,25 +639,25 @@ private:
 
       if(timeout_ms != 0)
       {
-         PLT::setTimer(timeout_ms);
+         PLT::Event::setTimer(timeout_ms);
       }
 
       while(true)
       {
-         PLT::Event     event;
-         PLT::EventType type = PLT::waitEvent(event);
+         PLT::Event::Message  event;
+         PLT::Event::Type     type = PLT::Event::waitEvent(event);
 
-         if(type == PLT::QUIT)
+         if(type == PLT::Event::QUIT)
          {
             status = -1;
             break;
          }
-         else if(type == PLT::TIMER)
+         else if(type == PLT::Event::TIMER)
          {
             status = 0;
             break;
          }
-         else if(type == PLT::KEY_DOWN)
+         else if(type == PLT::Event::KEY_DOWN)
          {
             if(echo && (event.code < 0x80))
             {
@@ -671,7 +671,7 @@ private:
 
       if(timeout_ms != 0)
       {
-         PLT::setTimer(0);
+         PLT::Event::setTimer(0);
       }
 
       return status;

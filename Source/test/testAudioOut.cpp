@@ -48,5 +48,5 @@ int main()
 
    audio.setEnable(true);
 
-   return PLT::mainLoop();
+   return PLT::Event::mainLoop();
 }

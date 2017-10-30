@@ -38,5 +38,5 @@ int main(int argc, const char* argv[])
 
    monitor.play();
 
-   return PLT::mainLoop();
+   return PLT::Event::mainLoop();
 }

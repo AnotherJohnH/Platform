@@ -82,5 +82,5 @@ int main(int argc, const char* argv[])
 
    canvas.refresh();
 
-   return PLT::eventLoop();
+   return PLT::Event::eventLoop();
 }

@@ -40,5 +40,5 @@ int main(int argc, const char* argv[])
    monitor.play();
 
    // Wait here for application exit
-   PLT::mainLoop();
+   PLT::Event::mainLoop();
 }

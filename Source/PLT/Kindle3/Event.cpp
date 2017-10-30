@@ -260,29 +260,32 @@ public:
 static EventImpl impl;
 
 
-namespace PLT {
-
-static EventType getEvent(Event& event, bool wait)
+static PLT::Event::Type getEvent(PLT::Event::Message& event, bool wait)
 {
    return impl.getEvent(event, wait);
 }
 
-EventType pollEvent(Event& event)
+
+namespace PLT {
+
+namespace Event {
+
+Type pollEvent(Message& event)
 {
    return getEvent(event, /* block */ false);
 }
 
-EventType waitEvent(Event& event)
+Type waitEvent(Message& event)
 {
    return getEvent(event, /* block */ true);
 }
 
-int eventLoop(void (*callback)(const Event&, void*), void* user_data)
+int eventLoop(void (*callback)(const Message&, void*), void* user_data)
 {
    while(true)
    {
-      Event     event;
-      EventType type = waitEvent(event);
+      Message event;
+      Type    type = waitEvent(event);
 
       if(callback != nullptr) (*callback)(event, user_data);
 
@@ -294,5 +297,8 @@ void setTimer(unsigned period_ms)
 {
    impl.setTimer(period_ms);
 }
+
+
+} // namespace Event
 
 } // namespace PLT
