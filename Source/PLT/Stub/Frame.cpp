@@ -36,6 +36,11 @@ Frame::~Frame()
 {
 }
 
+void* Frame::getHandle()
+{
+   return nullptr;
+}
+
 void Frame::blit(unsigned x,
                  unsigned y,
                  unsigned src_offset,

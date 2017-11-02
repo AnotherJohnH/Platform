@@ -99,6 +99,11 @@ public:
       return (uint8_t*)surface->pixels;
    }
 
+   void* getHandle() const
+   {
+      return surface;
+   }
+
    void blit(unsigned     x,
              unsigned     y,
              unsigned     src_offset,
@@ -193,6 +198,11 @@ Frame::Frame(const char* title_, unsigned width_, unsigned height_, uint32_t fla
 }
 
 Frame::~Frame() { delete pimpl; }
+
+void* Frame::getHandle() const
+{
+   return pimpl->getHandle();
+}
 
 void Frame::blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width, const Image& src)
 {

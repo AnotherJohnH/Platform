@@ -27,10 +27,11 @@
 #define PLT_IMAGE_H
 
 #include <cstdint>
+#include <cassert>
 
 namespace PLT {
 
-//! A rectangular bitmap image
+//! Base class for rectangular bitmap image
 //
 // Internal representation will be platform specific
 class Image
@@ -41,7 +42,7 @@ public:
       , height(height_)
    {}
 
-   //! Returns the number of bits per pixel
+   //! Returns the size of a pixel (bits)
    static unsigned getPixelBits();
 
    //! Get image width (pixels)
@@ -55,7 +56,7 @@ public:
 
    //! Get pointer to the storage for the image
    //
-   // \param pitch_ Number of bytes in each line of the image
+   // \param pitch_ Length of each line of the image (bytes)
    uint8_t* getStorage(unsigned& pitch_) const
    {
       pitch_ = pitch;
@@ -63,22 +64,35 @@ public:
    }
 
    //! Read a pixel from the image
+   //
+   // \param x X co-ordinate (pixels)
+   // \param y Y co-ordinate (pixels)
    uint32_t getPixel(unsigned x, unsigned y) const;
 
    //! Write a pixel in the image
+   //
+   // \param x X co-ordinate (pixels)
+   // \param y Y co-ordinate (pixels)
    void setPixel(unsigned x, unsigned y, uint32_t rgb);
 
    //! Blit another image into this image
+   //
+   // \param x X co-ordinate in target image (pixels)
+   // \param y Y co-ordinate in target image (pixels)
+   // \param src_offset x offset into source (pixels)
+   // \param src_width length of each line from source to render (pixels)
+   // \param source Reference to source image
    virtual void blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
                      const Image& source)
    {
       // Back-stop slow implementation
-      // TODO this is broken
-      for(unsigned i = 0; i < source.getWidth(); i++)
+      assert((src_offset + src_width) <= source.getWidth());
+
+      for(unsigned u = 0; u < src_width; u++)
       {
-         for(unsigned j = 0; j < source.getHeight(); j++)
+         for(unsigned v = 0; v < source.getHeight(); v++)
          {
-            setPixel(x + i, y + j, source.getPixel(i, j));
+            setPixel(x + u, y + v, source.getPixel(src_offset + u, v));
          }
       }
    }
