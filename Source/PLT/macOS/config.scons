@@ -29,6 +29,9 @@ env['LIBPREFIX'] = 'lib/'+env['machine']+'/lib'
 
 env['CXXFLAGS']  = ['-std=c++11']
 
+if env['CC'] == 'clang':
+   env.Append(CXXFLAGS = ['-Wdocumentation'])
+
 env.ParseConfig('sdl2-config --cflags --libs')
 
 env.Append(LINKFLAGS = ['-framework', 'CoreMIDI'])

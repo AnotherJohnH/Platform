@@ -24,7 +24,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "SDL.h"
+#include "SDL_headers.h"
 
 #include "PLT/Event.h"
 

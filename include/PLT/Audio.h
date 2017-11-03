@@ -28,6 +28,7 @@
 
 #include <cstdint>
 
+//! Platform abstraction layer
 namespace PLT {
 
 //! Interface for raw audio hardware
@@ -83,12 +84,12 @@ protected:
    ~IOBase();
 
 private:
-   unsigned freq{0};
-   Format   format{NONE};
-   unsigned channels{0};
-   bool     open{false};
-   bool     enable{false};
-   unsigned handle{0};
+   unsigned  freq{0};
+   Format    format{NONE};
+   unsigned  channels{0};
+   bool      open{false};
+   bool      enable{false};
+   uintptr_t handle{0};
 };
 
 

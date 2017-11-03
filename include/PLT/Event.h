@@ -30,8 +30,10 @@
 
 #include "PLT/KeyCode.h"
 
+//! Platform abstraction layer
 namespace PLT {
 
+//! Interface for user events
 namespace Event {
 
 
@@ -84,10 +86,18 @@ Type poll(Message& event);
 Type wait(Message& event);
 
 //! Enter a loop until the application quits
+//
+//! \param callback Called once each iteration, may be rate limited
+//! \param user_ptr Passed to callback
+//! \return value suitable for returning from main()
 int mainLoop(bool (*callback)(void*) = nullptr, void* user_ptr = nullptr);
 
 //! Enter an event loop until the application quits
-int eventLoop(void (*callback)(const Message&, void*) = nullptr, void* user_ptr = nullptr);
+//
+//! \param callback Called for each new event
+//! \param user_ptr Passed to callback
+//! \return value suitable for returning from main()
+int eventLoop(void (*callback)(const Message& event, void* user_data) = nullptr, void* user_ptr = nullptr);
 
 //! Request repeating timer events
 void setTimer(unsigned period_ms);

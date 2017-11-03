@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,36 +20,15 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// Stub Event implementation
+#ifndef SDL_HEADERS_H
+#define SDL_HEADERS_H
 
-#include "PLT/Event.h"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation"
 
-namespace PLT {
+#include "SDL.h"
+#include "SDL_audio.h"
 
-namespace Event {
+#pragma clang diagnostic pop
 
-Type poll(Message& event)
-{
-   return PLT::NONE;
-}
-
-Type wait(Message& event)
-{
-   return PLT::NONE;
-}
-
-int mainLoop(bool (*callback)(void*), void* user_data)
-{
-   return 0;
-}
-
-int eventLoop(void (*callback)(const Message&, void*), void* user_data)
-{
-   return 0;
-}
-
-void setTimer(unsigned period_ms)
-{
-}
-
-} // namespace PLT
+#endif // SDL_HEADERS_H

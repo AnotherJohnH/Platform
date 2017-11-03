@@ -280,6 +280,19 @@ Type wait(Message& event)
    return getEvent(event, /* block */ true);
 }
 
+int mainLoop(void (*callback)(void*), void* user_data)
+{
+   while(true)
+   {
+      Message event;
+      Type    type = wait(event);
+
+      if(callback != nullptr) (*callback)(user_data);
+
+      if(type == QUIT) return 0;
+   }
+}
+
 int eventLoop(void (*callback)(const Message&, void*), void* user_data)
 {
    while(true)
