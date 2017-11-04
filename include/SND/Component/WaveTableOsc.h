@@ -23,8 +23,6 @@
 #ifndef SND_WAVE_TABLE_OSC_H
 #define SND_WAVE_TABLE_OSC_H
 
-#include <functional>
-
 #include "MTH/Waveform.h"
 #include "Osc.h"
 
@@ -41,13 +39,13 @@ protected:
       : Osc(freq_hz)
    {}
 
-   WaveTableOsc(Freq freq_hz, std::function<double(double)> func)
+   WaveTableOsc(Freq freq_hz, double (*func)(double))
       : Osc(freq_hz)
    {
       computeWave(func);
    }
 
-   void computeWave(std::function<double(double)> func)
+   void computeWave(double (*func)(double))
    {
       Signal local[PHASE_PERIOD];
 
