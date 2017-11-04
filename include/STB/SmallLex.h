@@ -117,7 +117,6 @@ public:
 
    bool doMatch(const char* token, const char* description, bool err)
    {
-      printf("\n");
       bool is_regex = description != nullptr;
 
       char  ch;
