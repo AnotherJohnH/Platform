@@ -20,6 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#include <cstdio>
 
 #include "GUI/GUI.h"
 #include "PLT/Gui.h"

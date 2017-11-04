@@ -27,6 +27,7 @@
 #include <typeinfo>
 #include <cassert>
 #include <cstring>
+#include <cstdint>
 
 namespace PLT { class File; }
 

@@ -26,7 +26,7 @@
 #ifndef PLT_FILE_H
 #define PLT_FILE_H
 
-#include <string>
+#include <cstddef>
 
 namespace PLT {
 

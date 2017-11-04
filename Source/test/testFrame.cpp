@@ -48,8 +48,8 @@ int main(int argc, const char* argv[])
    printf("Handle     : %p\n", frame.getHandle());
    printf("Storage    : %p\n", frame.getStorage(pitch));
    printf("Pitch      : %u bytes\n", pitch);
-   printf("Pixel(0,0) : 0x%08X\n", frame.getPixel(0, 0));
-   printf("Pixel(0,8) : 0x%08X\n", frame.getPixel(0, 8));
+   printf("Pixel(0,0) : 0x%08X\n", unsigned(frame.getPixel(0, 0)));
+   printf("Pixel(0,8) : 0x%08X\n", unsigned(frame.getPixel(0, 8)));
 
    assert((frame.getPixel(0, 0) & 0xFFFFFF) == 0x000000);
    assert((frame.getPixel(0, 8) & 0xFFFFFF) == 0xFFFFFF);
