@@ -23,6 +23,7 @@
 binaries = ['testHelloWorld',
             'testAudioOut',
             'testAudioIn',
+            'testDigital',
             'testMidiIn',
             'testCanvas',
             'testEvent',
