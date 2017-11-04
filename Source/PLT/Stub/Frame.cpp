@@ -36,7 +36,7 @@ Frame::~Frame()
 {
 }
 
-void* Frame::getHandle()
+void* Frame::getHandle() const
 {
    return nullptr;
 }

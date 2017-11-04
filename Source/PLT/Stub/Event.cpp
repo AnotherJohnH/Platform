@@ -30,12 +30,12 @@ namespace Event {
 
 Type poll(Message& event)
 {
-   return PLT::NONE;
+   return PLT::Event::NONE;
 }
 
 Type wait(Message& event)
 {
-   return PLT::NONE;
+   return PLT::Event::NONE;
 }
 
 int mainLoop(bool (*callback)(void*), void* user_data)
@@ -51,5 +51,7 @@ int eventLoop(void (*callback)(const Message&, void*), void* user_data)
 void setTimer(unsigned period_ms)
 {
 }
+
+} // namespace Event
 
 } // namespace PLT
