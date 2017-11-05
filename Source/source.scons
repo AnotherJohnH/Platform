@@ -1,0 +1,16 @@
+
+# Get the source for libPLT.a
+
+Import('source')
+
+source += [File('STB/Option.cpp')]
+source += [File('STB/Midi.cpp')]
+source += [File('STB/Oil.cpp')]
+ 
+source += [File('GUI/LED11.cpp')]
+source += [File('GUI/LED22.cpp')]
+source += [File('GUI/Teletext18.cpp')]
+source += [File('GUI/Teletext15.cpp')]
+source += [File('GUI/Teletext12.cpp')]
+source += [File('GUI/Teletext9.cpp')]
+

@@ -43,7 +43,7 @@ app      = 'PlatformTest'
 version  = '0.0.1'
 
 # Get a build environment
-env,lib = SConscript('build.scons', ['app', 'version'])
+env,libs = SConscript('build.scons', ['app', 'version'])
 
 # Project specific build config
 env.Append(CCFLAGS = ['-O3'])
@@ -53,7 +53,7 @@ exe = []
 for binary in binaries:
    exe += env.Program(binary, ['Source/test/'+binary+'.cpp'])
 
-Depends(exe, lib)
+Depends(exe, libs)
 
 env.Tar(app+'_'+env['target']+'_'+env['machine']+'_'+version+'.tgz',
-        ['include', lib, env['platform_files'], 'LICENSE'])
+        ['include', libs, env['platform_files'], 'LICENSE'])

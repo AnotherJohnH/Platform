@@ -60,8 +60,7 @@ Import('app')
 env['machine'] = machine
 env['target']  = target
 env['app']     = app
-
-env.Append(LIBS    = 'PLT')
+env['LIBS']    = 'PLT'
 
 # Configure for the target platform
 source = []
@@ -81,18 +80,10 @@ env.Append(CPPPATH = env.Dir('Source/PLT/'+target))
 
 env.Append(LIBPATH = env.Dir('lib/'+env['machine']))
 
-# Add target sources to project sources
-source+=[env.File('Source/STB/Option.cpp')]
-source+=[env.File('Source/STB/Midi.cpp')]
-source+=[env.File('Source/STB/Oil.cpp')]
-source+=[env.File('Source/GUI/LED11.cpp')]
-source+=[env.File('Source/GUI/LED22.cpp')]
-source+=[env.File('Source/GUI/Teletext18.cpp')]
-source+=[env.File('Source/GUI/Teletext15.cpp')]
-source+=[env.File('Source/GUI/Teletext12.cpp')]
-source+=[env.File('Source/GUI/Teletext9.cpp')]
+libs = []
 
-lib = env.Library('PLT', source)
+SConscript('Source/source.scons', exports=['source'])
+libs += env.Library('PLT', source)
 
 # Return state to top level
-Return('env', 'lib')
+Return('env', 'libs')
