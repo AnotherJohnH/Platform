@@ -60,6 +60,7 @@ Import('app')
 env['machine'] = machine
 env['target']  = target
 env['app']     = app
+env['startup'] = []
 env['LIBS']    = 'PLT'
 
 # Configure for the target platform
@@ -84,6 +85,10 @@ libs = []
 
 SConscript('Source/source.scons', exports=['source'])
 libs += env.Library('PLT', source)
+
+if 'tinyc' in  str(env['LIBS']):
+   source = SConscript('Source/MTL/tinyc/source.scons')
+   libs += env.Library('tinyc', source)
 
 # Return state to top level
 Return('env', 'libs')

@@ -5,14 +5,14 @@ app     = 'APPLICATION'
 version = 'VERSION'
 
 # Get a build environment
-env,lib = SConscript('Platform/build.scons', ['app', 'version'])
+env,libs = SConscript('Platform/build.scons', ['app', 'version'])
 
 # Project specific build config
 env.Append(CCFLAGS = ['-O3'])
 
 # Builders
-exe = env.Program(binary, source)
-Depends(exe, lib)
+exe = env.Program(binary, source + env['startup'])
+Depends(exe, libs)
 
 env.Tar(app+'_'+env['target']+'_'+env['machine']+'_'+version+'.tgz',
         [exe, env['platform_files'], 'LICENSE'])

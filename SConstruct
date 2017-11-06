@@ -51,7 +51,7 @@ env.Append(CCFLAGS = ['-O3'])
 # Builders
 exe = []
 for binary in binaries:
-   exe += env.Program(binary, ['Source/test/'+binary+'.cpp'])
+   exe += env.Program(binary, ['Source/test/'+binary+'.cpp', env['startup']])
 
 Depends(exe, libs)
 
