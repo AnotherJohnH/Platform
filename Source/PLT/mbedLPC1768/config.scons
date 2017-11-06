@@ -20,38 +20,74 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# scons configuration for Kindle3 builds
+# scons configuration for MBED LPC1768 builds
 
 PREFIX  = 'arm-none-eabi-'
 MC='armv7m'
+CHIP='LPC1768'
 
 #-------------------------------------------------------------------------------
 
 Import('env')
 
-env['machine'] = MC
-
-obj_path = 'obj/'+env['machine']+'/'
+env['machine']    = MC
+env['OBJPREFIX']  = 'obj/'+env['machine']+'/'
+env['LIBPREFIX']  = 'lib/'+env['machine']+'/lib'
+env['PROGPREFIX'] = 'bin/'+env['machine']+'/'
 
 env['AS']        = PREFIX+'as'
 env['CC']        = PREFIX+'gcc'
 env['CXX']       = PREFIX+'g++'
-env['LINK']      = PREFIX+'g++'
+env['LINK']      = PREFIX+'ld'
 env['AR']        = PREFIX+'ar'
 env['RANLIB']    = PREFIX+'ranlib'
 env['OBJCOPY']   = PREFIX+'objcopy'
 env['OBJDUMP']   = PREFIX+'objdump'
 env['SIZE']      = PREFIX+'size'
 
-env['OBJPREFIX'] = obj_path
+env['ASFLAGS']   = ['-mcpu=cortex-m3']
 
-env['CCFLAGS']   = ['-DNDEBUG', '-DNCONSOLE',
-                    '-mcpu=cortex-m3', '-mthumb', '-mfloat-abi=soft',
-                    '-fno-common', '-fno-builtin', '-fmessage-length=0', '-fno-default-inline',
-                    '-fno-exceptions', '-ffunction-sections', '-fdata-sections']
-env['CXXFLAGS']  = ['-std=c++11', '-fno-rtti']
-env['CPPPATH']   = ['']
-env['LIBPATH']   = ['']
-env['LIBS']      = ['tinyc']
-env['LINKFLAGS'] = ['-static']
+env['CCFLAGS']   = ['-DNDEBUG',
+                    '-DNCONSOLE',
+                    '-mcpu=cortex-m3',
+                    '-mthumb',
+                    '-mfloat-abi=soft',
+                    '-fno-common',
+                    '-fno-builtin',
+                    '-fmessage-length=0',
+                    '-fno-default-inline',
+                    '-fno-exceptions',
+                    '-ffunction-sections',
+                    '-fdata-sections']
+
+env['CXXFLAGS']  = ['-std=c++11']  # -fno-rtti
+
+import os
+p = os.popen(env['CC'] + ' -print-file-name=armv7-m')
+gcc_lib = p.readline()
+env['LIBPATH']   = Split(gcc_lib)
+
+env.Append(LIBS = ['tinyc', 'gcc'])
+env['LINKFLAGS'] = ['--static']
+
+env['startup'] = env.Object('../../MTL/chip/'+CHIP+'/startup.s')
+env['script']  = env.File('../../MTL/chip/'+CHIP+'/script.ld')
+
+Import('source')
+
+source+=[env.File('platform.cpp'),
+         env.File('../Stub/Audio.cpp'),
+         env.File('../Stub/Event.cpp'),
+         env.File('../Stub/Frame.cpp'),
+         env.File('../Stub/Image.cpp'),
+         env.File('../Stub/Midi.cpp'),
+         env.File('../Stub/Sounder.cpp'),
+         env.File('../Stub/File.cpp')]
+
+#-------------------------------------------------------------------------------
+# Adapt the Program() builder to generate a raw binary and some debug info
+
+env['BUILDERS']['Program'].action += '$OBJCOPY -O binary $TARGET ${TARGET}.bin; '+ \
+                                     '$OBJDUMP -D $SOURCE > ${TARGET}.dbg; '+ \
+                                     '$SIZE $TARGET'
 
