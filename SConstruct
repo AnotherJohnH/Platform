@@ -56,4 +56,4 @@ for binary in binaries:
 Depends(exe, libs)
 
 env.Tar(app+'_'+env['target']+'_'+env['machine']+'_'+version+'.tgz',
-        ['include', libs, env['platform_files'], 'LICENSE'])
+        ['include', libs, env['startup'], env['script'], env['platform_files'], 'LICENSE'])
