@@ -94,6 +94,7 @@ if 'tinyc' in  str(env['LIBS']):
    env.Append(CPPPATH = env.Dir('include/MTL/board/'+target))
    env.Append(CPPPATH = env.Dir('include/MTL/tinyc'))
    env.Append(LINKFLAGS = '-T'+str(env['script'][0]))
+   env.Depends(env['startup'], env['script'])
 else:
    env.Append(CPPPATH = env.Dir('include/MTL/board/stub'))
 
