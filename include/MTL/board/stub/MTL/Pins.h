@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,43 +20,19 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Periph.h
-//! \brief 
+//! \file Pin.h
+//! \brief Stub
 
-#ifndef PERIPH_H
-#define PERIPH_H
+#ifndef MTL_PINS_H
+#define MTL_PINS_H
 
+namespace MTL {
 
-#include <cstdint>
+static const unsigned PIN_LED1 = 1;
+static const unsigned PIN_LED2 = 2;
+static const unsigned PIN_LED3 = 3;
+static const unsigned PIN_LED4 = 4;
 
-#include "Register.h"
+} // namespace MTL
 
-
-#define  REG(OFFSET, NAME)  \
-    struct { uint8_t pad_##NAME[OFFSET]; Register<uint32_t> NAME; }
-
-#define  REG_ARRAY(OFFSET, NAME, SIZE)  \
-    struct { uint8_t pad_##NAME[OFFSET]; Register<uint32_t> NAME[SIZE]; }
-
-
-#define  REG_TYPE(OFFSET, TYPE, NAME)  \
-    struct { uint8_t pad_##NAME[OFFSET]; TYPE NAME; }
-
-#define  REG_TYPE_ARRAY(OFFSET, TYPE, NAME, SIZE)  \
-    struct { uint8_t pad_##NAME[OFFSET]; TYPE NAME[SIZE]; }
-
-
-template <typename REG_TYPE,
-          uint32_t BASE_ADDR,
-          unsigned INSTANCE=0,
-          uint32_t SIZE = 0x1000>
-class Periph
-{
-protected:
-   const uint32_t PERIPH_ADDR = BASE_ADDR + INSTANCE*SIZE;
-
-   volatile REG_TYPE* const reg = (volatile REG_TYPE*)(PERIPH_ADDR);
-};
-
-
-#endif // PERIPH_H
+#endif // MTL_PINS_H

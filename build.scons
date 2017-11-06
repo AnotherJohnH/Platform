@@ -62,6 +62,7 @@ env['target']  = target
 env['app']     = app
 env['startup'] = []
 env['LIBS']    = 'PLT'
+env['CPPPATH'] = []
 
 # Configure for the target platform
 source = []
@@ -76,8 +77,6 @@ env.Append(CCFLAGS = '-Wall')
 env.Append(CCFLAGS = '-Werror')
 
 env.Append(CPPPATH = env.Dir('include'))
-env.Append(CPPPATH = env.Dir('Source/MTL'))
-env.Append(CPPPATH = env.Dir('Source/PLT/'+target))
 
 env.Append(LIBPATH = env.Dir('lib/'+env['machine']))
 
@@ -89,6 +88,10 @@ libs += env.Library('PLT', source)
 if 'tinyc' in  str(env['LIBS']):
    source = SConscript('Source/MTL/tinyc/source.scons')
    libs += env.Library('tinyc', source)
+   env.Append(CPPPATH = env.Dir('include/MTL/board/'+target))
+   env.Append(CPPPATH = env.Dir('include/MTL/tinyc'))
+else:
+   env.Append(CPPPATH = env.Dir('include/MTL/board/stub'))
 
 # Return state to top level
 Return('env', 'libs')

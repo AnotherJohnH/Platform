@@ -26,8 +26,8 @@
 #ifndef MTL_DIGITAL_H
 #define MTL_DIGITAL_H
 
-#include "plt/Pins.h"
-#include "plt/Gpio.h"
+#include "MTL/Pins.h"
+#include "MTL/Gpio.h"
 
 //! Bare metal interfaces
 namespace MTL {

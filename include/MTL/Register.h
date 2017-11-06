@@ -21,7 +21,7 @@
 //------------------------------------------------------------------------------
 
 //! \file Register.h
-//! \brief Generic register access
+//! \brief Memory mapped register helper
 
 #ifndef REGISTER_H
 #define REGISTER_H
