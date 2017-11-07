@@ -21,7 +21,7 @@
 //------------------------------------------------------------------------------
 
 // \file Gpio.h
-// \ brief General Purpose I/O for NXP LPC1768
+// \brief NXP LPC1768 General Purpose I/O
 
 #ifndef LPC1768_GPIO_H
 #define LPC1768_GPIO_H
@@ -33,8 +33,10 @@
 
 namespace MTL {
 
+namespace Gpio {
 
-struct GpioReg
+
+struct Reg
 {
    struct
    {
@@ -50,21 +52,12 @@ struct GpioReg
 
 
 template <unsigned WIDTH, unsigned PIN>
-class Gpio : public Periph<GpioReg,0x2009C000>
+class Out : public Periph<GpioReg,0x2009C000>
 {
-private:
-   static const unsigned LSB       = PIN & 0x1F;
-   static const unsigned PORT      = PIN >> 5;
-   static const unsigned MSB       = LSB + WIDTH - 1;
-   static const uint32_t DATA_MASK = (1<<WIDTH) - 1;
-
 public:
-   Gpio(bool out = true)
+   Out()
    {
-      if (out)
-         reg->fio[PORT].dir.setField(MSB, LSB, DATA_MASK);
-      else
-         reg->fio[PORT].dir.setField(MSB, LSB, 0);
+      reg->fio[PORT].dir.setField(MSB, LSB, DATA_MASK);
 
       for(unsigned i=0; i<WIDTH; ++i)
       {
@@ -72,15 +65,15 @@ public:
       }
    }
 
+   operator uint32_t() const
+   {
+      return reg->fio[PORT].pin.getField(MSB, LSB);
+   }
+
    uint32_t operator=(uint32_t data)
    {
       reg->fio[PORT].pin.setField(MSB, LSB, data);
       return data;
-   }
-
-   operator uint32_t() const
-   {
-      return reg->fio[PORT].pin.getField(MSB, LSB);
    }
 
    void set(uint32_t data)
@@ -92,7 +85,42 @@ public:
    {
       reg->fio[PORT].clr = data << LSB;
    }
+
+private:
+   static const unsigned PORT      = PIN >> 5;
+   static const unsigned LSB       = PIN & 0x1F;
+   static const unsigned MSB       = LSB + WIDTH - 1;
+   static const uint32_t DATA_MASK = (1<<WIDTH) - 1;
 };
+
+
+template <unsigned WIDTH, unsigned PIN>
+class In : public Periph<GpioReg,0x2009C000>
+{
+public:
+   In()
+   {
+      reg->fio[PORT].dir.setField(MSB, LSB, 0);
+
+      for(unsigned i=0; i<WIDTH; ++i)
+      {
+         PinCon().config(PIN + i, 0, PinCon::PULL_NONE);
+      }
+   }
+
+   operator uint32_t() const
+   {
+      return reg->fio[PORT].pin.getField(MSB, LSB);
+   }
+
+private:
+   static const unsigned PORT      = PIN >> 5;
+   static const unsigned LSB       = PIN & 0x1F;
+   static const unsigned MSB       = LSB + WIDTH - 1;
+};
+
+
+} // namespace Gpio
 
 } // namespace MTL
 

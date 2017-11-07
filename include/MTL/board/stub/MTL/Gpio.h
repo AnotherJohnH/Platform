@@ -30,22 +30,21 @@
 
 namespace MTL {
 
+namespace Gpio {
+
+
 template <unsigned WIDTH, unsigned PIN>
-class Gpio
+class Out
 {
 public:
-   Gpio(bool out = true)
+   operator uint32_t() const
    {
+      return 0;
    }
 
    uint32_t operator=(uint32_t data)
    {
       return data;
-   }
-
-   operator uint32_t() const
-   {
-      return 0;
    }
 
    void set(uint32_t data)
@@ -56,6 +55,20 @@ public:
    {
    }
 };
+
+
+template <unsigned WIDTH, unsigned PIN>
+class In
+{
+public:
+   operator uint32_t() const
+   {
+      return 0;
+   }
+};
+
+
+} // namespace GPIO
 
 } // namespace MTL
 

@@ -33,8 +33,10 @@
 
 namespace MTL {
 
+namespace Gpio {
 
-union GpioReg
+
+union Reg
 {
    REG_TYPE_ARRAY(0x0000, uint8_t, b0, 23);  //!< Byte pin register
    REG_TYPE_ARRAY(0x0020, uint8_t, b1, 32);  //!< Byte pin register
@@ -51,21 +53,12 @@ union GpioReg
 
 
 template <unsigned WIDTH, unsigned PIN>
-class Gpio : public Periph<GpioReg,0x50000000>
+class Out : public Periph<Reg,0x50000000>
 {
-private:
-   static const unsigned PORT      = PIN >> 5;
-   static const unsigned LSB       = PIN & 0x1F;
-   static const unsigned MSB       = LSB + WIDTH - 1;
-   static const uint32_t DATA_MASK = (1<<WIDTH) - 1;
-
 public:
-   Gpio(bool out = true)
+   Out()
    {
-      if (out)
-         reg->dir[PORT].setField(MSB, LSB, DATA_MASK);
-      else
-         reg->dir[PORT].setField(MSB, LSB, 0);
+      reg->dir[PORT].setField(MSB, LSB, DATA_MASK);
 
       for(unsigned i=0; i<WIDTH; ++i)
       {
@@ -73,15 +66,15 @@ public:
       }
    }
 
+   operator uint32_t() const
+   {
+      return reg->pin[PORT].getField(MSB, LSB);
+   }
+
    uint32_t operator=(uint32_t data)
    {
       reg->pin[PORT].setField(MSB, LSB, data);
       return data;
-   }
-
-   operator uint32_t() const
-   {
-      return reg->pin[PORT].getField(MSB, LSB);
    }
 
    void set(uint32_t data)
@@ -93,8 +86,42 @@ public:
    {
       reg->clr[PORT] = data << LSB;
    }
+
+private:
+   static const unsigned PORT      = PIN >> 5;
+   static const unsigned LSB       = PIN & 0x1F;
+   static const unsigned MSB       = LSB + WIDTH - 1;
+   static const uint32_t DATA_MASK = (1<<WIDTH) - 1;
 };
 
+
+template <unsigned WIDTH, unsigned PIN>
+class In : public Periph<Reg,0x50000000>
+{
+public:
+   In()
+   {
+      reg->dir[PORT].setField(MSB, LSB, 0);
+
+      for(unsigned i=0; i<WIDTH; ++i)
+      {
+         IoCon().config(PIN + i, 0, IoCon::PULL_NONE);
+      }
+   }
+
+   operator uint32_t() const
+   {
+      return reg->pin[PORT].getField(MSB, LSB);
+   }
+
+private:
+   static const unsigned PORT      = PIN >> 5;
+   static const unsigned LSB       = PIN & 0x1F;
+   static const unsigned MSB       = LSB + WIDTH - 1;
+};
+
+
+} // namespace Gpio
 
 } // namespace MTL
 
