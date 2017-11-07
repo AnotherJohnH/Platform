@@ -20,24 +20,25 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-binaries = ['testHelloWorld',
-            'testAudioOut',
-            'testAudioIn',
-            'testDigital',
-            'testMidiIn',
-            'testCanvas',
-            'testEvent',
-            'testFrame',
-            'testGui',
-            'testGuiHelloWorld',
-            'testConsoleApp',
-            'testSND_Expr',
-            'testSND_Sine',
-            'testTerminalCanvas',
-            'testTerminalConsole',
-            'testTerminalApp',
-            'testTerminalLauncher',
-            'testEndian']
+plt_binaries = ['testHelloWorld',
+                'testAudioOut',
+                'testAudioIn',
+                'testMidiIn',
+                'testCanvas',
+                'testEvent',
+                'testFrame',
+                'testGui',
+                'testGuiHelloWorld',
+                'testConsoleApp',
+                'testSND_Expr',
+                'testSND_Sine',
+                'testTerminalCanvas',
+                'testTerminalConsole',
+                'testTerminalApp',
+                'testTerminalLauncher',
+                'testEndian']
+
+mtl_binaries = ['testDigital']
 
 app      = 'PlatformTest'
 version  = '0.0.1'
@@ -47,6 +48,11 @@ env,libs = SConscript('build.scons', ['app', 'version'])
 
 # Project specific build config
 env.Append(CCFLAGS = ['-O3'])
+
+if env['startup'] == []:
+   binaries = plt_binaries
+else:
+   binaries = mtl_binaries
 
 # Builders
 exe = []
