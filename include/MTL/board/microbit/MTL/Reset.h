@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2016 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,30 +20,31 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \file Reset.h
+//! \brief micro::bit module buttons
 
-#include "MTL/Digital.h"
+#ifndef MICROBIT_RESET_H
+#define MICROBIT_RESET_H
+
+#include "Digital.h"
+
+namespace MTL {
 
 
-inline void wait(volatile unsigned n)
+class Reset
 {
-   while(n--);
-}
+private:
+   Digital::Out<PIN_RESET>  reset{true};
 
-
-int main()
-{
-#if defined(PROJ_TARGET_microbit)
-   MTL::Digital::Out<MTL::PIN_LED_COL1> led_gnd(false);
-   MTL::Digital::Out<MTL::PIN_LED_ROW1> led;
-#else
-   MTL::Digital::Out<MTL::PIN_LED1> led;
-#endif
-
-   while(true)
+public:
+   //! Request a reset
+   void go()
    {
-      led = !led;
-
-      wait(1000000);
+      reset = false;
    }
-}
+};
 
+
+} // namespace MTL
+
+#endif // MICROBIT_RESET_H

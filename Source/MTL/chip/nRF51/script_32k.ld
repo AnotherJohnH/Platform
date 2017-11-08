@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+/*------------------------------------------------------------------------------
+// Copyright (c) 2016 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,32 +18,52 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//------------------------------------------------------------------------------
+//----------------------------------------------------------------------------*/
 
-
-#include "MTL/Digital.h"
-
-
-inline void wait(volatile unsigned n)
+MEMORY
 {
-   while(n--);
+   FLASH (rx)  : ORIGIN = 0x00000000, LENGTH = 256K
+   RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = 32K
 }
 
+ENTRY(vector_table)
 
-int main()
+SECTIONS
 {
-#if defined(PROJ_TARGET_microbit)
-   MTL::Digital::Out<MTL::PIN_LED_COL1> led_gnd(false);
-   MTL::Digital::Out<MTL::PIN_LED_ROW1> led;
-#else
-   MTL::Digital::Out<MTL::PIN_LED1> led;
-#endif
-
-   while(true)
+   .text :
    {
-      led = !led;
+      KEEP(*(.vectors))
+      *(.text*)
+      __init_array_start = ALIGN(4);
+      KEEP(*(.init_array))
+      __init_array_end = .;
+      *(.rodata*)
 
-      wait(1000000);
-   }
+   } > FLASH
+
+   .ARM.exidx :
+   {
+      __exidx_start = .;
+      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+      __exidx_end = .;
+
+   } > FLASH
+
+   __etext = .;
+
+   .data : AT (__etext)
+   {
+      __data_start__ = .;
+      *(.data*)
+      __data_end__ = .;
+
+   } > RAM
+
+   .bss :
+   {
+      __bss_start__ = .;
+      *(.bss*)
+      __bss_end__ = .;
+
+   } > RAM
 }
-

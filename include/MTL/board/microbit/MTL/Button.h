@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2016 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,30 +20,35 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \file Button.h
+//! \brief micro::bit module buttons
 
-#include "MTL/Digital.h"
+#ifndef MICROBIT_BUTTON_H
+#define MICROBIT_BUTTON_H
+
+#include "Digital.h"
+
+namespace MTL {
 
 
-inline void wait(volatile unsigned n)
+enum ButtonId
 {
-   while(n--);
-}
+   BTN_A = PIN_BTN_A,
+   BTN_B = PIN_BTN_B
+};
 
 
-int main()
+template <ButtonId PIN>
+class Button
 {
-#if defined(PROJ_TARGET_microbit)
-   MTL::Digital::Out<MTL::PIN_LED_COL1> led_gnd(false);
-   MTL::Digital::Out<MTL::PIN_LED_ROW1> led;
-#else
-   MTL::Digital::Out<MTL::PIN_LED1> led;
-#endif
+private:
+   Digital::In<PIN>  pin;
 
-   while(true)
-   {
-      led = !led;
+public:
+   operator bool() const { return !pin; }
+};
 
-      wait(1000000);
-   }
-}
 
+} // namespace MTL
+
+#endif // MICROBIT_BUTTON_H

@@ -57,7 +57,7 @@ else:
 # Builders
 exe = []
 for binary in binaries:
-   exe += env.Program(binary, ['Source/test/'+binary+'.cpp', env['startup']])
+   exe += env.Program(binary, [env['startup'], 'Source/test/'+binary+'.cpp'])
 
 Depends(exe, libs)
 
