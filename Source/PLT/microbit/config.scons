@@ -73,6 +73,7 @@ env['LINKFLAGS'] = ['--static']
 ram_size = os.environ.get('MICROBIT_RAM')
 env['startup'] = env.Object('../../MTL/chip/'+CHIP+'/startup_'+ram_size+'.s')
 env['script']  = env.File('../../MTL/chip/'+CHIP+'/script_'+ram_size+'.ld')
+env['target'] += '_'+ram_size
 
 Import('source')
 
