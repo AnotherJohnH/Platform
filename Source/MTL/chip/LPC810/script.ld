@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+/*------------------------------------------------------------------------------
+// Copyright (c) 2015 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,54 +18,44 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//------------------------------------------------------------------------------
+//----------------------------------------------------------------------------*/
 
-// \file PinCon.h
-// \brief NXP LPC1768 pin connection peripheral
-//
-// Data source NXP document "LPC17xx User Manual UM10360"
-
-#ifndef LPC1768_PIN_CON_H
-#define LPC1768_PIN_CON_H
-
-#include "MTL/Periph.h"
-#include "MTL/Pins.h"
-
-
-namespace MTL {
-
-
-union PinConReg
+MEMORY
 {
-   REG_ARRAY(0x000, pinsel,     11);
-   REG_ARRAY(0x040, pinmode,    11);
-   REG_ARRAY(0x068, pinmode_od,  5);
-   REG(      0x07C, i2cpadcfg);
-};
+   FLASH (rx)  : ORIGIN = 0x00000000, LENGTH = 4K
+   RAM   (rwx) : ORIGIN = 0x10000000, LENGTH = 1K
+}
 
+ENTRY(vector_table)
 
-class PinCon : public Periph<PinConReg,0x4002C000>
+SECTIONS
 {
-public:
-   enum Mode
+   .text :
    {
-      PULL_UP   = 0,
-      REPEAT    = 1,
-      PULL_NONE = 2,
-      PULL_DOWN = 3
-   };
+      KEEP(*(.vectors))
+      *(.text*)
+      __init_array_start = ALIGN(4);
+      KEEP(*(.init_array))
+      __init_array_end = .;
+      *(.rodata*)
 
-   void config(uint32_t pin, unsigned func, Mode mode)
+   } > FLASH
+
+   __etext = .;
+
+   .data : AT (__etext)
    {
-      unsigned index = pin >> 4;
-      unsigned lsb   = (pin & 0xF)<<1;
+      __data_start__ = .;
+      *(.data*)
+      __data_end__ = .;
 
-      reg->pinsel[index].setField( lsb + 1, lsb, func);
-      reg->pinmode[index].setField(lsb + 1, lsb, mode);
-   }
-};
+   } > RAM
 
+   .bss :
+   {
+      __bss_start__ = .;
+      *(.bss*)
+      __bss_end__ = .;
 
-} // namespace MTL
-
-#endif // LPC1768_PIN_CON_H
+   } > RAM
+}

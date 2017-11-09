@@ -22,6 +22,8 @@
 
 // \file Gpio.h
 // \brief NXP LPC1768 General Purpose I/O
+//
+// Data source NXP document "LPC17xx User Manual UM10360"
 
 #ifndef LPC1768_GPIO_H
 #define LPC1768_GPIO_H

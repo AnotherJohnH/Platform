@@ -22,6 +22,8 @@
 
 // \file SysCon.h
 // \brief NXP LPC1768 System Controller peripheral
+//
+// Data source NXP document "LPC17xx User Manual UM10360"
 
 #ifndef LPC1768_SYS_CON_H
 #define LPC1768_SYS_COD_H

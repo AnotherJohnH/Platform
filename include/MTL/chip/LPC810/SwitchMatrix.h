@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2015 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,52 +20,37 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file PinCon.h
-// \brief NXP LPC1768 pin connection peripheral
+// \file SysCon.h
+// \brief NXP LPC810 Switch Matrix
 //
-// Data source NXP document "LPC17xx User Manual UM10360"
+// Data source NXP document "LPC81X User Manual UM10601"
 
-#ifndef LPC1768_PIN_CON_H
-#define LPC1768_PIN_CON_H
+#ifndef LPC810_SWITCH_MATRIX_H
+#define LPC810_SWITCH_MATRIX_H
 
 #include "MTL/Periph.h"
-#include "MTL/Pins.h"
 
 
 namespace MTL {
 
-
-union PinConReg
+union SwitchMatrixReg
 {
-   REG_ARRAY(0x000, pinsel,     11);
-   REG_ARRAY(0x040, pinmode,    11);
-   REG_ARRAY(0x068, pinmode_od,  5);
-   REG(      0x07C, i2cpadcfg);
+   REG_ARRAY(0x000, pinassign, 9);
+   REG(0x1C0, pinenable);
 };
 
 
-class PinCon : public Periph<PinConReg,0x4002C000>
+class SwitchMatrix : public Periph<SwitchMatrixReg,0x4000C000>
 {
 public:
-   enum Mode
+   void init()
    {
-      PULL_UP   = 0,
-      REPEAT    = 1,
-      PULL_NONE = 2,
-      PULL_DOWN = 3
-   };
-
-   void config(uint32_t pin, unsigned func, Mode mode)
-   {
-      unsigned index = pin >> 4;
-      unsigned lsb   = (pin & 0xF)<<1;
-
-      reg->pinsel[index].setField( lsb + 1, lsb, func);
-      reg->pinmode[index].setField(lsb + 1, lsb, mode);
+      // Disable SWDIO SWCLK
+      reg->pinenable = reg->pinenable | (1<<3) | (1<<2);
    }
 };
 
 
 } // namespace MTL
 
-#endif // LPC1768_PIN_CON_H
+#endif // LPC810_SWITCH_MATRIX_H

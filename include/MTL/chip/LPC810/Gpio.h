@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2015 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +21,12 @@
 //------------------------------------------------------------------------------
 
 // \file Gpio.h
-// \brief NXP LPC11U24 General Purpose I/O
+// \brief NXP LPC810 General Purpose I/O
 //
-// Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
+// Data source NXP document "LPC81X User Manual UM10601"
 
-#ifndef LPC11U24_GPIO_H
-#define LPC11U24_GPIO_H
+#ifndef LPC810_GPIO_H
+#define LPC810_GPIO_H
 
 #include "MTL/Periph.h"
 
@@ -40,27 +40,25 @@ namespace Gpio {
 
 union Reg
 {
-   REG_TYPE_ARRAY(0x0000, uint8_t, b0, 23);  //!< Byte pin register
-   REG_TYPE_ARRAY(0x0020, uint8_t, b1, 32);  //!< Byte pin register
-   REG_ARRAY(0x1000, w0,  23);               //!< Word pin register
-   REG_ARRAY(0x1080, w1,  32);               //!< Word pin register
-   REG_ARRAY(0x2000, dir,  2);               //!< Direction
-   REG_ARRAY(0x2080, mask, 2);               //!< Mask register
-   REG_ARRAY(0x2100, pin,  2);               //!< Bit pin register
-   REG_ARRAY(0x2180, mpin, 2);               //!< Masked pin register
-   REG_ARRAY(0x2200, set,  2);               //!< Bit set register
-   REG_ARRAY(0x2280, clr,  2);               //!< Bit clear register
-   REG_ARRAY(0x2300, tgl,  2);               //!< Bit toggle register
+   REG_TYPE_ARRAY(0x0000,  uint8_t, byte, 18); //!< Byte pin register
+   REG_TYPE_ARRAY(0x1000, uint32_t, word, 18); //!< Word pin register
+   REG(0x2000, dir);                           //!< Direction
+   REG(0x2080, mask);                          //!< Mask register
+   REG(0x2100, pin);                           //!< Bit pin register
+   REG(0x2180, mpin);                          //!< Masked pin register
+   REG(0x2200, set);                           //!< Bit set register
+   REG(0x2280, clr);                           //!< Bit clear register
+   REG(0x2300, tgl);                           //!< Bit toggle register
 };
 
 
 template <unsigned WIDTH, unsigned PIN>
-class Out : public Periph<Reg,0x50000000>
+class Out : public Periph<Reg,0xA0000000>
 {
 public:
    Out()
    {
-      reg->dir[PORT].setField(MSB, LSB, DATA_MASK);
+      reg->dir.setField(MSB, LSB, DATA_MASK);
 
       for(unsigned i=0; i<WIDTH; ++i)
       {
@@ -70,27 +68,26 @@ public:
 
    operator uint32_t() const
    {
-      return reg->pin[PORT].getField(MSB, LSB);
+      return reg->pin.getField(MSB, LSB);
    }
 
    uint32_t operator=(uint32_t data)
    {
-      reg->pin[PORT].setField(MSB, LSB, data);
+      reg->pin.setField(MSB, LSB, data);
       return data;
    }
 
    void set(uint32_t data)
    {
-      reg->set[PORT] = data << LSB;
+      reg->set = data << LSB;
    }
 
    void clr(uint32_t data)
    {
-      reg->clr[PORT] = data << LSB;
+      reg->clr = data << LSB;
    }
 
 private:
-   static const unsigned PORT      = PIN >> 5;
    static const unsigned LSB       = PIN & 0x1F;
    static const unsigned MSB       = LSB + WIDTH - 1;
    static const uint32_t DATA_MASK = (1<<WIDTH) - 1;
@@ -103,7 +100,7 @@ class In : public Periph<Reg,0x50000000>
 public:
    In()
    {
-      reg->dir[PORT].setField(MSB, LSB, 0);
+      reg->dir.setField(MSB, LSB, 0);
 
       for(unsigned i=0; i<WIDTH; ++i)
       {
@@ -113,11 +110,10 @@ public:
 
    operator uint32_t() const
    {
-      return reg->pin[PORT].getField(MSB, LSB);
+      return reg->pin.getField(MSB, LSB);
    }
 
 private:
-   static const unsigned PORT      = PIN >> 5;
    static const unsigned LSB       = PIN & 0x1F;
    static const unsigned MSB       = LSB + WIDTH - 1;
 };
@@ -127,4 +123,4 @@ private:
 
 } // namespace MTL
 
-#endif // LPC11U24_GPIO_H
+#endif // LPC810_GPIO_H

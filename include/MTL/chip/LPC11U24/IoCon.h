@@ -22,6 +22,8 @@
 
 // \file IoCon.h
 // \brief NXP LPC11U24 I/O Controller
+//
+// Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
 
 #ifndef LPC11U24_IO_CON_H
 #define LPC11U24_IO_CON_H

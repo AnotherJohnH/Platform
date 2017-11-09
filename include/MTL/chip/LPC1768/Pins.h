@@ -22,6 +22,8 @@
 
 // \file Pins.h
 // \brief NXP LPC1768 pins
+//
+// Data source NXP document "LPC17xx User Manual UM10360"
 
 #ifndef LPC1768_PINS_H
 #define LPC1768_PINS_H

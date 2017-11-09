@@ -22,6 +22,8 @@
 
 // \file Pins.h
 // \brief NXP LPC11U24 pins
+//
+// Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
 
 #ifndef LPC11U24_PINS_H
 #define LPC11U24_PINS_H

@@ -22,6 +22,8 @@
 
 // \file Gpio.h
 // \brief nRF51 General Purpose I/O
+//
+// Data source Nordic Semiconductor "nRF51 Series Reference Manual Version 3.0"
 
 #ifndef NRF51_GPIO_H
 #define NRF51_GPIO_H

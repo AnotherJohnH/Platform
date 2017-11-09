@@ -22,6 +22,8 @@
 
 // \file Pins.h
 // \brief nRF51 pins
+//
+// Data source Nordic Semiconductor "nRF51 Series Reference Manual Version 3.0"
 
 #ifndef NRF51_PINS_H
 #define NRF51_PINS_H

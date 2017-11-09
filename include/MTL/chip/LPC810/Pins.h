@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2015 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,52 +20,29 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file PinCon.h
-// \brief NXP LPC1768 pin connection peripheral
+// \file Pins.h
+// \brief NXP LPC810 pins
 //
-// Data source NXP document "LPC17xx User Manual UM10360"
+// Data source NXP document "LPC81X User Manual UM10601"
 
-#ifndef LPC1768_PIN_CON_H
-#define LPC1768_PIN_CON_H
-
-#include "MTL/Periph.h"
-#include "MTL/Pins.h"
+#ifndef LPC810_PINS_H
+#define LPC810_PINS_H
 
 
 namespace MTL {
 
+static const unsigned  PIN_1 = 0x5;
+static const unsigned  PIN_2 = 0x4;
+static const unsigned  PIN_3 = 0x3;
+static const unsigned  PIN_4 = 0x2;
+static const unsigned  PIN_5 = 0x1;
+//                     PIN_6 VDD
+//                     PIN_7 VSS
+static const unsigned  PIN_8 = 0x0;
 
-union PinConReg
-{
-   REG_ARRAY(0x000, pinsel,     11);
-   REG_ARRAY(0x040, pinmode,    11);
-   REG_ARRAY(0x068, pinmode_od,  5);
-   REG(      0x07C, i2cpadcfg);
-};
 
-
-class PinCon : public Periph<PinConReg,0x4002C000>
-{
-public:
-   enum Mode
-   {
-      PULL_UP   = 0,
-      REPEAT    = 1,
-      PULL_NONE = 2,
-      PULL_DOWN = 3
-   };
-
-   void config(uint32_t pin, unsigned func, Mode mode)
-   {
-      unsigned index = pin >> 4;
-      unsigned lsb   = (pin & 0xF)<<1;
-
-      reg->pinsel[index].setField( lsb + 1, lsb, func);
-      reg->pinmode[index].setField(lsb + 1, lsb, mode);
-   }
-};
-
+static const unsigned  PIN_LED1 = PIN_1;
 
 } // namespace MTL
 
-#endif // LPC1768_PIN_CON_H
+#endif // LPC810_PINS_H
