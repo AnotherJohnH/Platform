@@ -41,7 +41,7 @@ plt_binaries = ['testHelloWorld',
 mtl_binaries = ['testDigital']
 
 app      = 'PlatformTest'
-version  = '0.0.1'
+version  = '0.0.2'
 
 # Get a build environment
 env,libs = SConscript('build.scons', ['app', 'version'])
