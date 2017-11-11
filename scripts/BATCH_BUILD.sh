@@ -8,12 +8,13 @@
 #    NDK                       (Android builds)
 #    EMSDK                     (Emscripten builds)
 
+cd ..
 for build in NATIVE \
              IOS_ARMv7 IOS_ARM64 IOS_I386 IOS_X86_64 \
              ANDROID_ARM ANDROID_ARM64 \
              EMSCRIPTEN
 do
-   source BUILD_${build}.sh
+   source scripts/BUILD_${build}.sh
    scons $1
 done
 
