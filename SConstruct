@@ -20,25 +20,25 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-plt_binaries = ['testHelloWorld',
-                'testAudioOut',
-                'testAudioIn',
-                'testMidiIn',
-                'testCanvas',
-                'testEvent',
-                'testFrame',
-                'testGui',
-                'testGuiHelloWorld',
-                'testConsoleApp',
-                'testSND_Expr',
-                'testSND_Sine',
-                'testTerminalCanvas',
-                'testTerminalConsole',
-                'testTerminalApp',
-                'testTerminalLauncher',
-                'testEndian']
+plt_source = ['Source/test/testHelloWorld.cpp',
+              'Source/test/testAudioOut.cpp',
+              'Source/test/testAudioIn.cpp',
+              'Source/test/testMidiIn.cpp',
+              'Source/test/testCanvas.cpp',
+              'Source/test/testEvent.cpp',
+              'Source/test/testFrame.cpp',
+              'Source/test/testGui.cpp',
+              'Source/test/testGuiHelloWorld.cpp',
+              'Source/test/testConsoleApp.cpp',
+              'Source/test/testSND_Expr.cpp',
+              'Source/test/testSND_Sine.cpp',
+              'Source/test/testTerminalCanvas.cpp',
+              'Source/test/testTerminalConsole.cpp',
+              'Source/test/testTerminalApp.cpp',
+              'Source/test/testTerminalLauncher.cpp',
+              'Source/test/testEndian.cpp']
 
-mtl_binaries = ['testDigital']
+mtl_source = ['Source/MTL/testDigital.cpp']
 
 app      = 'PlatformTest'
 version  = '0.0.2'
@@ -50,14 +50,18 @@ env,libs = SConscript('build.scons', ['app', 'version'])
 env.Append(CCFLAGS = ['-O3'])
 
 if env['startup'] == []:
-   binaries = plt_binaries
+   source_list = plt_source
 else:
-   binaries = mtl_binaries
+   source_list = mtl_source
+
+source_list += env['app_src']
 
 # Builders
 exe = []
-for binary in binaries:
-   exe += env.Program(binary, [env['startup'], 'Source/test/'+binary+'.cpp'])
+for source in source_list:
+   filename=source.rsplit("/", 1)[1]
+   binary=filename.rsplit(".", 1)[0]
+   exe += env.Program(target=binary, source=[env['startup'], source])
 
 Depends(exe, libs)
 

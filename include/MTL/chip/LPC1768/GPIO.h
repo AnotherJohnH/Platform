@@ -54,7 +54,7 @@ struct Reg
 
 
 template <unsigned WIDTH, unsigned PIN>
-class Out : public Periph<GpioReg,0x2009C000>
+class Out : public Periph<Reg,0x2009C000>
 {
 public:
    Out()
@@ -97,7 +97,7 @@ private:
 
 
 template <unsigned WIDTH, unsigned PIN>
-class In : public Periph<GpioReg,0x2009C000>
+class In : public Periph<Reg,0x2009C000>
 {
 public:
    In()

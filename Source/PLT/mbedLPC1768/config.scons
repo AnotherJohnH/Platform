@@ -91,3 +91,8 @@ env['BUILDERS']['Program'].action += '$OBJCOPY -O binary $TARGET ${TARGET}.bin; 
                                      '$OBJDUMP -D $SOURCE > ${TARGET}.dbg; '+ \
                                      '$SIZE $TARGET'
 
+#-------------------------------------------------------------------------------
+# Declare platform specific applications
+
+env['app_src'] = ['Source/MTL/chip/LPC1768/testI2S.cpp']
+

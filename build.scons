@@ -62,6 +62,7 @@ env['target']  = target
 env['app']     = app
 env['startup'] = []
 env['script']  = []
+env['app_src'] = []
 env['LIBS']    = 'PLT'
 env['CPPPATH'] = []
 
