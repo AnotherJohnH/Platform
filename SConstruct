@@ -20,28 +20,28 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-plt_source = ['Source/test/testHelloWorld.cpp',
-              'Source/test/testAudioOut.cpp',
-              'Source/test/testAudioIn.cpp',
-              'Source/test/testMidiIn.cpp',
-              'Source/test/testCanvas.cpp',
-              'Source/test/testEvent.cpp',
-              'Source/test/testFrame.cpp',
-              'Source/test/testGui.cpp',
-              'Source/test/testGuiHelloWorld.cpp',
-              'Source/test/testConsoleApp.cpp',
-              'Source/test/testSND_Expr.cpp',
-              'Source/test/testSND_Sine.cpp',
-              'Source/test/testTerminalCanvas.cpp',
-              'Source/test/testTerminalConsole.cpp',
-              'Source/test/testTerminalApp.cpp',
-              'Source/test/testTerminalLauncher.cpp',
-              'Source/test/testEndian.cpp']
-
-mtl_source = ['Source/MTL/testDigital.cpp']
-
 app      = 'PlatformTest'
 version  = '0.0.2'
+
+plt_source = ['Source/PLT/test/testAudioOut.cpp',
+              'Source/PLT/test/testAudioIn.cpp',
+              'Source/PLT/test/testMidiIn.cpp',
+              'Source/PLT/test/testCanvas.cpp',
+              'Source/PLT/test/testEvent.cpp',
+              'Source/PLT/test/testFrame.cpp',
+              'Source/GUI/testGui.cpp',
+              'Source/GUI/testGuiHelloWorld.cpp',
+              'Source/SND/testSND_Expr.cpp',
+              'Source/SND/testSND_Sine.cpp',
+              'Source/TRM/testTerminalCanvas.cpp',
+              'Source/TRM/testTerminalConsole.cpp',
+              'Source/TRM/testTerminalApp.cpp',
+              'Source/TRM/testTerminalLauncher.cpp',
+              'Source/STB/testHelloWorld.cpp',
+              'Source/STB/testConsoleApp.cpp',
+              'Source/STB/testEndian.cpp']
+
+mtl_source = ['Source/MTL/testDigital.cpp']
 
 # Get a build environment
 env,libs = SConscript('build.scons', ['app', 'version'])
@@ -49,6 +49,7 @@ env,libs = SConscript('build.scons', ['app', 'version'])
 # Project specific build config
 env.Append(CCFLAGS = ['-O3'])
 
+# Generate final source list
 if env['startup'] == []:
    source_list = plt_source
 else:
