@@ -30,6 +30,11 @@
 
 #include "MTL/Periph.h"
 
+#include "MTL/chip/LPC1768/SysCon.h"
+
+
+namespace MTL {
+
 
 class DMA
 {

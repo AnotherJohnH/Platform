@@ -26,10 +26,12 @@
 #ifndef LPC1768_PIXEL_GEN_H
 #define LPC1768_PIXEL_GEN_H
 
-#include  <cstring>
+#include  <cassert>
 
-#include "I2S.h"
-#include "GPDMA.h"
+#include "MTL/chip/LPC1768/I2S.h"
+#include "MTL/chip/LPC1768/GPDMA.h"
+
+namespace MTL {
 
 
 template <unsigned WIDTH,

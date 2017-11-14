@@ -95,5 +95,5 @@ env['BUILDERS']['Program'].action += '$OBJCOPY -O binary $TARGET ${TARGET}.bin; 
 # Declare platform specific applications
 
 env['app_src'] = ['MTL/chip/LPC1768/testI2S.cpp',
-                  'MTL/chip/LPC1768/testPWM.cpp']
-
+                  'MTL/chip/LPC1768/testPWM.cpp',
+                  'MTL/chip/LPC1768/testPixelGen.cpp']

@@ -26,7 +26,7 @@
 // Data source NXP document "LPC17xx User Manual UM10360"
 
 #ifndef LPC1768_SYS_CON_H
-#define LPC1768_SYS_COD_H
+#define LPC1768_SYS_CON_H
 
 #include "MTL/Periph.h"
 
