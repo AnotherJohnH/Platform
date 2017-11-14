@@ -23,25 +23,25 @@
 app      = 'PlatformTest'
 version  = '0.0.2'
 
-plt_source = ['Source/PLT/test/testAudioOut.cpp',
-              'Source/PLT/test/testAudioIn.cpp',
-              'Source/PLT/test/testMidiIn.cpp',
-              'Source/PLT/test/testCanvas.cpp',
-              'Source/PLT/test/testEvent.cpp',
-              'Source/PLT/test/testFrame.cpp',
-              'Source/GUI/testGui.cpp',
-              'Source/GUI/testGuiHelloWorld.cpp',
-              'Source/SND/testSND_Expr.cpp',
-              'Source/SND/testSND_Sine.cpp',
-              'Source/TRM/testTerminalCanvas.cpp',
-              'Source/TRM/testTerminalConsole.cpp',
-              'Source/TRM/testTerminalApp.cpp',
-              'Source/TRM/testTerminalLauncher.cpp',
-              'Source/STB/testHelloWorld.cpp',
-              'Source/STB/testConsoleApp.cpp',
-              'Source/STB/testEndian.cpp']
+plt_source = ['PLT/test/testAudioOut.cpp',
+              'PLT/test/testAudioIn.cpp',
+              'PLT/test/testMidiIn.cpp',
+              'PLT/test/testCanvas.cpp',
+              'PLT/test/testEvent.cpp',
+              'PLT/test/testFrame.cpp',
+              'GUI/testGui.cpp',
+              'GUI/testGuiHelloWorld.cpp',
+              'SND/testSND_Expr.cpp',
+              'SND/testSND_Sine.cpp',
+              'TRM/testTerminalCanvas.cpp',
+              'TRM/testTerminalConsole.cpp',
+              'TRM/testTerminalApp.cpp',
+              'TRM/testTerminalLauncher.cpp',
+              'STB/testHelloWorld.cpp',
+              'STB/testConsoleApp.cpp',
+              'STB/testEndian.cpp']
 
-mtl_source = ['Source/MTL/testDigital.cpp']
+mtl_source = ['MTL/testDigital.cpp']
 
 # Get a build environment
 env,libs = SConscript('build.scons', ['app', 'version'])
@@ -60,9 +60,9 @@ source_list += env['app_src']
 # Builders
 exe = []
 for source in source_list:
-   filename=source.rsplit("/", 1)[1]
-   binary=filename.rsplit(".", 1)[0]
-   exe += env.Program(target=binary, source=[env['startup'], source])
+   filename=source.rsplit('/', 1)[1]
+   binary=filename.rsplit('.', 1)[0]
+   exe += env.Program(binary, [env['startup'], 'Source/'+source])
 
 Depends(exe, libs)
 
