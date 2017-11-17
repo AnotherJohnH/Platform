@@ -40,11 +40,13 @@
 #define PAL_VIDEO_ATTACH_IRQ(VIDEO) \
      extern "C" { void irqPWM1() { VIDEO.irqHandler(); } }
 
-static const unsigned PAL_VIDEO_BYTE_SWAP = 1;
-
 
 extern void PALVideo_FieldSync();
 
+
+namespace MTL {
+
+static const unsigned PAL_VIDEO_BYTE_SWAP = 1;
 
 template <unsigned WIDTH, unsigned HEIGHT, unsigned BPP=1>
 class PALVideo
