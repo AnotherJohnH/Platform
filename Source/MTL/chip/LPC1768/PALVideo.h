@@ -33,7 +33,7 @@
 #define LPC1768_PAL_VIDEO_H
 
 
-#include "PWM.h"
+#include "MTL/chip/LPC1768/PWM.h"
 #include "PixelGen.h"
 
 

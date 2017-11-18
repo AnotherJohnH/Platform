@@ -22,7 +22,7 @@
 
 // \brief 
 
-#include "MTL/chip/LPC1768/PALVideo.h"
+#include "PALVideo.h"
 
 
 #include "Frame.h"

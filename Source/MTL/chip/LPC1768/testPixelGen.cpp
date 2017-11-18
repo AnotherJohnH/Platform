@@ -22,7 +22,7 @@
 
 // \brief 
 
-#include "MTL/chip/LPC1768/PixelGen.h"
+#include "PixelGen.h"
 
 
 void wait(volatile unsigned n)

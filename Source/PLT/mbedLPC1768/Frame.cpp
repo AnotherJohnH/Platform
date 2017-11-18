@@ -24,7 +24,7 @@
 
 #include "PLT/Frame.h"
 
-#include "MTL/chip/LPC1768/PALVideo.h"
+#include "../../MTL/chip/LPC1768/PALVideo.h"
 #include "MTL/chip/LPC1768/RAM.h"
 
 #include <cstring>
