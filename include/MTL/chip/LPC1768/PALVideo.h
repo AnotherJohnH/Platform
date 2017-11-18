@@ -187,7 +187,7 @@ private:
    }
 
 public:
-   PALVideo(const char* title, unsigned scale)
+   PALVideo()
       : pwm(1)
       , field(0)
       , line_type(LINE_FIRST_SHORT_SYNC)

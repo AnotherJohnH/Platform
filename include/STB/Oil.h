@@ -116,6 +116,7 @@ struct Element<TYPE,true>
 class ClassBase
 {
 public:
+#ifndef NO_RTTI
    ClassBase(const char* name_,
              const std::type_info& type_info_)
       : name(name_)
@@ -123,6 +124,7 @@ public:
    {
       getClassList().push_back(this);
    }
+#endif
 
    bool isCalled(const char* name_) const
    {
@@ -132,6 +134,7 @@ public:
    template <typename TYPE>
    void addMember(size_t offset, const char* name, size_t elements=1)
    {
+#ifndef NO_RTTI
       if (typeid(TYPE) == typeid(bool))
       {
          member_list.push_back(Member(Member::BOOL, sizeof(TYPE), offset, elements, name));
@@ -161,6 +164,7 @@ public:
             member_list.push_back(Member(Member::UNSIGNED, sizeof(TYPE), offset, elements, name));
          }
       }
+#endif
    }
 
    void write(void* that) const;
@@ -170,12 +174,14 @@ public:
    template <typename TYPE>
    static ClassBase* findClass()
    {
+#ifndef NO_RTTI
       size_t hash = typeid(TYPE).hash_code();
 
       for(auto& c : getClassList())
       {
          if (hash == c->hash) return c;
       }
+#endif
 
       assert(!"Class not found");
       return nullptr;
@@ -235,7 +241,9 @@ class Class : public ClassBase
 {
 public:
    Class(const char* name_)
+#ifndef NO_RTTI
       : ClassBase(name_, typeid(TYPE))
+#endif
    {}
 
    //! Declare a member
