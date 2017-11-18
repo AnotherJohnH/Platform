@@ -28,13 +28,17 @@
 #ifndef LPC1768_RAM_H
 #define LPC1768_RAM_H
 
+#include <cstddef>
+
 #include "MTL/Periph.h"
 
+
+namespace MTL {
 
 class RAM : public Periph<uint8_t,0x2007C000>
 {
 public:
-   uint8_t* data() const { return reg; }
+   uint8_t* data() const { return (uint8_t*)reg; }
 
    size_t size() const { return 32 * 1024; }
 };
