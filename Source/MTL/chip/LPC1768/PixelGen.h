@@ -21,7 +21,7 @@
 //------------------------------------------------------------------------------
 
 // \file PixelGen.h
-// \brief NXP LPC1768 Generates a stream of pixels
+// \brief NXP LPC1768 Generates a stream of pixels using GP DMA and the I2S
 
 #ifndef LPC1768_PIXEL_GEN_H
 #define LPC1768_PIXEL_GEN_H
@@ -34,20 +34,19 @@
 namespace MTL {
 
 
-template <unsigned WIDTH,
-          unsigned HEIGHT,
-          unsigned SCAN_REPEAT = 1>
 class PixelGen
 {
 private:
    static const unsigned CHAN = 0;
 
+   // Device data
    I2S            i2s;
    GPDMA          gpdma;
    volatile DMA*  head;
    DMA            tail;
-   uint32_t       null32;
+   uint32_t       null32{0};
 
+   // Image date
    const uint8_t*             frame;
    const uint8_t*             start;
    unsigned                   width;
@@ -55,37 +54,14 @@ private:
    uint32_t                   size;
    volatile const uint8_t*    next;
    volatile uint8_t           row;
+   uint8_t                    scan_repeat;
 
 public:
-   PixelGen()
-      : null32(0)
+   PixelGen(unsigned width_, unsigned height_, uint8_t scan_repeat_)
    {
-      setWidth(WIDTH);
-
       i2s.setTxFormat(8, /* mono */ false);
       i2s.setTxMute(true);
       i2s.configDMA(0, /* tx */ true, /* depth */ 4);
-
-      if (WIDTH > 640)
-      {
-         i2s.setTxMulDiv(1, 3);
-      }
-      else if (WIDTH > 320)
-      {
-         i2s.setTxMulDiv(1, 6);
-      }
-      else if (WIDTH > 160)
-      {
-         i2s.setTxMulDiv(1, 12);
-      }
-      else if (WIDTH > 80)
-      {
-         i2s.setTxMulDiv(1, 24);
-      }
-      else
-      {
-         i2s.setTxMulDiv(1, 48);
-      }
 
       // Configure DMA channel
       gpdma.configChan(CHAN, GPDMA::MEMORY, GPDMA::I2S_0);
@@ -100,6 +76,8 @@ public:
       tail.setControl(DMA::BURST1, DMA::WIDTH32, false,
                       DMA::BURST1, DMA::WIDTH32, false,
                       1);
+
+      resize(width_, height_, scan_repeat_);
    }
 
    //! Set pointer to frame buffer
@@ -114,16 +92,36 @@ public:
       start = frame + offset;
    }
 
-   //! Set frame width (pixels)
-   //  Must be less than or equal to WIDTH
-   //  Must be a multiple of 32
-   void setWidth(unsigned width_)
+   //! Set frame size (pixels)
+   //
+   //! \param width should be a multiple of 32
+   void resize(unsigned width_, unsigned height_, uint8_t scan_repeat_)
    {
-      assert(width_ <= WIDTH);
-
       width          = (width_ + 0x1F) & ~0x1F;
       bytes_per_line = width/8;
-      size           = bytes_per_line * HEIGHT;
+      size           = bytes_per_line * height_;
+      scan_repeat    = scan_repeat_;
+
+      if (width > 640)
+      {
+         i2s.setTxMulDiv(1, 3);
+      }
+      else if (width > 320)
+      {
+         i2s.setTxMulDiv(1, 6);
+      }
+      else if (width > 160)
+      {
+         i2s.setTxMulDiv(1, 12);
+      }
+      else if (width > 80)
+      {
+         i2s.setTxMulDiv(1, 24);
+      }
+      else
+      {
+         i2s.setTxMulDiv(1, 48);
+      }
    }
 
    //! Get ready for next field of image
@@ -147,7 +145,7 @@ public:
 
       gpdma.start(CHAN);
 
-      if (++row == SCAN_REPEAT)
+      if (++row == scan_repeat)
       {
          row = 0;
          next += bytes_per_line;

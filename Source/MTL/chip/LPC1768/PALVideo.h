@@ -48,7 +48,7 @@ namespace MTL {
 
 static const unsigned PAL_VIDEO_BYTE_SWAP = 1;
 
-template <unsigned WIDTH, unsigned HEIGHT, unsigned BPP=1>
+template <unsigned WIDTH, unsigned HEIGHT>
 class PALVideo
 {
 private:
@@ -92,8 +92,8 @@ private:
       LINE_BOTTOM_BORDER     = 5
    };
 
-   PWM                             pwm;
-   PixelGen<WIDTH,HEIGHT,V_SCALE>  pixel_gen;
+   PWM                pwm;
+   PixelGen           pixel_gen;
 
    volatile uint8_t   field;
    volatile uint8_t   line_type;
@@ -189,6 +189,7 @@ private:
 public:
    PALVideo()
       : pwm(1)
+      , pixel_gen(WIDTH, HEIGHT, V_SCALE)
       , field(0)
       , line_type(LINE_FIRST_SHORT_SYNC)
       , line_counter(1)
@@ -199,20 +200,11 @@ public:
       pwm.setFall(1);
       pwm.setIRQ<0>(H_LINE_PERIOD);
 
-      // Initialise vertical timing
-      setHeight(HEIGHT);
+      // Initialise timing
+      resize(WIDTH, HEIGHT);
 
       // TODO don't start until a frame pointer has been set
       pwm.start();
-   }
-
-   void setPalette(unsigned index, uint32_t rgb24)
-   {
-   }
-
-   void refresh()
-   {
-      // Nothing to do
    }
 
    //! entry point from Timer_0_IRQ
@@ -241,18 +233,13 @@ public:
       pixel_gen.setOffset(offset);
    }
 
-   //! Set frame width (pixels)
-   //  Must be less than or equal to WIDTH
-   //  Must be a multiple of 32
-   void setWidth(unsigned width)
+   //! Set frame width and height (pixels)
+   //
+   //!  \param width Must be a multiple of 32
+   void resize(unsigned width, unsigned height)
    {
-      pixel_gen.setWidth(width);
-   }
+      pixel_gen.resize(width, height, V_SCALE);
 
-   //! Set frame height (pixels)
-   //  Must be less than or equal to HEIGHT
-   void setHeight(unsigned height)
-   {
       // Size of image (scan lines)
       v_image  = V_SCALE * height;
 
@@ -273,7 +260,7 @@ public:
    void setVertPos(unsigned lines)
    {
       v_adjust = lines;
-      setHeight(v_image / V_SCALE);
+      //setHeight(v_image / V_SCALE);
    }
 };
 

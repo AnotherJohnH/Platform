@@ -60,6 +60,4 @@ int main()
          frame.point(x + 32, y + 32, (x + y) & 1);
       }
    }
-
-   video.refresh();
 }

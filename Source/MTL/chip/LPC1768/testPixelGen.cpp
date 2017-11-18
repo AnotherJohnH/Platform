@@ -36,7 +36,7 @@ uint8_t buffer[40];
 
 int main()
 {
-   MTL::PixelGen<320,256>     pixel_gen;
+   MTL::PixelGen  pixel_gen(320, 256, 2);
 
    for(unsigned i=0; i<40; i++)
    {
