@@ -31,10 +31,10 @@
 
 
 #define WIDTH   512
-#define HEIGHT  256
+#define HEIGHT  512
 
 
-static MTL::PALVideo<WIDTH,HEIGHT>  video;
+static MTL::PALVideo  video(WIDTH, HEIGHT);
 PAL_VIDEO_ATTACH_IRQ(video);
 
 

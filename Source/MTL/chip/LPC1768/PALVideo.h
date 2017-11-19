@@ -48,7 +48,6 @@ namespace MTL {
 
 static const unsigned PAL_VIDEO_BYTE_SWAP = 1;
 
-template <unsigned WIDTH, unsigned HEIGHT>
 class PALVideo
 {
 private:
@@ -186,7 +185,7 @@ private:
    }
 
 public:
-   PALVideo()
+   PALVideo(unsigned width, unsigned height)
       : pwm(1)
    {
       pwm.setRise(H_LINE_SYNC);
@@ -194,7 +193,7 @@ public:
       pwm.setIRQ<0>(H_LINE_PERIOD);
 
       // Initialise timing
-      resize(WIDTH, HEIGHT);
+      resize(width, height);
    }
 
    //! entry point from Timer_0_IRQ
