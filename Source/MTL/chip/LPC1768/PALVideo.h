@@ -94,16 +94,16 @@ private:
    PWM                pwm;
    PixelGen           pixel_gen;
 
-   volatile uint8_t   field;
-   volatile uint8_t   line_type;
-   volatile uint16_t  line_counter;
+   volatile uint8_t   field{0};
+   volatile uint8_t   line_type{LINE_FIRST_SHORT_SYNC};
+   volatile uint16_t  line_counter{1};
 
    uint16_t           v_top;
-   uint16_t           v_adjust;
+   uint16_t           v_adjust{V_ADJUST};
    uint16_t           v_image;
    uint16_t           v_bottom;
 
-   int16_t            h_adjust;
+   int16_t            h_adjust{0};
 
    void lineFirstShortSync()
    {
@@ -142,7 +142,7 @@ private:
       {
          line_type    = LINE_IMAGE;
          line_counter = v_image;
-         pixel_gen.startField();
+         pixel_gen.startField(field ^ 1);
          pwm.setIRQ<1>(H_IMAGE + h_adjust);
       }
    }
@@ -188,11 +188,6 @@ private:
 public:
    PALVideo()
       : pwm(1)
-      , field(0)
-      , line_type(LINE_FIRST_SHORT_SYNC)
-      , line_counter(1)
-      , v_adjust(V_ADJUST)
-      , h_adjust(0)
    {
       pwm.setRise(H_LINE_SYNC);
       pwm.setFall(1);
@@ -200,9 +195,6 @@ public:
 
       // Initialise timing
       resize(WIDTH, HEIGHT);
-
-      // TODO don't start until a frame pointer has been set
-      pwm.start();
    }
 
    //! entry point from Timer_0_IRQ
@@ -223,6 +215,9 @@ public:
    void setFramePtr(const uint8_t* ptr)
    {
       pixel_gen.setFramePtr(ptr);
+
+      // start video generation
+      pwm.start();
    }
 
    //! Set offset for top-left pixel from start of frame buffer (bytes)
@@ -236,12 +231,12 @@ public:
    //!  \param width Must be a multiple of 32
    void resize(unsigned width, unsigned height)
    {
-      unsigned v_scale  = (PAL_LINES - 2 * MIN_VERT_BORDER) / height;
+      unsigned v_scale = (PAL_LINES - 2 * MIN_VERT_BORDER) / height;
 
       pixel_gen.resize(width, height, v_scale);
 
       // Size of image (scan lines)
-      v_image  = v_scale * height;
+      v_image  = v_scale == 0 ? height / 2: v_scale * height;
 
       // Height of top border (scan lines)
       v_top    = ((PAL_LINES - v_image) / 2) + v_adjust;

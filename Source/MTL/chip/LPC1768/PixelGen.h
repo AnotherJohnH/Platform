@@ -55,6 +55,7 @@ private:
    volatile const uint8_t*    next;
    volatile uint8_t           row;
    uint8_t                    scan_repeat;
+   uint8_t                    odd_field_offset;
 
 public:
    PixelGen()
@@ -93,12 +94,27 @@ public:
    //! Set frame size (pixels)
    //
    //! \param width should be a multiple of 32
+   //! \param height (pixels)
+   //! \param scan_repeat
    void resize(unsigned width_, unsigned height_, uint8_t scan_repeat_)
    {
       width          = (width_ + 0x1F) & ~0x1F;
       bytes_per_line = width/8;
       size           = bytes_per_line * height_;
-      scan_repeat    = scan_repeat_;
+
+      if (scan_repeat_ == 0)
+      {
+         // Interlace
+         scan_repeat = 1;
+         odd_field_offset = bytes_per_line;
+         bytes_per_line = bytes_per_line * 2;
+      }
+      else
+      {
+         // No interlace
+         scan_repeat = scan_repeat_;
+         odd_field_offset = 0;
+      }
 
       if (width > 640)
       {
@@ -123,10 +139,10 @@ public:
    }
 
    //! Get ready for next field of image
-   void startField()
+   void startField(uint8_t field)
    {
       row  = 0;
-      next = start;
+      next = start + field * odd_field_offset;
       head->setSrc(next);
    }
 

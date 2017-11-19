@@ -49,7 +49,7 @@ int main()
 
    while(true)
    {
-      pixel_gen.startField();
+      pixel_gen.startField(0);
 
       pixel_gen.startLine();
 
