@@ -71,7 +71,6 @@ private:
 
    // Vertical constants
    static const unsigned MIN_VERT_BORDER = 10;                   // (lines)
-   static const unsigned V_SCALE  = (PAL_LINES - 2 * MIN_VERT_BORDER) / HEIGHT;
 
    // Horizontal timing
    static const unsigned H_SYNC_PERIOD = PAL_SYNC_PERIOD_US * TICKS_PER_US;
@@ -189,7 +188,6 @@ private:
 public:
    PALVideo()
       : pwm(1)
-      , pixel_gen(WIDTH, HEIGHT, V_SCALE)
       , field(0)
       , line_type(LINE_FIRST_SHORT_SYNC)
       , line_counter(1)
@@ -238,10 +236,12 @@ public:
    //!  \param width Must be a multiple of 32
    void resize(unsigned width, unsigned height)
    {
-      pixel_gen.resize(width, height, V_SCALE);
+      unsigned v_scale  = (PAL_LINES - 2 * MIN_VERT_BORDER) / height;
+
+      pixel_gen.resize(width, height, v_scale);
 
       // Size of image (scan lines)
-      v_image  = V_SCALE * height;
+      v_image  = v_scale * height;
 
       // Height of top border (scan lines)
       v_top    = ((PAL_LINES - v_image) / 2) + v_adjust;

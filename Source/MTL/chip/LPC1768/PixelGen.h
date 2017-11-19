@@ -57,7 +57,7 @@ private:
    uint8_t                    scan_repeat;
 
 public:
-   PixelGen(unsigned width_, unsigned height_, uint8_t scan_repeat_)
+   PixelGen()
    {
       i2s.setTxFormat(8, /* mono */ false);
       i2s.setTxMute(true);
@@ -76,8 +76,6 @@ public:
       tail.setControl(DMA::BURST1, DMA::WIDTH32, false,
                       DMA::BURST1, DMA::WIDTH32, false,
                       1);
-
-      resize(width_, height_, scan_repeat_);
    }
 
    //! Set pointer to frame buffer
