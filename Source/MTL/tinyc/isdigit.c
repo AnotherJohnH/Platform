@@ -20,34 +20,12 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file atol.c
+//! \file isdigit.c
 //! \brief tiny C library implementation
 
-#include <stdlib.h>
+#include <ctype.h>
 
-long atol(const char* s)
+int isdigit(int c)
 {
-   long value = 0;
-   int  sign  = +1;
-
-   if (*s == '-')
-   {
-      sign = -1;
-      s++;
-   }
-   else if (*s == '+')
-   {
-      s++;
-   }
-
-   while(1)
-   {
-      unsigned digit = *s - '0';
-
-      if (digit > 9) break;
-
-      value = value * 10 + digit;
-   }
-
-   return value * sign;
+   return (c >= '0') && (c <= '9');
 }

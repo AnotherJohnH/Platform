@@ -20,15 +20,15 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file atol.c
+//! \file atoi.c
 //! \brief tiny C library implementation
 
 #include <stdlib.h>
 
-long atol(const char* s)
+int atoi(const char* s)
 {
-   long value = 0;
-   int  sign  = +1;
+   int value = 0;
+   int sign  = +1;
 
    if (*s == '-')
    {

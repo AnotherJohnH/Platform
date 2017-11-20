@@ -20,34 +20,18 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file atol.c
+//! \file strchr.c
 //! \brief tiny C library implementation
 
-#include <stdlib.h>
+#include <string.h>
 
-long atol(const char* s)
+char *strchr(const char* s, int c)
 {
-   long value = 0;
-   int  sign  = +1;
-
-   if (*s == '-')
+   while(*s != c)
    {
-      sign = -1;
-      s++;
-   }
-   else if (*s == '+')
-   {
-      s++;
+      if (*s == '\0') return (char*)0;
+      ++s;
    }
 
-   while(1)
-   {
-      unsigned digit = *s - '0';
-
-      if (digit > 9) break;
-
-      value = value * 10 + digit;
-   }
-
-   return value * sign;
+   return (char*)s;
 }
