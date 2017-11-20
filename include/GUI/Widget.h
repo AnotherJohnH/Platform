@@ -24,20 +24,19 @@
 #define GUI_WIDGET_H
 
 #include <cstdint>
-#include <vector>
 
 #include "GUI/Canvas.h"
 #include "GUI/Layout.h"
+#include "STB/Tree.h"
 
 namespace GUI {
 
+
 //! Generic Widget base class
-class Widget : public Layout
+class Widget : public Layout, public STB::Tree<Widget>
 {
 private:
-   bool                 auto_delete{false};
-   Widget*              parent{nullptr};
-   std::vector<Widget*> children;
+   bool auto_delete{false};
 
 protected:
    static const unsigned EVENT_PRIVATE = 0xFFFFFFFF;
@@ -55,16 +54,14 @@ private:
       unsigned width  = 0;
       unsigned height = 0;
 
-      for(size_t i = 0; i < children.size(); ++i)
+      for(Widget* child = children; child; child = child->next)
       {
-         Widget* child = children[i];
-
          child->layoutSizeShrink();
 
          if(row)
          {
             width += child->size.x;
-            if(i != 0) width += gap;
+            if(child != children) width += gap;
 
             if(child->size.y > height)
             {
@@ -79,7 +76,7 @@ private:
             }
 
             height += child->size.y;
-            if(i != 0) height += gap;
+            if(child != children) height += gap;
          }
       }
 
@@ -102,10 +99,8 @@ private:
       unsigned n     = 0;
       unsigned total = 0;
 
-      for(size_t i = 0; i < children.size(); ++i)
+      for(Widget* child = children; child; child = child->next)
       {
-         Widget* child = children[i];
-
          if(row)
          {
             if(child->horz_fit == EXPAND) ++n;
@@ -134,10 +129,8 @@ private:
             height = (size.y - top_left.y - btm_right.y - total) / n;
          }
 
-         for(size_t i = 0; i < children.size(); ++i)
+         for(Widget* child = children; child; child = child->next)
          {
-            Widget* child = children[i];
-
             if(child->horz_fit == EXPAND)
             {
                child->size.x = width;
@@ -150,10 +143,8 @@ private:
          }
       }
 
-      for(size_t i = 0; i < children.size(); ++i)
+      for(Widget* child = children; child; child = child->next)
       {
-         Widget* child = children[i];
-
          child->layoutSizeExpand();
       }
    }
@@ -178,13 +169,11 @@ private:
       case BOTTOM: y += size.y - btm_right.y;                  break;
       }
 
-      for(size_t i = 0; i < children.size(); ++i)
+      for(Widget* child = children; child; child = child->next)
       {
-         Widget* child = children[i];
-
          if(row)
          {
-            if(i != 0) x += gap;
+            if(child != children) x += gap;
             child->pos.x = x;
 
             switch(vert_align)
@@ -205,7 +194,7 @@ private:
             case RIGHT:  child->pos.x = x - child->size.x;     break;
             }
 
-            if(i != 0) y += gap;
+            if(child != children) y += gap;
             child->pos.y = y;
 
             y += child->size.y;
@@ -224,9 +213,9 @@ protected:
 
       level++;
 
-      for(size_t i = 0; i < children.size(); ++i)
+      for(Widget* child = children; child; child = child->next)
       {
-         children[i]->redraw(canvas);
+         child->redraw(canvas);
       }
 
       if(--level == 0)
@@ -239,9 +228,9 @@ protected:
    {
       if(!isHit(x_, y_)) return nullptr;
 
-      for(size_t i = 0; i < children.size(); ++i)
+      for(Widget* child = children; child; child = child->next)
       {
-         Widget* hit = children[i]->find(x_, y_);
+         Widget* hit = child->find(x_, y_);
          if(hit)
          {
             return hit;
@@ -283,9 +272,11 @@ public:
    {
       if(auto_delete)
       {
-         for(size_t i = 0; i < children.size(); ++i)
+         for(Widget* child = children; child;)
          {
-            delete children[i];
+            Widget* next = child->next;
+            delete child;
+            child = next;
          }
       }
    }
@@ -294,10 +285,11 @@ public:
 
    void setAutoDelete() { auto_delete = true; }
 
-   void pushBack(Widget* child_)
+   void pushBack(Widget* child)
    {
-      child_->parent = this;
-      children.push_back(child_);
+      child->set_parent(this);
+
+      push_back(child);
    }
 
    void setForegroundColour(Colour colour) { fg_colour = colour; }
