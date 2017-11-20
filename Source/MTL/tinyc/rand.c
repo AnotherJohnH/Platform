@@ -20,38 +20,20 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file stdlib.h
+//! \file ran.c
 //! \brief tiny C library implementation
 
-#ifndef STDLIB_H
-#define STDLIB_H
+#include <stdlib.h>
+#include <stdint.h>
 
-#include <stddef.h>
+static uint32_t rand_state = 1;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+int rand(void)
+{
+   // use xorshift, it's fast and simple
+   rand_state ^= rand_state << 13;
+   rand_state ^= rand_state >> 17;
+   rand_state ^= rand_state << 5;
 
-#define RAND_MAX 0xFFFFFF
-
-extern void* malloc(size_t);
-extern void  free(void*);
-extern int   rand(void);
-extern void  srand(unsigned);
-extern int   abs(int);
-extern int   atexit(void (*)(void));
-extern void  exit(int);
-extern void  abort(void);
-
-extern long           strtol(const char* str, const char** endptr, int base);
-extern unsigned long  strtoul(const char* str, const char** endptr, int base);
-extern long long      strtoll(const char* str, const char** endptr, int base);
-extern int            atoi(const char* str);
-extern long           atol(const char* str);
-extern double         atof(const char* str);
-
-#ifdef __cplusplus
+   return rand_state & RAND_MAX;
 }
-#endif
-
-#endif // STDLIB_H

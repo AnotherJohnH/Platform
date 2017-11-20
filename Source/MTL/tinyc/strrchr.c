@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,38 +20,20 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file stdlib.h
+//! \file strchr.c
 //! \brief tiny C library implementation
 
-#ifndef STDLIB_H
-#define STDLIB_H
+#include <string.h>
 
-#include <stddef.h>
+char *strrchr(const char* s, int c)
+{
+   const char* m = (const char*)0;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+   while(*s != '\0')
+   {
+      if (*s == c) m = s;
+      ++s;
+   }
 
-#define RAND_MAX 0xFFFFFF
-
-extern void* malloc(size_t);
-extern void  free(void*);
-extern int   rand(void);
-extern void  srand(unsigned);
-extern int   abs(int);
-extern int   atexit(void (*)(void));
-extern void  exit(int);
-extern void  abort(void);
-
-extern long           strtol(const char* str, const char** endptr, int base);
-extern unsigned long  strtoul(const char* str, const char** endptr, int base);
-extern long long      strtoll(const char* str, const char** endptr, int base);
-extern int            atoi(const char* str);
-extern long           atol(const char* str);
-extern double         atof(const char* str);
-
-#ifdef __cplusplus
+   return (char*)m;
 }
-#endif
-
-#endif // STDLIB_H
