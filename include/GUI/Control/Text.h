@@ -23,7 +23,7 @@
 #ifndef GUI_CONTROL_TEXT_H
 #define GUI_CONTROL_TEXT_H
 
-#include <string>
+#include <cstring>
 
 #include "GUI/Widget.h"
 
@@ -32,7 +32,7 @@ namespace GUI {
 class Text : public Widget
 {
 private:
-   std::string  text;
+   const char*  text;
    unsigned     cols{0};
    Align        text_align{LEFT};
 
@@ -51,26 +51,23 @@ protected:
       switch(text_align)
       {
       case LEFT:   break;
-      case CENTER: x += (cols - text.size()) * font->getWidth(" ")/ 2; break;
-      case RIGHT:  x += (cols - text.size()) * font->getWidth(" "); break;
+      case CENTER: x += cols * font->getWidth(" ")/ 2; break;
+      case RIGHT:  x += cols * font->getWidth(" "); break;
       default: assert(!"unexpected"); break;
       }
 
       canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
-      canvas.drawText(fg_colour, bg_colour, x, pos.y, font, text.c_str());
+      canvas.drawText(fg_colour, bg_colour, x, pos.y, font, text);
    }
 
 public:
-   Text(Widget* parent, const std::string& text_)
+   Text(Widget* parent, const char* text_)
       : Widget(parent)
       , text(text_)
-      , cols(text.size())
+      , cols(strlen(text_))
    {
       eventSize();
    }
-
-   template <typename TYPE>
-   void setText(TYPE text_) { text = text_; }
 
    void setCols(unsigned cols_)
    {
