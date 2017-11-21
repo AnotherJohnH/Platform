@@ -50,7 +50,7 @@ private:
    GUI::TextButton  btn_b;
    GUI::TickBox     tick;
    GUI::TextTickBox text_tick;
-   GUI::Field       field;
+   GUI::Field<16>   field;
 
    virtual void appEvent(Widget* widget_, unsigned code_) override
    {
@@ -69,7 +69,7 @@ public:
       , btn_b(this, 'B', "OK")
       , tick(this, 3)
       , text_tick(this, 3, "Do you agree?")
-      , field(this, 4, 16, "")
+      , field(this, 4, "")
    {}
 };
 

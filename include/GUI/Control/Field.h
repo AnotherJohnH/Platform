@@ -23,26 +23,26 @@
 #ifndef GUI_CONTROL_FIELD_H
 #define GUI_CONTROL_FIELD_H
 
-#include <string>
+#include <cstring>
 
 #include "GUI/Widget.h"
 #include "PLT/Event.h"
 
 namespace GUI {
 
+template <unsigned COLS>
 class Field : public Widget
 {
 private:
    // unsigned      code;
-   unsigned    cols;
-   std::string value;
+   char value[COLS + 1];
 
 protected:
    // Implement Widget events
    virtual void eventSize() override
    {
       setBorderAndGap(2);
-      size.x = font->getWidth() * cols + 4;
+      size.x = font->getWidth() * COLS + 4;
       size.y = font->getHeight() + 4;
    }
 
@@ -51,7 +51,7 @@ protected:
       canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
       canvas.drawText(fg_colour, FACE, pos.x + top_left.x, top_left.y + pos.y, font,
-                      value.c_str());
+                      value);
    }
 
    virtual void eventBtnPress(unsigned x, unsigned y, bool select, bool down_) override
@@ -66,6 +66,8 @@ protected:
    {
       if(down_)
       {
+         unsigned n = strlen(value);
+
          switch(key)
          {
          case PLT::LSHIFT:
@@ -73,16 +75,16 @@ protected:
             break;
 
          case PLT::BACKSPACE:
-            if(value.size() > 0)
+            if(n > 0)
             {
-               value.pop_back();
+               value[n - 1] = '\0';
             }
             break;
 
          default:
-            if(value.size() < cols)
+            if(n < COLS)
             {
-               value += key;
+               value[n] = key;
             }
             break;
          }
@@ -92,19 +94,23 @@ protected:
    }
 
 public:
-   Field(Widget* parent, unsigned code_, unsigned cols_, const char* initial_)
+   Field(Widget* parent, unsigned code_, const char* initial_)
       : Widget(parent)
       //, code(code_)
-      , cols(cols_)
-      , value(initial_)
    {
+      value[COLS] = '\0';
+      setValue(initial_);
+
       setBackgroundColour(BACKGROUND);
       setForegroundColour(FOREGROUND);
 
       eventSize();
    }
 
-   void setValue(const char* value_) { value = value_; }
+   void setValue(const char* value_)
+   {
+      strncpy(value, value_, COLS);
+    }
 };
 
 } // namespace GUI
