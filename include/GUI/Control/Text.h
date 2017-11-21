@@ -69,6 +69,11 @@ public:
       eventSize();
    }
 
+   void setText(const char* text_)
+   {
+      text = text_;
+   }
+
    void setCols(unsigned cols_)
    {
       cols = cols_;
