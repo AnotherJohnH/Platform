@@ -50,8 +50,31 @@ void Image::setPixel(unsigned x, unsigned y, uint32_t rgb)
    unsigned index = (x/PIXELS_PER_BYTE) + y * pitch;
    uint8_t& byte = buffer[index ^ MTL::PAL_VIDEO_BYTE_SWAP];
    uint8_t  mask = 0x80>>(x % PIXELS_PER_BYTE);
+   uint8_t  grn  = (rgb >> 8) & 0xFF;
+   bool     set;
 
-   if (rgb != 0)
+   if (grn >= 0xE0)
+   {
+      set = true;
+   }
+   else if (grn >= 0xA0)
+   {
+      set = (x | y) & 1;
+   }
+   else if (grn >= 0x60)
+   {
+      set = (x ^ y) & 1;
+   }
+   else if (grn >= 0x20)
+   {
+      set = (x & y) & 1;
+   }
+   else
+   {
+      set = false;
+   }
+
+   if (set)
    {
       byte |= mask;
    }
