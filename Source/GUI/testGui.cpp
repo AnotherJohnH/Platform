@@ -23,23 +23,22 @@
 #include <cstdio>
 
 #include "GUI/GUI.h"
-#include "PLT/Gui.h"
 
 
-class PopUp : public PLT::Gui
+class PopUp : public GUI::Frame
 {
 private:
    GUI::Text text;
 
 public:
    PopUp()
-      : PLT::Gui("Pop Up", &GUI::font_teletext18)
+      : GUI::Frame("Pop Up", &GUI::font_teletext18)
       , text(this, "Hello, world!")
    {}
 };
 
 
-class MainWindow : public PLT::Gui
+class MainWindow : public GUI::Frame
 {
 private:
    PopUp popup;
@@ -62,7 +61,7 @@ private:
 
 public:
    MainWindow()
-      : PLT::Gui("GUI test", &GUI::font_teletext18)
+      : GUI::Frame("GUI test", &GUI::font_teletext18)
       , text2(this, "Hello, world!")
       , button(this, 1)
       , txt_btn(this, 2, "0123456789")

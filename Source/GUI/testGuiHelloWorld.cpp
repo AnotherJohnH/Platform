@@ -20,15 +20,12 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-
 #include "GUI/GUI.h"
-#include "PLT/Gui.h"
-
 
 int main(int argc, const char* argv[])
 {
-   PLT::Gui  gui("Hi", &GUI::font_teletext18);
-   GUI::Text text(&gui, "Hello, world!");
+   GUI::Frame  frame("Hi", &GUI::font_teletext18);
+   GUI::Text   text(&frame, "Hello, world!");
 
-   return gui.eventLoop();
+   return frame.eventLoop();
 }

@@ -45,7 +45,7 @@ Frame::Frame(const char* title_, unsigned width_, unsigned height_, uint32_t fla
 {
    MTL::RAM  ram;
 
-   pimpl = nullptr;
+   pimpl  = nullptr;
    buffer = ram.data();
    pitch  = WIDTH / 8;
 

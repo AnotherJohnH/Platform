@@ -20,17 +20,17 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef PLT_GUI_H
-#define PLT_GUI_H
+#ifndef GUI_FRAME_H
+#define GUI_FRAME_H
 
 #include "PLT/Event.h"
 #include "PLT/Frame.h"
 
-#include "GUI/GUI.h"
+#include "GUI/Control/Window.h"
 
-namespace PLT {
+namespace GUI {
 
-class Gui : public GUI::Window
+class Frame : public Window
 {
 private:
    PLT::Frame frame;
@@ -70,13 +70,13 @@ private:
    static uint32_t guiFlagsToFrameFlags(uint32_t gui_flags)
    {
       uint32_t frame_flags = 0;
-      if(gui_flags & GUI::RESIZABLE)   frame_flags |= Frame::RESIZABLE;
-      if(gui_flags & GUI::NO_BORDER)   frame_flags |= Frame::NO_BORDER;
-      if(gui_flags & GUI::FULL_SCREEN) frame_flags |= Frame::FULL_SCREEN;
+      if(gui_flags & GUI::RESIZABLE)   frame_flags |= PLT::Frame::RESIZABLE;
+      if(gui_flags & GUI::NO_BORDER)   frame_flags |= PLT::Frame::NO_BORDER;
+      if(gui_flags & GUI::FULL_SCREEN) frame_flags |= PLT::Frame::FULL_SCREEN;
       return frame_flags;
    }
 
-   void handleEvent(const Event::Message& event)
+   void handleEvent(const PLT::Event::Message& event)
    {
       switch(event.type)
       {
@@ -94,21 +94,21 @@ private:
       }
    }
 
-   static void eventCallBack(const Event::Message& event, void* ptr)
+   static void eventCallBack(const PLT::Event::Message& event, void* ptr)
    {
-      Gui* gui = reinterpret_cast<Gui*>(ptr);
-      gui->handleEvent(event);
+      Frame* frame = reinterpret_cast<Frame*>(ptr);
+      frame->handleEvent(event);
    }
 
 public:
-   Gui(const char* title_, const GUI::Font* font_, uint32_t flags_ = 0)
+   Frame(const char* title_, const GUI::Font* font_, uint32_t flags_ = 0)
       : GUI::Window(font_)
       , frame(title_, 0, 0, guiFlagsToFrameFlags(flags_))
    {
    }
 
-   Gui(const char* title_, unsigned width_, unsigned height_, uint32_t flags_ = 0)
-      : GUI::Window()
+   Frame(const char* title_, const GUI::Font* font_, unsigned width_, unsigned height_, uint32_t flags_ = 0)
+      : GUI::Window(font_)
       , frame(title_, width_, height_, guiFlagsToFrameFlags(flags_))
    {
       setSize(width_, height_);
@@ -128,6 +128,6 @@ public:
    }
 };
 
-} // namespace PLT
+} // namespace GUI
 
-#endif
+#endif // GUI_FRAME_H
