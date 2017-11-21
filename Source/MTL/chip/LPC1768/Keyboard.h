@@ -21,13 +21,17 @@
 //------------------------------------------------------------------------------
 
 // \file Keyboard.h
-// \brief NXP LPC1768 PS/2 keyboard interface
+// \brief
 
 #ifndef LPC1768_KEYBOARD_H
 #define LPC1768_KEYBOARD_H
 
-#include "SSP.h"
-#include "PS2KeyDecode.h"
+
+#include "MTL/chip/LPC1768/SSP.h"
+#include "MTL/PS2KeyDecode.h"
+
+namespace MTL {
+
 
 class Keyboard
 {

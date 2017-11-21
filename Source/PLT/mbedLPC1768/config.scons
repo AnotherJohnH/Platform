@@ -83,6 +83,7 @@ source+=[env.File('platform.cpp'),
          env.File('../Stub/Midi.cpp'),
          env.File('../Stub/Sounder.cpp'),
          env.File('../Stub/File.cpp'),
+         env.File('../../MTL/PS2KeyDecode.cpp'),
          env.File('../../MTL/chip/LPC1768/PALVideo.cpp')]
 
 #-------------------------------------------------------------------------------
@@ -99,6 +100,7 @@ env['app_src'] = ['MTL/chip/LPC1768/testI2S.cpp',
                   'MTL/chip/LPC1768/testPWM.cpp',
                   'MTL/chip/LPC1768/testPixelGen.cpp',
                   'MTL/chip/LPC1768/testPALVideo.cpp',
+                  'MTL/chip/LPC1768/testKeyboard.cpp',
                   'PLT/test/testAudioOut.cpp',
                   'PLT/test/testAudioIn.cpp',
                   'PLT/test/testMidiIn.cpp',

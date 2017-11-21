@@ -33,6 +33,8 @@
 #include "SysCon.h"
 #include "PinCon.h"
 
+namespace MTL {
+
 
 union SSPReg
 {
