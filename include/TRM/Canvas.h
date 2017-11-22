@@ -822,6 +822,9 @@ public:
 
       return i;
    }
+
+   using Device::write;
+   using Device::read;
 };
 
 } // namesapce TRM

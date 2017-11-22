@@ -29,7 +29,7 @@
 
 int main(int argc, char *argv[])
 {
-   TRM::Canvas<800, 600> term("TRM::Canvas");
+   TRM::Canvas<512, 512> term("TRM::Canvas");
    TRM::Curses win(&term);
 
    win.clear();

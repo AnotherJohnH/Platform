@@ -24,6 +24,7 @@
 #define TRM_DEVICE_H
 
 #include <cstdlib>
+#include <cstring>
 
 namespace TRM {
 
@@ -47,11 +48,22 @@ public:
 
    virtual int ioctl(unsigned request, ...) { return -1; }
 
+   //! Write a block of data to the device
    virtual int write(const void* buffer, size_t n) { return 0; }
 
+   //! Read a block of data from the device
    virtual int read(void* buffer_, size_t n) { return -1; }
 
    virtual int close() { return 0; }
+
+   //! Write a single character to the device
+   int write(char ch)       { return write(&ch, 1); }
+
+   //! Write a null terminated string to the device
+   int write(const char* s) { return write(s, strlen(s)); }
+
+   //! Read a single character from the device
+   int read(char& ch)       { return read(&ch, 1); }
 };
 
 } // namesapce TRM
