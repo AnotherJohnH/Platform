@@ -90,7 +90,7 @@ source+=[env.File('platform.cpp'),
 # Adapt the Program() builder to generate a raw binary and some debug info
 
 env['BUILDERS']['Program'].action += '$OBJCOPY -O binary $TARGET ${TARGET}.bin; '+ \
-                                     '$OBJDUMP -D $SOURCE > ${TARGET}.dbg; '+ \
+                                     '$OBJDUMP -D $TARGET > ${TARGET}.dbg; '+ \
                                      '$SIZE $TARGET'
 
 #-------------------------------------------------------------------------------
