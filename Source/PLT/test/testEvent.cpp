@@ -26,12 +26,11 @@
 #include "PLT/Frame.h"
 
 
-static PLT::Frame frame("Event Test", 256, 256);
-static unsigned ticks = 0;
-
-
 void callback(const PLT::Event::Message& event, void* ptr)
 {
+   static unsigned ticks = 0;
+
+   PLT::Frame* frame = static_cast<PLT::Frame*>(ptr);
    uint32_t  rgb;
 
    switch(event.type)
@@ -39,13 +38,13 @@ void callback(const PLT::Event::Message& event, void* ptr)
    case PLT::Event::KEY_DOWN:
       printf("KEY_DOWN     %02X\n", event.code);
       for(unsigned y=248; y<256; y++)
-         frame.setPixel(event.code, y, 0xFFFFFF);
+         frame->setPixel(event.code, y, 0xFFFFFF);
       break;
 
    case PLT::Event::KEY_UP:
       printf("KEY_UP       %02X\n", event.code);
       for(unsigned y=248; y<256; y++)
-         frame.setPixel(event.code, y, 0x000000);
+         frame->setPixel(event.code, y, 0x000000);
       break;
 
    case PLT::Event::BUTTON_DOWN:
@@ -58,14 +57,14 @@ void callback(const PLT::Event::Message& event, void* ptr)
 
    case PLT::Event::POINTER_MOVE:
       printf("POINTER_MOVE %u %u\n",    event.x, event.y);
-      frame.setPixel(event.x, event.y, 0xFFFFFF);
+      frame->setPixel(event.x, event.y, 0xFFFFFF);
       break;
 
    case PLT::Event::TIMER:
       printf("TIMER\n");
-      ticks = (ticks + 1) % frame.getWidth();
-      rgb = frame.getPixel(ticks, 0);
-      frame.setPixel(ticks, 0, rgb ? 0x000000 : 0xFFFFFF);
+      ticks = (ticks + 1) % frame->getWidth();
+      rgb = frame->getPixel(ticks, 0);
+      frame->setPixel(ticks, 0, rgb ? 0x000000 : 0xFFFFFF);
       break;
 
    case PLT::Event::RESIZE:
@@ -80,13 +79,15 @@ void callback(const PLT::Event::Message& event, void* ptr)
       break;
    }
 
-   frame.refresh();
+   frame->refresh();
 }
 
 
 int main(int argc, const char* argv[])
 {
+   PLT::Frame frame("Event Test", 256, 256);
+
    PLT::Event::setTimer(500);
 
-   return PLT::Event::eventLoop(callback);
+   return PLT::Event::eventLoop(callback, &frame);
 }
