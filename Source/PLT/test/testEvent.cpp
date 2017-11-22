@@ -25,28 +25,68 @@
 #include "PLT/Event.h"
 #include "PLT/Frame.h"
 
+
+static PLT::Frame frame("Event Test", 256, 256);
+static unsigned ticks = 0;
+
+
 void callback(const PLT::Event::Message& event, void* ptr)
 {
+   uint32_t  rgb;
+
    switch(event.type)
    {
-   case PLT::Event::KEY_DOWN:     printf("KEY_DOWN     %02X\n",     event.code); break;
-   case PLT::Event::KEY_UP:       printf("KEY_UP       %02X\n",     event.code); break;
-   case PLT::Event::BUTTON_DOWN:  printf("BUTTON_DOWN  %d %u %u\n", event.code, event.x, event.y); break;
-   case PLT::Event::BUTTON_UP:    printf("BUTTON_UP    %d %u %u\n", event.code, event.x, event.y); break;
-   case PLT::Event::POINTER_MOVE: printf("POINTER_MOVE %u %u\n",    event.x, event.y); break;
-   case PLT::Event::TIMER:        printf("TIMER\n"); break;
-   case PLT::Event::RESIZE:       printf("RESIZE\n"); break;
-   case PLT::Event::QUIT:         printf("QUIT\n"); break;
+   case PLT::Event::KEY_DOWN:
+      printf("KEY_DOWN     %02X\n", event.code);
+      for(unsigned y=248; y<256; y++)
+         frame.setPixel(event.code, y, 0xFFFFFF);
+      break;
 
-   default: break;
+   case PLT::Event::KEY_UP:
+      printf("KEY_UP       %02X\n", event.code);
+      for(unsigned y=248; y<256; y++)
+         frame.setPixel(event.code, y, 0x000000);
+      break;
+
+   case PLT::Event::BUTTON_DOWN:
+      printf("BUTTON_DOWN  %d %u %u\n", event.code, event.x, event.y);
+      break;
+
+   case PLT::Event::BUTTON_UP:
+      printf("BUTTON_UP    %d %u %u\n", event.code, event.x, event.y);
+      break;
+
+   case PLT::Event::POINTER_MOVE:
+      printf("POINTER_MOVE %u %u\n",    event.x, event.y);
+      frame.setPixel(event.x, event.y, 0xFFFFFF);
+      break;
+
+   case PLT::Event::TIMER:
+      printf("TIMER\n");
+      ticks = (ticks + 1) % frame.getWidth();
+      rgb = frame.getPixel(ticks, 0);
+      frame.setPixel(ticks, 0, rgb ? 0x000000 : 0xFFFFFF);
+      break;
+
+   case PLT::Event::RESIZE:
+      printf("RESIZE\n");
+      break;
+
+   case PLT::Event::QUIT:
+      printf("QUIT\n");
+      break;
+
+   default:
+      break;
    }
+
+   frame.refresh();
 }
+
 
 int main(int argc, const char* argv[])
 {
-   PLT::Frame frame("Event Test", 100, 100);
-
-   PLT::Event::setTimer(1000);
+   PLT::Event::setTimer(500);
 
    return PLT::Event::eventLoop(callback);
 }
