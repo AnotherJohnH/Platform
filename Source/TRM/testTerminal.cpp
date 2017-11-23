@@ -23,14 +23,14 @@
 
 #include <cstdio>
 
-#include "TRM/Curses.h"
 #include "TRM/Frame.h"
+#include "TRM/Curses.h"
 
 
 int main(int argc, char *argv[])
 {
-   TRM::Frame<512, 512> term("TRM::Frame test");
-   TRM::Curses win(&term);
+   TRM::Frame<512, 512> frame("TRM::Frame test");
+   TRM::Curses win(&frame);
 
    win.clear();
    win.addstr("Hello, world!\n");

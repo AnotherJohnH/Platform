@@ -38,15 +38,14 @@ private:
       printf("Some extra help text.\n");
    }
 
-   virtual int startTerminalApp(TRM::Device& term) override
+   virtual int startTerminalApp(TRM::Device& device) override
    {
       // TODO Body of application goes here
 
-      const char* text = "Hello, world!\n";
-      term.write(text, strlen(text));
+      device.write("Hello, world!\n");
 
       char ch;
-      while(term.read(&ch, 1) != -1) {}
+      while(device.read(&ch, 1) != -1) {}
 
       return 0;
    }

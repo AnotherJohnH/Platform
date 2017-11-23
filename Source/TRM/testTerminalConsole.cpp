@@ -23,14 +23,14 @@
 
 #include <cstdio>
 
-#include "TRM/Curses.h"
 #include "TRM/Console.h"
+#include "TRM/Curses.h"
 
 
 int main(int argc, char *argv[])
 {
-   TRM::Console term("TRM::Console");
-   TRM::Curses win(&term);
+   TRM::Console console("TRM::Console");
+   TRM::Curses win(&console);
 
    win.clear();
    win.addstr("Hello, world!\n");

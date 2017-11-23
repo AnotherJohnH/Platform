@@ -65,6 +65,7 @@ void callback(const PLT::Event::Message& event, void* ptr)
       ticks = (ticks + 1) % frame->getWidth();
       rgb = frame->getPixel(ticks, 0);
       frame->setPixel(ticks, 0, rgb ? 0x000000 : 0xFFFFFF);
+      frame->setPixel(ticks, 1, rgb ? 0x000000 : 0xFFFFFF);
       break;
 
    case PLT::Event::RESIZE:
@@ -85,7 +86,7 @@ void callback(const PLT::Event::Message& event, void* ptr)
 
 int main(int argc, const char* argv[])
 {
-   PLT::Frame frame("Event Test", 256, 256);
+   PLT::Frame frame("PLT::Event Test", 256, 256);
 
    PLT::Event::setTimer(500);
 

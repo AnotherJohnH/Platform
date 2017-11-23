@@ -111,4 +111,4 @@ env['app_src'] = ['MTL/chip/LPC1768/testI2S.cpp',
                   'GUI/testGuiFrame.cpp',
                   'GUI/testGuiFrame.cpp',
                   'GUI/testGuiHelloWorld.cpp',
-                  'TRM/testTerminalCanvas.cpp']
+                  'TRM/testTerminalFrame.cpp']

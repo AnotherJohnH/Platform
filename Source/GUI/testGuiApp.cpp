@@ -20,11 +20,12 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "GUI/GUI.h"
+#include "GUI/App.h"
+#include "GUI/Font/Teletext.h"
 
 int main(int argc, const char* argv[])
 {
-   GUI::App app("Hi", &GUI::font_teletext18, 320, 256);
+   GUI::App app("GUI::App test", &GUI::font_teletext18, 320, 256);
 
    return app.eventLoop();
 }
