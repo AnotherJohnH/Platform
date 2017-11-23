@@ -24,12 +24,12 @@
 #include <cstdio>
 
 #include "TRM/Curses.h"
-#include "TRM/Canvas.h"
+#include "TRM/Frame.h"
 
 
 int main(int argc, char *argv[])
 {
-   TRM::Canvas<512, 512> term("TRM::Canvas");
+   TRM::Frame<512, 512> term("TRM::Frame test");
    TRM::Curses win(&term);
 
    win.clear();

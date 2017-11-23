@@ -40,6 +40,6 @@
 
 #include "Font/Teletext.h"
 
-#include "Frame.h"
+#include "App.h"
 
 #endif

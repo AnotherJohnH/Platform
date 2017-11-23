@@ -20,16 +20,16 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TRM_CANVAS_H
-#define TRM_CANVAS_H
+#ifndef TRM_FRAME_H
+#define TRM_FRAME_H
 
 #include <cassert>
 #include <cstdarg>
 #include <cstdio>
 
-#include "PLT/Canvas.h"
 #include "PLT/Event.h"
 
+#include "GUI/Frame.h"
 #include "GUI/Font/Teletext.h"
 
 #include "STB/Fifo.h"
@@ -39,10 +39,10 @@
 
 namespace TRM {
 
-//! Terminal device using PLT::Canvas back-end
+//! Terminal device using GUI::Frame back-end
 template <unsigned WIDTH, unsigned HEIGHT>
-class Canvas : public Ansi
-             , public Device
+class Frame : public Ansi
+            , public Device
 {
 private:
    static const unsigned MIN_FONT_WIDTH  = 6;
@@ -132,7 +132,7 @@ private:
    };
 
    // Resources
-   PLT::Canvas      canvas;
+   GUI::Frame       frame;
    const GUI::Font* font{};
    unsigned         border{0};
    unsigned         line_space{0};
@@ -460,19 +460,19 @@ private:
       unsigned x = org.x + (c - 1) * font->getWidth();
       unsigned y = org.y + (r - 1) * (font->getHeight() + line_space);
 
-      canvas.fillRect(bg, x, y, x + font->getWidth(), y + font->getHeight() + line_space);
+      frame.fillRect(bg, x, y, x + font->getWidth(), y + font->getHeight() + line_space);
 
-      canvas.drawChar(fg, bg, x, y + line_space, font, ch);
+      frame.drawChar(fg, bg, x, y + line_space, font, ch);
 
       if(at.isBold())
       {
-         canvas.drawChar(fg, bg, x + 1, y + line_space, font, ch);
+         frame.drawChar(fg, bg, x + 1, y + line_space, font, ch);
       }
 
       // TODO use an italic font for italics
       if(at.isUnderline() || at.isItalic())
       {
-         canvas.drawLine(fg, x, y + font->getHeight() - 1, x + font->getWidth(),
+         frame.drawLine(fg, x, y + font->getHeight() - 1, x + font->getWidth(),
                          y + font->getHeight() - 1);
       }
    }
@@ -688,12 +688,12 @@ private:
       org.x = (WIDTH - (num_cols * font->getWidth())) / 2;
       org.y = border;
 
-      canvas.clear(default_bg_col);
+      frame.clear(default_bg_col);
    }
 
 public:
-   Canvas(const char* title_)
-      : canvas(title_, WIDTH, HEIGHT)
+   Frame(const char* title_)
+      : frame(title_, WIDTH, HEIGHT)
       , font(&GUI::font_teletext15)
       , border(0)
       , line_space(0)
@@ -702,7 +702,7 @@ public:
       ansiReset();
    }
 
-   ~Canvas() { canvas.refresh(); }
+   ~Frame() { frame.refresh(); }
 
    void setFont(const GUI::Font& font_)
    {
@@ -810,7 +810,7 @@ public:
 
       for(i = 0; i < n; i++)
       {
-         canvas.refresh();
+         frame.refresh();
 
          uint8_t ch{};
 
@@ -829,4 +829,4 @@ public:
 
 } // namesapce TRM
 
-#endif // TRM_CANVAS_H
+#endif // TRM_FRAME_H

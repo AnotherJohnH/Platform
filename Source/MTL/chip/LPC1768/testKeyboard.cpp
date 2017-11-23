@@ -22,15 +22,13 @@
 
 // \brief 
 
-#include "GUI/GUI.h"
-#include "PLT/Canvas.h"
-
+#include "GUI/Frame.h"
+#include "GUI/Font/Teletext.h"
 #include "Keyboard.h"
-
 
 int main()
 {
-   PLT::Canvas    canvas("", 400, 300);
+   GUI::Frame     frame("", 400, 300);
    MTL::Keyboard  keyboard;
 
    while(true)
@@ -46,8 +44,8 @@ int main()
          buffer[1] = up ? '^' : 'v';
          buffer[2] = '\0';
 
-         canvas.fillRect(GUI::BLACK, 0, 0, 30, 20);
-         canvas.drawText(GUI::WHITE, 0x000000, 0, 0, &GUI::font_teletext18, buffer);
+         frame.fillRect(GUI::BLACK, 0, 0, 30, 20);
+         frame.drawText(GUI::WHITE, 0x000000, 0, 0, &GUI::font_teletext18, buffer);
       }
    }
 }

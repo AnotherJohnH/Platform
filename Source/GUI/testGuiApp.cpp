@@ -24,8 +24,7 @@
 
 int main(int argc, const char* argv[])
 {
-   GUI::App  app("Hi", &GUI::font_teletext18);
-   GUI::Text text(&app, "Hello, world!");
+   GUI::App app("Hi", &GUI::font_teletext18, 320, 256);
 
    return app.eventLoop();
 }

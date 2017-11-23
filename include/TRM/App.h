@@ -25,7 +25,7 @@
 
 #include "STB/ConsoleApp.h"
 
-#include "TRM/Canvas.h"
+#include "TRM/Frame.h"
 #include "TRM/Console.h"
 
 namespace TRM {
@@ -92,7 +92,7 @@ private:
    template <unsigned WIDTH, unsigned HEIGHT>
    int launchDisplay()
    {
-      Canvas<WIDTH,HEIGHT> term(program);
+      Frame<WIDTH,HEIGHT> term(program);
       return startTerminalApp(term);
    }
 

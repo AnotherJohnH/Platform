@@ -25,20 +25,20 @@
 #include "GUI/GUI.h"
 
 
-class PopUp : public GUI::Frame
+class PopUp : public GUI::App
 {
 private:
    GUI::Text text;
 
 public:
    PopUp()
-      : GUI::Frame("Pop Up", &GUI::font_teletext18)
+      : GUI::App("Pop Up", &GUI::font_teletext18)
       , text(this, "Hello, world!")
    {}
 };
 
 
-class MainWindow : public GUI::Frame
+class GuiApp : public GUI::App
 {
 private:
    PopUp popup;
@@ -60,8 +60,8 @@ private:
    }
 
 public:
-   MainWindow()
-      : GUI::Frame("GUI test", &GUI::font_teletext18)
+   GuiApp()
+      : GUI::App("GUI test", &GUI::font_teletext18)
       , text2(this, "Hello, world!")
       , button(this, 1)
       , txt_btn(this, 2, "0123456789")
@@ -76,6 +76,6 @@ public:
 
 int main( int argc, char *argv[] )
 {
-   MainWindow().eventLoop();
+   GuiApp().eventLoop();
 }
 

@@ -20,23 +20,28 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \file Frame.h
+//! \brief Platform abstraction interface for 2D rendering on a frame buffer
+
 #ifndef GUI_FRAME_H
 #define GUI_FRAME_H
 
-#include "PLT/Event.h"
 #include "PLT/Frame.h"
-
-#include "GUI/Control/Window.h"
+#include "GUI/Canvas.h"
 
 namespace GUI {
 
-class Frame : public Window
+const uint32_t RESIZABLE   = PLT::Frame::RESIZABLE;
+const uint32_t NO_BORDER   = PLT::Frame::NO_BORDER;
+const uint32_t FULL_SCREEN = PLT::Frame::FULL_SCREEN;
+
+//! A frame buffer with 2D rendering primitive support
+class Frame : public GUI::Canvas
 {
 private:
    PLT::Frame frame;
 
    // Implement GUI::Canvas
-
    virtual GUI::Colour canvasGetPixel(signed x, signed y) const override
    {
       return frame.getPixel(x, y);
@@ -65,66 +70,15 @@ private:
       }
    }
 
-   // -------------------
-
-   static uint32_t guiFlagsToFrameFlags(uint32_t gui_flags)
-   {
-      uint32_t frame_flags = 0;
-      if(gui_flags & GUI::RESIZABLE)   frame_flags |= PLT::Frame::RESIZABLE;
-      if(gui_flags & GUI::NO_BORDER)   frame_flags |= PLT::Frame::NO_BORDER;
-      if(gui_flags & GUI::FULL_SCREEN) frame_flags |= PLT::Frame::FULL_SCREEN;
-      return frame_flags;
-   }
-
-   void handleEvent(const PLT::Event::Message& event)
-   {
-      switch(event.type)
-      {
-      case PLT::Event::RESIZE:       winResize(event.x, event.y); break;
-      case PLT::Event::KEY_DOWN:     keyPress(event.code, true ); break;
-      case PLT::Event::KEY_UP:       keyPress(event.code, false); break;
-      case PLT::Event::POINTER_MOVE: ptrMove(event.x, event.y); break;
-      case PLT::Event::BUTTON_DOWN:  btnPress(event.x, event.y, event.code == 1, true);  break;
-      case PLT::Event::BUTTON_UP:    btnPress(event.x, event.y, event.code == 1, false); break;
-      case PLT::Event::TIMER:        timerEvent(); break;
-
-      case PLT::Event::QUIT:
-      default:
-         break;
-      }
-   }
-
-   static void eventCallBack(const PLT::Event::Message& event, void* ptr)
-   {
-      Frame* frame = reinterpret_cast<Frame*>(ptr);
-      frame->handleEvent(event);
-   }
-
 public:
-   Frame(const char* title_, const GUI::Font* font_, uint32_t flags_ = 0)
-      : GUI::Window(font_)
-      , frame(title_, 0, 0, guiFlagsToFrameFlags(flags_))
-   {
-   }
+   Frame(const char* title_, unsigned width_ = 0, unsigned height_ = 0, uint32_t flags_ = 0)
+      : GUI::Canvas(width_, height_)
+      , frame(title_, width_, height_, flags_)
+   {}
 
-   Frame(const char* title_, const GUI::Font* font_, unsigned width_, unsigned height_, uint32_t flags_ = 0)
-      : GUI::Window(font_)
-      , frame(title_, width_, height_, guiFlagsToFrameFlags(flags_))
+   void blit(unsigned x, unsigned y, unsigned offset, unsigned width, const PLT::Image& image)
    {
-      setSize(width_, height_);
-   }
-
-   int eventLoop()
-   {
-      show();
-
-      return PLT::Event::eventLoop(eventCallBack, this);
-   }
-
-   void setTimer(unsigned code, unsigned period_ms)
-   {
-      setTimerEvent(code);
-      PLT::Event::setTimer(period_ms);
+      frame.blit(x, y, offset, width, image);
    }
 };
 

@@ -23,16 +23,13 @@
 #ifndef GUI_CONTROL_WINDOW_H
 #define GUI_CONTROL_WINDOW_H
 
-#include "GUI/Canvas.h"
+#include "GUI/Frame.h"
 #include "GUI/Control/Col.h"
 
 namespace GUI {
 
-const uint32_t RESIZABLE   = 1 << 0;
-const uint32_t NO_BORDER   = 1 << 1;
-const uint32_t FULL_SCREEN = 1 << 2;
 
-class Window : public Col, public Canvas
+class Window : public Col, public Frame
 {
 private:
    const Font* const font{nullptr};
@@ -41,7 +38,7 @@ private:
 
    // Implement Widget
 
-   virtual void eventResize() override { Canvas::resize(Widget::size.x, Widget::size.y); }
+   virtual void eventResize() override { Frame::resize(Widget::size.x, Widget::size.y); }
 
    virtual void eventDraw(Canvas&) override { Canvas::clear(FACE); }
 
@@ -62,8 +59,9 @@ protected:
    }
 
 public:
-   Window(const Font* font_ = 0)
+   Window(const char* title_, unsigned width_, unsigned height_, const Font* font_, uint32_t flags_)
       : Col(0, 8)
+      , GUI::Frame(title_, width_, height_, flags_)
       , font(font_)
    {
    }
