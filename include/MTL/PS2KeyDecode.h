@@ -28,7 +28,9 @@
 
 #include <stdint.h>
 
+//! Bare metal layer
 namespace MTL {
+
 
 class PS2KeyDecode
 {

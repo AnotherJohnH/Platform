@@ -23,8 +23,11 @@
 //! \file Register.h
 //! \brief Memory mapped register helper
 
-#ifndef REGISTER_H
-#define REGISTER_H
+#ifndef MTL_REGISTER_H
+#define MTL_REGISTER_H
+
+//! Bare metal layer
+namespace MTL {
 
 
 //! Generic register access
@@ -95,5 +98,7 @@ private:
    }
 };
 
+
+} // namespace MTL
 
 #endif

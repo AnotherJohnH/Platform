@@ -29,7 +29,7 @@
 #include "MTL/Pins.h"
 #include "MTL/Gpio.h"
 
-//! Bare metal interfaces
+//! Bare metal layer
 namespace MTL {
 
 //! Low level digital I/O

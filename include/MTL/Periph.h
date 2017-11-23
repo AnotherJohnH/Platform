@@ -23,13 +23,13 @@
 //! \file Periph.h
 //! \brief Memory mapped peripheral helper
 
-#ifndef PERIPH_H
-#define PERIPH_H
+#ifndef MTL_PERIPH_H
+#define MTL_PERIPH_H
 
 
 #include <cstdint>
 
-#include "Register.h"
+#include "MTL/Register.h"
 
 
 #define  REG(OFFSET, NAME)  \
@@ -46,6 +46,9 @@
     struct { uint8_t pad_##NAME[OFFSET]; TYPE NAME[SIZE]; }
 
 
+namespace MTL {
+
+
 template <typename REG_TYPE,
           uint32_t BASE_ADDR,
           unsigned INSTANCE=0,
@@ -59,4 +62,6 @@ protected:
 };
 
 
-#endif // PERIPH_H
+} // namespace MTL
+
+#endif // MTL_PERIPH_H
