@@ -29,6 +29,7 @@
 #include <cstdint>
 #include <cassert>
 
+//! Platform abstraction layer
 namespace PLT {
 
 //! Base class for rectangular bitmap image

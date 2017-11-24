@@ -26,6 +26,7 @@
 #ifndef PLT_SOUNDER_H
 #define PLT_SOUNDER_H
 
+//! Platform abstraction layer
 namespace PLT {
 
 //! Simple on/off sounder

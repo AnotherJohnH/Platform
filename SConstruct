@@ -26,6 +26,7 @@ version  = '0.0.2'
 plt_source = ['PLT/test/testAudioOut.cpp',
               'PLT/test/testAudioIn.cpp',
               'PLT/test/testMidiIn.cpp',
+              'PLT/test/testSounder.cpp',
               'PLT/test/testEvent.cpp',
               'PLT/test/testFrame.cpp',
               'GUI/testGuiFrame.cpp',

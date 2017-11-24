@@ -27,14 +27,24 @@
 #include "PLT/Event.h"
 
 
-static int16_t data[1024];
+static const unsigned           SAMPLE_FREQUENCY = 44100;
+static const PLT::Audio::Format FORMAT           = PLT::Audio::SINT16;
+static const unsigned           CHANNELS         = 1;
+
+
+// TODO this just happens to match the SDL2 implementation
+//      need a more portable way of doing this
+static const unsigned BLOCK_SAMPLES    = 1024;
+
+
+static int16_t data[BLOCK_SAMPLES];
 
 
 class TestAudioIn : public PLT::Audio::In
 {
 public:
    TestAudioIn()
-      : PLT::Audio::In(44100, PLT::Audio::SINT16, 1)
+      : PLT::Audio::In(SAMPLE_FREQUENCY, FORMAT, CHANNELS)
    {}
 
    virtual void setSamples(const int16_t* buffer, unsigned n) override
@@ -51,7 +61,7 @@ class TestAudioOut : public PLT::Audio::Out
 {
 public:
    TestAudioOut()
-      : PLT::Audio::Out(44100, PLT::Audio::SINT16, 1)
+      : PLT::Audio::Out(SAMPLE_FREQUENCY, FORMAT, CHANNELS)
    {}
 
    virtual void getSamples(int16_t* buffer, unsigned n) override

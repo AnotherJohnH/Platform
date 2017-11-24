@@ -20,10 +20,44 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// Stub Sounder implementation
+// Stub Sounder implementation using PLT::Audio
 
 #include "PLT/Sounder.h"
+#include "PLT/Audio.h"
+#include "MTH/Waveform.h"
+
+
+class Beep : public PLT::Audio::Out
+{
+private:
+   static const unsigned           SAMPLE_FREQUENCY = 44100; // 44.1 KHz
+   static const PLT::Audio::Format FORMAT           = PLT::Audio::SINT16;
+   static const unsigned           CHANNELS         = 1;
+   static const unsigned           FREQUENCY        = 440;   // 440 Hz
+
+   double phase{0.0};
+   double delta;
+
+   virtual void getSamples(int16_t* buffer, unsigned n) override
+   {
+      for(unsigned i = 0; i < n; ++i)
+      {
+         buffer[i] = MTH::Waveform::sine(phase) * 0x7FFF;
+         phase += delta;
+      }
+   }
+
+public:
+   Beep()
+      : PLT::Audio::Out(SAMPLE_FREQUENCY, FORMAT, CHANNELS)
+      , delta(double(FREQUENCY)/SAMPLE_FREQUENCY)
+   {}
+};
+
 
 void PLT::Sounder::setEnable(bool enable)
 {
+   static Beep beep;
+
+   beep.setEnable(enable);
 }

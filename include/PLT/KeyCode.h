@@ -25,7 +25,9 @@
 
 #include <cstdint>
 
+//! Platform abstraction layer
 namespace PLT {
+
 
 //! Event codes for special keys
 enum KeyCode : uint8_t
@@ -70,6 +72,6 @@ enum KeyCode : uint8_t
    VOL_UP    = 0xA1   //!< Volume up
 };
 
-} // PLT
+} // namespace PLT
 
 #endif // PLT_KEY_CODE_H

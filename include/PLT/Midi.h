@@ -30,6 +30,7 @@
 
 #include "STB/Midi.h"
 
+//! Platform abstraction layer
 namespace PLT {
 
 //! Access to MIDI devices

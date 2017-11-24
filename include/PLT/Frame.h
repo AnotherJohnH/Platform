@@ -30,9 +30,10 @@
 
 #include "Image.h"
 
+//! Platform abstraction layer
 namespace PLT {
 
-//! A raw frame buffer
+//! Raw frame buffer
 class Frame : public Image
 {
 public:
@@ -41,21 +42,30 @@ public:
    static const uint32_t NO_BORDER   = 1 << 1; //!< Frame has no external border pixels
    static const uint32_t FULL_SCREEN = 1 << 2; //!< Frame should cover the whole screen
 
+   //! Construct a new frame
+   //
+   //! \param title for window based platforms should be the window title
+   //! \param width frame width (pixels)
+   //! \param height frame height (pixels)
+   //! \param flags bitmask of hints for the underlying platform that implements the frame
    Frame(const char* title, unsigned width_, unsigned height_, uint32_t flags_ = NO_FLAGS);
 
    ~Frame();
 
-   //! Get a platform specific handle for the image
+   //! Get a platform specific handle for the frame
    virtual void* getHandle() const override;
 
    //! Render an image onto the frame buffer
    virtual void blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
                      const Image& src) override;
 
-   //! Resize frame buffer
+   //! Resize the frame buffer
+   //
+   //! \param width frame width (pixels)
+   //! \param height frame height (pixels)
    void resize(unsigned width_, unsigned height_);
 
-   //! Ensure changes in frame buffer are displayed
+   //! Ensure any changes to the frame buffer are displayed
    void refresh();
 
 private:

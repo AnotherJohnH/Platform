@@ -33,7 +33,7 @@
 //! Platform abstraction layer
 namespace PLT {
 
-//! Interface for user events
+//! Interface for user interface events
 namespace Event {
 
 
@@ -67,7 +67,7 @@ struct Message
    Type     type{NONE};   //!< Event type
    uint8_t  code{0};      //!< Identify key or mouse button
    uint16_t x{0};         //!< Mouse pointer or touch x co-ordinate
-   uint16_t y{0};         //!< Mouse pointer or touch y-co-ordinate
+   uint16_t y{0};         //!< Mouse pointer or touch y co-ordinate
 };
 
 
