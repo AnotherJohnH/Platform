@@ -20,14 +20,14 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef MTH_VECTOR2_H
-#define MTH_VECTOR2_H
+#ifndef STB_VECTOR2_H
+#define STB_VECTOR2_H
 
 #include <cassert>
 #include <cmath>
 #include <cstddef>
 
-namespace MTH {
+namespace STB {
 
 //! Two dimensional vector template
 template <typename T>
@@ -216,6 +216,6 @@ public:
    }
 };
 
-} // namespace MTH
+} // namespace STB
 
 #endif

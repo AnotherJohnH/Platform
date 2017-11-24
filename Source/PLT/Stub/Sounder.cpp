@@ -24,7 +24,7 @@
 
 #include "PLT/Sounder.h"
 #include "PLT/Audio.h"
-#include "MTH/Waveform.h"
+#include "STB/Waveform.h"
 
 
 class Beep : public PLT::Audio::Out
@@ -42,7 +42,7 @@ private:
    {
       for(unsigned i = 0; i < n; ++i)
       {
-         buffer[i] = MTH::Waveform::sine(phase) * 0x7FFF;
+         buffer[i] = STB::Waveform::sine(phase) * 0x7FFF;
          phase += delta;
       }
    }

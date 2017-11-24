@@ -53,7 +53,7 @@ private:
          double value = 0.0;
          for(unsigned i = 1; i <= NUM_HARMONICS; i++)
          {
-            value += harmonic[i - 1] * MTH::Waveform::sine(i * t);
+            value += harmonic[i - 1] * STB::Waveform::sine(i * t);
          }
          return value;
       });

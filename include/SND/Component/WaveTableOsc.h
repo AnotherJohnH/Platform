@@ -23,7 +23,7 @@
 #ifndef SND_WAVE_TABLE_OSC_H
 #define SND_WAVE_TABLE_OSC_H
 
-#include "MTH/Waveform.h"
+#include "STB/Waveform.h"
 #include "Osc.h"
 
 
@@ -87,7 +87,7 @@ class SquareOsc : public WaveTableOsc
 {
 public:
    SquareOsc(Freq freq_hz = 0.0)
-      : WaveTableOsc(freq_hz, MTH::Waveform::square)
+      : WaveTableOsc(freq_hz, STB::Waveform::square)
    {}
 };
 
@@ -96,7 +96,7 @@ class SawToothOsc : public WaveTableOsc
 {
 public:
    SawToothOsc(Freq freq_hz = 0.0)
-      : WaveTableOsc(freq_hz, MTH::Waveform::sawTooth)
+      : WaveTableOsc(freq_hz, STB::Waveform::sawTooth)
    {}
 };
 
@@ -105,7 +105,7 @@ class TriangleOsc : public WaveTableOsc
 {
 public:
    TriangleOsc(Freq freq_hz = 0.0)
-      : WaveTableOsc(freq_hz, MTH::Waveform::triangle)
+      : WaveTableOsc(freq_hz, STB::Waveform::triangle)
    {}
 };
 
@@ -114,7 +114,7 @@ class SineOsc : public WaveTableOsc
 {
 public:
    SineOsc(Freq freq_hz = 0.0)
-      : WaveTableOsc(freq_hz, MTH::Waveform::sine)
+      : WaveTableOsc(freq_hz, STB::Waveform::sine)
    {}
 };
 
@@ -123,7 +123,7 @@ class CosineOsc : public WaveTableOsc
 {
 public:
    CosineOsc(Freq freq_hz = 0.0)
-      : WaveTableOsc(freq_hz, MTH::Waveform::cosine)
+      : WaveTableOsc(freq_hz, STB::Waveform::cosine)
    {}
 };
 

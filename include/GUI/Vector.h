@@ -23,11 +23,11 @@
 #ifndef GUI_VECTOR_H
 #define GUI_VECTOR_H
 
-#include "MTH/Vector2.h"
+#include "STB/Vector2.h"
 
 namespace GUI {
 
-using Vector = MTH::Vector2<unsigned>;
+using Vector = STB::Vector2<unsigned>;
 
 } // namespace GUI
 

@@ -24,7 +24,7 @@
 #include "PLT/Audio.h"
 #include "PLT/Event.h"
 
-#include "MTH/Waveform.h"
+#include "STB/Waveform.h"
 
 
 class TestAudio : public PLT::Audio::Out
@@ -41,7 +41,7 @@ private:
    {
       for(unsigned i = 0; i < n; ++i)
       {
-         buffer[i] = MTH::Waveform::sine(phase) * 0x7FFF;
+         buffer[i] = STB::Waveform::sine(phase) * 0x7FFF;
          phase += phase_delta;
       }
    }

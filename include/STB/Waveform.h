@@ -20,14 +20,14 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// Functions f(x) for some common waveforms were 0.0 <= x <= 1.0
+// Functions f(t) for some common waveforms were 0.0 <= t <= 1.0
 
-#ifndef MTH_WAVEFORM_H
-#define MTH_WAVEFORM_H
+#ifndef STB_WAVEFORM_H
+#define STB_WAVEFORM_H
 
 #include <cmath>
 
-namespace MTH {
+namespace STB {
 
 namespace Waveform {
 
@@ -71,6 +71,6 @@ inline double cosine(double t)
 
 } // namespace Waveform
 
-} // namespace MTH
+} // namespace STB
 
 #endif
