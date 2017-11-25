@@ -153,7 +153,10 @@ public:
       argc = 1;
       argv = local_argv;
 #endif
-      name = extractFilename(argv[0]);
+      if (argc != 0)
+      {
+         name = extractFilename(argv[0]);
+      }
 
       for(int i = 1; i < argc; ++i)
       {
