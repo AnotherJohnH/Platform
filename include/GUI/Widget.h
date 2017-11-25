@@ -45,7 +45,6 @@ protected:
 
    Colour      fg_colour{FOREGROUND};
    Colour      bg_colour{FACE};
-   const Font* font{nullptr};
 
 private:
    //! Recursively determine the minimum size of this item and this items children
@@ -250,7 +249,7 @@ protected:
       }
    }
 
-   //! Get default font fro, top level
+   //! Get default font from top level
    virtual const Font* getDefaultFont() const
    {
       return parent ? parent->getDefaultFont() : nullptr;
@@ -264,8 +263,6 @@ public:
          assert(parent_ != this);
          parent_->pushBack(this);
       }
-
-      font = getDefaultFont();
    }
 
    virtual ~Widget()
@@ -295,13 +292,6 @@ public:
    void setForegroundColour(Colour colour) { fg_colour = colour; }
 
    void setBackgroundColour(Colour colour) { bg_colour = colour; }
-
-   void setFont(const Font* font_)
-   {
-      font = font_ != nullptr ? font_ : getDefaultFont();
-
-      eventSize();
-   }
 
    void show()
    {

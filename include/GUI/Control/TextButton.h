@@ -33,6 +33,11 @@ class TextButton : public Button
 public:
    Text text;
 
+   TextButton()
+   {
+      pushBack(&text);
+   }
+
    TextButton(Widget* parent_, unsigned code_, const char* text_)
       : Button(parent_, code_)
       , text(this, text_)

@@ -32,7 +32,9 @@ namespace GUI {
 class Text : public Widget
 {
 private:
-   const char*  text;
+   const Font*  font{nullptr};
+   const char*  text{nullptr};
+   unsigned     len{0};
    unsigned     cols{0};
    Align        text_align{LEFT};
 
@@ -40,6 +42,11 @@ protected:
    // Implement Widget events
    virtual void eventSize() override
    {
+      if (font == nullptr)
+      {
+         font = getDefaultFont();
+      }
+
       size.x = font->getWidth(" ") * cols;
       size.y = font->getHeight();
    }
@@ -51,8 +58,8 @@ protected:
       switch(text_align)
       {
       case LEFT:   break;
-      case CENTER: x += cols * font->getWidth(" ")/ 2; break;
-      case RIGHT:  x += cols * font->getWidth(" "); break;
+      case CENTER: x += (cols - len) * font->getWidth(" ")/2; break;
+      case RIGHT:  x += (cols - len) * font->getWidth(" "); break;
       default: assert(!"unexpected"); break;
       }
 
@@ -61,17 +68,25 @@ protected:
    }
 
 public:
+   Text() = default;
+
    Text(Widget* parent, const char* text_)
       : Widget(parent)
-      , text(text_)
-      , cols(strlen(text_))
    {
+      setText(text_);
+      setCols(len);
+   }
+
+   void setFont(const Font* font_)
+   {
+      font = font_;
       eventSize();
    }
 
    void setText(const char* text_)
    {
       text = text_;
+      len  = strlen(text);
    }
 
    void setCols(unsigned cols_)

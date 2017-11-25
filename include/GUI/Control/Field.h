@@ -34,6 +34,7 @@ template <unsigned COLS>
 class Field : public Widget
 {
 private:
+   const Font*  font{nullptr};
    // unsigned      code;
    char value[COLS + 1];
 
@@ -41,6 +42,11 @@ protected:
    // Implement Widget events
    virtual void eventSize() override
    {
+      if (font == nullptr)
+      {
+         font = getDefaultFont();
+      }
+
       setBorderAndGap(2);
       size.x = font->getWidth() * COLS + 4;
       size.y = font->getHeight() + 4;

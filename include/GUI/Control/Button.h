@@ -96,10 +96,17 @@ private:
    }
 
 public:
+   Button()
+   {
+      Row::setBorderAndGap(4);
+   }
+
    Button(Widget* parent, unsigned code_)
       : Row(parent, 4)
       , code(code_)
    {}
+
+   void setCode(unsigned code_) { code = code_; }
 
    void setSelect(bool set = true) { select = set; }
 

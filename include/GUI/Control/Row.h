@@ -31,7 +31,7 @@ namespace GUI {
 class Row : public Widget
 {
 public:
-   Row(Widget* parent, unsigned space = 0)
+   Row(Widget* parent = nullptr, unsigned space = 0)
       : Widget(parent)
    {
       row = true;
