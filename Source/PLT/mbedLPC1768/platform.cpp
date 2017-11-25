@@ -21,12 +21,29 @@
 //------------------------------------------------------------------------------
 
 #include "MTL/chip/LPC1768/SysCon.h"
+#include "MTL/Digital.h"
 
 extern "C" {
 void platform_init();
+void platform_shutdown();
+void platform_fault();
 }
 
 void platform_init()
 {
    MTL::SysCon().init();
+}
+
+void platform_shutdown()
+{
+   MTL::Digital::Out<MTL::PIN_LED1> led{true};
+
+   while(true);
+}
+
+void platform_fault()
+{
+   MTL::Digital::Out<MTL::PIN_LED4> led{true};
+
+   while(true);
 }

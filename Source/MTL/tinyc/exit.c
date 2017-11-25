@@ -25,8 +25,18 @@
 
 #include <stdlib.h>
 
+extern void platform_shutdown();
+extern void platform_fault();
+
 void exit(int status)
 {
-   while(1);
+   if (status == 0)
+   {
+      platform_shutdown();
+   }
+   else
+   {
+      platform_fault();
+   }
 }
 

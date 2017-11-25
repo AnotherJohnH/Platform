@@ -143,10 +143,11 @@ reset:
 #
     mov     r0, #0   @ ensure argc is zero
     bl      main
-#
-# Fall through to unhandled exception
-#
+    bl      exit
 
+#
+# unhandled exceptions
+#
 unhandled_exception:
 nmi:
 hard_fault:
@@ -191,5 +192,5 @@ irqQuadEnc:
 irqPLL1:
 irqUSBAct:
 irqCANAct:
-loop:
-    b       loop
+    ldr     r0,=platform_fault
+    bx      r0

@@ -25,7 +25,9 @@
 
 #include <stdlib.h>
 
+extern void platform_fault(void);
+
 void abort(void)
 {
-   while(1);
+   platform_fault();
 }
