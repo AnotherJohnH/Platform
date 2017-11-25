@@ -31,7 +31,6 @@ namespace GUI {
 //! Packed pixel colour type
 using Colour = uint32_t;
 
-
 //! Least significant bit for fields in the packed pixel colour type Colour
 const unsigned ALP_LSB = 24;
 const unsigned RED_LSB = 16;
@@ -57,25 +56,7 @@ static constexpr Colour RGB(uint8_t red, uint8_t grn, uint8_t blu)
 static constexpr Colour GREY(uint8_t level) { return RGB(level, level, level); }
 
 
-//! Helper class to extract fields from packed colour type Colour
-struct ColourDecode
-{
-   Colour colour;
-
-   ColourDecode(Colour colour_)
-      : colour(colour_)
-   {
-   }
-
-   uint8_t alp() const { return colour >> ALP_LSB; }
-   uint8_t red() const { return colour >> RED_LSB; }
-   uint8_t grn() const { return colour >> GRN_LSB; }
-   uint8_t blu() const { return colour >> BLU_LSB; }
-};
-
-
 // Some pre-defined packed colour values
-
 const Colour BLACK   = RGB(0x00, 0x00, 0x00);
 const Colour BLUE    = RGB(0x00, 0x00, 0xFF);
 const Colour GREEN   = RGB(0x00, 0xFF, 0x00);
@@ -93,6 +74,36 @@ const Colour FACE       = GREY(0xB0);
 const Colour LIGHT      = GREY(0xD0);
 const Colour HILIGHT    = GREY(0xF0);
 const Colour HIDDEN     = RGBA(0x00, 0x00, 0x00, 0xFF);
+
+
+//! Helper class to extract fields from packed colour type Colour
+struct ColourDecode
+{
+   Colour colour;
+
+   ColourDecode(Colour colour_)
+      : colour(colour_)
+   {
+   }
+
+   uint8_t alp() const { return colour >> ALP_LSB; }
+   uint8_t red() const { return colour >> RED_LSB; }
+   uint8_t grn() const { return colour >> GRN_LSB; }
+   uint8_t blu() const { return colour >> BLU_LSB; }
+};
+
+
+//! Background and foreground colour pair
+class ColourPair
+{
+protected:
+   Colour  fg_colour{FOREGROUND};
+   Colour  bg_colour{FACE};
+
+public:
+   void setForegroundColour(Colour colour) { fg_colour = colour; }
+   void setBackgroundColour(Colour colour) { bg_colour = colour; }
+};
 
 
 } // namespace GUI

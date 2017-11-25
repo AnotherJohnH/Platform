@@ -40,9 +40,6 @@ protected:
    static const unsigned EVENT_REDRAW  = EVENT_PRIVATE - 1;
    static const unsigned EVENT_FOCUS   = EVENT_PRIVATE - 2;
 
-   Colour      fg_colour{FOREGROUND};
-   Colour      bg_colour{FACE};
-
 private:
    //! Recursively determine the minimum size of this item and this items children
    void layoutSizeShrink()
@@ -272,10 +269,6 @@ public:
 
       push_back(child);
    }
-
-   void setForegroundColour(Colour colour) { fg_colour = colour; }
-
-   void setBackgroundColour(Colour colour) { bg_colour = colour; }
 
    void show()
    {

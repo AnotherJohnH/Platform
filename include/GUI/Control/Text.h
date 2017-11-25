@@ -29,7 +29,7 @@
 
 namespace GUI {
 
-class Text : public Widget
+class Text : public Widget, public ColourPair
 {
 private:
    const Font*  font{nullptr};

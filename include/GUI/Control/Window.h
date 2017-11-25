@@ -44,7 +44,6 @@ private:
 
    virtual const Font* getDefaultFont() const override { return font; }
 
-
    virtual void appEvent(Widget* item_, unsigned code_) {}
 
 protected:

@@ -31,6 +31,7 @@ namespace GUI {
 class Button : public Row
 {
 private:
+   Colour   bg_colour{FACE};
    uint32_t code{0};
    uint32_t alt_code{0};
    bool     down{false};
@@ -113,6 +114,8 @@ public:
    void setFlat(bool set = true) { flat = set; }
 
    void setAltCode(bool select, unsigned code_) { alt_code = code_; }
+
+   void setBackgroundColour(Colour colour) { bg_colour = colour; }
 };
 
 } // namespace GUI

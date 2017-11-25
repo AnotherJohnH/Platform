@@ -31,7 +31,7 @@
 namespace GUI {
 
 template <unsigned COLS>
-class Field : public Widget
+class Field : public Widget, public ColourPair
 {
 private:
    const Font*  font{nullptr};
