@@ -34,8 +34,8 @@ class Text : public Widget
 private:
    const Font*  font{nullptr};
    const char*  text{nullptr};
-   unsigned     len{0};
-   unsigned     cols{0};
+   uint8_t      len{0};
+   uint8_t      cols{0};
    Align        text_align{LEFT};
 
 protected:

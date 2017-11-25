@@ -31,8 +31,8 @@ namespace GUI {
 class Button : public Row
 {
 private:
-   unsigned code{0};
-   unsigned alt_code{0};
+   uint32_t code{0};
+   uint32_t alt_code{0};
    bool     down{false};
    bool     select{false};
    bool     flat{false};

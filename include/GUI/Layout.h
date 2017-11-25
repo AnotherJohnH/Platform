@@ -31,7 +31,7 @@
 namespace GUI {
 
 // Size fit
-enum Fit
+enum Fit : uint8_t
 {
    FIX = 0,
    SHRINK, // Shrink to minimum size that contains children
@@ -40,7 +40,7 @@ enum Fit
 
 
 // Alignment for children
-enum Align
+enum Align : uint8_t
 {
    LEFT = 0,
    CENTER,
@@ -55,17 +55,16 @@ enum Align
 class Layout
 {
 protected:
-   Vector pos{0, 0};     //!< Absolute position in root canvas
-   Vector size{0, 0};    //!< Width and height
-   Fit    horz_fit{FIX}; //!< Horizontal fit
-   Fit    vert_fit{FIX}; //!< Vertical fit
-
-   bool     row{false};       //!< Layout children in a row not a column
-   Vector   top_left{0,0};    //!< Top left border for children
-   Vector   btm_right{0,0};   //!< Bottom right border for children
-   unsigned gap{0};           //!< Gap between children
-   Align    horz_align{LEFT}; //!< Horizontal alignment mode for children
-   Align    vert_align{TOP};  //!< Vertical alignment mode for children
+   Vector      pos{0, 0};        //!< Absolute position in root canvas
+   Vector      size{0, 0};       //!< Width and height
+   SmallVector top_left{0,0};    //!< Top left border for children
+   SmallVector btm_right{0,0};   //!< Bottom right border for children
+   Fit         horz_fit{FIX};    //!< Horizontal fit
+   Fit         vert_fit{FIX};    //!< Vertical fit
+   bool        row{false};       //!< Layout children in a row not a column
+   uint8_t     gap{0};           //!< Gap between children
+   Align       horz_align{LEFT}; //!< Horizontal alignment mode for children
+   Align       vert_align{TOP};  //!< Vertical alignment mode for children
 
 public:
    unsigned getX() const { return pos.x; }

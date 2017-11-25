@@ -27,7 +27,8 @@
 
 namespace GUI {
 
-using Vector = STB::Vector2<unsigned>;
+using Vector      = STB::Vector2<uint16_t>;
+using SmallVector = STB::Vector2<uint8_t>;
 
 } // namespace GUI
 

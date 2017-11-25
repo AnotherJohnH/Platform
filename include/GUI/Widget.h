@@ -35,9 +35,6 @@ namespace GUI {
 //! Generic Widget base class
 class Widget : public Layout, public STB::Tree<Widget>
 {
-private:
-   bool auto_delete{false};
-
 protected:
    static const unsigned EVENT_PRIVATE = 0xFFFFFFFF;
    static const unsigned EVENT_REDRAW  = EVENT_PRIVATE - 1;
@@ -265,22 +262,9 @@ public:
       }
    }
 
-   virtual ~Widget()
-   {
-      if(auto_delete)
-      {
-         for(Widget* child = children; child;)
-         {
-            Widget* next = child->next;
-            delete child;
-            child = next;
-         }
-      }
-   }
+   virtual ~Widget() {}
 
    bool isParentRow() const { return parent ? parent->isRow() : false; }
-
-   void setAutoDelete() { auto_delete = true; }
 
    void pushBack(Widget* child)
    {
