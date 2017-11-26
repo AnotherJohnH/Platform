@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,27 +20,12 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file ctype.h
+//! \file isalpha.c
 //! \brief tiny C library implementation
 
-#ifndef CTYPE_H
-#define CTYPE_H
+#include <ctype.h>
 
-#include <stdlib.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern int isdigit(int c);
-extern int isalpha(int c);
-extern int islower(int c);
-extern int isupper(int c);
-extern int isalnum(int c);
-extern int isspace(int c);
-
-#ifdef __cplusplus
+int isalpha(int c)
+{
+   return ((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z'));
 }
-#endif
-
-#endif // CTYPE_H
