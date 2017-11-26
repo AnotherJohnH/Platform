@@ -60,7 +60,7 @@ env['CCFLAGS']   = ['-DNDEBUG',
                     '-ffunction-sections',
                     '-fdata-sections']
 
-env['CXXFLAGS']  = ['-std=c++11']  # -fno-rtti
+env['CXXFLAGS']  = ['-std=c++11', '-fno-rtti', '-DNO_RTTI', '-DSMALL_MEMORY']
 
 import os
 p = os.popen(env['CC'] + ' -print-file-name=armv6-m')
