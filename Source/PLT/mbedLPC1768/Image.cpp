@@ -45,7 +45,7 @@ uint32_t Image::getPixel(unsigned x, unsigned y) const
    return byte & mask ? 0xFFFFFF : 0x000000;
 }
 
-void Image::setPixel(unsigned x, unsigned y, uint32_t rgb)
+void Image::point(uint32_t rgb, unsigned x, unsigned y)
 {
    unsigned index = (x/PIXELS_PER_BYTE) + y * pitch;
    uint8_t& byte = buffer[index ^ MTL::PAL_VIDEO_BYTE_SWAP];
@@ -84,9 +84,9 @@ void Image::setPixel(unsigned x, unsigned y, uint32_t rgb)
    }
 }
 
-void Image::span(unsigned x1, unsigned y, unsigned x2, uint32_t rgb)
+void Image::span(uint32_t rgb, unsigned x1, unsigned y, unsigned x2)
 {
-   defaultSpan(x1, y, x2, rgb);
+   defaultSpan(rgb, x1, y, x2);
 }
 
 void Image::blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,

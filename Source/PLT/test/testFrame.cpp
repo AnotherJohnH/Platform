@@ -34,13 +34,13 @@ int main(int argc, const char* argv[])
    {
       for(unsigned x = 0; x < frame.getWidth(); x++)
       {
-         frame.setPixel(x, y, (x ^ y) & 8 ? 0xFFFFFF : 0x000000);
+         frame.point((x ^ y) & 8 ? 0xFFFFFF : 0x000000, x, y);
       }
    }
 
-   frame.span(0, 149, 400, 0xFFFFFF);
-   frame.span(0, 150, 400, 0xFFFFFF);
-   frame.span(0, 151, 400, 0xFFFFFF);
+   frame.span(0xFFFFFF, 0, 149, 400);
+   frame.span(0xFFFFFF, 0, 150, 400);
+   frame.span(0xFFFFFF, 0, 151, 400);
 
    frame.refresh();
 

@@ -90,6 +90,8 @@ public:
    //! Draw a straight line between two points
    void drawLine(Colour colour, signed x1, signed y1, signed x2, signed y2)
    {
+      // TODO clip to frame and then use canvasPoint() directly
+
       signed dx = x2 - x1;
       signed dy = y2 - y1;
 
@@ -478,6 +480,21 @@ private:
       for(signed x = x1; x < x2; x++)
       {
          canvasPoint(colour, x, y);
+      }
+   }
+
+   //! Blit another image into this imag
+   virtual void canvasBlit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
+                           const Canvas& source)
+   {
+      assert((src_offset + src_width) <= source.getWidth());
+
+      for(unsigned u = 0; u < src_width; u++)
+      {
+         for(unsigned v = 0; v < source.getHeight(); v++)
+         {
+            canvasPoint(source.getPixel(src_offset + u, v), x + u, y + v);
+         }
       }
    }
 };

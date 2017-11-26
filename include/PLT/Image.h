@@ -72,16 +72,18 @@ public:
 
    //! Write a pixel in the image
    //
+   // \param rgb 24-bit colour
    // \param x X co-ordinate (pixels)
    // \param y Y co-ordinate (pixels)
-   void setPixel(unsigned x, unsigned y, uint32_t rgb);
+   void point(uint32_t rgb, unsigned x, unsigned y);
 
    //! Draw a horizontal line of pixels
    //
+   // \param rgb 24-bit colour
    // \param x1 Start X co-ordinate (pixels)
    // \param y Y co-ordinate (pixels)
    // \param x2 End X co-ordinate (pixels)
-   void span(unsigned x1, unsigned y, unsigned x2, uint32_t rgb);
+   void span(uint32_t rgb, unsigned x1, unsigned y, unsigned x2);
 
    //! Blit another image into this image
    //
@@ -97,11 +99,11 @@ protected:
    virtual ~Image() {}
 
    //! Draw a horizontal line of pixels (back-stop slow implementation)
-   void defaultSpan(unsigned x1, unsigned y, unsigned x2, uint32_t rgb)
+   void defaultSpan(uint32_t rgb, unsigned x1, unsigned y, unsigned x2)
    {
       for(unsigned x = x1; x < x2; x++)
       {
-         setPixel(x, y, rgb);
+         point(rgb, x, y);
       }
    }
 
@@ -115,7 +117,7 @@ protected:
       {
          for(unsigned v = 0; v < source.getHeight(); v++)
          {
-            setPixel(x + u, y + v, source.getPixel(src_offset + u, v));
+            point(source.getPixel(src_offset + u, v), x + u, y + v);
          }
       }
    }

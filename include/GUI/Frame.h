@@ -59,12 +59,12 @@ private:
 
    virtual void canvasPoint(GUI::Colour colour, signed x, signed y) override
    {
-      frame.setPixel(x, y, colour);
+      frame.point(colour, x, y);
    }
 
    virtual void canvasSpan(GUI::Colour colour, signed x1, signed y, signed x2) override
    {
-      frame.span(x1, y, x2, colour);
+      frame.span(colour, x1, y, x2);
    }
 
 public:

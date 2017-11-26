@@ -38,13 +38,13 @@ void callback(const PLT::Event::Message& event, void* ptr)
    case PLT::Event::KEY_DOWN:
       printf("KEY_DOWN     %02X\n", event.code);
       for(unsigned y=248; y<256; y++)
-         frame->setPixel(event.code, y, 0xFFFFFF);
+         frame->point(0xFFFFFF, event.code, y);
       break;
 
    case PLT::Event::KEY_UP:
       printf("KEY_UP       %02X\n", event.code);
       for(unsigned y=248; y<256; y++)
-         frame->setPixel(event.code, y, 0x000000);
+         frame->point(0xFFFFFF, event.code, y);
       break;
 
    case PLT::Event::BUTTON_DOWN:
@@ -57,15 +57,15 @@ void callback(const PLT::Event::Message& event, void* ptr)
 
    case PLT::Event::POINTER_MOVE:
       printf("POINTER_MOVE %u %u\n",    event.x, event.y);
-      frame->setPixel(event.x, event.y, 0xFFFFFF);
+      frame->point(0xFFFFFF, event.x, event.y);
       break;
 
    case PLT::Event::TIMER:
       printf("TIMER\n");
       ticks = (ticks + 1) % frame->getWidth();
       rgb = frame->getPixel(ticks, 0);
-      frame->setPixel(ticks, 0, rgb ? 0x000000 : 0xFFFFFF);
-      frame->setPixel(ticks, 1, rgb ? 0x000000 : 0xFFFFFF);
+      frame->point(rgb ? 0x000000 : 0xFFFFFF, ticks, 0);
+      frame->point(rgb ? 0x000000 : 0xFFFFFF, ticks, 1);
       break;
 
    case PLT::Event::RESIZE:
