@@ -76,6 +76,13 @@ public:
    // \param y Y co-ordinate (pixels)
    void setPixel(unsigned x, unsigned y, uint32_t rgb);
 
+   //! Draw a horizontal line of pixels
+   //
+   // \param x1 Start X co-ordinate (pixels)
+   // \param y Y co-ordinate (pixels)
+   // \param x2 End X co-ordinate (pixels)
+   void span(unsigned x1, unsigned y, unsigned x2, uint32_t rgb);
+
    //! Blit another image into this image
    //
    // \param x X co-ordinate in target image (pixels)
@@ -83,10 +90,25 @@ public:
    // \param src_offset x offset into source (pixels)
    // \param src_width length of each line from source to render (pixels)
    // \param source Reference to source image
-   virtual void blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
-                     const Image& source)
+   void blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
+             const Image& source);
+
+protected:
+   virtual ~Image() {}
+
+   //! Draw a horizontal line of pixels (back-stop slow implementation)
+   void defaultSpan(unsigned x1, unsigned y, unsigned x2, uint32_t rgb)
    {
-      // Back-stop slow implementation
+      for(unsigned x = x1; x < x2; x++)
+      {
+         setPixel(x, y, rgb);
+      }
+   }
+
+   //! Blit another image into this image (back-stop slow implementation)
+   void defaultBlit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
+                    const Image& source)
+   {
       assert((src_offset + src_width) <= source.getWidth());
 
       for(unsigned u = 0; u < src_width; u++)
@@ -98,13 +120,10 @@ public:
       }
    }
 
-protected:
    uint8_t* buffer{nullptr};
    unsigned pitch{0};
    unsigned width{0};
    unsigned height{0};
-
-   virtual ~Image() {}
 };
 
 } // namespace PLT

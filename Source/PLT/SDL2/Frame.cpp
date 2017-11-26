@@ -104,34 +104,6 @@ public:
       return surface;
    }
 
-   void blit(unsigned     x,
-             unsigned     y,
-             unsigned     src_offset,
-             unsigned     src_width,
-             SDL_Surface* src)
-   {
-      SDL_Rect srcrect;
-      SDL_Rect dstrect;
-
-      srcrect.x = src_offset;
-      srcrect.y = 0;
-      srcrect.w = src_width;
-      srcrect.h = src->h;
-
-      dstrect.x = x;
-      dstrect.y = y;
-      dstrect.w = src_width;
-      dstrect.h = src->h;
-
-      if(src_width == 0)
-      {
-         srcrect.w = src->w;
-         dstrect.w = src->w;
-      }
-
-      SDL_BlitSurface(src, &srcrect, surface, &dstrect);
-   }
-
    void resize(unsigned width_, unsigned height_)
    {
       if(window == nullptr)
@@ -202,11 +174,6 @@ Frame::~Frame() { delete pimpl; }
 void* Frame::getHandle() const
 {
    return pimpl->getHandle();
-}
-
-void Frame::blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width, const Image& src)
-{
-   pimpl->blit(x, y, src_offset, src_width, (SDL_Surface*)src.getHandle());
 }
 
 void Frame::resize(unsigned width_, unsigned height_)

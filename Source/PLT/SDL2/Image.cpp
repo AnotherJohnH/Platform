@@ -20,6 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#include "SDL_headers.h"
+
 #include "PLT/Image.h"
 
 namespace PLT {
@@ -40,6 +42,38 @@ void Image::setPixel(unsigned x, unsigned y, uint32_t rgb)
 #else
    pixels[x + y * pitch / 4] = rgb;
 #endif
+}
+
+void Image::span(unsigned x1, unsigned y, unsigned x2, uint32_t rgb)
+{
+   defaultSpan(x1, y, x2, rgb);
+}
+
+void Image::blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
+                 const Image& source)
+{
+   SDL_Surface* src = static_cast<SDL_Surface*>(source.getHandle());
+
+   SDL_Rect srcrect;
+   SDL_Rect dstrect;
+
+   srcrect.x = src_offset;
+   srcrect.y = 0;
+   srcrect.w = src_width;
+   srcrect.h = src->h;
+
+   dstrect.x = x;
+   dstrect.y = y;
+   dstrect.w = src_width;
+   dstrect.h = src->h;
+
+   if(src_width == 0)
+   {
+      srcrect.w = src->w;
+      dstrect.w = src->w;
+   }
+
+   SDL_BlitSurface(src, &srcrect, static_cast<SDL_Surface*>(getHandle()), &dstrect);
 }
 
 } // namespace PLT

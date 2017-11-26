@@ -55,10 +55,6 @@ public:
    //! Get a platform specific handle for the frame
    virtual void* getHandle() const override;
 
-   //! Render an image onto the frame buffer
-   virtual void blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
-                     const Image& src) override;
-
    //! Resize the frame buffer
    //
    //! \param width frame width (pixels)

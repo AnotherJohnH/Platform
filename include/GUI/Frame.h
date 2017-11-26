@@ -64,10 +64,7 @@ private:
 
    virtual void canvasSpan(GUI::Colour colour, signed x1, signed y, signed x2) override
    {
-      for(signed x = x1; x < x2; x++)
-      {
-         frame.setPixel(x, y, colour);
-      }
+      frame.span(x1, y, x2, colour);
    }
 
 public:

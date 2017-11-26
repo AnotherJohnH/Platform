@@ -65,15 +65,6 @@ void* Frame::getHandle() const
    return nullptr;
 }
 
-void Frame::blit(unsigned x,
-                 unsigned y,
-                 unsigned src_offset,
-                 unsigned src_width,
-                 const Image& src)
-{
-   Image::blit(x, y, src_offset, src_width, src);
-}
-
 void Frame::resize(unsigned width_, unsigned height_)
 {
    assert((width_ <= WIDTH) && (height <= HEIGHT_));

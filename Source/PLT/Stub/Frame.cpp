@@ -41,14 +41,6 @@ void* Frame::getHandle() const
    return nullptr;
 }
 
-void Frame::blit(unsigned x,
-                 unsigned y,
-                 unsigned src_offset,
-                 unsigned src_width,
-                 const Image& src)
-{
-}
-
 void Frame::resize(unsigned width_, unsigned height_)
 {
 }

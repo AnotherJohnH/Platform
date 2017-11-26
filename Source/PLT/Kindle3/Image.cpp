@@ -47,4 +47,15 @@ void Image::setPixel(unsigned x, unsigned y, uint32_t rgb)
    }
 }
 
+void Image::span(unsigned x1, unsigned y, unsigned x2, uint32_t rgb)
+{
+   defaultSpan(x1, y, x2, rgb);
+}
+
+void Image::blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
+                 const Image& source)
+{
+   defaultBlit(x, y, src_offset, src_width, source);
+}
+
 } // namespace PLT

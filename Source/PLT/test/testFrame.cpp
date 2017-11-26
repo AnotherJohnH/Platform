@@ -38,6 +38,10 @@ int main(int argc, const char* argv[])
       }
    }
 
+   frame.span(0, 149, 400, 0xFFFFFF);
+   frame.span(0, 150, 400, 0xFFFFFF);
+   frame.span(0, 151, 400, 0xFFFFFF);
+
    frame.refresh();
 
    unsigned pitch;
