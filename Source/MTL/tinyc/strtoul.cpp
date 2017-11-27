@@ -20,68 +20,13 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file strtol.c
+//! \file strtoul.cpp
 //! \brief tiny C library implementation
 
 #include <stdlib.h>
+#include "strto.h"
 
-long strtol(const char* s, const char** endptr, int base)
+unsigned long strtoul(const char* s, const char** endptr, int base)
 {
-   long  value = 0;
-
-   if (base == 0)
-   {
-      if (*s == '0')
-      {
-         s++;
-
-         if ((*s == 'x') || (*s == 'X'))
-         {
-            s++;
-            base = 16;
-         }
-         else
-         {
-            base = 8;
-         }
-      }
-      else
-      {
-         base = 10;
-      }
-   }
-
-   while(1)
-   {
-      char     ch = *s++;
-      unsigned digit;
-
-      if ((ch >= '0') && (ch <='9'))
-      {
-         digit = ch - '0';
-      }
-      else if ((ch >= 'a') && (ch <='z'))
-      {
-         digit = ch - 'a' + 10;
-      }
-      else if ((ch >= 'A') && (ch <='Z'))
-      {
-         digit = ch - 'A' + 10;
-      }
-      else
-      {
-         break;
-      }
-
-      if (digit >= base) break;
-
-      value = value * base + digit;
-   }
-
-   if (endptr)
-   {
-      *endptr = s;
-   }
-
-   return value;
+   return tinyc::strto<unsigned long>(s, endptr, base);
 }

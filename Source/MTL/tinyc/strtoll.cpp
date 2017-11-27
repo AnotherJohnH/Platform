@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2013 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,13 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file atol.c
+//! \file strtoll.cpp
 //! \brief tiny C library implementation
 
 #include <stdlib.h>
+#include "strto.h"
 
-long atol(const char* s)
+long long strtoll(const char* s, const char** endptr, int base)
 {
-   long value = 0;
-   int  sign  = +1;
-
-   if (*s == '-')
-   {
-      sign = -1;
-      s++;
-   }
-   else if (*s == '+')
-   {
-      s++;
-   }
-
-   while(1)
-   {
-      unsigned digit = *s - '0';
-
-      if (digit > 9) break;
-
-      value = value * 10 + digit;
-   }
-
-   return value * sign;
+   return tinyc::strto<long long>(s, endptr, base);
 }

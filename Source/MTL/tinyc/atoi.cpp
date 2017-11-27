@@ -20,34 +20,13 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file atoi.c
+//! \file atoi.cpp
 //! \brief tiny C library implementation
 
 #include <stdlib.h>
+#include "strto.h"
 
 int atoi(const char* s)
 {
-   int value = 0;
-   int sign  = +1;
-
-   if (*s == '-')
-   {
-      sign = -1;
-      s++;
-   }
-   else if (*s == '+')
-   {
-      s++;
-   }
-
-   while(1)
-   {
-      unsigned digit = *s - '0';
-
-      if (digit > 9) break;
-
-      value = value * 10 + digit;
-   }
-
-   return value * sign;
+   return tinyc::strto<int>(s, nullptr, 10);
 }

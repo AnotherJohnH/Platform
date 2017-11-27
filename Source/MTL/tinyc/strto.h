@@ -20,14 +20,29 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file strtoul.c
+//! \file strto.h
 //! \brief tiny C library implementation
 
-#include <stdlib.h>
+#ifndef TINYC_STRTO_H
+#define TINYC_STRTO_H
 
-unsigned long strtoul(const char* s, const char** endptr, int base)
+namespace tinyc {
+
+template <typename TYPE>
+TYPE strto(const char* s, const char** endptr, unsigned base)
 {
-   unsigned long  value = 0;
+   TYPE value = 0;
+   int sign = +1;
+
+   if (*s == '-')
+   {
+      sign = -1;
+      s++;
+   }
+   else if (*s == '+')
+   {
+      s++;
+   }
 
    if (base == 0)
    {
@@ -75,6 +90,7 @@ unsigned long strtoul(const char* s, const char** endptr, int base)
 
       if (digit >= base) break;
 
+      // TODO check for overflow
       value = value * base + digit;
    }
 
@@ -83,5 +99,9 @@ unsigned long strtoul(const char* s, const char** endptr, int base)
       *endptr = s;
    }
 
-   return value;
+   return value * sign;
 }
+
+} // namespace tinyc
+
+#endif
