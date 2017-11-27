@@ -36,20 +36,26 @@ template <typename TYPE, size_t N>
 class array
 {
 public:
-   TYPE& operator[](size_t index)
-   {
-      return data[index];
-   }
-
-   const TYPE& operator[](size_t index) const
-   {
-      return data[index];
-   }
-
+   // Capacity
    size_t size() const { return N; }
+   size_t max_size() const { return N; }
+   bool empty() const { return N != 0; }
+
+   // Element access
+   TYPE&       operator[](size_t index)       { return storage[index]; }
+   const TYPE& operator[](size_t index) const { return storage[index]; }
+
+   TYPE&       front()       { return storage[0]; }
+   const TYPE& front() const { return storage[0]; }
+
+   TYPE&       back()       { return storage[N-1]; }
+   const TYPE& back() const { return storage[N-1]; }
+
+   TYPE*       data()       { return storage; }
+   const TYPE* data() const { return storage; }
 
 private:
-   TYPE data[N];
+   TYPE storage[N];
 };
 
 } // namespace std
