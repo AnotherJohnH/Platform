@@ -387,7 +387,7 @@ public:
    }
 
    //! Fill the entire canvas
-   void clear(Colour colour) { fillRect(colour, 0, 0, size.x, size.y); }
+   void clear(Colour colour) { canvasClear(colour); }
 
    //! Refresh the whole canvas to the display device
    void refresh() { canvasRefresh(0, 0, size.x, size.y); }
@@ -468,6 +468,15 @@ private:
 
    //! Refresh a rectangular region of the frame buffer
    virtual void canvasRefresh(signed x1, signed y1, signed x2, signed y2) {}
+
+   //! Clear frame buffer to a single colour
+   virtual void canvasClear(Colour colour)
+   {
+      for(signed y = 0; y < size.y; y++)
+      {
+         canvasSpan(colour, 0, y, size.x);
+      }
+   }
 
    //! Set a single pixel in the frame buffer
    virtual void canvasPoint(Colour colour, signed x, signed y) = 0;

@@ -20,6 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#include <cstring>
+
 #include "PLT/Image.h"
 
 namespace PLT {
@@ -31,6 +33,12 @@ uint32_t Image::getPixel(unsigned x, unsigned y) const
    uint8_t pair = buffer[(x + y * pitch) / 2];
    uint8_t grey = x & 1 ? (pair << 4) : (pair & 0xF0);
    return (grey << 16) | (grey << 8) | grey;
+}
+
+void Image::clear(uint32_t rgb)
+{
+   uint8_t grey = 0xf - ((rgb >> 12) & 0xF);
+   memset(buffer, (grey<<4) | grey, pitch * height);
 }
 
 void Image::point(uint32_t rgb, unsigned x, unsigned y)

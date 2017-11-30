@@ -22,6 +22,8 @@
 
 // \brief mbed LPC1768 Image implementation
 
+#include <cstring>
+
 #include "PLT/Image.h"
 
 #include "../../MTL/chip/LPC1768/PALVideo.h"
@@ -30,7 +32,6 @@ namespace PLT {
 
 static const unsigned BITS_PER_PIXEL = 1;
 static const unsigned PIXELS_PER_BYTE = 8/BITS_PER_PIXEL;
-
 
 unsigned Image::getPixelBits()
 {
@@ -43,6 +44,14 @@ uint32_t Image::getPixel(unsigned x, unsigned y) const
    uint8_t byte = buffer[index ^ MTL::PAL_VIDEO_BYTE_SWAP];
    uint8_t mask = 0x80>>(x % PIXELS_PER_BYTE);
    return byte & mask ? 0xFFFFFF : 0x000000;
+}
+
+void Image::clear(uint32_t rgb)
+{
+   uint8_t grn  = (rgb >> 8) & 0xFF;
+   uint8_t byte = (rgb >= 0x80) : 0xFF : 0x00;
+
+   memset(buffer, byte, height * pitch);
 }
 
 void Image::point(uint32_t rgb, unsigned x, unsigned y)

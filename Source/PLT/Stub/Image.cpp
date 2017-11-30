@@ -36,6 +36,11 @@ uint32_t Image::getPixel(unsigned x, unsigned y) const
    return 0;
 }
 
+void Image::clear(uint32_t rgb)
+{
+   defaultClear(rgb);
+}
+
 void Image::point(uint32_t rgb, unsigned x, unsigned y)
 {
 }

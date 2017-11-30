@@ -57,6 +57,11 @@ private:
       frame.refresh();
    }
 
+   virtual void canvasClear(GUI::Colour colour) override
+   {
+      frame.clear(colour);
+   }
+
    virtual void canvasPoint(GUI::Colour colour, signed x, signed y) override
    {
       frame.point(colour, x, y);

@@ -38,16 +38,16 @@ namespace MTL {
 
 union SSPReg
 {
-   REG(0x000, cr0);
-   REG(0x004, cr1);
-   REG(0x008, dr);
-   REG(0x00C, sr);
-   REG(0x010, cpsr);
-   REG(0x014, imsc);
-   REG(0x018, ris);
-   REG(0x01C, mis);
-   REG(0x020, icr);
-   REG(0x024, dmacr);
+   REG(0x000, cr0);   //!< Control 0
+   REG(0x004, cr1);   //!< Control 1
+   REG(0x008, dr);    //!< Data
+   REG(0x00C, sr);    //!< Status
+   REG(0x010, cpsr);  //!< Clock prescale
+   REG(0x014, imsc);  //!< Interrupt mask set and clear
+   REG(0x018, ris);   //!< Raw interrupt status
+   REG(0x01C, mis);   //!< Masked interrupt status
+   REG(0x020, icr);   //!< SSPICR interrupt clear
+   REG(0x024, dmacr); //!< DMA control register
 };
 
 
@@ -55,6 +55,20 @@ template <unsigned INDEX>
 class SSP : public Periph<SSPReg,INDEX == 0 ? 0x40088000
                                             : 0x40030000>
 {
+private:
+   // Frame format
+   static const unsigned CR0_FRF_SPI       = (0<<4);
+   static const unsigned CR0_FRF_TI        = (1<<4);
+   static const unsigned CR0_FRF_MICROWIRE = (2<<4);
+
+   // Clock out polarity
+   static const unsigned CR0_CPOL_LO  = (0<<6);
+   static const unsigned CR0_CPOL_HI  = (1<<6);
+
+   // Clock out phase
+   static const unsigned CR0_CPHA_FIRST = (0<<7);
+   static const unsigned CR0_CPHA_SECND = (1<<7);
+
 public:
    SSP(unsigned bits, bool master)
    {
@@ -73,9 +87,9 @@ public:
       // Configure
 
       this->reg->cr0 = ((bits - 1) << 0)     // Frame length (bits)
-                     | (0          << 4)     // SPI
-                     | (1          << 6)     // Clock out polarity
-                     | (1          << 7)     // Clock out phase
+                     | CR0_FRF_SPI
+                     | CR0_CPOL_HI
+                     | CR0_CPHA_SECND
                      | (0          << 8);    // Serial clock rate
 
       this->reg->cr1 = (0 << 0)              // Loop back

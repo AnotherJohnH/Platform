@@ -70,6 +70,9 @@ public:
    // \param y Y co-ordinate (pixels)
    uint32_t getPixel(unsigned x, unsigned y) const;
 
+   //! Clear to the given colour
+   void clear(uint32_t rgb);
+
    //! Write a pixel in the image
    //
    // \param rgb 24-bit colour
@@ -97,6 +100,15 @@ public:
 
 protected:
    virtual ~Image() {}
+
+   //! Clear entire image (back-stop slow implementation)
+   void defaultClear(uint32_t rgb)
+   {
+      for(unsigned y = 0; y < height; y++)
+      {
+         span(rgb, 0, y, width);
+      }
+   }
 
    //! Draw a horizontal line of pixels (back-stop slow implementation)
    void defaultSpan(uint32_t rgb, unsigned x1, unsigned y, unsigned x2)
