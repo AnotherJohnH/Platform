@@ -164,7 +164,7 @@ private:
          pwm.setRise(H_SHORT_SYNC);
          pwm.setPeriod(H_SYNC_PERIOD);
          line_type    = LINE_FIRST_SHORT_SYNC;
-         line_counter = (PAL_SHORT_SYNC_LINES + field);
+         line_counter = PAL_SHORT_SYNC_LINES + field;
          field = field ^ 1;
          PALVideo_FieldSync();
       }
@@ -235,13 +235,9 @@ public:
       pixel_gen.resize(width, height, v_scale);
 
       // Size of image (scan lines)
-      v_image  = v_scale == 0 ? height / 2: v_scale * height;
+      v_image  = v_scale == 0 ? height / 2 : v_scale * height;
 
-      // Height of top border (scan lines)
-      v_top    = ((PAL_LINES - v_image) / 2) + v_adjust;
-
-      // Height of bottom border (scan lines)
-      v_bottom = PAL_LINES - v_image - v_top;
+      setVertPos(v_adjust);
    }
 
    //! Set horizontal position of image (uS)
@@ -254,7 +250,12 @@ public:
    void setVertPos(unsigned lines)
    {
       v_adjust = lines;
-      //setHeight(v_image / V_SCALE);
+
+      // Height of top border (scan lines)
+      v_top    = ((PAL_LINES - v_image) / 2) + v_adjust;
+
+      // Height of bottom border (scan lines)
+      v_bottom = PAL_LINES - v_image - v_top;
    }
 };
 

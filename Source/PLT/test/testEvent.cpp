@@ -88,6 +88,8 @@ int main(int argc, const char* argv[])
 {
    PLT::Frame frame("PLT::Event Test", 256, 256);
 
+   frame.clear(STB::BLACK);
+
    PLT::Event::setTimer(500);
 
    return PLT::Event::eventLoop(callback, &frame);

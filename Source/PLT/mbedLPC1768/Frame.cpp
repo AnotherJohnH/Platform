@@ -49,7 +49,7 @@ Frame::Frame(const char* title_, unsigned width_, unsigned height_, uint32_t fla
    buffer = ram.data();
    pitch  = WIDTH / 8;
 
-   memset(buffer, 0, ram.size());
+   memset(buffer, 0x81, ram.size());
 
    video.setFramePtr(buffer);
    video.setHorzPos(0);
@@ -68,6 +68,12 @@ void* Frame::getHandle() const
 void Frame::resize(unsigned width_, unsigned height_)
 {
    assert((width_ <= WIDTH) && (height <= HEIGHT_));
+
+   width  = width_;
+   height = height_;
+   pitch  = ((width_ + 0x1F) & ~0x1F) / 8;
+
+   video.resize(pitch * 8, height);
 }
 
 void Frame::refresh()

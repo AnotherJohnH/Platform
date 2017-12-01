@@ -48,9 +48,20 @@ uint32_t Image::getPixel(unsigned x, unsigned y) const
 
 void Image::clear(STB::Colour rgb)
 {
-   uint8_t grn  = STB::ColourDecode(rgb).grn();
-   uint8_t byte = (grn >= 0x80) ? 0xFF : 0x00;
-   memset(buffer, byte, height * pitch);
+   uint8_t grn = STB::ColourDecode(rgb).grn();
+
+   for(unsigned y=0; y<height; y++)
+   {
+      uint8_t byte;
+
+           if (grn >= 0xE0) { byte = 0xFF; }
+      else if (grn >= 0xA0) { byte = y & 1 ? 0xAA : 0xFF; }
+      else if (grn >= 0x60) { byte = y & 1 ? 0xAA : 0x55; }
+      else if (grn >= 0x20) { byte = y & 1 ? 0x00 : 0x55; }
+      else                  { byte = 0x00; }
+
+      memset(buffer + y*pitch, byte, width);
+   }
 }
 
 void Image::point(uint32_t rgb, unsigned x, unsigned y)
@@ -61,26 +72,11 @@ void Image::point(uint32_t rgb, unsigned x, unsigned y)
    uint8_t  grn  = STB::ColourDecode(rgb).grn();
    bool     set;
 
-   if (grn >= 0xE0)
-   {
-      set = true;
-   }
-   else if (grn >= 0xA0)
-   {
-      set = (x | y) & 1;
-   }
-   else if (grn >= 0x60)
-   {
-      set = (x ^ y) & 1;
-   }
-   else if (grn >= 0x20)
-   {
-      set = (x & y) & 1;
-   }
-   else
-   {
-      set = false;
-   }
+        if (grn >= 0xE0) { set = true; }
+   else if (grn >= 0xA0) { set = (x | y) & 1; }
+   else if (grn >= 0x60) { set = (x ^ y) & 1; }
+   else if (grn >= 0x20) { set = (x & y) & 1; }
+   else                  { set = false; }
 
    if (set)
    {
