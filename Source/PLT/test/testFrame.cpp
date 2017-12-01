@@ -30,17 +30,19 @@ int main(int argc, const char* argv[])
 {
    PLT::Frame frame("PLT::Frame test", 400, 300);
 
+   frame.clear(STB::BLACK);
+
    for(unsigned y = 0; y < frame.getHeight(); y++)
    {
       for(unsigned x = 0; x < frame.getWidth(); x++)
       {
-         frame.point((x ^ y) & 8 ? 0xFFFFFF : 0x000000, x, y);
+         frame.point((x ^ y) & 8 ? STB::WHITE : STB::BLACK, x, y);
       }
    }
 
-   frame.span(0xFFFFFF, 0, 149, 400);
-   frame.span(0xFFFFFF, 0, 150, 400);
-   frame.span(0xFFFFFF, 0, 151, 400);
+   frame.span(STB::GREEN, 0, 149, 400);
+   frame.span(STB::GREEN, 0, 150, 400);
+   frame.span(STB::GREEN, 0, 151, 400);
 
    frame.refresh();
 

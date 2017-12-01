@@ -36,16 +36,16 @@ uint32_t Image::getPixel(unsigned x, unsigned y) const
    return 0;
 }
 
-void Image::clear(uint32_t rgb)
+void Image::clear(STB::Colour rgb)
 {
    defaultClear(rgb);
 }
 
-void Image::point(uint32_t rgb, unsigned x, unsigned y)
+void Image::point(STB::Colour rgb, unsigned x, unsigned y)
 {
 }
 
-void Image::span(uint32_t rgb, unsigned x1, unsigned y, unsigned x2)
+void Image::span(STB::Colour rgb, unsigned x1, unsigned y, unsigned x2)
 {
    defaultSpan(rgb, x1, y, x2);
 }

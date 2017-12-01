@@ -29,6 +29,8 @@
 #include <cstdint>
 #include <cassert>
 
+#include "STB/Colour.h"
+
 //! Platform abstraction layer
 namespace PLT {
 
@@ -68,17 +70,17 @@ public:
    //
    // \param x X co-ordinate (pixels)
    // \param y Y co-ordinate (pixels)
-   uint32_t getPixel(unsigned x, unsigned y) const;
+   STB::Colour getPixel(unsigned x, unsigned y) const;
 
    //! Clear to the given colour
-   void clear(uint32_t rgb);
+   void clear(STB::Colour rgb);
 
    //! Write a pixel in the image
    //
    // \param rgb 24-bit colour
    // \param x X co-ordinate (pixels)
    // \param y Y co-ordinate (pixels)
-   void point(uint32_t rgb, unsigned x, unsigned y);
+   void point(STB::Colour rgb, unsigned x, unsigned y);
 
    //! Draw a horizontal line of pixels
    //
@@ -86,7 +88,7 @@ public:
    // \param x1 Start X co-ordinate (pixels)
    // \param y Y co-ordinate (pixels)
    // \param x2 End X co-ordinate (pixels)
-   void span(uint32_t rgb, unsigned x1, unsigned y, unsigned x2);
+   void span(STB::Colour rgb, unsigned x1, unsigned y, unsigned x2);
 
    //! Blit another image into this image
    //
@@ -102,7 +104,7 @@ protected:
    virtual ~Image() {}
 
    //! Clear entire image (back-stop slow implementation)
-   void defaultClear(uint32_t rgb)
+   void defaultClear(STB::Colour rgb)
    {
       for(unsigned y = 0; y < height; y++)
       {
@@ -111,7 +113,7 @@ protected:
    }
 
    //! Draw a horizontal line of pixels (back-stop slow implementation)
-   void defaultSpan(uint32_t rgb, unsigned x1, unsigned y, unsigned x2)
+   void defaultSpan(STB::Colour rgb, unsigned x1, unsigned y, unsigned x2)
    {
       for(unsigned x = x1; x < x2; x++)
       {
