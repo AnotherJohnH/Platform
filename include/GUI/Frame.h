@@ -42,7 +42,7 @@ private:
    PLT::Frame frame;
 
    // Implement GUI::Canvas
-   virtual GUI::Colour canvasGetPixel(signed x, signed y) const override
+   virtual STB::Colour canvasGetPixel(signed x, signed y) const override
    {
       return frame.getPixel(x, y);
    }
@@ -57,17 +57,17 @@ private:
       frame.refresh();
    }
 
-   virtual void canvasClear(GUI::Colour colour) override
+   virtual void canvasClear(STB::Colour colour) override
    {
       frame.clear(colour);
    }
 
-   virtual void canvasPoint(GUI::Colour colour, signed x, signed y) override
+   virtual void canvasPoint(STB::Colour colour, signed x, signed y) override
    {
       frame.point(colour, x, y);
    }
 
-   virtual void canvasSpan(GUI::Colour colour, signed x1, signed y, signed x2) override
+   virtual void canvasSpan(STB::Colour colour, signed x1, signed y, signed x2) override
    {
       frame.span(colour, x1, y, x2);
    }

@@ -31,12 +31,12 @@ namespace GUI {
 class Button : public Row
 {
 private:
-   Colour   bg_colour{FACE};
-   uint32_t code{0};
-   uint32_t alt_code{0};
-   bool     down{false};
-   bool     select{false};
-   bool     flat{false};
+   STB::Colour  bg_colour{FACE};
+   uint32_t     code{0};
+   uint32_t     alt_code{0};
+   bool         down{false};
+   bool         select{false};
+   bool         flat{false};
 
    void operate(bool down_, bool over_, bool select_)
    {
@@ -67,8 +67,8 @@ private:
 
    virtual void eventDraw(Canvas& canvas) override
    {
-      Colour tl = (down || select) ? SHADOW  : HILIGHT;
-      Colour br = (down || select) ? HILIGHT : SHADOW;
+      STB::Colour tl = (down || select) ? SHADOW  : HILIGHT;
+      STB::Colour br = (down || select) ? HILIGHT : SHADOW;
 
       canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
@@ -115,7 +115,7 @@ public:
 
    void setAltCode(bool select, unsigned code_) { alt_code = code_; }
 
-   void setBackgroundColour(Colour colour) { bg_colour = colour; }
+   void setBackgroundColour(STB::Colour colour) { bg_colour = colour; }
 };
 
 } // namespace GUI

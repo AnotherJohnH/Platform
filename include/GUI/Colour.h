@@ -23,86 +23,32 @@
 #ifndef GUI_COLOUR_H
 #define GUI_COLOUR_H
 
-#include <cstdint>
+#include "STB/Colour.h"
 
 namespace GUI {
 
 
-//! Packed pixel colour type
-using Colour = uint32_t;
-
-//! Least significant bit for fields in the packed pixel colour type Colour
-const unsigned ALP_LSB = 24;
-const unsigned RED_LSB = 16;
-const unsigned GRN_LSB = 8;
-const unsigned BLU_LSB = 0;
-
-
-//! Compute a Colour value from red, green, blu and alpha components
-static constexpr Colour RGBA(uint8_t red, uint8_t grn, uint8_t blu, uint8_t alpha)
-{
-   return (alpha << ALP_LSB) | (red << RED_LSB) | (grn << GRN_LSB) | (blu << BLU_LSB);
-}
-
-
-//! Compute a Colour value from red, green, blu components
-static constexpr Colour RGB(uint8_t red, uint8_t grn, uint8_t blu)
-{
-   return RGBA(red, grn, blu, 0x00);
-}
-
-
-//! Compute a Colour value for a grey level
-static constexpr Colour GREY(uint8_t level) { return RGB(level, level, level); }
-
-
 // Some pre-defined packed colour values
-const Colour BLACK   = RGB(0x00, 0x00, 0x00);
-const Colour BLUE    = RGB(0x00, 0x00, 0xFF);
-const Colour GREEN   = RGB(0x00, 0xFF, 0x00);
-const Colour CYAN    = RGB(0x00, 0xFF, 0xFF);
-const Colour RED     = RGB(0xFF, 0x00, 0x00);
-const Colour MAGENTA = RGB(0xFF, 0x00, 0xFF);
-const Colour YELLOW  = RGB(0xFF, 0xFF, 0x00);
-const Colour WHITE   = RGB(0xFF, 0xFF, 0xFF);
-
-const Colour BACKGROUND = WHITE;
-const Colour FOREGROUND = BLACK;
-const Colour DARK       = GREY(0x60);
-const Colour SHADOW     = GREY(0x80);
-const Colour FACE       = GREY(0xB0);
-const Colour LIGHT      = GREY(0xD0);
-const Colour HILIGHT    = GREY(0xF0);
-const Colour HIDDEN     = RGBA(0x00, 0x00, 0x00, 0xFF);
-
-
-//! Helper class to extract fields from packed colour type Colour
-struct ColourDecode
-{
-   Colour colour;
-
-   ColourDecode(Colour colour_)
-      : colour(colour_)
-   {
-   }
-
-   uint8_t alp() const { return colour >> ALP_LSB; }
-   uint8_t red() const { return colour >> RED_LSB; }
-   uint8_t grn() const { return colour >> GRN_LSB; }
-   uint8_t blu() const { return colour >> BLU_LSB; }
-};
+const STB::Colour BACKGROUND = STB::WHITE;
+const STB::Colour FOREGROUND = STB::BLACK;
+const STB::Colour DARK       = STB::GREY(0x60);
+const STB::Colour SHADOW     = STB::GREY(0x80);
+const STB::Colour FACE       = STB::GREY(0xB0);
+const STB::Colour LIGHT      = STB::GREY(0xD0);
+const STB::Colour HILIGHT    = STB::GREY(0xF0);
+const STB::Colour HIDDEN     = STB::RGBA(0x00, 0x00, 0x00, 0xFF);
 
 
 //! Background and foreground colour pair
 class ColourPair
 {
 protected:
-   Colour  fg_colour{FOREGROUND};
-   Colour  bg_colour{FACE};
+   STB::Colour  fg_colour{FOREGROUND};
+   STB::Colour  bg_colour{FACE};
 
 public:
-   void setForegroundColour(Colour colour) { fg_colour = colour; }
-   void setBackgroundColour(Colour colour) { bg_colour = colour; }
+   void setForegroundColour(STB::Colour colour) { fg_colour = colour; }
+   void setBackgroundColour(STB::Colour colour) { bg_colour = colour; }
 };
 
 

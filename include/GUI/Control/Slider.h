@@ -59,7 +59,7 @@ private:
       }
    }
 
-   void line(Canvas& canvas, Colour col, int x1, double y1, int x2, double y2)
+   void line(Canvas& canvas, STB::Colour col, int x1, double y1, int x2, double y2)
    {
       Vector from;
       Vector to;

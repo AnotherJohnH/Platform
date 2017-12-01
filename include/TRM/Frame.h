@@ -141,8 +141,8 @@ private:
    GUI::Vector      org;
 
    // State
-   GUI::Colour           default_bg_col;
-   GUI::Colour           default_fg_col;
+   STB::Colour           default_bg_col;
+   STB::Colour           default_fg_col;
    signed                col{}, row{};
    signed                save_col{}, save_row{};
    Attr                  attr;
@@ -156,26 +156,26 @@ private:
    uint8_t               sgr_state_red{0};
    uint8_t               sgr_state_grn{0};
 
-   GUI::Colour convertCol256ToRGB(uint8_t col, bool bg)
+   STB::Colour convertCol256ToRGB(uint8_t col, bool bg)
    {
       switch(col)
       {
-      case  0: return GUI::BLACK;
-      case  1: return GUI::RGB(RGB_NRM,       0,       0);
-      case  2: return GUI::RGB(      0, RGB_NRM,       0);
-      case  3: return GUI::RGB(RGB_NRM, RGB_NRM,       0);
-      case  4: return GUI::RGB(      0,       0, RGB_NRM);
-      case  5: return GUI::RGB(RGB_NRM,       0, RGB_NRM);
-      case  6: return GUI::RGB(      0, RGB_NRM, RGB_NRM);
-      case  7: return GUI::RGB(RGB_NRM, RGB_NRM, RGB_NRM);
+      case  0: return STB::BLACK;
+      case  1: return STB::RGB(RGB_NRM,       0,       0);
+      case  2: return STB::RGB(      0, RGB_NRM,       0);
+      case  3: return STB::RGB(RGB_NRM, RGB_NRM,       0);
+      case  4: return STB::RGB(      0,       0, RGB_NRM);
+      case  5: return STB::RGB(RGB_NRM,       0, RGB_NRM);
+      case  6: return STB::RGB(      0, RGB_NRM, RGB_NRM);
+      case  7: return STB::RGB(RGB_NRM, RGB_NRM, RGB_NRM);
       case  8: return bg ? default_bg_col : default_fg_col;
-      case  9: return GUI::RED;
-      case 10: return GUI::GREEN;
-      case 11: return GUI::YELLOW;
-      case 12: return GUI::BLUE;
-      case 13: return GUI::MAGENTA;
-      case 14: return GUI::CYAN;
-      case 15: return GUI::WHITE;
+      case  9: return STB::RED;
+      case 10: return STB::GREEN;
+      case 11: return STB::YELLOW;
+      case 12: return STB::BLUE;
+      case 13: return STB::MAGENTA;
+      case 14: return STB::CYAN;
+      case 15: return STB::WHITE;
 
       default:
          if(col < 232)
@@ -186,13 +186,13 @@ private:
             uint8_t grn = (col % 6) * 51;
             col /= 6;
             uint8_t red = (col % 6) * 51;
-            return GUI::RGB(red, blu, grn);
+            return STB::RGB(red, blu, grn);
          }
          else
          {
             col -= 232;
             uint8_t lvl = col * 11;
-            return GUI::GREY(lvl);
+            return STB::GREY(lvl);
          }
       }
    }
@@ -444,7 +444,7 @@ private:
       uint8_t ch = cell_char[c - 1][r - 1];
       Attr    at = cell_attr[c - 1][r - 1];
 
-      GUI::Colour fg, bg;
+      STB::Colour fg, bg;
 
       if(at.isInvert())
       {
@@ -487,8 +487,8 @@ private:
       echo        = true;
       implicit_cr = false;
 
-      default_bg_col = GUI::BLACK;
-      default_fg_col = GUI::WHITE;
+      default_bg_col = STB::BLACK;
+      default_fg_col = STB::WHITE;
    }
 
    virtual void ansiGraphic(uint8_t ch) override
@@ -734,7 +734,7 @@ public:
       case IOCTL_TERM_PALETTE:
       {
          unsigned col = va_arg(ap, unsigned);
-         GUI::Colour rgb = va_arg(ap, unsigned);
+         STB::Colour rgb = va_arg(ap, unsigned);
               if (col == DEFAULT_BG_COL) { default_bg_col = rgb; }
          else if (col == DEFAULT_FG_COL) { default_fg_col = rgb; }
          init();

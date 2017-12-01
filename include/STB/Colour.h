@@ -66,15 +66,6 @@ const Colour MAGENTA = RGB(0xFF, 0x00, 0xFF);
 const Colour YELLOW  = RGB(0xFF, 0xFF, 0x00);
 const Colour WHITE   = RGB(0xFF, 0xFF, 0xFF);
 
-const Colour BACKGROUND = WHITE;
-const Colour FOREGROUND = BLACK;
-const Colour DARK       = GREY(0x60);
-const Colour SHADOW     = GREY(0x80);
-const Colour FACE       = GREY(0xB0);
-const Colour LIGHT      = GREY(0xD0);
-const Colour HILIGHT    = GREY(0xF0);
-const Colour HIDDEN     = RGBA(0x00, 0x00, 0x00, 0xFF);
-
 
 //! Helper class to extract fields from packed colour type Colour
 struct ColourDecode

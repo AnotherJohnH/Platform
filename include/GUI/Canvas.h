@@ -60,7 +60,7 @@ public:
    }
 
    //! Get colour of single pixel in the frame buffer
-   Colour getPixel(signed x, signed y) const
+   STB::Colour getPixel(signed x, signed y) const
    {
       if(!isVisible(x, y)) return GUI::HIDDEN;
 
@@ -68,7 +68,7 @@ public:
    }
 
    //! Set a single pixel
-   void drawPoint(Colour colour, signed x, signed y)
+   void drawPoint(STB::Colour colour, signed x, signed y)
    {
       if(isVisible(x, y))
       {
@@ -77,7 +77,7 @@ public:
    }
 
    //! Set a horizontal row of pixels
-   void drawSpan(Colour colour, signed x1, signed y, signed x2)
+   void drawSpan(STB::Colour colour, signed x1, signed y, signed x2)
    {
       clipAndSort(x1, x2, size.x);
 
@@ -88,7 +88,7 @@ public:
    }
 
    //! Draw a straight line between two points
-   void drawLine(Colour colour, signed x1, signed y1, signed x2, signed y2)
+   void drawLine(STB::Colour colour, signed x1, signed y1, signed x2, signed y2)
    {
       // TODO clip to frame and then use canvasPoint() directly
 
@@ -122,7 +122,7 @@ public:
    }
 
    //! Draw a rectangle outline
-   void drawRect(Colour colour, signed x1, signed y1, signed x2, signed y2)
+   void drawRect(STB::Colour colour, signed x1, signed y1, signed x2, signed y2)
    {
       drawLine(colour, x1, y1, x2, y1);
       drawLine(colour, x2, y1, x2, y2);
@@ -131,7 +131,7 @@ public:
    }
 
    //! Fill a rectangle
-   void fillRect(Colour colour, signed x1, signed y1, signed x2, signed y2)
+   void fillRect(STB::Colour colour, signed x1, signed y1, signed x2, signed y2)
    {
       clipAndSort(x1, x2, size.x);
       clipAndSort(y1, y2, size.y);
@@ -143,7 +143,7 @@ public:
    }
 
    //! Fill a triangle
-   void fillTriangle(Colour colour, signed x1, signed y1, signed x2, signed y2, signed x3,
+   void fillTriangle(STB::Colour colour, signed x1, signed y1, signed x2, signed y2, signed x3,
                      signed y3)
    {
       if(y2 < y1)
@@ -212,7 +212,7 @@ public:
    }
 
    //! Draw a circle
-   void drawCircle(Colour colour, signed cx, signed cy, unsigned r)
+   void drawCircle(STB::Colour colour, signed cx, signed cy, unsigned r)
    {
       drawPoint(colour, cx, cy + r);
       drawPoint(colour, cx, cy - r);
@@ -251,7 +251,7 @@ public:
    }
 
    //! Fill a circle
-   void fillCircle(Colour colour, signed cx, signed cy, unsigned r)
+   void fillCircle(STB::Colour colour, signed cx, signed cy, unsigned r)
    {
       drawSpan(colour, cx, cy + r, cx);
       drawSpan(colour, cx - r, cy, cx + r);
@@ -290,7 +290,7 @@ public:
 
    //! Draw an alphamap
    template <unsigned BPP>
-   void drawAlphaMap(Colour fg, Colour bg, signed x, signed y, unsigned w, unsigned h,
+   void drawAlphaMap(STB::Colour fg, STB::Colour bg, signed x, signed y, unsigned w, unsigned h,
                      const uint8_t* alphamap)
    {
       unsigned shift;
@@ -354,7 +354,7 @@ public:
    }
 
    //! Draw a single character from a font
-   unsigned drawChar(Colour fg, Colour bg, signed x, signed y, const Font* font, uint8_t ch)
+   unsigned drawChar(STB::Colour fg, STB::Colour bg, signed x, signed y, const Font* font, uint8_t ch)
    {
       unsigned w = font->getWidth();
 
@@ -376,7 +376,7 @@ public:
    }
 
    //! Draw a string of text
-   void drawText(Colour fg, Colour bg, signed x, signed y, const Font* font, const char* s)
+   void drawText(STB::Colour fg, STB::Colour bg, signed x, signed y, const Font* font, const char* s)
    {
       assert(s);
 
@@ -387,7 +387,7 @@ public:
    }
 
    //! Fill the entire canvas
-   void clear(Colour colour) { canvasClear(colour); }
+   void clear(STB::Colour colour) { canvasClear(colour); }
 
    //! Refresh the whole canvas to the display device
    void refresh() { canvasRefresh(0, 0, size.x, size.y); }
@@ -407,7 +407,7 @@ private:
    static const unsigned MAX_ALPHA_BPP = 4;
 
    Vector size;
-   Colour alpha_table[1 << MAX_ALPHA_BPP] = {};
+   STB::Colour alpha_table[1 << MAX_ALPHA_BPP] = {};
 
    //! Clip value to between 0 and limit (inclusive range)
    void clip(signed& value, unsigned limit)
@@ -432,7 +432,7 @@ private:
    }
 
    //! Compute alpha LUT for rendering alpha maps
-   void preComputeAlpha(Colour fg_, Colour bg_, unsigned bpp)
+   void preComputeAlpha(STB::Colour fg_, STB::Colour bg_, unsigned bpp)
    {
       assert(bpp <= MAX_ALPHA_BPP);
 
@@ -442,8 +442,8 @@ private:
       {
          // Not already computed
 
-         ColourDecode fg(fg_);
-         ColourDecode bg(bg_);
+         STB::ColourDecode fg(fg_);
+         STB::ColourDecode bg(bg_);
 
          alpha_table[0]         = bg_;
          alpha_table[max_alpha] = fg_;
@@ -451,9 +451,9 @@ private:
          for(unsigned alpha = 1; alpha < max_alpha; ++alpha)
          {
             alpha_table[alpha] =
-               RGB((fg.red() * alpha + bg.red() * (max_alpha - alpha)) / max_alpha,
-                   (fg.grn() * alpha + bg.grn() * (max_alpha - alpha)) / max_alpha,
-                   (fg.blu() * alpha + bg.blu() * (max_alpha - alpha)) / max_alpha);
+               STB::RGB((fg.red() * alpha + bg.red() * (max_alpha - alpha)) / max_alpha,
+                        (fg.grn() * alpha + bg.grn() * (max_alpha - alpha)) / max_alpha,
+                        (fg.blu() * alpha + bg.blu() * (max_alpha - alpha)) / max_alpha);
          }
       }
    }
@@ -461,7 +461,7 @@ private:
    // Overide the following interface with a frame buffer implementation
 
    //! Get colour of single pixel in the frame buffer
-   virtual Colour canvasGetPixel(signed x, signed y) const { return GUI::HIDDEN; }
+   virtual STB::Colour canvasGetPixel(signed x, signed y) const { return GUI::HIDDEN; }
 
    //! Resize the frame buffer
    virtual void canvasResize(unsigned width, unsigned height) { assert(!"no implementation"); }
@@ -470,7 +470,7 @@ private:
    virtual void canvasRefresh(signed x1, signed y1, signed x2, signed y2) {}
 
    //! Clear frame buffer to a single colour
-   virtual void canvasClear(Colour colour)
+   virtual void canvasClear(STB::Colour colour)
    {
       for(signed y = 0; y < size.y; y++)
       {
@@ -479,10 +479,10 @@ private:
    }
 
    //! Set a single pixel in the frame buffer
-   virtual void canvasPoint(Colour colour, signed x, signed y) = 0;
+   virtual void canvasPoint(STB::Colour colour, signed x, signed y) = 0;
 
    //! Set a horizontal row of pixels in the frame buffer
-   virtual void canvasSpan(Colour colour, signed x1, signed y, signed x2)
+   virtual void canvasSpan(STB::Colour colour, signed x1, signed y, signed x2)
    {
       assert(x1 < x2);
 

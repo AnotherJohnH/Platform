@@ -29,15 +29,15 @@ int main(int argc, const char* argv[])
 {
    GUI::Frame frame("GUI::Frame Test", 400, 300);
 
-   frame.clear(GUI::BLACK);
+   frame.clear(STB::BLACK);
 
-   frame.fillRect(GUI::RED,         10,  10,  42,  42);
-   frame.fillRect(GUI::GREEN,       42,  10,  74,  42);
-   frame.fillRect(GUI::YELLOW,      74,  10, 106,  42);
-   frame.fillRect(GUI::BLUE,       106,  10, 138,  42);
-   frame.fillRect(GUI::MAGENTA,    138,  10, 170,  42);
-   frame.fillRect(GUI::CYAN,       170,  10, 202,  42);
-   frame.fillRect(GUI::WHITE,      202,  10, 234,  42);
+   frame.fillRect(STB::RED,         10,  10,  42,  42);
+   frame.fillRect(STB::GREEN,       42,  10,  74,  42);
+   frame.fillRect(STB::YELLOW,      74,  10, 106,  42);
+   frame.fillRect(STB::BLUE,       106,  10, 138,  42);
+   frame.fillRect(STB::MAGENTA,    138,  10, 170,  42);
+   frame.fillRect(STB::CYAN,       170,  10, 202,  42);
+   frame.fillRect(STB::WHITE,      202,  10, 234,  42);
 
    frame.fillRect(GUI::BACKGROUND,  10,  50,  42,  82);
    frame.fillRect(GUI::FOREGROUND,  42,  50,  74,  82);
@@ -49,37 +49,37 @@ int main(int argc, const char* argv[])
 
    for(unsigned x = 0; x < 256; x++)
    {
-      frame.drawLine(GUI::GREY(x), 10 + x, 90, 10 + x, 122);
+      frame.drawLine(STB::GREY(x), 10 + x, 90, 10 + x, 122);
    }
 
    for(unsigned x = 0; x < 256; x += 4)
    {
-      frame.drawPoint(GUI::WHITE, 10 + x, 130);
+      frame.drawPoint(STB::WHITE, 10 + x, 130);
    }
 
-   frame.fillRect(GUI::WHITE, 10, 140, 70, 200);
-   frame.drawRect(GUI::BLACK, 11, 141, 68, 198);
-   frame.drawRect(GUI::BLACK, 14, 144, 65, 195);
+   frame.fillRect(STB::WHITE, 10, 140, 70, 200);
+   frame.drawRect(STB::BLACK, 11, 141, 68, 198);
+   frame.drawRect(STB::BLACK, 14, 144, 65, 195);
 
    for(unsigned i = 0; i <= 60; i += 10)
    {
-      frame.drawLine(GUI::WHITE, 140, 170, 110 + i, 140);
-      frame.drawLine(GUI::WHITE, 140, 170, 170, 140 + i);
-      frame.drawLine(GUI::WHITE, 140, 170, 110 + i, 200);
-      frame.drawLine(GUI::WHITE, 140, 170, 110, 140 + i);
+      frame.drawLine(STB::WHITE, 140, 170, 110 + i, 140);
+      frame.drawLine(STB::WHITE, 140, 170, 170, 140 + i);
+      frame.drawLine(STB::WHITE, 140, 170, 110 + i, 200);
+      frame.drawLine(STB::WHITE, 140, 170, 110, 140 + i);
    }
 
-   frame.fillTriangle(GUI::WHITE, 300, 200, 100, 350, 350, 260);
+   frame.fillTriangle(STB::WHITE, 300, 200, 100, 350, 350, 260);
 
    for(unsigned i = 0; i < 60; i += 3)
    {
-      frame.drawSpan(GUI::WHITE, 210, 140 + i, 220 + i);
+      frame.drawSpan(STB::WHITE, 210, 140 + i, 220 + i);
    }
 
-   frame.drawCircle(GUI::CYAN, 40, 250, 20);
-   frame.fillCircle(GUI::CYAN, 40, 250, 15);
+   frame.drawCircle(STB::CYAN, 40, 250, 20);
+   frame.fillCircle(STB::CYAN, 40, 250, 15);
 
-   frame.drawText(GUI::YELLOW, 0x000000, 100, 210, &GUI::font_teletext18, "Hello, world!");
+   frame.drawText(STB::YELLOW, 0x000000, 100, 210, &GUI::font_teletext18, "Hello, world!");
 
    frame.refresh();
 
