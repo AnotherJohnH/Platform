@@ -30,11 +30,7 @@
 #include <cstring>
 
 
-#define WIDTH   512
-#define HEIGHT  512
-
-
-static MTL::PALVideo  video(WIDTH, HEIGHT);
+static MTL::PALVideo  video;
 PAL_VIDEO_ATTACH_IRQ(video);
 
 
@@ -47,12 +43,12 @@ Frame::Frame(const char* title_, unsigned width_, unsigned height_, uint32_t fla
 
    pimpl  = nullptr;
    buffer = ram.data();
-   pitch  = WIDTH / 8;
-
    memset(buffer, 0x81, ram.size());
 
-   video.setFramePtr(buffer);
-   video.setHorzPos(0);
+   if (width_ != 0)
+   {
+      resize(width_, height_);
+   }
 }
 
 Frame::~Frame()
@@ -67,13 +63,13 @@ void* Frame::getHandle() const
 
 void Frame::resize(unsigned width_, unsigned height_)
 {
-   assert((width_ <= WIDTH) && (height <= HEIGHT_));
-
    width  = width_;
    height = height_;
    pitch  = ((width_ + 0x1F) & ~0x1F) / 8;
 
+   video.setHorzPos(0);
    video.resize(pitch * 8, height);
+   video.setFramePtr(buffer);
 }
 
 void Frame::refresh()

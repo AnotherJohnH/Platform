@@ -185,15 +185,12 @@ private:
    }
 
 public:
-   PALVideo(unsigned width, unsigned height)
+   PALVideo()
       : pwm(1)
    {
       pwm.setRise(H_LINE_SYNC);
       pwm.setFall(1);
       pwm.setIRQ<0>(H_LINE_PERIOD);
-
-      // Initialise timing
-      resize(width, height);
    }
 
    //! entry point from Timer_0_IRQ

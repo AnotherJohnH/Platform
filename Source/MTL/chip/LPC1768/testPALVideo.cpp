@@ -29,7 +29,7 @@
 #define  WIDTH   320
 #define  HEIGHT  256
 
-MTL::PALVideo  video(WIDTH, HEIGHT);
+MTL::PALVideo  video;
 PAL_VIDEO_ATTACH_IRQ(video);
 
 static uint8_t buffer[WIDTH * HEIGHT / 8];
@@ -37,8 +37,9 @@ static uint8_t buffer[WIDTH * HEIGHT / 8];
 
 int main()
 {
-   video.setFramePtr(buffer);
-   video.setHorzPos(0);
-
    memset(buffer, 0xC3, sizeof(buffer));
+
+   video.setHorzPos(0);
+   video.resize(WIDTH, HEIGHT);
+   video.setFramePtr(buffer);
 }
