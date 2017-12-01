@@ -65,7 +65,7 @@ static char* itos(char*    buffer,
    {
       for(unsigned i=0; i<(width - n); i++)
       {
-         *buffer++ = leading_zero ? '0' : ' ';
+         *s++ = leading_zero ? '0' : ' ';
       }
    }
 
