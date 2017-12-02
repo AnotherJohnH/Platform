@@ -60,7 +60,7 @@ void Image::clear(STB::Colour rgb)
       else if (grn >= 0x20) { byte = y & 1 ? 0x00 : 0x55; }
       else                  { byte = 0x00; }
 
-      memset(buffer + y*pitch, byte, width);
+      memset(buffer + y*pitch, byte, width/8);
    }
 }
 

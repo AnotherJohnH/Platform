@@ -141,8 +141,8 @@ private:
    GUI::Vector      org;
 
    // State
-   STB::Colour           default_bg_col;
-   STB::Colour           default_fg_col;
+   STB::Colour           default_bg_col{STB::BLACK};
+   STB::Colour           default_fg_col{STB::WHITE};
    signed                col{}, row{};
    signed                save_col{}, save_row{};
    Attr                  attr;

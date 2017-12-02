@@ -31,6 +31,8 @@ int main()
    GUI::Frame     frame("", 400, 300);
    MTL::Keyboard  keyboard;
 
+   frame.clear(STB::BLACK);
+
    while(true)
    {
       bool    up;
@@ -44,8 +46,8 @@ int main()
          buffer[1] = up ? '^' : 'v';
          buffer[2] = '\0';
 
-         frame.fillRect(GUI::BLACK, 0, 0, 30, 20);
-         frame.drawText(GUI::WHITE, 0x000000, 0, 0, &GUI::font_teletext18, buffer);
+         frame.fillRect(STB::BLACK, 0, 0, 30, 20);
+         frame.drawText(STB::WHITE, 0x000000, 0, 0, &GUI::font_teletext18, buffer);
       }
    }
 }
