@@ -53,7 +53,7 @@ public:
    {
       if (period == 0)
       {
-         period = reg->calib.getField(23, 0);
+         period = reg->calib.getField(23, 0) / 10;
 
          if ((period != 0) && (reg->calib.getBit(30) == 0))
          {
