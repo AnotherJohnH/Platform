@@ -67,7 +67,7 @@ p = os.popen(env['CC'] + ' -print-file-name=armv7-m')
 gcc_lib = p.readline()
 env['LIBPATH']   = Split(gcc_lib)
 
-env.Append(LIBS = ['tinyc', 'gcc'])
+env.Append(LIBS = ['tinyc', 'PLT', 'gcc'])
 env['LINKFLAGS'] = ['--static']
 
 env['startup'] = env.Object('../../MTL/chip/'+CHIP+'/startup.s')
@@ -75,7 +75,8 @@ env['script']  = env.File('../../MTL/chip/'+CHIP+'/script.ld')
 
 Import('source')
 
-source+=[env.File('platform.cpp'),
+source+=[env.File('platform_init.cpp'),
+         env.File('platform_clock.cpp'),
          env.File('../Stub/Audio.cpp'),
          env.File('Event.cpp'),
          env.File('Frame.cpp'),
