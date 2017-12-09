@@ -55,12 +55,23 @@ void Image::clear(STB::Colour rgb)
       uint8_t byte;
 
            if (grn >= 0xE0) { byte = 0xFF; }
-      else if (grn >= 0xA0) { byte = y & 1 ? 0xAA : 0xFF; }
+      else if (grn >= 0xA0) { byte = y & 1 ? 0xFF : 0x55; }
       else if (grn >= 0x60) { byte = y & 1 ? 0xAA : 0x55; }
       else if (grn >= 0x20) { byte = y & 1 ? 0x00 : 0x55; }
       else                  { byte = 0x00; }
 
-      memset(buffer + y*pitch, byte, width/8);
+      unsigned x=0;
+
+      for(; x<((width + 7) & 7); x += 8)
+      {
+         unsigned index = (x/PIXELS_PER_BYTE) + y * pitch;
+         buffer[index ^ MTL::PAL_VIDEO_BYTE_SWAP] = byte;
+      }
+
+      for(; x<width; x++)
+      {
+         point(rgb, x, y);
+      }
    }
 }
 
