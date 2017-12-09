@@ -42,6 +42,12 @@ public:
    static const uint32_t NO_BORDER   = 1 << 1; //!< Frame has no external border pixels
    static const uint32_t FULL_SCREEN = 1 << 2; //!< Frame should cover the whole screen
 
+   class Scanner
+   {
+   public:
+      virtual void getRawPixels(uint8_t* buffer, unsigned line) = 0;
+   };
+
    //! Construct a new frame
    //
    //! \param title for window based platforms should be the window title
@@ -64,10 +70,13 @@ public:
    //! Ensure any changes to the frame buffer are displayed
    void refresh();
 
+   //! Add a line scanning call-back
+   void setScanner(Scanner* scanner_);
+
 private:
    class Impl;
 
-   Impl* pimpl{nullptr};
+   Impl*    pimpl{nullptr};
 };
 
 } // namespace PLT

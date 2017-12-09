@@ -33,6 +33,13 @@
 static MTL::PALVideo  video;
 PAL_VIDEO_ATTACH_IRQ(video);
 
+static PLT::Frame::Scanner* scanner{nullptr};
+
+static void scanCallBack(uint8_t* buffer, uint16_t line)
+{
+   scanner->getRawPixels(buffer, line);
+}
+
 
 namespace PLT {
 
@@ -75,7 +82,14 @@ void Frame::resize(unsigned width_, unsigned height_)
 
 void Frame::refresh()
 {
-   // nohing to do here
+   // nothing to do here
+}
+
+void Frame::setScanner(Scanner* scanner_)
+{
+   scanner = scanner_;
+
+   video.setScanner(scanner != nullptr ? scanCallBack : nullptr);
 }
 
 } // namespace PLT

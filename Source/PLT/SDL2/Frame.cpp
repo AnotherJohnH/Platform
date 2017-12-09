@@ -26,6 +26,10 @@
 
 #include <string>
 
+
+static PLT::Frame::Scanner*  scanner{nullptr};
+
+
 namespace PLT {
 
 
@@ -187,6 +191,22 @@ void Frame::resize(unsigned width_, unsigned height_)
    buffer = pimpl->getStorage(pitch);
 }
 
-void Frame::refresh() { pimpl->refresh(); }
+void Frame::refresh()
+{
+   if (scanner != nullptr)
+   {
+      for(unsigned y=0; y<height; y++)
+      {
+         scanner->getRawPixels(buffer + y*pitch, y);
+      }
+   }
+
+   pimpl->refresh();
+}
+
+void Frame::setScanner(Scanner* scanner_)
+{
+   scanner = scanner_;
+}
 
 } // namespace PLT

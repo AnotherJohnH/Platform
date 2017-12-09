@@ -49,4 +49,8 @@ void Frame::refresh()
 {
 }
 
+void Frame::setScanner(Scanner* scanner_)
+{
+}
+
 } // namespace PLT

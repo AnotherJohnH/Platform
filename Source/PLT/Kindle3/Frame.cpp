@@ -145,4 +145,8 @@ void Frame::resize(unsigned width_, unsigned height_)
 
 void Frame::refresh() { pimpl->refresh(); }
 
+void Frame::setScanner(Scanner* scanner_)
+{
+}
+
 } // namespace PLT

@@ -104,6 +104,8 @@ private:
 
    int16_t            h_adjust{0};
 
+   uint16_t           height;
+
    void lineFirstShortSync()
    {
       if (--line_counter == 0)
@@ -198,7 +200,7 @@ public:
    {
       if (pwm.isIRQ<1>())
       {
-         pixel_gen.startLine();
+         pixel_gen.startLine(v_image - line_counter);
          return;
       }
      
@@ -216,6 +218,12 @@ public:
       pwm.start();
    }
 
+   //! Set pointer to scaning pixel generator
+   void setScanner(void (*scanner)(uint8_t*, uint16_t))
+   {
+      pixel_gen.setScanner(scanner, height);
+   }
+
    //! Set offset for top-left pixel from start of frame buffer (bytes)
    void setOffset(uintptr_t offset)
    {
@@ -225,8 +233,10 @@ public:
    //! Set frame width and height (pixels)
    //
    //!  \param width Must be a multiple of 32
-   void resize(unsigned width, unsigned height)
+   void resize(unsigned width, unsigned height_)
    {
+      height = height_;
+
       unsigned v_scale = (PAL_LINES - 2 * MIN_VERT_BORDER) / height;
 
       pixel_gen.resize(width, height, v_scale);

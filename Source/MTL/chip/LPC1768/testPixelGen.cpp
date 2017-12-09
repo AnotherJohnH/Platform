@@ -51,7 +51,7 @@ int main()
    {
       pixel_gen.startField(0);
 
-      pixel_gen.startLine();
+      pixel_gen.startLine(0);
 
       wait(1000000);
 

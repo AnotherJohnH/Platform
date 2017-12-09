@@ -45,6 +45,7 @@ private:
    volatile DMA*  head;
    DMA            tail;
    uint32_t       null32{0};
+   void           (*scanner)(uint8_t* buffer, uint16_t y) = nullptr;
 
    // Image date
    const uint8_t*             frame;
@@ -83,6 +84,17 @@ public:
    void setFramePtr(const uint8_t* ptr)
    {
       frame = start = ptr;
+   }
+
+   //! Set pointer to scaning pixel generator
+   void setScanner(void (*scanner_)(uint8_t*, uint16_t), uint16_t height)
+   {
+      scanner = scanner_;
+
+      if (scanner != nullptr)
+         size = bytes_per_line * 2;
+      else
+         size = bytes_per_line * height;
    }
 
    //! Set offset for top-left pixel from start of frame buffer (bytes)
@@ -144,10 +156,15 @@ public:
       row  = 0;
       next = start + field * odd_field_offset;
       head->setSrc(next);
+
+      if (scanner)
+      {
+          (*scanner)((uint8_t*)next, 0);
+      }
    }
 
    //! Start generating pixel data
-   void startLine()
+   void startLine(uint16_t line)
    {
       i2s.setTxMute(false);
 
@@ -166,6 +183,11 @@ public:
          if (next >= (frame + size))
          {
             next -= size;
+         }
+
+         if (scanner)
+         {
+            (*scanner)((uint8_t*)next, line);
          }
       }
    }
