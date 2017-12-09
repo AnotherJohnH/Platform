@@ -37,6 +37,7 @@ source+=[env.File('../SDL2/Audio.cpp'),
          env.File('../SDL2/Event.cpp'),
          env.File('../SDL2/Frame.cpp'),
          env.File('../SDL2/Image.cpp'),
+         env.File('../Stub/Bitmap.cpp'),
          env.File('../Stub/Midi.cpp'),
          env.File('../Stub/Sounder.cpp'),
          env.File('../POSIX/File.cpp')]

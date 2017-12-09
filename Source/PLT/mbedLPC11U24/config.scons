@@ -80,6 +80,7 @@ source+=[env.File('platform.cpp'),
          env.File('../Stub/Event.cpp'),
          env.File('../Stub/Frame.cpp'),
          env.File('../Stub/Image.cpp'),
+         env.File('../Stub/Bitmap.cpp'),
          env.File('../Stub/Midi.cpp'),
          env.File('../Stub/Sounder.cpp'),
          env.File('../Stub/File.cpp')]
