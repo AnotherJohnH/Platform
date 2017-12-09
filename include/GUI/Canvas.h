@@ -31,6 +31,8 @@
 #include "GUI/Font.h"
 #include "GUI/Vector.h"
 
+namespace PLT { class Image; }
+
 namespace GUI {
 
 //! Abstract drawable class
@@ -386,6 +388,15 @@ public:
       }
    }
 
+   //! Blit from another canvas into this canvas
+   void drawImage(const Canvas& source,
+                  unsigned x, unsigned y,
+                  unsigned w, unsigned h,
+                  unsigned src_x, unsigned src_y)
+   {
+      canvasBlit(source, x, y, w, h, src_x, src_y);
+   }
+
    //! Fill the entire canvas
    void clear(STB::Colour colour) { canvasClear(colour); }
 
@@ -463,6 +474,11 @@ private:
    //! Get colour of single pixel in the frame buffer
    virtual STB::Colour canvasGetPixel(signed x, signed y) const { return GUI::HIDDEN; }
 
+public:
+   //! Get pointer to underlying frame buffer
+   virtual const PLT::Image* canvasGetImage() const { return nullptr; }
+
+private:
    //! Resize the frame buffer
    virtual void canvasResize(unsigned width, unsigned height) { assert(!"no implementation"); }
 
@@ -492,17 +508,21 @@ private:
       }
    }
 
-   //! Blit another image into this imag
-   virtual void canvasBlit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
-                           const Canvas& source)
+protected:
+   //! Blit from another canvas into this canvas
+   virtual void canvasBlit(const Canvas& source,
+                           unsigned x, unsigned y,
+                           unsigned w, unsigned h,
+                           unsigned src_x, unsigned src_y)
    {
-      assert((src_offset + src_width) <= source.getWidth());
+      assert((src_x + w) <= source.getWidth());
+      assert((src_y + h) <= source.getHeight());
 
-      for(unsigned u = 0; u < src_width; u++)
+      for(unsigned u = 0; u < w; u++)
       {
-         for(unsigned v = 0; v < source.getHeight(); v++)
+         for(unsigned v = 0; v < h; v++)
          {
-            canvasPoint(source.getPixel(src_offset + u, v), x + u, y + v);
+            canvasPoint(source.getPixel(src_x + u, src_y + v), x + u, y + v);
          }
       }
    }

@@ -36,7 +36,7 @@ const uint32_t NO_BORDER   = PLT::Frame::NO_BORDER;
 const uint32_t FULL_SCREEN = PLT::Frame::FULL_SCREEN;
 
 //! A frame buffer with 2D rendering primitive support
-class Frame : public GUI::Canvas
+class Frame : public Canvas
 {
 private:
    PLT::Frame frame;
@@ -47,6 +47,13 @@ private:
       return frame.getPixel(x, y);
    }
 
+protected:
+   virtual const PLT::Image* canvasGetImage() const override
+   {
+      return &frame;
+   }
+
+private:
    virtual void canvasResize(unsigned width, unsigned height) override
    {
       frame.resize(width, height);
@@ -72,16 +79,26 @@ private:
       frame.span(colour, x1, y, x2);
    }
 
+   virtual void canvasBlit(const Canvas& source,
+                           unsigned x, unsigned y,
+                           unsigned w, unsigned h,
+                           unsigned src_x, unsigned src_y) override
+   {
+      const PLT::Image* image = source.canvasGetImage();
+      if (image == nullptr)
+      {
+         Canvas::canvasBlit(source, x, y, w, h, src_x, src_y);
+         return;
+      }
+
+      frame.blit(*image, x, y, w, h, src_x, src_y);
+   }
+
 public:
    Frame(const char* title_, unsigned width_ = 0, unsigned height_ = 0, uint32_t flags_ = 0)
       : GUI::Canvas(width_, height_)
       , frame(title_, width_, height_, flags_)
    {}
-
-   void blit(unsigned x, unsigned y, unsigned offset, unsigned width, const PLT::Image& image)
-   {
-      frame.blit(x, y, offset, width, image);
-   }
 };
 
 } // namespace GUI

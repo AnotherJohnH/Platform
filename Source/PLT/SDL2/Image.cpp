@@ -54,29 +54,24 @@ void Image::span(uint32_t rgb, unsigned x1, unsigned y, unsigned x2)
    defaultSpan(rgb, x1, y, x2);
 }
 
-void Image::blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
-                 const Image& source)
+void Image::blit(const Image& source,
+                 unsigned x, unsigned y,
+                 unsigned w, unsigned h,
+                 unsigned src_x, unsigned src_y)
 {
    SDL_Surface* src = static_cast<SDL_Surface*>(source.getHandle());
 
    SDL_Rect srcrect;
+   srcrect.x = src_x;
+   srcrect.y = src_y;
+   srcrect.w = w;
+   srcrect.h = h;
+
    SDL_Rect dstrect;
-
-   srcrect.x = src_offset;
-   srcrect.y = 0;
-   srcrect.w = src_width;
-   srcrect.h = src->h;
-
    dstrect.x = x;
    dstrect.y = y;
-   dstrect.w = src_width;
-   dstrect.h = src->h;
-
-   if(src_width == 0)
-   {
-      srcrect.w = src->w;
-      dstrect.w = src->w;
-   }
+   dstrect.w = srcrect.w;
+   dstrect.h = srcrect.h;
 
    SDL_BlitSurface(src, &srcrect, static_cast<SDL_Surface*>(getHandle()), &dstrect);
 }

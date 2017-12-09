@@ -94,11 +94,15 @@ public:
    //
    // \param x X co-ordinate in target image (pixels)
    // \param y Y co-ordinate in target image (pixels)
-   // \param src_offset x offset into source (pixels)
-   // \param src_width length of each line from source to render (pixels)
+   // \param w width in target image (pixels)
+   // \param h height in target image (pixels)
+   // \param src_x X co-ordinate in source image (pixels)
+   // \param src_y Y co-ordinate in source image (pixels)
    // \param source Reference to source image
-   void blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
-             const Image& source);
+   void blit(const Image& source,
+             unsigned x, unsigned y, 
+             unsigned w, unsigned h,
+             unsigned src_x, unsigned src_y);
 
 protected:
    virtual ~Image() {}
@@ -122,16 +126,19 @@ protected:
    }
 
    //! Blit another image into this image (back-stop slow implementation)
-   void defaultBlit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
-                    const Image& source)
+   void defaultBlit(const Image& source,
+                    unsigned x, unsigned y,
+                    unsigned w, unsigned h,
+                    unsigned src_x, unsigned src_y)
    {
-      assert((src_offset + src_width) <= source.getWidth());
+      assert((src_x + w) <= source.getWidth());
+      assert((src_y + h) <= source.getHeight());
 
-      for(unsigned u = 0; u < src_width; u++)
+      for(unsigned u = 0; u < w; u++)
       {
-         for(unsigned v = 0; v < source.getHeight(); v++)
+         for(unsigned v = 0; v < h; v++)
          {
-            point(source.getPixel(src_offset + u, v), x + u, y + v);
+            point(source.getPixel(src_x + u, src_y + v), x + u, y + v);
          }
       }
    }

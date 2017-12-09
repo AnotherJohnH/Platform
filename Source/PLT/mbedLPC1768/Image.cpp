@@ -93,10 +93,12 @@ void Image::span(STB::Colour rgb, unsigned x1, unsigned y, unsigned x2)
    defaultSpan(rgb, x1, y, x2);
 }
 
-void Image::blit(unsigned x, unsigned y, unsigned src_offset, unsigned src_width,
-                 const Image& source)
+void Image::blit(const Image& source,
+                 unsigned x, unsigned y,
+                 unsigned w, unsigned h,
+                 unsigned src_x, unsigned src_y)
 {
-   defaultBlit(x, y, src_offset, src_width, source);
+   defaultBlit(source, x, y, w, h, src_x, src_y);
 }
 
 } // namespace PLT
