@@ -75,27 +75,30 @@ public:
       // Power up and selct PCLK/1 clock
       if (INDEX == 0)
       {
-         SysCon().pconp(21, true);
-         SysCon().pclksel1(10, 1);
+         SysCon().pconp(21, true);  // PCSSP0 (already enabled at reset)
+         SysCon().pclksel1(10, 1);  // PCLK_SSP0
       }
       else if (INDEX == 1)
       {
-         SysCon().pconp(10, true);
-         SysCon().pclksel1(20, 1);
+         SysCon().pconp(10, true);  // PCSSP1 (already enabled at reset)
+         SysCon().pclksel0(20, 1);  // PCLK_SSP1
       }
 
-      // Configure
+      configure(bits, master);
+   }
 
+   void configure(unsigned bits, bool master)
+   {
       this->reg->cr0 = ((bits - 1) << 0)     // Frame length (bits)
                      | CR0_FRF_SPI
                      | CR0_CPOL_HI
                      | CR0_CPHA_SECND
                      | (0          << 8);    // Serial clock rate
 
-      this->reg->cr1 = (0 << 0)              // Loop back
-                     | (1 << 1)              // Enable
-                     | ((master?0:1) << 2)   // Master
-                     | (1 << 3);             // Slave out disable
+      this->reg->cr1 = (0 << 0)              // LBM  Loop back
+                     | (1 << 1)              // SSE  Enable
+                     | ((master?0:1) << 2)   // MS   Master
+                     | ((master?0:1) << 3);  // SOD  Slave out disable
    }
 
    void enablePin_SSEL()
