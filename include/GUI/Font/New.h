@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,28 +20,15 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_H
-#define GUI_H
+#ifndef GUI_FONT_NEW_H
+#define GUI_FONT_NEW_H
 
-#include "Control/Bar.h"
-#include "Control/Button.h"
-#include "Control/Col.h"
-#include "Control/Expand.h"
-#include "Control/Field.h"
-#include "Control/MenuBar.h"
-#include "Control/Row.h"
-#include "Control/ScrollBar.h"
-#include "Control/Slider.h"
-#include "Control/Text.h"
-#include "Control/TextButton.h"
-#include "Control/TextTickBox.h"
-#include "Control/TickBox.h"
-#include "Control/Window.h"
+#include "GUI/Font.h"
 
-#include "Font/LED.h"
-#include "Font/New.h"
-#include "Font/Teletext.h"
+namespace GUI {
 
-#include "App.h"
+extern const Font font_new8;
+
+} // namespace GUI
 
 #endif
