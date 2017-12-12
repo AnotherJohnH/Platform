@@ -36,8 +36,6 @@ namespace PLT {
 class Keyboard
 {
 public:
-   Keyboard() : shift(false) {}
-
    //! Get state of physical shift keys
    bool getShift() const { return shift; }
 
@@ -113,7 +111,7 @@ public:
    }
 
 private:
-   bool  shift;
+   bool  shift{false};
 };
 
 
