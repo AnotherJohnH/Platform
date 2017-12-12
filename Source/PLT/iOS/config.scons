@@ -152,5 +152,6 @@ source+=[env.File('../SDL2/Audio.cpp'),
          env.File('../SDL2/Image.cpp'),
          env.File('../Stub/Bitmap.cpp'),
          env.File('../Stub/Midi.cpp'),
+         env.File('../POSIX/Yeild.cpp')]
          env.File('../Stub/Sounder.cpp')]
 

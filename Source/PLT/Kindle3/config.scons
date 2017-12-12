@@ -55,4 +55,5 @@ source+=[env.File('../Stub/Audio.cpp'),
          env.File('../Stub/Bitmap.cpp'),
          env.File('../Stub/Midi.cpp'),
          env.File('../Stub/Sounder.cpp'),
+         env.File('../Stub/Yield.cpp'),
          env.File('../POSIX/File.cpp')]

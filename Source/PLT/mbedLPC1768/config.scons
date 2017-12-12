@@ -84,6 +84,7 @@ source+=[env.File('platform_init.cpp'),
          env.File('../Stub/Bitmap.cpp'),
          env.File('../Stub/Midi.cpp'),
          env.File('../Stub/Sounder.cpp'),
+         env.File('../Stub/Yield.cpp'),
          env.File('../Stub/File.cpp'),
          env.File('../../MTL/PS2KeyDecode.cpp'),
          env.File('../../MTL/chip/LPC1768/PALVideo.cpp')]
