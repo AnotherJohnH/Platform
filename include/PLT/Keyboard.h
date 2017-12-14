@@ -79,12 +79,12 @@ public:
    //! Poll for next keyboard event
    bool poll(uint8_t& key, bool& down)
    {
-      Event  event;
+      Event::Message  message;
 
-      switch(pollEvent(event))
+      switch(Event::poll(message))
       {
-      case KEY_DOWN:
-         key  = event.code;
+      case Event::KEY_DOWN:
+         key  = message.code;
          down = true;
          if ((key == KeyCode::LSHIFT) || (key == KeyCode::RSHIFT))
          {
@@ -92,8 +92,8 @@ public:
          }
          return true;
 
-      case KEY_UP:
-         key  = event.code;
+      case Event::KEY_UP:
+         key  = message.code;
          down = false;
          if ((key == KeyCode::LSHIFT) || (key == KeyCode::RSHIFT))
          {
@@ -101,7 +101,7 @@ public:
          }
          return true;
 
-      case QUIT:
+      case Event::QUIT:
          exit(0);
          break;
 
