@@ -280,7 +280,7 @@ Type wait(Message& event)
    return getEvent(event, /* block */ true);
 }
 
-int mainLoop(void (*callback)(void*), void* user_data)
+int mainLoop(bool (*callback)(void*), void* user_data)
 {
    while(true)
    {
