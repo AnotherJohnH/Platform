@@ -26,6 +26,8 @@
 #ifndef PLT_YIELD_H
 #define PLT_YIELD_H
 
+#include <cstdint>
+
 //! Platform abstraction layer
 namespace PLT {
 
