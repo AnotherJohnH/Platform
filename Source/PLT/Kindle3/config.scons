@@ -24,7 +24,7 @@
 
 Import('env')
 
-env['machine'] = 'armv6l'
+env['machine'] = 'armv6l_k3'
 
 env['OBJPREFIX'] = 'obj/'+env['machine']+'/'
 env['LIBPREFIX'] = 'lib/'+env['machine']+'/lib'
