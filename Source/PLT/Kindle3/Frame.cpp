@@ -72,7 +72,7 @@ private:
    }
 
 public:
-   FrameImpl(const char* title_, unsigned width_, unsigned height_, uint32_t flags_)
+   Impl(const char* title_, unsigned width_, unsigned height_, uint32_t flags_)
    {
       int fd = openDev("/dev/fb0");
 
@@ -97,7 +97,7 @@ public:
       refresh_fd = openDev("/proc/eink_fb/update_display");
    }
 
-   ~FrameImpl()
+   ~Impl()
    {
       munmap(buffer, getSize());
       close(refresh_fd);
@@ -127,7 +127,7 @@ Frame::Frame(const char* title_, unsigned width_, unsigned height_, uint32_t fla
 
 Frame::~Frame() { delete pimpl; }
 
-void* Frame::getHandle()
+void* Frame::getHandle() const
 {
    return nullptr;
 }

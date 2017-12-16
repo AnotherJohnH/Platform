@@ -89,7 +89,7 @@ private:
    STB::Fifo<uint16_t,4> fifo;
 
    //! Push an event in a thread safe manner
-   void pushEvent(EventType type, uint8_t code = 0)
+   void pushEvent(PLT::Event::Type type, uint8_t code = 0)
    {
       uint16_t ev = (uint16_t(type) << 8) | code;
 
@@ -99,7 +99,7 @@ private:
    }
 
    //! Get next event in a thread safe manner
-   bool popEvent(bool block, PLT::EventType& type, uint8_t& code)
+   bool popEvent(bool block, PLT::Event::Type& type, uint8_t& code)
    {
       while(true)
       {
@@ -116,7 +116,7 @@ private:
 
          if(ok)
          {
-            type = PLT::EventType(ev >> 8);
+            type = PLT::Event::Type(ev >> 8);
             code = uint8_t(ev);
             return true;
          }
@@ -171,8 +171,8 @@ private:
                {
                   switch(buffer[12])
                   {
-                  case 0: pushEvent(KEY_UP, event_decode[buffer[10]]); break;
-                  case 1: pushEvent(KEY_DOWN, event_decode[buffer[10]]); break;
+                  case 0: pushEvent(PLT::Event::KEY_UP,   event_decode[buffer[10]]); break;
+                  case 1: pushEvent(PLT::Event::KEY_DOWN, event_decode[buffer[10]]); break;
                   default: break;
                   }
                }
@@ -199,7 +199,7 @@ private:
       while(true)
       {
          usleep(tmr_period_ms * 1000);
-         pushEvent(TIMER);
+         pushEvent(PLT::Event::TIMER);
       }
    }
 
@@ -241,9 +241,9 @@ public:
       }
    }
 
-   EventType getEvent(PLT::Event& event, bool block)
+   PLT::Event::Type getEvent(PLT::Event::Message& event, bool block)
    {
-      event.type = NONE;
+      event.type = PLT::Event::NONE;
       event.x    = 0;
       event.y    = 0;
 
@@ -252,7 +252,7 @@ public:
          // printf("getEvent() => EV %x:%02x\n", event.type, event.code);
       }
 
-      return EventType(event.type);
+      return PLT::Event::Type(event.type);
    }
 };
 
