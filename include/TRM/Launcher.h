@@ -239,23 +239,24 @@ private:
 
       curses.mvaddstr(3, 3, "Program     : "); curses.addstr(program);
       curses.mvaddstr(4, 3, "Description : "); curses.addstr(description);
-      curses.mvaddstr(5, 3, "Author      : "); curses.addstr(author);
-      curses.mvaddstr(6, 3, "Version     : "); curses.addstr(version);
+      curses.mvaddstr(5, 3, "Link        : "); curses.addstr(link);
+      curses.mvaddstr(6, 3, "Author      : "); curses.addstr(author);
+      curses.mvaddstr(7, 3, "Version     : "); curses.addstr(version);
 
-      curses.mvaddstr(7, 3, "Built       : ");
+      curses.mvaddstr(8, 3, "Built       : ");
       curses.addstr(__TIME__); curses.addstr(" "); curses.addstr(__DATE__);
 
-      curses.mvaddstr(8, 3, "Compiler    : "); layoutText(8, 17, __VERSION__);
+      curses.mvaddstr(9, 3, "Compiler    : "); layoutText(9, 17, __VERSION__);
 
       curses.attron(A_BOLD);
-      curses.mvaddstr(10, 3, "Copyright (c) ");
+      curses.mvaddstr(11, 3, "Copyright (c) ");
       curses.addstr(copyright_year);
       curses.addstr(" ");
       curses.addstr(author);
 
       curses.attroff(A_BOLD);
 
-      layoutText(12, 3, MIT_LICENSE);
+      layoutText(13, 3, MIT_LICENSE);
 
       (void)curses.getch();
    }
@@ -453,13 +454,14 @@ private:
 
 public:
    Launcher(const char*  program,
-            const char*  author,
             const char*  description,
+            const char*  link,
+            const char*  author,
             const char*  version,
             const char*  copyright_year,
             const char*  args_help,
             const char*  config_file)
-      : App(program, author, description, version, copyright_year, args_help)
+      : App(program, description, link, author, version, copyright_year, args_help)
       , opt_config('c', "config", "Use alternate config file", config_file)
    {}
 };
