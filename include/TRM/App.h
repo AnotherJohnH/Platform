@@ -102,12 +102,13 @@ protected:
 
 public:
     App(const char* program_,
-                const char* author_,
-                const char* description_,
-                const char* version_,
-                const char* copyright_year_,
-                const char* args_help_ = nullptr)
-      : ConsoleApp(program_, author_, description_, version_, copyright_year_, args_help_)
+        const char* description_,
+        const char* link_,
+        const char* author_,
+        const char* version_,
+        const char* copyright_year_,
+        const char* args_help_ = nullptr)
+      : ConsoleApp(program_, description_, link_, author_, version_, copyright_year_, args_help_)
    {}
 };
 

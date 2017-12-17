@@ -25,9 +25,10 @@
 
 #define  PROGRAM         "MyApp"
 #define  DESCRIPTION     "A test"
-#define  COPYRIGHT_YEAR  "2017"
+#define  LINK            "https://github.com/AnotherJohnH/Platform"
 #define  AUTHOR          "John D. Haughton"
 #define  VERSION         PROJ_VERSION
+#define  COPYRIGHT_YEAR  "2017"
 
 class MyApp : public TRM::App
 {
@@ -52,7 +53,7 @@ private:
 
 public:
    MyApp(int argc, const char* argv[])
-      : TRM::App(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR)
+      : TRM::App(PROGRAM, DESCRIPTION, LINK, AUTHOR, VERSION, COPYRIGHT_YEAR)
    {
       parseArgsAndStart(argc, argv);
    }

@@ -154,9 +154,9 @@ protected:
 
 public:
    ConsoleApp(const char* program_,
-              const char* author_,
               const char* description_,
               const char* link_,
+              const char* author_,
               const char* version_,
               const char* copyright_year_,
               const char* args_help_ = nullptr)
