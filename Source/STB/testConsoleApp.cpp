@@ -27,6 +27,7 @@
 
 #define  PROGRAM         "HelloWorld"
 #define  DESCRIPTION     "Confidence test for development environment"
+#define  LINK            "https://github.com/AnotherJohnH/Platform"
 #define  COPYRIGHT_YEAR  "2017"
 #define  AUTHOR          "John D. Haughton"
 #define  VERSION         PROJ_VERSION
@@ -56,7 +57,7 @@ private:
 
 public:
    MyApp(int argc, const char* argv[])
-      : ConsoleApp(PROGRAM, AUTHOR, DESCRIPTION, VERSION, COPYRIGHT_YEAR)
+      : ConsoleApp(PROGRAM, AUTHOR, DESCRIPTION, LINK, VERSION, COPYRIGHT_YEAR)
    {
       parseArgsAndStart(argc, argv);
    }

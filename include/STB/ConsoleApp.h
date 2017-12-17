@@ -58,6 +58,10 @@ private:
       printf("\n");
       printf("Program      : %s\n", program);
       printf("Description  : %s\n", description);
+      if (link != nullptr)
+      {
+         printf("Link         : %s\n", link);
+      }
       printf("Author       : %s\n", author);
       printf("Version      : %s\n", version);
       printf("Built        : %s %s\n", __TIME__, __DATE__);
@@ -119,6 +123,7 @@ protected:
    const char* name;
    const char* program;
    const char* description;
+   const char* link;
    const char* author;
    const char* version;
    const char* copyright_year;
@@ -148,11 +153,17 @@ protected:
    virtual int startConsoleApp() = 0;
 
 public:
-   ConsoleApp(const char* program_, const char* author_, const char* description_,
-              const char* version_, const char* copyright_year_, const char* args_help_ = nullptr)
+   ConsoleApp(const char* program_,
+              const char* author_,
+              const char* description_,
+              const char* link_,
+              const char* version_,
+              const char* copyright_year_,
+              const char* args_help_ = nullptr)
       : name(program_)
       , program(program_)
       , description(description_)
+      , link(link_)
       , author(author_)
       , version(version_)
       , copyright_year(copyright_year_)
