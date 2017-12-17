@@ -24,6 +24,7 @@
 #include <cstdio>
 
 #include "STB/ConsoleApp.h"
+#include "STB/Option.h"
 
 #define  PROGRAM         "HelloWorld"
 #define  DESCRIPTION     "Confidence test for development environment"
@@ -35,6 +36,8 @@
 class MyApp : public STB::ConsoleApp
 {
 private:
+   STB::Option<bool>  debug{'d', "debug", "Enable debug", false};
+
    // TODO remove this override if not required
    virtual void showExtraHelp() override
    {
@@ -47,7 +50,7 @@ private:
 
       printf("Hello, world!\n");
 
-      if(isDebug())
+      if(debug)
       {
          printf("HERE %s:%u\n", __FILE__, __LINE__);
       }
