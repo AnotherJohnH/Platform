@@ -56,12 +56,27 @@ private:
    void showVersion()
    {
       printf("\n");
-      printf("Program     : %s\n", program);
-      printf("Description : %s\n", description);
-      printf("Author      : %s\n", author);
-      printf("Version     : %s\n", version);
-      printf("Built       : %s %s\n", __TIME__, __DATE__);
-      printf("Compiler    : %s\n", __VERSION__);
+      printf("Program      : %s\n", program);
+      printf("Description  : %s\n", description);
+      printf("Author       : %s\n", author);
+      printf("Version      : %s\n", version);
+      printf("Built        : %s %s\n", __TIME__, __DATE__);
+      printf("Compiler     : %s\n", __VERSION__);
+#if defined(__arm__)
+      printf("Architecture : ARM-32\n");
+#elif defined(__aarch64__)
+      printf("Architecture : ARM-64\n");
+#elif defined(__mips__)
+      printf("Architecture : MIPS\n");
+#elif defined(__powerpc__)
+      printf("Architecture : PowerPC\n");
+#elif defined(__sparc__)
+      printf("Architecture : SPARC\n");
+#elif defined(__i386__)
+      printf("Architecture : x86-32\n");
+#elif defined(__amd64__)
+      printf("Architecture : AMD-64 (x86-64)\n");
+#endif
       printf("\n");
       bold();
       printf("Copyright (c) %s %s\n", copyright_year, author);
