@@ -39,7 +39,6 @@ class ConsoleApp
 private:
    Option<bool> opt_version{'v', "version", "Display version information"};
    Option<bool> opt_help{   'h', "help",    "Display this help"};
-   Option<bool> opt_debug{  'd', "debug",   "Report extra debug information"};
 
    static const char* extractFilename(const char* path)
    {
@@ -128,8 +127,6 @@ protected:
    const char* version;
    const char* copyright_year;
    const char* args_help;
-
-   bool isDebug() const { return opt_debug; }
 
    void error(const char* format, ...)
    {
