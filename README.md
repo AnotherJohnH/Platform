@@ -66,13 +66,33 @@ The primary target platforms at the moment.
 
 Depend on SDL2, so a development install of SDL2 is required.
 
+Typically the following packages will be required...
+
+```
+sudo apt-get install scons
+sudo apt-get install libsdl2-dev
+```
+
 ### Kindle3
 
 Although this is also a Linux build, it does not depend on SDL2.
 
-Requires gcc built for arm-linux-gnueabihf and a set of headers and static runtime libraries
-that are compatible with the Linux installed on the Kindle3. The original ARMv6 Raspberry Pi
-running a Debian based Linux has been found to be suitable platform to build the Kindle3 version.
+Requires gcc/g++ built for arm-linux-gnueabihf targets that supports C++11 and a set of
+headers and static runtime libraries that are compatible with the Linux kernel v2.6.26
+installed on the Kindle3.
+
+#### Using a Raspberry Pi as a build machine for Kindle3
+
+The original ARMv6 Raspberry Pi running a Debian based Linux has been found to be suitable
+platform to build for Kindle3. But this is far easier if an old version of Rasbian (Wheezy)
+is used to ensure that libc is compatible with the old kernel on the Kindle.
+
+Other packages required...
+
+```
+sudo apt-get install scons
+sudo apt-get install g++-4.7
+```
 
 ### Browser (via Emscripten)
 
