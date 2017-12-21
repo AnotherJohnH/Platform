@@ -112,4 +112,11 @@ void Image::blit(const Image& source,
    defaultBlit(source, x, y, w, h, src_x, src_y);
 }
 
+void Image::lineBlit(uint8_t pixel_mask, STB::Colour one, STB::Colour zero,
+                     unsigned x, unsigned y)
+{
+   // TODO optimise as a single byte write when aligned
+   defaultLineBlit(pixel_mask, one, zero, x, y);
+}
+
 } // namespace PLT

@@ -76,4 +76,10 @@ void Image::blit(const Image& source,
    SDL_BlitSurface(src, &srcrect, static_cast<SDL_Surface*>(getHandle()), &dstrect);
 }
 
+void Image::lineBlit(uint8_t pixel_mask, STB::Colour one, STB::Colour zero,
+                     unsigned x, unsigned y)
+{
+   defaultLineBlit(pixel_mask, one, zero, x, y);
+}
+
 } // namespace PLT

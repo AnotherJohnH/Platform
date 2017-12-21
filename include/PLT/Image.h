@@ -104,6 +104,10 @@ public:
              unsigned w, unsigned h,
              unsigned src_x, unsigned src_y);
 
+   //! Blit an 8-bit pixel mask
+   void lineBlit(uint8_t pixel_mask, STB::Colour one, STB::Colour zero,
+                 unsigned x, unsigned y);
+
 protected:
    virtual ~Image() {}
 
@@ -140,6 +144,17 @@ protected:
          {
             point(source.getPixel(src_x + u, src_y + v), x + u, y + v);
          }
+      }
+   }
+
+   //! Blit an 8-bit pixel mask
+   void defaultLineBlit(uint8_t pixels, STB::Colour one, STB::Colour zero,
+                        unsigned x, unsigned y)
+   {
+      for(unsigned i=0; i<8; i++)
+      {
+         point(pixels & (1<<7) ? one : zero, x + i, y);
+         pixels = pixels<<1;
       }
    }
 
