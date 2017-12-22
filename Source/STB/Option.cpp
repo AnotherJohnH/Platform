@@ -49,6 +49,13 @@ bool Option<int64_t>::set(const char* arg_)
 }
 
 template <>
+bool Option<uint16_t>::set(const char* arg_)
+{
+   if(arg_ != nullptr) value = uint16_t(strtoul(arg_, nullptr, 0));
+   return true;
+}
+
+template <>
 bool Option<uint32_t>::set(const char* arg_)
 {
    if(arg_ != nullptr) value = uint32_t(strtoul(arg_, nullptr, 0));
