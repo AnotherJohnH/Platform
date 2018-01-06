@@ -35,12 +35,6 @@ uint32_t Image::getPixel(unsigned x, unsigned y) const
    return (grey << 16) | (grey << 8) | grey;
 }
 
-void Image::clear(STB::Colour rgb)
-{
-   uint8_t grey = 0xF - (STB::ColourDecode(rgb).grn() >> 4);
-   memset(buffer, (grey<<4) | grey, pitch * height / 2);
-}
-
 void Image::point(STB::Colour rgb, unsigned x, unsigned y)
 {
    uint8_t& pair = buffer[(x + y * pitch) / 2];
@@ -53,6 +47,11 @@ void Image::point(STB::Colour rgb, unsigned x, unsigned y)
    {
       pair = (pair & 0x0F) | (grey << 4);
    }
+}
+
+void Image::clear(STB::Colour rgb)
+{
+   defaultClear(rgb);
 }
 
 void Image::span(STB::Colour rgb, unsigned x1, unsigned y, unsigned x2)
