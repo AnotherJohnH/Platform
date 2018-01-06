@@ -94,7 +94,7 @@ private:
       uint16_t ev = (uint16_t(type) << 8) | code;
 
       pthread_mutex_lock(&fifo_mutex);
-      fifo.push(ev);
+      if (!fifo.full()) fifo.push(ev);
       pthread_mutex_unlock(&fifo_mutex);
    }
 
