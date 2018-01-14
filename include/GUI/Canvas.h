@@ -44,25 +44,25 @@ public:
    {
    }
 
-   Canvas(unsigned width_, unsigned height_)
+   Canvas(uint32_t width_, uint32_t height_)
       : size(width_, height_)
    {
    }
 
    //! Get canvas width (pixels)
-   unsigned getWidth() const { return size.x; }
+   uint32_t getWidth() const { return size.x; }
 
    //! Get canvas height (pixels)
-   unsigned getHeight() const { return size.y; }
+   uint32_t getHeight() const { return size.y; }
 
    //! Test pixel co-ordinates are inside the canvass boundaries
-   bool isVisible(signed x, signed y) const
+   bool isVisible(int32_t x, int32_t y) const
    {
-      return (x >= 0) && (x < signed(getWidth())) && (y >= 0) && (y < signed(getHeight()));
+      return (x >= 0) && (x < int32_t(getWidth())) && (y >= 0) && (y < int32_t(getHeight()));
    }
 
    //! Get colour of single pixel in the frame buffer
-   STB::Colour getPixel(signed x, signed y) const
+   STB::Colour getPixel(int32_t x, int32_t y) const
    {
       if(!isVisible(x, y)) return GUI::HIDDEN;
 
@@ -70,7 +70,7 @@ public:
    }
 
    //! Set a single pixel
-   void drawPoint(STB::Colour colour, signed x, signed y)
+   void drawPoint(STB::Colour colour, int32_t x, int32_t y)
    {
       if(isVisible(x, y))
       {
@@ -79,31 +79,31 @@ public:
    }
 
    //! Set a horizontal row of pixels
-   void drawSpan(STB::Colour colour, signed x1, signed y, signed x2)
+   void drawSpan(STB::Colour colour, int32_t x1, int32_t y, int32_t x2)
    {
       clipAndSort(x1, x2, size.x);
 
-      if((y >= 0) && (y < signed(size.y)))
+      if((y >= 0) && (y < int32_t(size.y)))
       {
          canvasSpan(colour, x1, y, x2);
       }
    }
 
    //! Draw a straight line between two points
-   void drawLine(STB::Colour colour, signed x1, signed y1, signed x2, signed y2)
+   void drawLine(STB::Colour colour, int32_t x1, int32_t y1, int32_t x2, int32_t y2)
    {
       // TODO clip to frame and then use canvasPoint() directly
 
-      signed dx = x2 - x1;
-      signed dy = y2 - y1;
+      int32_t dx = x2 - x1;
+      int32_t dy = y2 - y1;
 
       if(abs(dx) >= abs(dy))
       {
-         signed ix = dx < 0 ? -1 : +1;
-         signed iy = (dy << 16) / abs(dx);
-         signed y  = y1 << 16;
+         int32_t ix = dx < 0 ? -1 : +1;
+         int32_t iy = (dy << 16) / abs(dx);
+         int32_t y  = y1 << 16;
 
-         for(signed x = x1; x != x2; x += ix)
+         for(int32_t x = x1; x != x2; x += ix)
          {
             drawPoint(colour, x, y >> 16);
             y += iy;
@@ -111,11 +111,11 @@ public:
       }
       else
       {
-         signed iy = dy < 0 ? -1 : +1;
-         signed ix = (dx << 16) / abs(dy);
-         signed x  = x1 << 16;
+         int32_t iy = dy < 0 ? -1 : +1;
+         int32_t ix = (dx << 16) / abs(dy);
+         int32_t x  = x1 << 16;
 
-         for(signed y = y1; y != y2; y += iy)
+         for(int32_t y = y1; y != y2; y += iy)
          {
             drawPoint(colour, x >> 16, y);
             x += ix;
@@ -124,7 +124,7 @@ public:
    }
 
    //! Draw a rectangle outline
-   void drawRect(STB::Colour colour, signed x1, signed y1, signed x2, signed y2)
+   void drawRect(STB::Colour colour, int32_t x1, int32_t y1, int32_t x2, int32_t y2)
    {
       drawLine(colour, x1, y1, x2, y1);
       drawLine(colour, x2, y1, x2, y2);
@@ -133,20 +133,20 @@ public:
    }
 
    //! Fill a rectangle
-   void fillRect(STB::Colour colour, signed x1, signed y1, signed x2, signed y2)
+   void fillRect(STB::Colour colour, int32_t x1, int32_t y1, int32_t x2, int32_t y2)
    {
       clipAndSort(x1, x2, size.x);
       clipAndSort(y1, y2, size.y);
 
-      for(signed y = y1; y < y2; y++)
+      for(int32_t y = y1; y < y2; y++)
       {
          canvasSpan(colour, x1, y, x2);
       }
    }
 
    //! Fill a triangle
-   void fillTriangle(STB::Colour colour, signed x1, signed y1, signed x2, signed y2, signed x3,
-                     signed y3)
+   void fillTriangle(STB::Colour colour, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3,
+                     int32_t y3)
    {
       if(y2 < y1)
       {
@@ -168,12 +168,12 @@ public:
 
       if(y3 == y1) return;
 
-      signed dxe = ((x3 - x1) << 16) / (y3 - y1);
-      signed dxs;
+      int32_t dxe = ((x3 - x1) << 16) / (y3 - y1);
+      int32_t dxs;
 
-      signed y  = y1;
-      signed xs = x1 << 16;
-      signed xe;
+      int32_t y  = y1;
+      int32_t xs = x1 << 16;
+      int32_t xe;
 
       if(y2 > y1)
       {
@@ -214,19 +214,19 @@ public:
    }
 
    //! Draw a circle
-   void drawCircle(STB::Colour colour, signed cx, signed cy, unsigned r)
+   void drawCircle(STB::Colour colour, int32_t cx, int32_t cy, uint32_t r)
    {
       drawPoint(colour, cx, cy + r);
       drawPoint(colour, cx, cy - r);
       drawPoint(colour, cx + r, cy);
       drawPoint(colour, cx - r, cy);
 
-      signed f     = 1 - r;
-      signed ddf_x = 1;
-      signed ddf_y = -2 * r;
-      signed y     = r;
+      int32_t f     = 1 - r;
+      int32_t ddf_x = 1;
+      int32_t ddf_y = -2 * r;
+      int32_t y     = r;
 
-      for(signed x = 0; x < y;)
+      for(int32_t x = 0; x < y;)
       {
          if(f >= 0)
          {
@@ -253,7 +253,7 @@ public:
    }
 
    //! Fill a circle
-   void fillCircle(STB::Colour colour, signed cx, signed cy, unsigned r)
+   void fillCircle(STB::Colour colour, int32_t cx, int32_t cy, uint32_t r)
    {
       drawSpan(colour, cx, cy + r, cx);
       drawSpan(colour, cx - r, cy, cx + r);
@@ -283,19 +283,19 @@ public:
       }
    }
 
-   void drawCurve(signed x1, signed y1, signed x2, signed y2, signed cx1, signed cy1, signed cx2,
-                  signed cy2)
+   void drawCurve(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t cx1, int32_t cy1, int32_t cx2,
+                  int32_t cy2)
    {
       // TODO implementation
       assert(!"no implementation");
    }
 
    //! Draw an alphamap
-   template <unsigned BPP>
-   void drawAlphaMap(STB::Colour fg, STB::Colour bg, signed x, signed y, unsigned w, unsigned h,
+   template <uint32_t BPP>
+   void drawAlphaMap(STB::Colour fg, STB::Colour bg, int32_t x, int32_t y, uint32_t w, uint32_t h,
                      const uint8_t* alphamap)
    {
-      unsigned shift;
+      uint32_t shift;
       if(BPP > MAX_ALPHA_BPP)
       {
          shift = BPP - MAX_ALPHA_BPP;
@@ -307,15 +307,15 @@ public:
          preComputeAlpha(fg, bg, BPP);
       }
 
-      for(unsigned v = 0; v < h; v++)
+      for(uint32_t v = 0; v < h; v++)
       {
          uint8_t byte       = *alphamap++;
          uint8_t alpha      = byte >> (8 - BPP);
          uint8_t last_alpha = alpha;
-         signed  x1         = x;
-         signed  x2         = x1;
+         int32_t  x1         = x;
+         int32_t  x2         = x1;
 
-         for(unsigned u = 0; true;)
+         for(uint32_t u = 0; true;)
          {
             if(alpha != last_alpha)
             {
@@ -356,9 +356,9 @@ public:
    }
 
    //! Draw a single character from a font
-   unsigned drawChar(STB::Colour fg, STB::Colour bg, signed x, signed y, const Font* font, uint8_t ch)
+   uint32_t drawChar(STB::Colour fg, STB::Colour bg, int32_t x, int32_t y, const Font* font, uint8_t ch)
    {
-      unsigned w = font->getWidth();
+      uint32_t w = font->getWidth();
 
       const uint8_t* map = font->getAlphaMap(ch);
       if(map != nullptr)
@@ -378,7 +378,7 @@ public:
    }
 
    //! Draw a string of text
-   void drawText(STB::Colour fg, STB::Colour bg, signed x, signed y, const Font* font, const char* s)
+   void drawText(STB::Colour fg, STB::Colour bg, int32_t x, int32_t y, const Font* font, const char* s)
    {
       assert(s);
 
@@ -390,9 +390,9 @@ public:
 
    //! Blit from another canvas into this canvas
    void drawImage(const Canvas& source,
-                  unsigned x, unsigned y,
-                  unsigned w, unsigned h,
-                  unsigned src_x, unsigned src_y)
+                  uint32_t x, uint32_t y,
+                  uint32_t w, uint32_t h,
+                  uint32_t src_x, uint32_t src_y)
    {
       canvasBlit(source, x, y, w, h, src_x, src_y);
    }
@@ -404,7 +404,7 @@ public:
    void refresh() { canvasRefresh(0, 0, size.x, size.y); }
 
    //! Resize the canvas
-   void resize(unsigned width, unsigned height)
+   void resize(uint32_t width, uint32_t height)
    {
       assert((width != 0) && (height != 0));
 
@@ -415,23 +415,23 @@ public:
    }
 
 private:
-   static const unsigned MAX_ALPHA_BPP = 4;
+   static const uint32_t MAX_ALPHA_BPP = 4;
 
    Vector size;
    STB::Colour alpha_table[1 << MAX_ALPHA_BPP] = {};
 
    //! Clip value to between 0 and limit (inclusive range)
-   void clip(signed& value, unsigned limit)
+   void clip(int32_t& value, uint32_t limit)
    {
       if(value < 0)
          value = 0;
-      else if(value > signed(limit))
+      else if(value > int32_t(limit))
          value = limit;
    }
 
    //! Clip two values to between 0 and limit (inclusive range) and
    //  ensure swap the values if the first is greater than the second
-   void clipAndSort(signed& value1, signed& value2, unsigned limit)
+   void clipAndSort(int32_t& value1, int32_t& value2, uint32_t limit)
    {
       clip(value1, limit);
       clip(value2, limit);
@@ -443,11 +443,11 @@ private:
    }
 
    //! Compute alpha LUT for rendering alpha maps
-   void preComputeAlpha(STB::Colour fg_, STB::Colour bg_, unsigned bpp)
+   void preComputeAlpha(STB::Colour fg_, STB::Colour bg_, uint32_t bpp)
    {
       assert(bpp <= MAX_ALPHA_BPP);
 
-      unsigned max_alpha = (1 << bpp) - 1;
+      uint32_t max_alpha = (1 << bpp) - 1;
 
       if((alpha_table[0] != bg_) || (alpha_table[max_alpha] != fg_))
       {
@@ -459,7 +459,7 @@ private:
          alpha_table[0]         = bg_;
          alpha_table[max_alpha] = fg_;
 
-         for(unsigned alpha = 1; alpha < max_alpha; ++alpha)
+         for(uint32_t alpha = 1; alpha < max_alpha; ++alpha)
          {
             alpha_table[alpha] =
                STB::RGB((fg.red() * alpha + bg.red() * (max_alpha - alpha)) / max_alpha,
@@ -472,7 +472,7 @@ private:
    // Overide the following interface with a frame buffer implementation
 
    //! Get colour of single pixel in the frame buffer
-   virtual STB::Colour canvasGetPixel(signed x, signed y) const { return GUI::HIDDEN; }
+   virtual STB::Colour canvasGetPixel(int32_t x, int32_t y) const { return GUI::HIDDEN; }
 
 public:
    //! Get pointer to underlying frame buffer
@@ -480,29 +480,29 @@ public:
 
 private:
    //! Resize the frame buffer
-   virtual void canvasResize(unsigned width, unsigned height) { assert(!"no implementation"); }
+   virtual void canvasResize(uint32_t width, uint32_t height) { assert(!"no implementation"); }
 
    //! Refresh a rectangular region of the frame buffer
-   virtual void canvasRefresh(signed x1, signed y1, signed x2, signed y2) {}
+   virtual void canvasRefresh(int32_t x1, int32_t y1, int32_t x2, int32_t y2) {}
 
    //! Clear frame buffer to a single colour
    virtual void canvasClear(STB::Colour colour)
    {
-      for(signed y = 0; y < size.y; y++)
+      for(int32_t y = 0; y < size.y; y++)
       {
          canvasSpan(colour, 0, y, size.x);
       }
    }
 
    //! Set a single pixel in the frame buffer
-   virtual void canvasPoint(STB::Colour colour, signed x, signed y) = 0;
+   virtual void canvasPoint(STB::Colour colour, int32_t x, int32_t y) = 0;
 
    //! Set a horizontal row of pixels in the frame buffer
-   virtual void canvasSpan(STB::Colour colour, signed x1, signed y, signed x2)
+   virtual void canvasSpan(STB::Colour colour, int32_t x1, int32_t y, int32_t x2)
    {
       assert(x1 < x2);
 
-      for(signed x = x1; x < x2; x++)
+      for(int32_t x = x1; x < x2; x++)
       {
          canvasPoint(colour, x, y);
       }
@@ -511,16 +511,16 @@ private:
 protected:
    //! Blit from another canvas into this canvas
    virtual void canvasBlit(const Canvas& source,
-                           unsigned x, unsigned y,
-                           unsigned w, unsigned h,
-                           unsigned src_x, unsigned src_y)
+                           uint32_t x, uint32_t y,
+                           uint32_t w, uint32_t h,
+                           uint32_t src_x, uint32_t src_y)
    {
       assert((src_x + w) <= source.getWidth());
       assert((src_y + h) <= source.getHeight());
 
-      for(unsigned u = 0; u < w; u++)
+      for(uint32_t u = 0; u < w; u++)
       {
-         for(unsigned v = 0; v < h; v++)
+         for(uint32_t v = 0; v < h; v++)
          {
             canvasPoint(source.getPixel(src_x + u, src_y + v), x + u, y + v);
          }
