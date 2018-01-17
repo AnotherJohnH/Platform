@@ -239,7 +239,7 @@ private:
 
       curses.mvaddstr(3, 3, "Program     : "); curses.addstr(program);
       curses.mvaddstr(4, 3, "Description : "); curses.addstr(description);
-      curses.mvaddstr(5, 3, "Link        : "); curses.addstr(link);
+      curses.mvaddstr(5, 3, "Link        : "); if (link != nullptr) curses.addstr(link);
       curses.mvaddstr(6, 3, "Author      : "); curses.addstr(author);
       curses.mvaddstr(7, 3, "Version     : "); curses.addstr(version);
 
