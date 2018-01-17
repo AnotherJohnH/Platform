@@ -99,6 +99,11 @@ public:
       : GUI::Canvas(width_, height_)
       , frame(title_, width_, height_, flags_)
    {}
+
+   PLT::Frame* getFramePtr()
+   {
+      return &frame;
+   }
 };
 
 } // namespace GUI
