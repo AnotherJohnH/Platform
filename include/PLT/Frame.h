@@ -61,6 +61,9 @@ public:
    //! Get a platform specific handle for the frame
    virtual void* getHandle() const override;
 
+   //! Change the title, for window based platforms should be the window title
+   void setTitle(const char* title);
+
    //! Resize the frame buffer
    //
    //! \param width frame width (pixels)

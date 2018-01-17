@@ -41,6 +41,10 @@ void* Frame::getHandle() const
    return nullptr;
 }
 
+void Frame::setTitle(const char* title_)
+{
+}
+
 void Frame::resize(unsigned width_, unsigned height_)
 {
 }

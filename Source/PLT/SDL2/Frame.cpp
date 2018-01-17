@@ -108,6 +108,12 @@ public:
       return surface;
    }
 
+   void setTitle(const char* title_)
+   {
+      title = title_;
+      SDL_SetWindowTitle(window, title_);
+   }
+
    void resize(unsigned width_, unsigned height_)
    {
       if(window == nullptr)
@@ -178,6 +184,11 @@ Frame::~Frame() { delete pimpl; }
 void* Frame::getHandle() const
 {
    return pimpl->getHandle();
+}
+
+void Frame::setTitle(const char* title_)
+{
+   pimpl->setTitle(title_);
 }
 
 void Frame::resize(unsigned width_, unsigned height_)
