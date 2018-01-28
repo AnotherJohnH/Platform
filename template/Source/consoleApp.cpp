@@ -27,6 +27,7 @@
 
 `#'define  PROGRAM         "APPLICATION"
 `#'define  `DESCRIPTION'     "DESCRIPTION"
+`#'define  `LINK'            "LINK"
 `#'define  COPYRIGHT_YEAR  "YEAR"
 `#'define  `AUTHOR'          "AUTHOR"
 `#'define  `VERSION'         PROJ_VERSION
@@ -43,7 +44,7 @@ private:
 
 public:
    APPLICATION`App'(int argc, const char* argv[])
-      : ConsoleApp(PROGRAM, `AUTHOR', `DESCRIPTION', `VERSION', COPYRIGHT_YEAR)
+      : ConsoleApp(PROGRAM, `DESCRIPTION', `LINK', `AUTHOR', `VERSION', COPYRIGHT_YEAR)
    {
       parseArgsAndStart(argc, argv);
    }
