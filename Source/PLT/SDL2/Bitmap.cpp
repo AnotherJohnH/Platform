@@ -22,28 +22,97 @@
 
 // SDL2 Bitmap implementation
 
+#include <cstdio>
+
+#include "SDL2/SDL.h"
+
 #include "PLT/Bitmap.h"
 
 namespace PLT {
 
+//! Memory image buffer
+class Bitmap::Impl : public Image
+{
+public:
+   Impl(const char* name, unsigned width, unsigned height)
+   {
+      surface = SDL_CreateRGBSurface(0, width, height, 32,
+                                     0x00FF0000,
+                                     0x0000FF00,
+                                     0x000000FF,
+                                     0xFF000000);
+   }
+
+   Impl(const char* filename)
+   {
+      surface = SDL_LoadBMP(filename);
+      if (surface == nullptr)
+      {
+         fprintf(stderr, "Failed to open file '%s'\n", filename);
+      }
+   }
+
+   ~Impl()
+   {
+      SDL_FreeSurface(surface);
+   }
+
+   void getSize(unsigned& width, unsigned& height)
+   {
+      if (surface != nullptr)
+      {
+         width  = surface->w;
+         height = surface->h;
+      }
+      else
+      {
+         width  = 0;
+         height = 0;
+      }
+   }
+
+   uint8_t* getStorage(unsigned& pitch)
+   {
+      if(surface == nullptr) return nullptr;
+
+      pitch = surface->pitch;
+      return (uint8_t*)surface->pixels;
+   }
+
+   virtual void* getHandle() const override
+   {
+      return surface;
+   }
+
+private:
+   SDL_Surface*   surface{nullptr};
+};
+
+
 Bitmap::Bitmap(const char* name_, unsigned width_, unsigned height_)
    : Image(width_, height_)
 {
-   pimpl = nullptr;
+   pimpl = new Impl(name_, width_, height_);
+
+   buffer = pimpl->getStorage(pitch);
 }
 
 Bitmap::Bitmap(const char* filename_)
 {
-   pimpl = nullptr;
+   pimpl  = new Impl(filename_);
+
+   pimpl->getSize(width, height);
+   buffer = pimpl->getStorage(pitch);
 }
 
 Bitmap::~Bitmap()
 {
+   delete pimpl;
 }
 
 void* Bitmap::getHandle() const
 {
-   return nullptr;
+   return pimpl->getHandle();
 }
 
 } // namespace PLT

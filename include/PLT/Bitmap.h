@@ -44,6 +44,8 @@ public:
    //! \param height (pixels)
    Bitmap(const char* name, unsigned width, unsigned height);
 
+   Bitmap(const char* filename);
+
    ~Bitmap();
 
    //! Get a platform specific handle for the bitmap
