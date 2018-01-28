@@ -20,7 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// Stub Bitmap implementation
+// SDL2 Bitmap implementation
 
 #include "PLT/Bitmap.h"
 
