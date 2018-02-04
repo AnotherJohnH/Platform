@@ -41,7 +41,7 @@ public:
 
       iterator& operator++()
       {
-         ptr = ptr->next;
+         ptr = ptr->Net::next;
          return *this;
       }
 
@@ -74,8 +74,8 @@ public:
    void operator>>(TYPE& insert)
    {
       TYPE* temp = next;
-      next = insert.next;
-      insert.next = temp;
+      next = insert.Net::next;
+      insert.Net::next = temp;
    }
 
 protected:
