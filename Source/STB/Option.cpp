@@ -70,6 +70,13 @@ bool Option<uint64_t>::set(const char* arg_)
 }
 
 template <>
+bool Option<double>::set(const char* arg_)
+{
+   if(arg_ != nullptr) value = atof(arg_);
+   return true;
+}
+
+template <>
 bool Option<const char*>::set(const char* arg_)
 {
    if(arg_ != nullptr) value = arg_;
