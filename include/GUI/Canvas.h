@@ -97,7 +97,7 @@ public:
       int32_t dx = x2 - x1;
       int32_t dy = y2 - y1;
 
-      if(abs(dx) >= abs(dy))
+      if(abs(dx) > abs(dy))
       {
          int32_t ix = dx < 0 ? -1 : +1;
          int32_t iy = (dy << 16) / abs(dx);
@@ -109,7 +109,7 @@ public:
             y += iy;
          }
       }
-      else
+      else if(dy != 0)
       {
          int32_t iy = dy < 0 ? -1 : +1;
          int32_t ix = (dx << 16) / abs(dy);
@@ -283,11 +283,38 @@ public:
       }
    }
 
-   void drawCurve(int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t cx1, int32_t cy1, int32_t cx2,
-                  int32_t cy2)
+   void drawCurve(STB::Colour colour,
+                  int32_t x1,  int32_t y1,
+                  int32_t x2,  int32_t y2,
+                  int32_t cx1, int32_t cy1,
+                  int32_t cx2, int32_t cy2)
    {
-      // TODO implementation
-      assert(!"no implementation");
+      int32_t ax =   -x1 + 3*cx1 - 3*cx2 + x2;
+      int32_t ay =   -y1 + 3*cy1 - 3*cy2 + y2;
+
+      int32_t bx =  3*x1 - 6*cx1 + 3*cx2;
+      int32_t by =  3*y1 - 6*cy1 + 3*cy2;
+
+      int32_t cx = -3*x1 + 3*cx1;
+      int32_t cy = -3*y1 + 3*cy1;
+
+      int32_t dx =    x1;
+      int32_t dy =    y1;
+
+      int32_t prev_x = x1;
+      int32_t prev_y = y1;
+
+      // TODO some kind of recursive sub-division would seem to be in order here
+      for(double t = 0.1; t <= 1.0; t += 0.1)
+      {
+         int32_t x = ax * t*t*t + bx * t*t + cx * t + dx;
+         int32_t y = ay * t*t*t + by * t*t + cy * t + dy;
+
+         drawLine(colour, prev_x, prev_y, x, y);
+
+         prev_x = x;
+         prev_y = y;
+      }
    }
 
    //! Draw an alphamap
