@@ -20,24 +20,24 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef STB_VECTOR2_H
-#define STB_VECTOR2_H
+#ifndef STB_VECTOR3_H
+#define STB_VECTOR3_H
 
 #include <cassert>
 #include <cmath>
 
 namespace STB {
 
-//! Two dimensional vector template
+//! Three dimensional vector template
 template <typename T>
-class Vector2
+class Vector3
 {
 private:
-   static const unsigned N = 2;
+   static const unsigned N = 3;
 
 protected:
    using Function = T (*)(T);
-   using This     = Vector2<T>;
+   using This     = Vector3<T>;
 
 public:
    union
@@ -45,18 +45,18 @@ public:
       T e[N];
       struct
       {
-         T x, y;
+         T x, y, z;
       };
    };
 
    static size_t size() { return N; }
 
    // clang-format off
-   Vector2()              {}
-   Vector2(const T& v)    { operator=(v); }
-   Vector2(const This& v) { operator=(v); }
-   Vector2(Function f)    { operator=(f); }
-   Vector2(const T& x_, const T& y_) : e{ x_, y_} {}
+   Vector3()              {}
+   Vector3(const T& v)    { operator=(v); }
+   Vector3(const This& v) { operator=(v); }
+   Vector3(Function f)    { operator=(f); }
+   Vector3(const T& x_, const T& y_, const T& z_) : e{ x_, y_, z } {}
 
          T& operator[](unsigned i)       { assert(i<N); return e[i]; }
    const T& operator[](unsigned i) const { assert(i<N); return e[i]; }
@@ -143,6 +143,16 @@ public:
    T getMagnitude() const
    {
       return sqrt(getSquare());
+   }
+
+   This getCrossProduct(const This& v) const
+   {
+      assert(N == 3);
+      This r;
+      r[0] = e[1] * v[2] - e[2] * v[1];
+      r[1] = e[2] * v[0] - e[0] * v[2];
+      r[2] = e[0] * v[1] - e[1] * v[0];
+      return r;
    }
 };
 
