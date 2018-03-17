@@ -57,6 +57,9 @@ public:
    
    //! Return true if the file is open
    bool isOpen() const { return fp != nullptr; }
+
+   //! Return true if the file is not open or at the end of file
+   bool isEof() const { return !isOpen() || feof(fp); }
    
    //! Get next character from input stream
    bool getChar(char& ch)
@@ -138,6 +141,8 @@ File::~File()
 }
 
 bool File::isOpen() const { return pimpl->isOpen(); }
+
+bool File::isEof() const { return pimpl->isEof(); }
 
 const char* File::getFilename() const { return pimpl->getFilename(); }
 

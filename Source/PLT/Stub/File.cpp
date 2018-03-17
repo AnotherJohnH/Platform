@@ -32,6 +32,8 @@ File::~File() {}
 
 bool File::isOpen() const { return false; }
 
+bool File::isEof() const { return true; }
+
 const char* File::getFilename() const { return nullptr; }
 
 bool File::getChar(char& ch) { return false; }

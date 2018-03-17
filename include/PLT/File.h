@@ -56,6 +56,9 @@ public:
    //! Return true if the file is open
    bool isOpen() const;
 
+   //! Return true if the file is not open or at the end of the file
+   bool isEof() const;
+
    //! Get next character from input stream
    bool getChar(char& ch);
 
