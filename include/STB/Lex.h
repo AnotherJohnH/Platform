@@ -113,7 +113,7 @@ public:
    }
 
    //! Try and match a literal unsigned integer
-   bool isMatch(unsigned int& value)
+   bool isMatchUnsigned(uint64_t& value)
    {
       char     ch = first();
       unsigned base;
@@ -121,9 +121,7 @@ public:
       if (ch == '0')
       {
          sink();
-
          ch = next();
-         sink();
 
          if (isdigit(ch))
          {
@@ -142,14 +140,12 @@ public:
          }
          else
          {
-            unsink(ch);
-            unsink('0');
-            return false;
+            value = 0;
+            return true;
          }
       }
       else if (isdigit(ch))
       {
-         sink();
          value = ch - '0';
          base = 10;
       }
@@ -161,7 +157,10 @@ public:
       while(!isEof())
       {
          unsigned digit;
+
+         sink();
          ch = next();
+
          if (!isdigit(ch))
          {
             if (isupper(ch))
@@ -179,7 +178,6 @@ public:
             digit = ch - '0';
          }
 
-         sink();
          value = value * base + digit;
       }
 
@@ -187,7 +185,7 @@ public:
    }
 
    //! Try and match a literal signed integer
-   bool isMatch(signed int& value)
+   bool isMatchSigned(int64_t& value)
    {
       int      sign = +1;
       char     ch   = first();
@@ -266,9 +264,9 @@ public:
       {
          sink();
 
-         int exp;
+         int64_t exp;
 
-         if (isMatch(exp))
+         if (isMatchSigned(exp))
          {
             value = value * pow(10.0, exp);
          }
@@ -292,7 +290,7 @@ public:
    bool match(const char* token)
    {
       if (isMatch(token)) return true;
-      return error("'%s' expected", token);
+      return error("\"%s\" expected", token);
    }
 
    //! Match an identiier
@@ -309,11 +307,18 @@ public:
       return error("literal string expected");
    }
 
-   //! Match a integer literal
-   bool match(int& value)
+   //! Match a signed integer literal
+   bool matchSigned(int64_t& value)
    {
-      if (isMatch(value)) return true;
-      return error("literal integer expected");
+      if (isMatchSigned(value)) return true;
+      return error("integer expected");
+   }
+
+   //! Match an unsigned integer literal
+   bool matchUnsigned(uint64_t& value)
+   {
+      if (isMatchUnsigned(value)) return true;
+      return error("unsigned integer expected");
    }
 
    //! Match a floating point literal

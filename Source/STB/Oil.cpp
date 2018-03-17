@@ -147,7 +147,7 @@ bool Member::read(Lex& lex, void* that) const
       case SIGNED:
       {
          int64_t value = 0;
-         if (!lex.match(value)) return false;
+         if (!lex.matchSigned(value)) return false;
          int64_t unused = value >> (size*8);
          if ((unused != 0) || (unused != -1))
          {
@@ -167,7 +167,7 @@ bool Member::read(Lex& lex, void* that) const
       case UNSIGNED:
       {
          uint64_t value = 0;
-         if (!lex.match(value)) return false;
+         if (!lex.matchUnsigned(value)) return false;
          uint64_t unused = value >> (size*8);
          if (unused != 0)
          {
