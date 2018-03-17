@@ -25,8 +25,8 @@
 
 #include <vector>
 #include <string>
+#include <cstdint>
 #include <cctype>
-#include <cstdlib>
 #include <cmath>
 
 #include "PLT/File.h"
@@ -101,7 +101,7 @@ public:
       value = "";
       while(true)
       {
-         if (isEof()) error("terminating \" exepcted");
+         if (isEof()) return error("terminating \" exepcted");
 
          ch = next();
          sink();
@@ -109,6 +109,32 @@ public:
 
          value.push_back(ch);
       }
+   }
+
+   //! Try and match a literal unsigned integer
+   bool isMatch(unsigned int& value)
+   {
+      char     ch   = first();
+      unsigned base = 10;
+
+           if (isdigit(ch)) { value = ch - '0';     }
+      else                  { return false;         }
+
+      sink();
+
+      while(!isEof())
+      {
+         ch = next();
+         if (!isdigit(ch))
+         {
+            break;
+         }
+
+         sink();
+         value = value * base + ch - '0';
+      }
+
+      return true;
    }
 
    //! Try and match a literal signed integer
@@ -205,43 +231,49 @@ public:
    }
 
    //! Match a single character
-   void match(char token)
+   bool match(char token)
    {
-      if (!isMatch(token)) error("'%c' expected", token);
+      if (isMatch(token)) return true;
+      return error("'%c' expected", token);
    }
 
    //! Match a string
-   void match(const char* token)
+   bool match(const char* token)
    {
-      if (!isMatch(token))  error("'%s' expected", token);
+      if (isMatch(token)) return true;
+      return error("'%s' expected", token);
    }
 
    //! Match an identiier
-   void matchIdent(std::string& ident)
+   bool matchIdent(std::string& ident)
    {
-      if (!isMatchIdent(ident)) error("identifier epxected");
+      if (isMatchIdent(ident)) return true;
+      return error("identifier epxected");
    }
 
    //! Match a literal string
-   void match(std::string& string)
+   bool match(std::string& string)
    {
-      if (!isMatch(string)) error("literal string expected");
+      if (isMatch(string)) return true;
+      return error("literal string expected");
    }
 
    //! Match a integer literal
-   void match(int& value)
+   bool match(int& value)
    {
-      if (!isMatch(value)) error("literal integer expected");
+      if (isMatch(value)) return true;
+      return error("literal integer expected");
    }
 
    //! Match a floating point literal
-   void match(double& value)
+   bool match(double& value)
    {
-      if (!isMatch(value)) error("literal float expected");
+      if (isMatch(value)) return true;
+      return error("literal float expected");
    }
 
    //! Report a file error
-   void error(const char* format, ...)
+   bool error(const char* format, ...)
    {
       fprintf(stderr, "\nERROR %s:%u - ", getSource().c_str(), line_no);
 
@@ -252,7 +284,7 @@ public:
 
       fprintf(stderr, "\n");
 
-      exit(1);
+      return false;
    }
 
    //! Return the next non-whitespace character from the input stream
@@ -305,15 +337,26 @@ private:
 };
 
 
+namespace LEX {
+
 class File : public Lex
 {
 public:
-   File(const std::string& filename)
-      : file(filename.c_str(), "r")
+   File(const char* filename)
+      : file(filename, "r")
    {
       if (!file.isOpen())
       {
-         error("Failed to open file '%s'", filename.c_str());
+         error("Failed to open file '%s'", filename);
+      }
+   }
+
+   File(const char* filename, const char* ext)
+      : file(filename, ext, "r")
+   {
+      if (!file.isOpen())
+      {
+         error("Failed to open file '%s.%s'", filename, ext);
       }
    }
 
@@ -352,6 +395,7 @@ private:
    std::string  string{};
 };
 
+} // namsepace LEX
 
 } // namsepace STB
 

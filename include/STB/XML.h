@@ -45,7 +45,7 @@ public:
 
    const std::string& getValue() const { return value; }
 
-   void parse(STB::Lex& lex)
+   void parse(Lex& lex)
    {
       lex.match('=');
       lex.match(value);
@@ -82,7 +82,7 @@ public:
    template <typename TYPE>
    void match(const std::string& attr_name, TYPE& value) const
    {
-       STB::String(operator[](attr_name)).match(value);
+       LEX::String(operator[](attr_name)).match(value);
    }
 
    void write(FILE* fp, unsigned indent=0) const
@@ -125,7 +125,7 @@ public:
    }
 
 protected:
-   void parse(STB::Lex& lex)
+   void parse(Lex& lex)
    {
       lex.matchIdent(name);
 
@@ -169,7 +169,7 @@ class Document : public Element
 public:
    Document(const std::string& filename, bool require_prologue = false)
    {
-      STB::File lex(filename);
+      LEX::File lex(filename.c_str());
       parseDocument(lex, require_prologue);
    }
 
@@ -212,7 +212,7 @@ public:
    }
 
 private:
-   void parseXMLDecl(STB::Lex& lex, bool require_prolog)
+   void parseXMLDecl(Lex& lex, bool require_prolog)
    {
       if (require_prolog)
       {
@@ -242,7 +242,7 @@ private:
       lex.match("?>");
    }
 
-   void parseProlog(STB::Lex& lex, bool require_prolog)
+   void parseProlog(Lex& lex, bool require_prolog)
    {
       parseXMLDecl(lex, require_prolog);
 
@@ -264,7 +264,7 @@ private:
       }
    }
 
-   void parseDocument(STB::Lex& lex, bool require_prolog)
+   void parseDocument(Lex& lex, bool require_prolog)
    {
       parseProlog(lex, require_prolog);
 
