@@ -24,6 +24,7 @@
 #define STB_VECTOR2_H
 
 #include <cassert>
+#include <cstddef>
 #include <cmath>
 
 namespace STB {
