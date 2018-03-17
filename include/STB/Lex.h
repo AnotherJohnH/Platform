@@ -219,6 +219,8 @@ public:
    //! Try and match a literal float
    bool isMatch(double& value)
    {
+      value = 0.0;
+
       int  sign = +1;
       char ch   = first();
 
