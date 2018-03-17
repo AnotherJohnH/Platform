@@ -85,6 +85,22 @@ public:
        LEX::String(operator[](attr_name)).match(value);
    }
 
+   template <typename TYPE>
+   void matchSigned(const std::string& attr_name, TYPE& value) const
+   {
+       int64_t value64;
+       LEX::String(operator[](attr_name)).matchSigned(value64);
+       value = value64;
+   }
+
+   template <typename TYPE>
+   void matchUnsigned(const std::string& attr_name, TYPE& value) const
+   {
+       uint64_t value64;
+       LEX::String(operator[](attr_name)).matchUnsigned(value64);
+       value = value64;
+   }
+
    void write(FILE* fp, unsigned indent=0) const
    {
       for(unsigned i=0; i<indent; i++)
