@@ -115,24 +115,72 @@ public:
    //! Try and match a literal unsigned integer
    bool isMatch(unsigned int& value)
    {
-      char     ch   = first();
-      unsigned base = 10;
+      char     ch = first();
+      unsigned base;
 
-           if (isdigit(ch)) { value = ch - '0';     }
-      else                  { return false;         }
+      if (ch == '0')
+      {
+         sink();
 
-      sink();
+         ch = next();
+         sink();
+
+         if (isdigit(ch))
+         {
+            value = ch - '0';
+            base = 8;
+         }
+         else if ((ch == 'b') || (ch == 'B'))
+         {
+            value = 0;
+            base = 2;
+         }
+         else if ((ch == 'x') || (ch == 'X'))
+         {
+            value = 0;
+            base = 16;
+         }
+         else
+         {
+            unsink(ch);
+            unsink('0');
+            return false;
+         }
+      }
+      else if (isdigit(ch))
+      {
+         sink();
+         value = ch - '0';
+         base = 10;
+      }
+      else
+      {
+         return false;
+      }
 
       while(!isEof())
       {
+         unsigned digit;
          ch = next();
          if (!isdigit(ch))
          {
-            break;
+            if (isupper(ch))
+            {
+               digit = ch - 'A' + 10;
+            }
+            else
+            {
+               digit = ch - 'a' + 10;
+            }
+            if (digit >= base) break;
+         }
+         else
+         {
+            digit = ch - '0';
          }
 
          sink();
-         value = value * base + ch - '0';
+         value = value * base + digit;
       }
 
       return true;
