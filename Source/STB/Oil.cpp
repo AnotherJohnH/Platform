@@ -21,10 +21,9 @@
 //------------------------------------------------------------------------------
 
 #include "PLT/File.h"
-#include "STB/SmallLex.h"
+#include "STB/Lex.h"
 #include "STB/Oil.h"
 
-#include <cstdlib>
 
 namespace STB {
 
@@ -112,7 +111,7 @@ void ClassBase::write(void* that) const
 }
 
 
-bool Member::read(SmallLex& lex, void* that) const
+bool Member::read(Lex& lex, void* that) const
 {
    if (elements > 1)
    {
@@ -131,11 +130,11 @@ bool Member::read(SmallLex& lex, void* that) const
       switch(type)
       {
       case BOOL:
-         if (lex.tryMatch("true"))
+         if (lex.isMatch("true"))
          {
             *(bool*)data = true;
          }
-         else if (lex.tryMatch("false"))
+         else if (lex.isMatch("false"))
          {
             *(bool*)data = false;
          }
@@ -147,8 +146,8 @@ bool Member::read(SmallLex& lex, void* that) const
 
       case SIGNED:
       {
-         if (!lex.matchSigned()) return false;
-         int64_t value = strtoll(lex.getToken(), nullptr, 0);
+         int64_t value = 0;
+         if (!lex.match(value)) return false;
          int64_t unused = value >> (size*8);
          if ((unused != 0) || (unused != -1))
          {
@@ -167,8 +166,8 @@ bool Member::read(SmallLex& lex, void* that) const
       case ENUM:
       case UNSIGNED:
       {
-         if (!lex.matchUnsigned()) return false;
-         uint64_t value = strtoll(lex.getToken(), nullptr, 0);
+         uint64_t value = 0;
+         if (!lex.match(value)) return false;
          uint64_t unused = value >> (size*8);
          if (unused != 0)
          {
@@ -186,8 +185,8 @@ bool Member::read(SmallLex& lex, void* that) const
 
       case FLOAT:
       {
-         if (!lex.matchFloat()) return false;
-         double value = atof(lex.getToken());
+         double value;
+         if (!lex.match(value)) return false;
          switch(size)
          {
          case 4: *(float*)data = float(value); break;
@@ -206,18 +205,19 @@ bool Member::read(SmallLex& lex, void* that) const
    return true;
 }
 
-bool ClassBase::read(SmallLex& lex, void* that) const
+bool ClassBase::read(Lex& lex, void* that) const
 {
    if (!lex.match(name)) return false;
 
    if (!lex.match('{')) return false;
 
-   while(!lex.tryMatch('}'))
+   while(!lex.isMatch('}'))
    {
-      if (!lex.matchIdent()) return false;
+      std::string ident;
+      if (!lex.matchIdent(ident)) return false;
 
-      const Member* member = findMember(lex.getToken());
-      if (member == nullptr) return lex.error("bad member name '%s'", lex.getToken());
+      const Member* member = findMember(ident.c_str());
+      if (member == nullptr) return lex.error("bad member name '%s'", ident.c_str());
 
       if (!lex.match('=')) return false;
 
@@ -231,7 +231,7 @@ bool ClassBase::read(SmallLex& lex, void* that) const
 
 bool ClassBase::read(void* that) const
 {
-   SmallLex lex(name, "oil");
+   LEX::File lex(name, "oil");
 
    return read(lex, that);
 }

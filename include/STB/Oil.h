@@ -33,7 +33,7 @@ namespace PLT { class File; }
 
 namespace STB {
 
-class SmallLex;
+class Lex;
 
 namespace OIL {
 
@@ -80,7 +80,7 @@ public:
    void write(PLT::File& file, void* that) const;
 
    //! Read a data member value from a file stream
-   bool read(SmallLex& lex, void* that) const;
+   bool read(Lex& lex, void* that) const;
 
 private:
    Type        type;     //!< Type
@@ -200,7 +200,7 @@ protected:
 private:
    void write(PLT::File& file, void* that) const;
 
-   bool read(SmallLex& lex, void* that) const;
+   bool read(Lex& lex, void* that) const;
 
    Member* findMember(const char* name)
    {
