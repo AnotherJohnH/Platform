@@ -92,7 +92,7 @@ public:
       }
    }
 
-   //! Try and match a literal string
+   //! Try and match a string literal
    bool isMatch(std::string& value)
    {
       char ch = first();
@@ -112,8 +112,9 @@ public:
       }
    }
 
-   //! Try and match a literal unsigned integer
-   bool isMatchUnsigned(uint64_t& value)
+   //! Try and match a unsigned integer literal
+   template <typename TYPE>
+   bool isMatchUnsigned(TYPE& value)
    {
       char     ch = first();
       unsigned base;
@@ -156,11 +157,11 @@ public:
 
       while(!isEof())
       {
+         sink();
+
          unsigned digit;
 
-         sink();
          ch = next();
-
          if (!isdigit(ch))
          {
             if (isupper(ch))
@@ -178,6 +179,7 @@ public:
             digit = ch - '0';
          }
 
+         // TODO check for overflow
          value = value * base + digit;
       }
 
@@ -185,7 +187,8 @@ public:
    }
 
    //! Try and match a literal signed integer
-   bool isMatchSigned(int64_t& value)
+   template <typename TYPE>
+   bool isMatchSigned(TYPE& value)
    {
       int      sign = +1;
       char     ch   = first();
@@ -196,17 +199,17 @@ public:
       else if (isdigit(ch)) { value = ch - '0';     }
       else                  { return false;         }
 
-      sink();
-
       while(!isEof())
       {
+         sink();
+
          ch = next();
          if (!isdigit(ch))
          {
             break;
          }
 
-         sink();
+         // TODO check for overflow
          value = value * base + ch - '0';
       }
 
@@ -215,7 +218,8 @@ public:
    }
 
    //! Try and match a literal float
-   bool isMatch(double& value)
+   template <typename TYPE>
+   bool isMatchFloat(TYPE& value)
    {
       value = 0.0;
 
@@ -227,17 +231,16 @@ public:
       else if (isdigit(ch)) { value = ch - '0';       }
       else                  { return false;           }
 
-      sink();
-
       double denominator = 1.0;
 
       while(!isEof())
       {
+         sink();
+
          ch = next();
          if (ch == '.')
          {
             denominator = 10.0;
-            sink();
          }
          else if (!isdigit(ch))
          {
@@ -245,7 +248,6 @@ public:
          }
          else
          {
-            sink();
             if (denominator == 1.0)
             {
                value = value * 10.0 + ch - '0';
@@ -264,7 +266,7 @@ public:
       {
          sink();
 
-         int64_t exp;
+         int exp;
 
          if (isMatchSigned(exp))
          {
@@ -308,24 +310,27 @@ public:
    }
 
    //! Match a signed integer literal
-   bool matchSigned(int64_t& value)
+   template <typename TYPE>
+   bool matchSigned(TYPE& value)
    {
       if (isMatchSigned(value)) return true;
       return error("integer expected");
    }
 
    //! Match an unsigned integer literal
-   bool matchUnsigned(uint64_t& value)
+   template <typename TYPE>
+   bool matchUnsigned(TYPE& value)
    {
       if (isMatchUnsigned(value)) return true;
       return error("unsigned integer expected");
    }
 
    //! Match a floating point literal
-   bool match(double& value)
+   template <typename TYPE>
+   bool matchFloat(TYPE& value)
    {
-      if (isMatch(value)) return true;
-      return error("literal float expected");
+      if (isMatchFloat(value)) return true;
+      return error("floating point literal expected");
    }
 
    //! Report a file error

@@ -88,17 +88,19 @@ public:
    template <typename TYPE>
    void matchSigned(const std::string& attr_name, TYPE& value) const
    {
-       int64_t value64;
-       LEX::String(operator[](attr_name)).matchSigned(value64);
-       value = value64;
+       LEX::String(operator[](attr_name)).matchSigned(value);
    }
 
    template <typename TYPE>
    void matchUnsigned(const std::string& attr_name, TYPE& value) const
    {
-       uint64_t value64;
-       LEX::String(operator[](attr_name)).matchUnsigned(value64);
-       value = value64;
+       LEX::String(operator[](attr_name)).matchUnsigned(value);
+   }
+
+   template <typename TYPE>
+   void matchFloat(const std::string& attr_name, TYPE& value) const
+   {
+       LEX::String(operator[](attr_name)).matchFloat(value);
    }
 
    void write(FILE* fp, unsigned indent=0) const
