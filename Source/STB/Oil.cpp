@@ -185,8 +185,8 @@ bool Member::read(Lex& lex, void* that) const
 
       case FLOAT:
       {
-         double value;
-         if (!lex.match(value)) return false;
+         double value = 0.0;
+         if (!lex.matchFloat(value)) return false;
          switch(size)
          {
          case 4: *(float*)data = float(value); break;
