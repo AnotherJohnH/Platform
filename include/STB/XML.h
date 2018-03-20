@@ -188,6 +188,9 @@ public:
    Document(const std::string& filename, bool require_prologue = false)
    {
       LEX::File lex(filename.c_str());
+
+      lex.setSpecialIdentChar("_-:");
+
       parseDocument(lex, require_prologue);
    }
 

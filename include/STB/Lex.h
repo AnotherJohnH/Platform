@@ -85,7 +85,13 @@ public:
       while(true)
       {
          ch = next();
-         if (!isalnum(ch) && (ch != '_') && (ch != ':') && (ch != '-')) return true;
+         if (!isalnum(ch))
+         {
+            if (special_ident_char.find(ch) == std::string::npos)
+            {
+               return true;
+            }
+         }
 
          sink();
          ident.push_back(ch);
@@ -390,6 +396,11 @@ public:
       buffer.push_back(ch);
    }
 
+   void setSpecialIdentChar(const std::string special_ident_char_)
+   {
+      special_ident_char = special_ident_char_;
+   }
+
    virtual std::string getSource() const = 0;
    virtual bool        isEof() const = 0;
    virtual bool        getChar(char& ch) = 0;
@@ -401,6 +412,7 @@ protected:
 
 private:
    std::vector<char>  buffer;
+   std::string        special_ident_char{"_"};
 };
 
 
