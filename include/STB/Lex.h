@@ -336,7 +336,12 @@ public:
    //! Report a file error
    bool error(const char* format, ...)
    {
-      fprintf(stderr, "\nERROR %s:%u - ", getSource().c_str(), line_no);
+      fprintf(stderr, "ERROR");
+      if (line_no != 0)
+      {
+          fprintf(stderr, " %s:%u", getSource().c_str(), line_no);
+      }
+      fprintf(stderr, " - ");
 
       va_list ap;
       va_start(ap, format);
@@ -385,15 +390,16 @@ public:
       buffer.push_back(ch);
    }
 
-protected:
-   Lex() {}
-
    virtual std::string getSource() const = 0;
    virtual bool        isEof() const = 0;
    virtual bool        getChar(char& ch) = 0;
 
+protected:
+   Lex() {}
+
+   unsigned           line_no{0};
+
 private:
-   unsigned           line_no{1};
    std::vector<char>  buffer;
 };
 
@@ -410,6 +416,10 @@ public:
       {
          error("Failed to open file '%s'", filename);
       }
+      else
+      {
+         line_no = 1;
+      }
    }
 
    File(const char* filename, const char* ext)
@@ -418,6 +428,10 @@ public:
       if (!file.isOpen())
       {
          error("Failed to open file '%s.%s'", filename, ext);
+      }
+      else
+      {
+         line_no = 1;
       }
    }
 
