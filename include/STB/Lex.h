@@ -343,7 +343,7 @@ public:
    bool error(const char* format, ...)
    {
       fprintf(stderr, "ERROR");
-      if (line_no != 0)
+      if ((line_no != 0) && !isEof())
       {
           fprintf(stderr, " %s:%u", getSource().c_str(), line_no);
       }
