@@ -374,7 +374,7 @@ public:
 
          if (!isspace(ch))
          {
-            if (isMatch(comment_intro.c_str()))
+            if (!comment_intro.empty() && isMatch(comment_intro.c_str()))
             {
                while(true)
                {

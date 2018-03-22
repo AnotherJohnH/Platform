@@ -48,7 +48,7 @@ public:
    void parse(Lex& lex)
    {
       lex.match('=');
-      lex.match(value);
+      lex.matchString(value);
    }
 
 private:
@@ -190,6 +190,7 @@ public:
       LEX::File lex(filename.c_str());
 
       lex.setSpecialIdentChar("_-:");
+      // lex.setComment("<!--", "-->"); TODO seems broken
 
       parseDocument(lex, require_prologue);
    }
@@ -246,18 +247,18 @@ private:
 
       lex.match("version");
       lex.match('=');
-      lex.match(version);
+      lex.matchString(version);
 
       if (lex.isMatch("encoding"))
       {
          lex.match('=');
-         lex.match(encoding);
+         lex.matchString(encoding);
       }
 
       if (lex.isMatch("standalone"))
       {
          lex.match('=');
-         lex.match(standalone);
+         lex.matchString(standalone);
       }
 
       lex.match("?>");
@@ -273,12 +274,12 @@ private:
 
          if (lex.isMatch("SYSTEM"))
          {
-            lex.match(system_literal);
+            lex.matchString(system_literal);
          }
          else if (lex.isMatch("PUBLIC"))
          {
-            lex.match(public_literal);
-            lex.match(system_literal);
+            lex.matchString(public_literal);
+            lex.matchString(system_literal);
          }
 
          lex.match('>');
