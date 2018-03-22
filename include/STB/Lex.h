@@ -99,7 +99,7 @@ public:
    }
 
    //! Try and match a string literal
-   bool isMatch(std::string& value)
+   bool isMatchString(std::string& value)
    {
       char ch = first();
       if (ch != '"') return false;
@@ -309,9 +309,9 @@ public:
    }
 
    //! Match a literal string
-   bool match(std::string& string)
+   bool matchString(std::string& string)
    {
-      if (isMatch(string)) return true;
+      if (isMatchString(string)) return true;
       return error("literal string expected");
    }
 
@@ -362,10 +362,38 @@ public:
    //! Return the next non-whitespace character from the input stream
    char first()
    {
+      static bool recursion_trap = false;
+
+      if (recursion_trap) return next();
+
+      recursion_trap = true;
+
       while(true)
       {
          char ch = next();
-         if (!isspace(ch)) return ch;
+
+         if (!isspace(ch))
+         {
+            if (isMatch(comment_intro.c_str()))
+            {
+               while(true)
+               {
+                  if (isMatch(comment_term.c_str()))
+                  {
+                     break;
+                  }
+
+                  (void) next();
+                  sink();
+               }
+            }
+            else
+            {
+               recursion_trap = false;
+               return ch;
+            }
+         }
+
          sink();
       }
    }
@@ -401,6 +429,12 @@ public:
       special_ident_char = special_ident_char_;
    }
 
+   void setComment(const std::string intro_, const std::string term_)
+   {
+      comment_intro = intro_;
+      comment_term  = term_;
+   }
+
    virtual std::string getSource() const = 0;
    virtual bool        isEof() const = 0;
    virtual bool        getChar(char& ch) = 0;
@@ -413,6 +447,8 @@ protected:
 private:
    std::vector<char>  buffer;
    std::string        special_ident_char{"_"};
+   std::string        comment_intro{};
+   std::string        comment_term{};
 };
 
 
