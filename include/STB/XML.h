@@ -190,7 +190,7 @@ public:
       LEX::File lex(filename.c_str());
 
       lex.setSpecialIdentChar("_-:");
-      // lex.setComment("<!--", "-->"); TODO seems broken
+      lex.setComment("<!--", "-->");
 
       parseDocument(lex, require_prologue);
    }

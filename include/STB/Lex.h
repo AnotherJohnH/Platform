@@ -58,9 +58,9 @@ public:
       {
          if (ch != token[i])
          {
-            for(unsigned j=0; j<i; j++)
+            for(unsigned j=i; j>0; j--)
             {
-               unsink(token[j]);
+               unsink(token[j-1]);
             }
 
             return false;
@@ -420,7 +420,7 @@ public:
       buffer.pop_back();
    }
 
-   //!
+   //! Return a character to the input stream
    void unsink(char ch)
    {
       buffer.push_back(ch);
