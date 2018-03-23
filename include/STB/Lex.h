@@ -23,7 +23,6 @@
 #ifndef STB_LEX_H
 #define STB_LEX_H
 
-#include <vector>
 #include <string>
 #include <cstdint>
 #include <cstdarg>
@@ -372,8 +371,13 @@ public:
       {
          char ch = next();
 
-         if (!isspace(ch))
+         if (isspace(ch))
          {
+             sink();
+         }
+         else
+         {
+            // Not white space
             if (!comment_intro.empty() && isMatch(comment_intro.c_str()))
             {
                while(true)
@@ -393,8 +397,6 @@ public:
                return ch;
             }
          }
-
-         sink();
       }
    }
 
@@ -445,10 +447,10 @@ protected:
    unsigned           line_no{0};
 
 private:
-   std::vector<char>  buffer;
-   std::string        special_ident_char{"_"};
-   std::string        comment_intro{};
-   std::string        comment_term{};
+   std::string buffer;
+   std::string special_ident_char{"_"};
+   std::string comment_intro{};
+   std::string comment_term{};
 };
 
 
