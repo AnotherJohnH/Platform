@@ -28,6 +28,7 @@
 #include <cstdarg>
 #include <cctype>
 #include <cmath>
+#include <vector>
 
 #include "PLT/File.h"
 
@@ -52,6 +53,8 @@ public:
    //! Try and match a string
    bool isMatch(const char* token)
    {
+      if (token == nullptr) return false;
+
       char ch = first();
 
       for(unsigned i=0; token[i] != '\0'; i++)
@@ -378,7 +381,7 @@ public:
          else
          {
             // Not white space
-            if (!comment_one_line_intro.empty() && isMatch(comment_one_line_intro.c_str()))
+            if (isMatch(comment_one_line_intro.c_str()))
             {
                while(true)
                {
@@ -391,7 +394,7 @@ public:
                   sink();
                }
             }
-            else if (!comment_intro.empty() && isMatch(comment_intro.c_str()))
+            else if (isMatch(comment_intro.c_str()))
             {
                while(true)
                {
@@ -403,6 +406,20 @@ public:
                   (void) next();
                   sink();
                }
+            }
+            else if (isMatch(include_intro.c_str()))
+            {
+               while(true)
+               {
+                  ch = next();
+                  if (!isspace(ch)) break;
+                  sink();
+               }
+
+               std::string filename;
+               matchString(filename);
+
+               openInclude(filename.c_str());
             }
             else
             {
@@ -461,8 +478,9 @@ public:
    }
 
    virtual std::string getSource() const = 0;
-   virtual bool        isEof() const = 0;
+   virtual bool        isEof() = 0;
    virtual bool        getChar(char& ch) = 0;
+   virtual void        openInclude(const char* filename) {}
 
 protected:
    Lex() {}
@@ -484,40 +502,91 @@ namespace LEX {
 class File : public Lex
 {
 public:
-   File(const char* filename)
-      : file(filename, "r")
+   File(const char* filename, const char* ext = nullptr)
    {
-      if (!file.isOpen())
-      {
-         error("Failed to open file '%s'", filename);
-      }
-      else
-      {
-         line_no = 1;
-      }
+      open(filename, ext);
    }
 
-   File(const char* filename, const char* ext)
-      : file(filename, ext, "r")
+   ~File()
    {
-      if (!file.isOpen())
+      while(!file_stack.empty())
       {
-         error("Failed to open file '%s.%s'", filename, ext);
-      }
-      else
-      {
-         line_no = 1;
+         close();
       }
    }
 
    // Implement Lex
 
-   virtual std::string getSource() const override { return file.getFilename(); }
-   virtual bool        isEof() const override     { return file.isEof(); }
-   virtual bool        getChar(char& ch) override { return file.getChar(ch); }
+   virtual std::string getSource() const override
+   {
+      if (file_stack.empty()) return "";
+      const PLT::File* file = file_stack.back();
+      return file->getFilename();
+   }
+
+   virtual bool getChar(char& ch) override
+   {
+      if (file_stack.empty()) return false;
+      PLT::File* file = file_stack.back();
+      if (file->getChar(ch))
+      {
+         return true;
+      }
+      close();
+      return getChar(ch);
+   }
+
+   virtual bool isEof() override
+   {
+      if (file_stack.empty()) return true;
+      const PLT::File* file = file_stack.back();
+      if (!file->isEof())
+      {
+         return false;
+      }
+      close();
+      return isEof();
+   }
+
+   virtual void openInclude(const char* filename) override
+   {
+      open(filename, nullptr);
+   }
 
 private:
-   PLT::File    file;
+   std::vector<PLT::File*> file_stack;
+   std::vector<unsigned>   line_no_stack;
+
+   void open(const char* filename, const char* ext)
+   {
+      line_no_stack.push_back(line_no);
+
+      if (ext != nullptr)
+         file_stack.push_back(new PLT::File(filename, ext, "r"));
+      else
+         file_stack.push_back(new PLT::File(filename, "r"));
+
+      const PLT::File* file = file_stack.back();
+
+      if (!file->isOpen())
+      {
+         error("Failed to open file '%s'", filename);
+         close();
+      }
+      else
+      {
+         line_no = 1;
+      }
+   }
+
+   void close()
+   {
+      delete file_stack.back();;
+      file_stack.pop_back();
+
+      line_no = line_no_stack.back();
+      line_no_stack.pop_back();
+   }
 };
 
 
@@ -531,7 +600,7 @@ public:
    // Implement Lex
 
    virtual std::string getSource() const override { return ""; }
-   virtual bool        isEof() const override     { return pos >= string.size(); }
+   virtual bool        isEof() override           { return pos >= string.size(); }
 
    virtual bool getChar(char& ch) override
    {
