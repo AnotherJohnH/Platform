@@ -378,7 +378,20 @@ public:
          else
          {
             // Not white space
-            if (!comment_intro.empty() && isMatch(comment_intro.c_str()))
+            if (!comment_one_line_intro.empty() && isMatch(comment_one_line_intro.c_str()))
+            {
+               while(true)
+               {
+                  if (isMatch('\n'))
+                  {
+                     break;
+                  }
+
+                  (void) next();
+                  sink();
+               }
+            }
+            else if (!comment_intro.empty() && isMatch(comment_intro.c_str()))
             {
                while(true)
                {
@@ -431,10 +444,20 @@ public:
       special_ident_char = special_ident_char_;
    }
 
+   void setOneLineComment(const std::string intro_)
+   {
+      comment_one_line_intro = intro_;
+   }
+
    void setComment(const std::string intro_, const std::string term_)
    {
       comment_intro = intro_;
       comment_term  = term_;
+   }
+
+   void setInclude(const std::string intro_)
+   {
+      include_intro = intro_;
    }
 
    virtual std::string getSource() const = 0;
@@ -449,8 +472,10 @@ protected:
 private:
    std::string buffer;
    std::string special_ident_char{"_"};
+   std::string comment_one_line_intro{};
    std::string comment_intro{};
    std::string comment_term{};
+   std::string include_intro{};
 };
 
 
