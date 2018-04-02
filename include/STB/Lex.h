@@ -53,7 +53,7 @@ public:
    //! Try and match a string
    bool isMatch(const char* token)
    {
-      if (token == nullptr) return false;
+      if (token == nullptr || (token[0] == '\0')) return false;
 
       char ch = first();
 
