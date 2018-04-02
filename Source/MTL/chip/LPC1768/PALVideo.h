@@ -80,21 +80,21 @@ private:
    static const unsigned H_IMAGE       = PAL_IMAGE_START_NS * TICKS_PER_US / 1000;
    static const unsigned H_NO_IMAGE    = H_LINE_PERIOD + 1;
 
-   enum LineType
+   enum class LineType : uint8_t
    {
-      LINE_FIRST_SHORT_SYNC  = 0,
-      LINE_LONG_SYNC         = 1,
-      LINE_SECOND_SHORT_SYNC = 2,
-      LINE_TOP_BORDER        = 3,
-      LINE_IMAGE             = 4,
-      LINE_BOTTOM_BORDER     = 5
+      FIRST_SHORT_SYNC  = 0,
+      LONG_SYNC         = 1,
+      SECOND_SHORT_SYNC = 2,
+      TOP_BORDER        = 3,
+      IMAGE             = 4,
+      BOTTOM_BORDER     = 5
    };
 
    PWM                pwm;
    PixelGen           pixel_gen;
 
    volatile uint8_t   field{0};
-   volatile uint8_t   line_type{LINE_FIRST_SHORT_SYNC};
+   volatile LineType  line_type{LineType::FIRST_SHORT_SYNC};
    volatile uint16_t  line_counter{1};
 
    uint16_t           v_top;
@@ -111,7 +111,7 @@ private:
       if (--line_counter == 0)
       {
          pwm.setRise(H_LONG_SYNC);
-         line_type    = LINE_LONG_SYNC;
+         line_type    = LineType::LONG_SYNC;
          line_counter = PAL_LONG_SYNC_LINES;
       }
    }
@@ -121,7 +121,7 @@ private:
       if (--line_counter == 0)
       {
          pwm.setRise(H_SHORT_SYNC);
-         line_type    = LINE_SECOND_SHORT_SYNC;
+         line_type    = LineType::SECOND_SHORT_SYNC;
          line_counter = PAL_SHORT_SYNC_LINES - field;
       }
    }
@@ -132,7 +132,7 @@ private:
       {
          pwm.setRise(H_LINE_SYNC);
          pwm.setPeriod(H_LINE_PERIOD);
-         line_type    = LINE_TOP_BORDER;
+         line_type    = LineType::TOP_BORDER;
          line_counter = v_top;
       }
    }
@@ -141,7 +141,7 @@ private:
    {
       if (--line_counter == 0)
       {
-         line_type    = LINE_IMAGE;
+         line_type    = LineType::IMAGE;
          line_counter = v_image;
          pixel_gen.startField(field ^ 1);
          pwm.setIRQ<1>(H_IMAGE + h_adjust);
@@ -154,7 +154,7 @@ private:
       if (--line_counter == 0)
       {
          pwm.setIRQ<1>(H_NO_IMAGE);
-         line_type    = LINE_BOTTOM_BORDER;
+         line_type    = LineType::BOTTOM_BORDER;
          line_counter = v_bottom;
       }
    }
@@ -165,7 +165,7 @@ private:
       {
          pwm.setRise(H_SHORT_SYNC);
          pwm.setPeriod(H_SYNC_PERIOD);
-         line_type    = LINE_FIRST_SHORT_SYNC;
+         line_type    = LineType::FIRST_SHORT_SYNC;
          line_counter = PAL_SHORT_SYNC_LINES + field;
          field = field ^ 1;
          PALVideo_FieldSync();
@@ -176,12 +176,12 @@ private:
    {
       switch(line_type)
       {
-      case LINE_FIRST_SHORT_SYNC:  lineFirstShortSync();  break;
-      case LINE_LONG_SYNC:         lineLongSync();        break;
-      case LINE_SECOND_SHORT_SYNC: lineSecondShortSync(); break;
-      case LINE_TOP_BORDER:        lineTopBorder();       break;
-      case LINE_IMAGE:             lineImage();           break;
-      case LINE_BOTTOM_BORDER:     lineBottomBorder();    break;
+      case LineType::FIRST_SHORT_SYNC:  lineFirstShortSync();  break;
+      case LineType::LONG_SYNC:         lineLongSync();        break;
+      case LineType::SECOND_SHORT_SYNC: lineSecondShortSync(); break;
+      case LineType::TOP_BORDER:        lineTopBorder();       break;
+      case LineType::IMAGE:             lineImage();           break;
+      case LineType::BOTTOM_BORDER:     lineBottomBorder();    break;
       default: break;
       }
    }

@@ -26,6 +26,7 @@
 #include <string>
 #include <cstdint>
 #include <cstdarg>
+#include <cstdio>
 #include <cctype>
 #include <cmath>
 #include <vector>

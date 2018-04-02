@@ -35,6 +35,7 @@ extern "C" {
 double fabs(double);
 double sin(double);
 double cos(double);
+double pow(double, double);
 
 #ifdef __cplusplus
 }

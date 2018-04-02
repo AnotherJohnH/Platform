@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+/*------------------------------------------------------------------------------
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,62 +18,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//------------------------------------------------------------------------------
+//----------------------------------------------------------------------------*/
 
-//! \file string
+//! \file atoi.cpp
 //! \brief tiny C library implementation
 
-#ifndef STRING
-#define STRING
+#include <stdlib.h>
+#include <cassert>
+#include "strto.h"
 
-#include <cstddef>
-
-namespace std {
-
-//! TODO this is just a stub
-class string
+double atof(const char* s)
 {
-public:
-   static const size_t npos = size_t(-1);
-
-   string() {}
-
-   string(const char* s) {}
-
-   string(const std::string& str) {}
-
-   bool empty() const { return true; }
-
-   size_t size() { return 0; }
-
-   char operator[](size_t index) { return '\0'; }
-
-   char back() const { return '\0'; }
-
-   void pop_back() {}
-
-   void push_back(char ch) {}
-
-   char operator=(char ch)
-   {
-      return ch;
-   }
-
-   void operator+=(char ch)
-   {
-   }
-
-   const char* c_str() const
-   {
-      return nullptr;
-   }
-
-   size_t find(char ch, size_t pos = 0) const
-   {
-      return npos;
-   }
-};
-
-} // namespace std
-
-#endif
+   assert(!"no implementation");
+   return 0.0;
+}

@@ -42,7 +42,7 @@ private:
    PLT::Frame frame;
 
    // Implement GUI::Canvas
-   virtual STB::Colour canvasGetPixel(signed x, signed y) const override
+   virtual STB::Colour canvasGetPixel(int32_t x, int32_t y) const override
    {
       return frame.getPixel(x, y);
    }
@@ -54,12 +54,12 @@ protected:
    }
 
 private:
-   virtual void canvasResize(unsigned width, unsigned height) override
+   virtual void canvasResize(uint32_t width, uint32_t height) override
    {
       frame.resize(width, height);
    }
 
-   virtual void canvasRefresh(signed x1, signed y1, signed x2, signed y2) override
+   virtual void canvasRefresh(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override
    {
       frame.refresh();
    }
@@ -69,20 +69,20 @@ private:
       frame.clear(colour);
    }
 
-   virtual void canvasPoint(STB::Colour colour, signed x, signed y) override
+   virtual void canvasPoint(STB::Colour colour, int32_t x, int32_t y) override
    {
       frame.point(colour, x, y);
    }
 
-   virtual void canvasSpan(STB::Colour colour, signed x1, signed y, signed x2) override
+   virtual void canvasSpan(STB::Colour colour, int32_t x1, int32_t y, int32_t x2) override
    {
       frame.span(colour, x1, y, x2);
    }
 
    virtual void canvasBlit(const Canvas& source,
-                           unsigned x, unsigned y,
-                           unsigned w, unsigned h,
-                           unsigned src_x, unsigned src_y) override
+                           uint32_t x, uint32_t y,
+                           uint32_t w, uint32_t h,
+                           uint32_t src_x, uint32_t src_y) override
    {
       const PLT::Image* image = source.canvasGetImage();
       if (image == nullptr)
