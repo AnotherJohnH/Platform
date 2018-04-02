@@ -56,8 +56,8 @@ private:
 
    static const uint8_t RGB_NRM = 0xC0;
 
-   enum Flash     { OFF, SLOW, FAST };
-   enum Intensity { NORMAL, BOLD, FAINT };
+   enum class Flash     : uint8_t { OFF, SLOW, FAST };
+   enum class Intensity : uint8_t { NORMAL, BOLD, FAINT };
 
    class Attr
    {
@@ -86,14 +86,14 @@ private:
 
       void reset()
       {
-         setIntensity(NORMAL);
+         setIntensity(Intensity::NORMAL);
          setItalic(false);
          setUnderline(false);
          setInvert(false);
          setFont(0);
          setFgCol(8);
          setBgCol(8);
-         setFlash(OFF);
+         setFlash(Flash::OFF);
       }
 
       Intensity getIntensity() const { return Intensity(unpack( 1,  0)); }
@@ -103,18 +103,18 @@ private:
       unsigned  getFont()      const { return           unpack( 6,  5);  }
       unsigned  getFgCol()     const { return           fg;              }
       unsigned  getBgCol()     const { return           bg;              }
-      Flash     getFlash()     const { return           unpack(15, 15) ? SLOW : OFF; }
+      Flash     getFlash()     const { return           unpack(15, 15) ? Flash::SLOW : Flash::OFF; }
 
-      bool isBold()   const { return getIntensity() == BOLD; }
-      bool isNormal() const { return getIntensity() == NORMAL; }
-      bool isFaint()  const { return getIntensity() == FAINT; }
+      bool isBold()   const { return getIntensity() == Intensity::BOLD; }
+      bool isNormal() const { return getIntensity() == Intensity::NORMAL; }
+      bool isFaint()  const { return getIntensity() == Intensity::FAINT; }
 
       void setIntensity(Intensity intensity) { pack( 1,  0, unsigned(intensity)); }
       void setItalic(bool on)                { pack( 2,  2, on ? 1 : 0); }
       void setUnderline(bool on)             { pack( 3,  3, on ? 1 : 0); }
       void setInvert(bool on)                { pack( 4,  4, on ? 1 : 0); }
       void setFont(unsigned font)            { pack( 6,  5, font); }
-      void setFlash(Flash flash)             { pack( 7,  7, flash != OFF ? 1 : 0); }
+      void setFlash(Flash flash)             { pack( 7,  7, flash != Flash::OFF ? 1 : 0); }
       void setFgCol(unsigned col)            { fg = col; }
       void setBgCol(unsigned col)            { bg = col; }
 
@@ -330,9 +330,9 @@ private:
       {
       case  0: attr.reset();              break;
 
-      case 22: attr.setIntensity(NORMAL); break;
-      case  1: attr.setIntensity(BOLD);   break;
-      case  2: attr.setIntensity(FAINT);  break;
+      case 22: attr.setIntensity(Intensity::NORMAL); break;
+      case  1: attr.setIntensity(Intensity::BOLD);   break;
+      case  2: attr.setIntensity(Intensity::FAINT);  break;
 
       case 23: attr.setItalic(false);     break;
       case  3: attr.setItalic(true);      break;
@@ -340,9 +340,9 @@ private:
       case 24: attr.setUnderline(false);  break;
       case  4: attr.setUnderline(true);   break;
 
-      case 25: attr.setFlash(OFF);        break;
-      case  5: attr.setFlash(SLOW);       break;
-      case  6: attr.setFlash(FAST);       break;
+      case 25: attr.setFlash(Flash::OFF);  break;
+      case  5: attr.setFlash(Flash::SLOW); break;
+      case  6: attr.setFlash(Flash::FAST); break;
 
       case 27: attr.setInvert(false);     break;
       case  7: attr.setInvert(true);      break;

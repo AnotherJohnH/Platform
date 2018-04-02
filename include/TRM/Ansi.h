@@ -43,7 +43,7 @@ private:
    static const uint8_t PM  = 0x9E;
    static const uint8_t APC = 0x9F;
 
-   enum State
+   enum class State
    {
       BASE,
       CONTROL_SEQUENCE_INTRODUCER,
@@ -54,10 +54,10 @@ private:
       APPLICATION_PROGRAM_COMMAND
    };
 
-   bool   escape;
-   State  state;
-   size_t string_size;
-   char   string[MAX_STRING_SIZE + 1];
+   bool   escape{false};
+   State  state{State::BASE};
+   size_t string_size{0};
+   char   string[MAX_STRING_SIZE + 1]{'\0'};
 
    //! Handle char in a CSI
    void csiChar(uint8_t ch)
@@ -68,7 +68,7 @@ private:
 
          ansiCsi(ch, string);
 
-         state       = BASE;
+         state       = State::BASE;
          string_size = 0;
       }
       else if(string_size < MAX_STRING_SIZE)
@@ -86,17 +86,17 @@ private:
 
          switch(state)
          {
-         case DEVICE_CONTROL_STRING:
+         case State::DEVICE_CONTROL_STRING:
             ansiDcs(string);
             break;
 
-         case OPERATING_SYSTEM_CONTROL:
+         case State::OPERATING_SYSTEM_CONTROL:
             ansiOsc(string);
             break;
 
-         case START_OF_STRING:
-         case PRIVACY_MESSAGE:
-         case APPLICATION_PROGRAM_COMMAND:
+         case State::START_OF_STRING:
+         case State::PRIVACY_MESSAGE:
+         case State::APPLICATION_PROGRAM_COMMAND:
             // Ignore
             break;
 
@@ -104,7 +104,7 @@ private:
             break;
          }
 
-         state       = BASE;
+         state       = State::BASE;
          string_size = 0;
       }
       else if(string_size < MAX_STRING_SIZE)
@@ -114,12 +114,6 @@ private:
    }
 
 public:
-   Ansi()
-      : escape(false)
-      , state(BASE)
-      , string_size(0)
-   {}
-
    //! Supply next character to the state machine
    void ansiWrite(uint8_t ch)
    {
@@ -137,7 +131,7 @@ public:
          }
          else if(ch == 'c')
          {
-            state       = BASE;
+            state       = State::BASE;
             string_size = 0;
             ansiReset();
          }
@@ -150,15 +144,15 @@ public:
       {
          switch(state)
          {
-         case BASE:
+         case State::BASE:
             switch(ch)
             {
-            case DCS: state = DEVICE_CONTROL_STRING;       break;
-            case CSI: state = CONTROL_SEQUENCE_INTRODUCER; break;
-            case OSC: state = OPERATING_SYSTEM_CONTROL;    break;
-            case SOS: state = START_OF_STRING;             break;
-            case PM:  state = PRIVACY_MESSAGE;             break;
-            case APC: state = APPLICATION_PROGRAM_COMMAND; break;
+            case DCS: state = State::DEVICE_CONTROL_STRING;       break;
+            case CSI: state = State::CONTROL_SEQUENCE_INTRODUCER; break;
+            case OSC: state = State::OPERATING_SYSTEM_CONTROL;    break;
+            case SOS: state = State::START_OF_STRING;             break;
+            case PM:  state = State::PRIVACY_MESSAGE;             break;
+            case APC: state = State::APPLICATION_PROGRAM_COMMAND; break;
 
             default:
                if ((ch < 0x20) || ((ch >= 0x7E) && (ch < 0xA0)))
@@ -173,15 +167,15 @@ public:
             }
             break;
 
-         case CONTROL_SEQUENCE_INTRODUCER:
+         case State::CONTROL_SEQUENCE_INTRODUCER:
             csiChar(ch);
             break;
 
-         case DEVICE_CONTROL_STRING:
-         case OPERATING_SYSTEM_CONTROL:
-         case START_OF_STRING:
-         case PRIVACY_MESSAGE:
-         case APPLICATION_PROGRAM_COMMAND:
+         case State::DEVICE_CONTROL_STRING:
+         case State::OPERATING_SYSTEM_CONTROL:
+         case State::START_OF_STRING:
+         case State::PRIVACY_MESSAGE:
+         case State::APPLICATION_PROGRAM_COMMAND:
             stringChar(ch);
             break;
          }

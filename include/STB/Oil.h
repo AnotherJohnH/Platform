@@ -45,7 +45,7 @@ public:
 
    static const Flags HEX = 1<<0;
 
-   enum Type
+   enum class Type
    {
       BOOL,
       ENUM,
@@ -137,15 +137,15 @@ public:
 #ifndef NO_RTTI
       if (typeid(TYPE) == typeid(bool))
       {
-         member_list.push_back(Member(Member::BOOL, sizeof(TYPE), offset, elements, name));
+         member_list.push_back(Member(Member::Type::BOOL, sizeof(TYPE), offset, elements, name));
       }
       else if (std::is_floating_point<TYPE>::value)
       {
-         member_list.push_back(Member(Member::FLOAT, sizeof(TYPE), offset, elements, name));
+         member_list.push_back(Member(Member::Type::FLOAT, sizeof(TYPE), offset, elements, name));
       }
       else if (std::is_enum<TYPE>::value)
       {
-         member_list.push_back(Member(Member::ENUM, sizeof(TYPE), offset, elements, name));
+         member_list.push_back(Member(Member::Type::ENUM, sizeof(TYPE), offset, elements, name));
       }
       else if (std::is_array<TYPE>::value)
       {
@@ -157,11 +157,11 @@ public:
       {
          if (std::is_signed<TYPE>::value)
          {
-            member_list.push_back(Member(Member::SIGNED, sizeof(TYPE), offset, elements, name));
+            member_list.push_back(Member(Member::Type::SIGNED, sizeof(TYPE), offset, elements, name));
          }
          else
          {
-            member_list.push_back(Member(Member::UNSIGNED, sizeof(TYPE), offset, elements, name));
+            member_list.push_back(Member(Member::Type::UNSIGNED, sizeof(TYPE), offset, elements, name));
          }
       }
 #endif

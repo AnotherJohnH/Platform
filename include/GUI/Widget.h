@@ -73,12 +73,12 @@ private:
          }
       }
 
-      if(horz_fit != FIX)
+      if(horz_fit != Fit::FIX)
       {
          size.x = width + top_left.x + btm_right.x;
       }
 
-      if(vert_fit != FIX)
+      if(vert_fit != Fit::FIX)
       {
          size.y = height + top_left.y + btm_right.y;
       }
@@ -96,12 +96,12 @@ private:
       {
          if(row)
          {
-            if(child->horz_fit == EXPAND) ++n;
+            if(child->horz_fit == Fit::EXPAND) ++n;
             total += child->size.x;
          }
          else
          {
-            if(child->vert_fit == EXPAND) ++n;
+            if(child->vert_fit == Fit::EXPAND) ++n;
             total += child->size.y;
          }
       }
@@ -124,12 +124,12 @@ private:
 
          for(Widget* child = children; child; child = child->next)
          {
-            if(child->horz_fit == EXPAND)
+            if(child->horz_fit == Fit::EXPAND)
             {
                child->size.x = width;
             }
 
-            if(child->vert_fit == EXPAND)
+            if(child->vert_fit == Fit::EXPAND)
             {
                child->size.y = height;
             }
@@ -150,16 +150,16 @@ private:
 
       switch(horz_align)
       {
-      case LEFT:   x += top_left.x;                            break;
-      case CENTER: x += (top_left.x + size.x - btm_right.x)/2; break;
-      case RIGHT:  x += size.x - btm_right.x;                  break;
+      case Align::LEFT:   x += top_left.x;                            break;
+      case Align::CENTER: x += (top_left.x + size.x - btm_right.x)/2; break;
+      case Align::RIGHT:  x += size.x - btm_right.x;                  break;
       }
 
       switch(vert_align)
       {
-      case TOP:    y += top_left.y;                            break;
-      case CENTER: y += (top_left.y + size.y - btm_right.y)/2; break;
-      case BOTTOM: y += size.y - btm_right.y;                  break;
+      case Align::TOP:    y += top_left.y;                            break;
+      case Align::CENTER: y += (top_left.y + size.y - btm_right.y)/2; break;
+      case Align::BOTTOM: y += size.y - btm_right.y;                  break;
       }
 
       for(Widget* child = children; child; child = child->next)
@@ -171,9 +171,9 @@ private:
 
             switch(vert_align)
             {
-            case TOP:    child->pos.y = y;                     break;
-            case CENTER: child->pos.y = y - (child->size.y/2); break;
-            case BOTTOM: child->pos.y = y - child->size.y;     break;
+            case Align::TOP:    child->pos.y = y;                     break;
+            case Align::CENTER: child->pos.y = y - (child->size.y/2); break;
+            case Align::BOTTOM: child->pos.y = y - child->size.y;     break;
             }
 
             x += child->size.x;
@@ -182,9 +182,9 @@ private:
          {
             switch(horz_align)
             {
-            case LEFT:   child->pos.x = x;                     break;
-            case CENTER: child->pos.x = x - (child->size.x/2); break;
-            case RIGHT:  child->pos.x = x - child->size.x;     break;
+            case Align::LEFT:   child->pos.x = x;                     break;
+            case Align::CENTER: child->pos.x = x - (child->size.x/2); break;
+            case Align::RIGHT:  child->pos.x = x - child->size.x;     break;
             }
 
             if(child != children) y += gap;

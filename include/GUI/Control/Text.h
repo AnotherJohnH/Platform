@@ -36,7 +36,7 @@ private:
    const char*  text{nullptr};
    uint8_t      len{0};
    uint8_t      cols{0};
-   Align        text_align{LEFT};
+   Align        text_align{Align::LEFT};
 
 protected:
    // Implement Widget events
@@ -57,10 +57,9 @@ protected:
 
       switch(text_align)
       {
-      case LEFT:   break;
-      case CENTER: x += (cols - len) * font->getWidth(" ")/2; break;
-      case RIGHT:  x += (cols - len) * font->getWidth(" "); break;
-      default: assert(!"unexpected"); break;
+      case Align::LEFT:   break;
+      case Align::CENTER: x += (cols - len) * font->getWidth(" ")/2; break;
+      case Align::RIGHT:  x += (cols - len) * font->getWidth(" ");   break;
       }
 
       canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);

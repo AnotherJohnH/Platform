@@ -381,7 +381,11 @@ public:
          else
          {
             // Not white space
-            if (isMatch(comment_one_line_intro.c_str()))
+            if (isEof())
+            {
+               return ch;
+            }
+            else if (isMatch(comment_one_line_intro.c_str()))
             {
                while(true)
                {

@@ -43,11 +43,11 @@ void Member::write(PLT::File& file, void* that) const
 
       switch(type)
       {
-      case BOOL:
+      case Type::BOOL:
          file.print("%s", *(bool*)data ? "true" : "false");
          break;
 
-      case SIGNED:
+      case Type::SIGNED:
          switch(size)
          {
          case 1: file.print("%d",   *(int8_t*)data); break;
@@ -58,8 +58,8 @@ void Member::write(PLT::File& file, void* that) const
          }
          break;
 
-      case ENUM:
-      case UNSIGNED:
+      case Type::ENUM:
+      case Type::UNSIGNED:
       {
           bool hex = (flags & HEX) != 0;
 
@@ -74,7 +74,7 @@ void Member::write(PLT::File& file, void* that) const
       }
       break;
 
-      case FLOAT:
+      case Type::FLOAT:
          switch(size)
          {
          case 4: file.print("%g", *(float*)data); break;
@@ -129,7 +129,7 @@ bool Member::read(Lex& lex, void* that) const
 
       switch(type)
       {
-      case BOOL:
+      case Type::BOOL:
          if (lex.isMatch("true"))
          {
             *(bool*)data = true;
@@ -144,7 +144,7 @@ bool Member::read(Lex& lex, void* that) const
          }
          break;
 
-      case SIGNED:
+      case Type::SIGNED:
       {
          int64_t value = 0;
          if (!lex.matchSigned(value)) return false;
@@ -163,8 +163,8 @@ bool Member::read(Lex& lex, void* that) const
       }
       break;
 
-      case ENUM:
-      case UNSIGNED:
+      case Type::ENUM:
+      case Type::UNSIGNED:
       {
          uint64_t value = 0;
          if (!lex.matchUnsigned(value)) return false;
@@ -183,7 +183,7 @@ bool Member::read(Lex& lex, void* that) const
       }
       break;
 
-      case FLOAT:
+      case Type::FLOAT:
       {
          double value = 0.0;
          if (!lex.matchFloat(value)) return false;

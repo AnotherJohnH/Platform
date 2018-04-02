@@ -51,12 +51,12 @@ public:
    {
       if(isParentRow())
       {
-         vert_fit = EXPAND;
+         vert_fit = Fit::EXPAND;
          size.x   = 2;
       }
       else
       {
-         horz_fit = EXPAND;
+         horz_fit = Fit::EXPAND;
          size.y   = 2;
       }
    }

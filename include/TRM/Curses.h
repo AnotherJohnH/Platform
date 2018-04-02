@@ -31,16 +31,13 @@
 
 namespace TRM {
 
-enum : unsigned
-{
-   A_UNDERLINE = 1 << 0,
-   A_REVERSE   = 1 << 1,
-   A_NORMAL    = 1 << 2,
-   A_BOLD      = 1 << 3,
-   A_DIM       = 1 << 4,
-   A_ITALIC    = 1 << 5,
-   A_FIXED     = 1 << 6
-};
+static const unsigned A_UNDERLINE = 1 << 0;
+static const unsigned A_REVERSE   = 1 << 1;
+static const unsigned A_NORMAL    = 1 << 2;
+static const unsigned A_BOLD      = 1 << 3;
+static const unsigned A_DIM       = 1 << 4;
+static const unsigned A_ITALIC    = 1 << 5;
+static const unsigned A_FIXED     = 1 << 6;
 
 //! Very small curses 'like' wrapper for TRM devices
 class Curses

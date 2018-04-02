@@ -31,7 +31,7 @@
 namespace GUI {
 
 // Size fit
-enum Fit : uint8_t
+enum class Fit : uint8_t
 {
    FIX = 0,
    SHRINK, // Shrink to minimum size that contains children
@@ -40,7 +40,7 @@ enum Fit : uint8_t
 
 
 // Alignment for children
-enum Align : uint8_t
+enum class Align : uint8_t
 {
    LEFT = 0,
    CENTER,
@@ -55,16 +55,16 @@ enum Align : uint8_t
 class Layout
 {
 protected:
-   Vector      pos{0, 0};        //!< Absolute position in root canvas
-   Vector      size{0, 0};       //!< Width and height
-   SmallVector top_left{0,0};    //!< Top left border for children
-   SmallVector btm_right{0,0};   //!< Bottom right border for children
-   Fit         horz_fit{FIX};    //!< Horizontal fit
-   Fit         vert_fit{FIX};    //!< Vertical fit
-   bool        row{false};       //!< Layout children in a row not a column
-   uint8_t     gap{0};           //!< Gap between children
-   Align       horz_align{LEFT}; //!< Horizontal alignment mode for children
-   Align       vert_align{TOP};  //!< Vertical alignment mode for children
+   Vector      pos{0, 0};               //!< Absolute position in root canvas
+   Vector      size{0, 0};              //!< Width and height
+   SmallVector top_left{0,0};           //!< Top left border for children
+   SmallVector btm_right{0,0};          //!< Bottom right border for children
+   Fit         horz_fit{Fit::FIX};      //!< Horizontal fit
+   Fit         vert_fit{Fit::FIX};      //!< Vertical fit
+   bool        row{false};              //!< Layout children in a row not a column
+   uint8_t     gap{0};                  //!< Gap between children
+   Align       horz_align{Align::LEFT}; //!< Horizontal alignment mode for children
+   Align       vert_align{Align::TOP};  //!< Vertical alignment mode for children
 
 public:
    unsigned getX() const { return pos.x; }
@@ -86,14 +86,14 @@ public:
       size.x = width;
       size.y = height;
 
-      horz_fit = vert_fit = FIX;
+      horz_fit = vert_fit = Fit::FIX;
    }
 
    //! This items will shrink to fit it's children
-   void setShrink() { horz_fit = vert_fit = SHRINK; }
+   void setShrink() { horz_fit = vert_fit = Fit::SHRINK; }
 
    //! This items will expand to fit it's parent
-   void setExpand() { horz_fit = vert_fit = EXPAND; }
+   void setExpand() { horz_fit = vert_fit = Fit::EXPAND; }
 
    //! Translate children
    void nudgeChildren(signed x, signed y)

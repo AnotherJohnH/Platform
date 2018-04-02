@@ -34,18 +34,18 @@ class App : public STB::ConsoleApp
 {
 private:
 #ifndef NO_TERMINAL_EMULATOR
-   enum Display
+   enum class Display
    {
-      DISP_KINDLE3,
-      DISP_VGA,
-      DISP_SVGA,
-      DISP_XGA
+      KINDLE3,
+      VGA,
+      SVGA,
+      XGA
    };
 
 #ifdef PROJ_TARGET_Kindle3
-   Display display = DISP_KINDLE3;
+   Display display = Display::KINDLE3;
 #else
-   Display display = DISP_SVGA;
+   Display display = Display::SVGA;
 #endif
 
    STB::Option<bool> opt_term{'t', "term", "Use the parent terminal (not the built in terminal)"};
@@ -70,17 +70,17 @@ private:
       {
          // Use the built in terminal
               
-              if (opt_k3)   display = DISP_KINDLE3;
-         else if (opt_vga)  display = DISP_VGA;
-         else if (opt_svga) display = DISP_SVGA;
-         else if (opt_xga)  display = DISP_XGA;
+              if (opt_k3)   display = Display::KINDLE3;
+         else if (opt_vga)  display = Display::VGA;
+         else if (opt_svga) display = Display::SVGA;
+         else if (opt_xga)  display = Display::XGA;
          
          switch(display)
          {
-         case DISP_KINDLE3: return launchDisplay< 600,800>();
-         case DISP_VGA:     return launchDisplay< 640,480>();
-         case DISP_SVGA:    return launchDisplay< 800,600>();
-         case DISP_XGA:     return launchDisplay<1024,768>();
+         case Display::KINDLE3: return launchDisplay< 600,800>();
+         case Display::VGA:     return launchDisplay< 640,480>();
+         case Display::SVGA:    return launchDisplay< 800,600>();
+         case Display::XGA:     return launchDisplay<1024,768>();
          }
 
          assert(!"Display selection bug");

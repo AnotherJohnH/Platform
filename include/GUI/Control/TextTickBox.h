@@ -43,7 +43,7 @@ public:
       , text(this, text_)
    {
       gap        = 8;
-      vert_align = CENTER;
+      vert_align = Align::CENTER;
    }
 };
 
