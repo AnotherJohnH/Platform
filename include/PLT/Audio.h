@@ -36,7 +36,7 @@ namespace Audio {
 
 
 //! Audio sample format
-enum Format
+enum class Format
 {
    NONE = 0, //!< Sample format not configured
    SINT8,    //!< Signed 8-bit sample format
@@ -85,7 +85,7 @@ protected:
 
 private:
    unsigned  freq{0};
-   Format    format{NONE};
+   Format    format{Format::NONE};
    unsigned  channels{0};
    bool      open{false};
    bool      enable{false};

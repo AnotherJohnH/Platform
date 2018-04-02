@@ -78,19 +78,19 @@ IOBase::IOBase(unsigned freq_, Format format_, unsigned channels_, bool input)
 
    switch(format)
    {
-   case SINT8:
+   case Format::SINT8:
       requested.format   = AUDIO_S8;
       requested.callback = input ? mixAudioIn<int8_t>
                                  : mixAudioOut<int8_t>;
       break;
 
-   case SINT16:
+   case Format::SINT16:
       requested.format   = AUDIO_S16;
       requested.callback = input ? mixAudioIn<int16_t>
                                  : mixAudioOut<int16_t>;
       break;
 
-   case SINT32:
+   case Format::SINT32:
       requested.format   = AUDIO_S32;
       requested.callback = input ? mixAudioIn<int32_t>
                                  : mixAudioOut<int32_t>;

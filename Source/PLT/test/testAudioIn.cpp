@@ -28,7 +28,7 @@
 
 
 static const unsigned           SAMPLE_FREQUENCY = 44100;
-static const PLT::Audio::Format FORMAT           = PLT::Audio::SINT16;
+static const PLT::Audio::Format FORMAT           = PLT::Audio::Format::SINT16;
 static const unsigned           CHANNELS         = 1;
 
 

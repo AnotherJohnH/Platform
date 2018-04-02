@@ -45,7 +45,7 @@ static const uint8_t SYSTEM            = 0xF0;
 
 
 // System event sub-types
-enum SystemEvent
+enum class SystemEvent
 {
    TUNE_REQUEST   = 0x6,
    CLOCK          = 0x8,
@@ -58,7 +58,7 @@ enum SystemEvent
 
 
 // System meta event sub-types (with text)
-enum TextEvent
+enum class TextEvent
 {
    TEXT       = 0x01,
    COPYRIGHT  = 0x02,

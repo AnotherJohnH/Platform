@@ -38,7 +38,7 @@ public:
    ControlOut<uint32_t> ticks;
 
    Monitor(Freq tick_freq = 1000.0, Freq sample_freq = 44100.0)
-      : PLT::Audio::Out(sample_freq, PLT::Audio::SINT16, /* channels */ 1)
+      : PLT::Audio::Out(sample_freq, PLT::Audio::Format::SINT16, /* channels */ 1)
       , sink(sample_freq)
       , tick_period(sample_freq / tick_freq)
    {}

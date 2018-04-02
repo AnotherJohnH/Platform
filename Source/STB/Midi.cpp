@@ -137,20 +137,20 @@ unsigned Decoder::decodeCommand(const uint8_t* data, unsigned length)
          return size + 1;
       }
 
-      case 0xF1: /* undefined */                       return 1;
-      case 0xF2: songPosition((data[1]<<7) | data[0]); return 3;
-      case 0xF3: songSelect(data[0]);                  return 2;
-      case 0xF4: /* undefined */                       return 1;
-      case 0xF5: /* undefined */                       return 1;
-      case 0xF6: sysEvent(TUNE_REQUEST);               return 1;
-      case 0xF7: /* end of SysEx */                    return 1;
-      case 0xF8: sysEvent(CLOCK);                      return 1;
-      case 0xF9: /* undefined */                       return 1;
-      case 0xFA: sysEvent(START);                      return 1;
-      case 0xFB: sysEvent(CONTINUE);                   return 1;
-      case 0xFC: sysEvent(STOP);                       return 1;
-      case 0xFD: /* undefined */                       return 1;
-      case 0xFE: sysEvent(ACTIVE_SENSING);             return 1;
+      case 0xF1: /* undefined */                        return 1;
+      case 0xF2: songPosition((data[1]<<7) | data[0]);  return 3;
+      case 0xF3: songSelect(data[0]);                   return 2;
+      case 0xF4: /* undefined */                        return 1;
+      case 0xF5: /* undefined */                        return 1;
+      case 0xF6: sysEvent(SystemEvent::TUNE_REQUEST);   return 1;
+      case 0xF7: /* end of SysEx */                     return 1;
+      case 0xF8: sysEvent(SystemEvent::CLOCK);          return 1;
+      case 0xF9: /* undefined */                        return 1;
+      case 0xFA: sysEvent(SystemEvent::START);          return 1;
+      case 0xFB: sysEvent(SystemEvent::CONTINUE);       return 1;
+      case 0xFC: sysEvent(SystemEvent::STOP);           return 1;
+      case 0xFD: /* undefined */                        return 1;
+      case 0xFE: sysEvent(SystemEvent::ACTIVE_SENSING); return 1;
 
       case 0xFF:
 #if 0

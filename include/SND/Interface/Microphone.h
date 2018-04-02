@@ -43,7 +43,7 @@ public:
    STB::Fifo<Signal, 11> fifo;
 
    Microphone()
-      : In(SAMPLE_FREQ, PLT::Audio::SINT16, /* channels */ 1)
+      : In(SAMPLE_FREQ, PLT::Audio::Format::SINT16, /* channels */ 1)
    {}
 
 private:

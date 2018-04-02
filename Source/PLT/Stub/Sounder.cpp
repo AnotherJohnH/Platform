@@ -31,7 +31,7 @@ class Beep : public PLT::Audio::Out
 {
 private:
    static const unsigned           SAMPLE_FREQUENCY = 44100; // 44.1 KHz
-   static const PLT::Audio::Format FORMAT           = PLT::Audio::SINT16;
+   static const PLT::Audio::Format FORMAT           = PLT::Audio::Format::SINT16;
    static const unsigned           CHANNELS         = 1;
    static const unsigned           FREQUENCY        = 440;   // 440 Hz
 
