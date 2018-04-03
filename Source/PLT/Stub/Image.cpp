@@ -52,7 +52,7 @@ void Image::span(STB::Colour rgb, unsigned x1, unsigned y, unsigned x2)
 
 void Image::blit(const Image& source,
                  unsigned x, unsigned y,
-                 unsigned w, unsigned w,
+                 unsigned w, unsigned h,
                  unsigned src_x, unsigned src_y)
 {
    defaultBlit(source, x, y, w, h, src_x, src_y);
