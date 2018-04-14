@@ -45,40 +45,65 @@ protected:
       computeWave(func);
    }
 
+   // TODO Lambda's would be a much better solution here.
+   // Having difficulty supporitng in embedded targets
+   // at the moment
+
    void computeWave(double (*func)(double))
    {
       Signal local[PHASE_PERIOD];
 
-      double min = +1.0;
-      double max = -1.0;
+      for(unsigned i = 0; i < PHASE_PERIOD; ++i)
+      {
+         local[i] = func(double(i) / PHASE_PERIOD);
+      }
+
+      updateWave(local);
+   }
+
+   void computeWave(double (*func)(double, void*), void* data)
+   {
+      Signal local[PHASE_PERIOD];
 
       for(unsigned i = 0; i < PHASE_PERIOD; ++i)
       {
-         double value = func(double(i) / PHASE_PERIOD);
-
-         if(value > max) max = value;
-         if(value < min) min = value;
-
-         local[i] = value;
+         local[i] = func(double(i) / PHASE_PERIOD, data);
       }
 
-      // Rescale to -1..+1
-      for(unsigned i = 0; i < PHASE_PERIOD; ++i)
-      {
-         local[i] = (2.0 * (local[i] - min) / (max - min)) - 1.0;
-      }
-
-      // Final copy to live wave table
-      for(unsigned i = 0; i < PHASE_PERIOD; ++i)
-      {
-         table[i] = local[i];
-      }
+      updateWave(local);
    }
 
 private:
    virtual Signal output() override
    {
       return table[nextPhase()];
+   }
+
+   //! Rewrite wave tabel with new data
+   void updateWave(Signal* data)
+   {
+      double min = +1.0;
+      double max = -1.0;
+
+      for(unsigned i = 0; i < PHASE_PERIOD; ++i)
+      {
+         double value = data[i];
+
+         if(value > max) max = value;
+         if(value < min) min = value;
+      }
+
+      // Rescale to -1..+1
+      for(unsigned i = 0; i < PHASE_PERIOD; ++i)
+      {
+         data[i] = (2.0 * (data[i] - min) / (max - min)) - 1.0;
+      }
+
+      // Final copy to live wave table
+      for(unsigned i = 0; i < PHASE_PERIOD; ++i)
+      {
+         table[i] = data[i];
+      }
    }
 };
 

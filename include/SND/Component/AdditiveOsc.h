@@ -44,19 +44,31 @@ public:
    }
 
 private:
+
+   // TODO convert back to Lambda when embedded builds
+   // allow
+
+   double func(double t)
+   {
+      double value = 0.0;
+      for(unsigned i = 1; i <= NUM_HARMONICS; i++)
+      {
+         value += harmonic[i - 1] * STB::Waveform::sine(i * t);
+      }
+      return value;
+   }
+
+   static double thunk(double t, void* that)
+   {
+      AdditiveOsc* osc = (AdditiveOsc*)that;
+      return osc->func(t);
+   }
+
    virtual void controlEvent(Control* control) override
    {
       WaveTableOsc::controlEvent(control);
 
-      computeWave([this](double t) -> double
-      {
-         double value = 0.0;
-         for(unsigned i = 1; i <= NUM_HARMONICS; i++)
-         {
-            value += harmonic[i - 1] * STB::Waveform::sine(i * t);
-         }
-         return value;
-      });
+      computeWave(thunk, this);
    }
 };
 
