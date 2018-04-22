@@ -244,7 +244,7 @@ public:
    }
 
    //! Get next character input
-   int getch()
+   int getch() const
    {
       uint8_t ch;
       int     status;
