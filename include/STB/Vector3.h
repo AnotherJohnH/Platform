@@ -57,7 +57,7 @@ public:
    Vector3(const T& v)    { operator=(v); }
    Vector3(const This& v) { operator=(v); }
    Vector3(Function f)    { operator=(f); }
-   Vector3(const T& x_, const T& y_, const T& z_) : e{ x_, y_, z } {}
+   Vector3(const T& x_, const T& y_, const T& z_) : e{ x_, y_, z_ } {}
 
          T& operator[](unsigned i)       { assert(i<N); return e[i]; }
    const T& operator[](unsigned i) const { assert(i<N); return e[i]; }
@@ -84,6 +84,9 @@ public:
 
    This operator*(const T& v) const
    { This r; for(unsigned i=0; i<N; ++i) r[i] = e[i] * v; return r; }
+
+   This operator/(const T& v) const
+   { This r; for(unsigned i=0; i<N; ++i) r[i] = e[i] / v; return r; }
 
    This operator+(const This& v) const
    { This r; for(unsigned i=0; i<N; ++i) r[i] = e[i] + v[i]; return r; }
