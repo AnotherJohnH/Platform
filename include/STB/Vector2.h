@@ -112,16 +112,16 @@ public:
       }
    }
 
-   This getNormal() const
+   This getNormalised() const
    {
       assert(getMagnitude() != 0);
 
-      return operator*(1 / getMagnitude());
+      return operator*(1.0 / getMagnitude());
    }
 
    void normalise()
    {
-      *this = getNormal();
+      *this = getNormalised();
    }
 
    T getDotProduct(const This& v) const
