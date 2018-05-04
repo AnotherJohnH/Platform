@@ -365,8 +365,6 @@ public:
    //! Return the next non-whitespace character from the input stream
    char first()
    {
-      static bool recursion_trap = false;
-
       if (recursion_trap) return next();
 
       recursion_trap = true;
@@ -499,6 +497,8 @@ private:
    std::string comment_intro{};
    std::string comment_term{};
    std::string include_intro{};
+   bool recursion_trap{false};
+
 };
 
 
