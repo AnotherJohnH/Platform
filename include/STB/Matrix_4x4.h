@@ -20,45 +20,51 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef STB_MATRIX_3X3_H
-#define STB_MATRIX_3X3_H
+#ifndef STB_MATRIX_4X4_H
+#define STB_MATRIX_4X4_H
 
 #include <cmath>
 
-#include "Vector2.h"
+#include "Vector3.h"
 
 namespace STB {
 
 //! Three dimensional vector template
 template <typename T>
-class Matrix_3x3
+class Matrix_4x4
 {
 public:
-   Matrix_3x3() = default;
+   Matrix_4x4() = default;
 
-   void translate(T x, T y)
+   void translate(T x, T y, T z)
    {
-      c += x;
-      f += y;
+      j += x;
+      h += y;
+      l += z;
    }
 
-   void scale(T x, T y)
+   void scale(T x, T y, T z)
    {
       a *= x;
-      e *= y;
+      f *= y;
+      k *= z;
    }
 
-   void rotate(double angle)
+   void rotateX(double angle)
    {
-      a = cos(angle);
-      b = sin(angle);
-      d = -b;
-      e = a;
    }
 
-   Matrix_3x3<T> operator*(const Matrix_3x3& that) const
+   void rotateY(double angle)
    {
-      Matrix_3x3 result;
+   }
+
+   void rotateZ(double angle)
+   {
+   }
+
+   Matrix_4x4<T> operator*(const Matrix_4x4& that) const
+   {
+      Matrix_4x4 result;
 
       result.a = a*that.a + b*that.d + c*that.g;
       result.b = a*that.b + b*that.e + c*that.h;
@@ -75,15 +81,17 @@ public:
       return result;
    }
 
-   Vector2<T> transform(const Vector2<T>& in) const
+   Vector3<T> transform(const Vector3<T>& in) const
    {
-      return Vector2<T>(in.x * a + in.y * b + c,
-                        in.x * d + in.y * e + f);
+      return Vector3<T>(in.x * a + in.y * b + in.z * c + d,
+                        in.x * e + in.y * f + in.z * g + h,
+                        in.x * i + in.y * j + in.z * k + l);
    }
 
-   T a{1.0}, b{0.0}, c{0.0};
-   T d{0.0}, e{1.0}, f{0.0};
-   T g{0.0}, h{0.0}, i{1.0};
+   T a{1.0}, b{0.0}, c{0.0}, d{0.0};
+   T e{0.0}, f{1.0}, g{0.0}, h{0.0};
+   T i{0.0}, j{0.0}, k{1.0}, l{0.0};
+   T m{0.0}, n{0.0}, o{0.0}, p{1.0};
 };
 
 } // namespace STB
