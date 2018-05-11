@@ -29,9 +29,14 @@
 
 static PLT::Frame::Scanner*  scanner{nullptr};
 
+#ifdef PROJ_TARGET_Emscripten
+static unsigned high_dpi_scale{1};
+#else
+static unsigned high_dpi_scale{2};
+#endif
+
 
 namespace PLT {
-
 
 class Frame::Impl
 {
@@ -60,7 +65,6 @@ public:
 
 #ifndef PROJ_TARGET_Emscripten
       sdl_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
-      high_dpi_scale = 2;
 #endif
 
       if(flags & Frame::FULL_SCREEN) sdl_flags |= SDL_WINDOW_FULLSCREEN;
@@ -161,7 +165,6 @@ private:
    SDL_Renderer* renderer{nullptr};
    SDL_Surface*  surface{nullptr};
    SDL_Texture*  texture{nullptr};
-   unsigned      high_dpi_scale{1};
    unsigned      scale_x{1};
    unsigned      scale_y{1};
 
@@ -238,6 +241,11 @@ void Frame::refresh()
 void Frame::setScanner(Scanner* scanner_)
 {
    scanner = scanner_;
+}
+
+unsigned Frame::getHighDpiScale()
+{
+   return high_dpi_scale;
 }
 
 } // namespace PLT

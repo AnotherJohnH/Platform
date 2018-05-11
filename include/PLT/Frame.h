@@ -79,6 +79,10 @@ public:
    //! Add a line scanning call-back
    void setScanner(Scanner* scanner_);
 
+   //! Scale factror between window co-ordinates and actual pixel co-ordinates
+   //  normally this is 1 but under OS-X with Retina hardware it will be 2
+   static unsigned getHighDpiScale();
+
 private:
    class Impl;
 
