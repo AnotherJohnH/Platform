@@ -80,7 +80,7 @@ public:
       // Check if high DPI hint has been ignored
       int physical_width, physical_height;
       SDL_GL_GetDrawableSize(window, &physical_width, &physical_height);
-      if (physical_width != width_ * scale_x)
+      if (unsigned(physical_width) != width_ * scale_x)
       {
          // No high DPI
          high_dpi_scale = 1;
