@@ -60,17 +60,32 @@ public:
 
 #ifndef PROJ_TARGET_Emscripten
       sdl_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
+      high_dpi_scale = 2;
 #endif
 
       if(flags & Frame::FULL_SCREEN) sdl_flags |= SDL_WINDOW_FULLSCREEN;
       if(flags & Frame::RESIZABLE)   sdl_flags |= SDL_WINDOW_RESIZABLE;
       if(flags & Frame::NO_BORDER)   sdl_flags |= SDL_WINDOW_BORDERLESS;
 
+      scale_x = ((flags >> 4) & 0xF) + 1;
+      scale_y = ((flags >> 8) & 0xF) + 1;
+
       window = SDL_CreateWindow(title.c_str(),
                                 SDL_WINDOWPOS_UNDEFINED,
                                 SDL_WINDOWPOS_UNDEFINED,
-                                width_, height_,
+                                width_  * scale_x / high_dpi_scale,
+                                height_ * scale_y / high_dpi_scale,
                                 sdl_flags);
+
+      // Check if high DPI hint has been ignored
+      int physical_width, physical_height;
+      SDL_GL_GetDrawableSize(window, &physical_width, &physical_height);
+      if (physical_width != width_ * scale_x)
+      {
+         // No high DPI
+         high_dpi_scale = 1;
+         SDL_SetWindowSize(window, width_, height_);
+      }
 
       renderer = SDL_CreateRenderer(window, -1, 0);
 
@@ -126,7 +141,9 @@ public:
       }
 
       destroySurface();
-      SDL_SetWindowSize(window, width_, height_);
+      SDL_SetWindowSize(window,
+                        width_  * scale_x / high_dpi_scale,
+                        height_ * scale_y / high_dpi_scale);
       createSurface(width_, height_);
    }
 
@@ -144,6 +161,9 @@ private:
    SDL_Renderer* renderer{nullptr};
    SDL_Surface*  surface{nullptr};
    SDL_Texture*  texture{nullptr};
+   unsigned      high_dpi_scale{1};
+   unsigned      scale_x{1};
+   unsigned      scale_y{1};
 
    void createSurface(unsigned width_, unsigned height_)
    {

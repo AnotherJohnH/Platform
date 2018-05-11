@@ -42,6 +42,9 @@ public:
    static const uint32_t NO_BORDER   = 1 << 1; //!< Frame has no external border pixels
    static const uint32_t FULL_SCREEN = 1 << 2; //!< Frame should cover the whole screen
 
+   static uint32_t SCALE_X(unsigned n) { return ((n - 1) & 0xF) << 4; }
+   static uint32_t SCALE_Y(unsigned n) { return ((n - 1) & 0xF) << 8; }
+
    class Scanner
    {
    public:
