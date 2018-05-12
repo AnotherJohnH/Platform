@@ -131,8 +131,6 @@ namespace PLT {
 
 static Event::Type getEvent(Event::Message& event, bool wait)
 {
-   unsigned high_dpi_scale = PLT::Frame::getHighDpiScale();
-
    event.type = Event::NONE;
    event.code = 0;
    event.x    = 0;
@@ -159,8 +157,7 @@ static Event::Type getEvent(Event::Message& event, bool wait)
 
          case SDL_WINDOWEVENT_RESIZED:
             event.type = Event::RESIZE;
-            event.x    = sdl_event.window.data1 * high_dpi_scale;
-            event.y    = sdl_event.window.data2 * high_dpi_scale;
+            PLT::Frame::internal_transEventXyToPixel(event.x, event.y);
             break;
 
          default:
@@ -180,8 +177,9 @@ static Event::Type getEvent(Event::Message& event, bool wait)
 
       case SDL_MOUSEMOTION:
          event.type = Event::POINTER_MOVE;
-         event.x    = sdl_event.motion.x * high_dpi_scale;
-         event.y    = sdl_event.motion.y * high_dpi_scale;
+         event.x    = sdl_event.motion.x;
+         event.y    = sdl_event.motion.y;
+         PLT::Frame::internal_transEventXyToPixel(event.x, event.y);
          break;
 
       case SDL_MOUSEBUTTONDOWN:
@@ -193,8 +191,7 @@ static Event::Type getEvent(Event::Message& event, bool wait)
          case SDL_BUTTON_LEFT:  event.code = uint8_t(Event::Button::LEFT);  break;
          case SDL_BUTTON_RIGHT: event.code = uint8_t(Event::Button::RIGHT); break;
          }
-         event.x = sdl_event.button.x * high_dpi_scale;
-         event.y = sdl_event.button.y * high_dpi_scale;
+         PLT::Frame::internal_transEventXyToPixel(event.x, event.y);
          break;
 
       case SDL_USEREVENT:

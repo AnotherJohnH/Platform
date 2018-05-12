@@ -37,11 +37,13 @@ namespace PLT {
 class Frame : public Image
 {
 public:
+   // Falgs for Frame creation
    static const uint32_t NO_FLAGS    = 0;
    static const uint32_t RESIZABLE   = 1 << 0; //!< Frame can be resized
    static const uint32_t NO_BORDER   = 1 << 1; //!< Frame has no external border pixels
    static const uint32_t FULL_SCREEN = 1 << 2; //!< Frame should cover the whole screen
 
+   // Hints to request a logical pixel size larger than physical pixel size
    static uint32_t SCALE_X(unsigned n) { return ((n - 1) & 0xF) << 4; }
    static uint32_t SCALE_Y(unsigned n) { return ((n - 1) & 0xF) << 8; }
 
@@ -79,9 +81,10 @@ public:
    //! Add a line scanning call-back
    void setScanner(Scanner* scanner_);
 
-   //! Scale factror between window co-ordinates and actual pixel co-ordinates
-   //  normally this is 1 but under OS-X with Retina hardware it will be 2
-   static unsigned getHighDpiScale();
+   //! Translate internal event co-ordinates to pixel co-ordinates
+   //  For internal use by the PLT implementation when the Frame
+   //  can support high-DPI (OS X) or pixel scaling
+   static void internal_transEventXyToPixel(uint16_t& x, uint16_t& y);
 
 private:
    class Impl;

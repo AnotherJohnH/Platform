@@ -34,6 +34,8 @@ static unsigned high_dpi_scale{1};
 #else
 static unsigned high_dpi_scale{2};
 #endif
+static unsigned scale_x{1};
+static unsigned scale_y{1};
 
 
 namespace PLT {
@@ -71,8 +73,13 @@ public:
       if(flags & Frame::RESIZABLE)   sdl_flags |= SDL_WINDOW_RESIZABLE;
       if(flags & Frame::NO_BORDER)   sdl_flags |= SDL_WINDOW_BORDERLESS;
 
-      scale_x = ((flags >> 4) & 0xF) + 1;
-      scale_y = ((flags >> 8) & 0xF) + 1;
+      static bool first_window = true;
+      if (first_window)
+      {
+         first_window = false;
+         scale_x = ((flags >> 4) & 0xF) + 1;
+         scale_y = ((flags >> 8) & 0xF) + 1;
+      }
 
       window = SDL_CreateWindow(title.c_str(),
                                 SDL_WINDOWPOS_UNDEFINED,
@@ -165,8 +172,6 @@ private:
    SDL_Renderer* renderer{nullptr};
    SDL_Surface*  surface{nullptr};
    SDL_Texture*  texture{nullptr};
-   unsigned      scale_x{1};
-   unsigned      scale_y{1};
 
    void createSurface(unsigned width_, unsigned height_)
    {
@@ -243,9 +248,10 @@ void Frame::setScanner(Scanner* scanner_)
    scanner = scanner_;
 }
 
-unsigned Frame::getHighDpiScale()
+void Frame::internal_transEventXyToPixel(uint16_t& x, uint16_t& y)
 {
-   return high_dpi_scale;
+   x = x * high_dpi_scale / scale_x;
+   y = y * high_dpi_scale / scale_y;
 }
 
 } // namespace PLT

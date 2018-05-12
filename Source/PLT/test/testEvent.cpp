@@ -86,7 +86,8 @@ void callback(const PLT::Event::Message& event, void* ptr)
 
 int main(int argc, const char* argv[])
 {
-   PLT::Frame frame("PLT::Event Test", 256, 256);
+   PLT::Frame frame("PLT::Event Test", 256, 256,
+                    PLT::Frame::SCALE_X(2) | PLT::Frame::SCALE_Y(2));
 
    frame.clear(STB::BLACK);
 
