@@ -157,6 +157,8 @@ static Event::Type getEvent(Event::Message& event, bool wait)
 
          case SDL_WINDOWEVENT_RESIZED:
             event.type = Event::RESIZE;
+            event.x    = sdl_event.window.data1;
+            event.y    = sdl_event.window.data2;
             PLT::Frame::internal_transEventXyToPixel(event.x, event.y);
             break;
 
@@ -191,6 +193,8 @@ static Event::Type getEvent(Event::Message& event, bool wait)
          case SDL_BUTTON_LEFT:  event.code = uint8_t(Event::Button::LEFT);  break;
          case SDL_BUTTON_RIGHT: event.code = uint8_t(Event::Button::RIGHT); break;
          }
+         event.x = sdl_event.button.x;
+         event.y = sdl_event.button.y;
          PLT::Frame::internal_transEventXyToPixel(event.x, event.y);
          break;
 
