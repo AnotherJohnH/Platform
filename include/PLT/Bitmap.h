@@ -37,19 +37,22 @@ namespace PLT {
 class Bitmap : public Image
 {
 public:
-   //! Construct a new bitmap
+   //! Create a blank bitmap
    //
-   //! \param name
    //! \param width (pixels)
    //! \param height (pixels)
-   Bitmap(const char* name, unsigned width, unsigned height);
+   Bitmap(unsigned width, unsigned height);
 
+   //! Create a bitmap from a file
    Bitmap(const char* filename);
 
    ~Bitmap();
 
    //! Get a platform specific handle for the bitmap
    virtual void* getHandle() const override;
+
+   //! Save bitmap to named file (an appropriate extension will be added)
+   void save(const char* name) const;
 
 private:
    class Impl;

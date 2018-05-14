@@ -26,7 +26,7 @@
 
 namespace PLT {
 
-Bitmap::Bitmap(const char* name_, unsigned width_, unsigned height_)
+Bitmap::Bitmap(unsigned width_, unsigned height_)
    : Image(width_, height_)
 {
    pimpl = nullptr;
@@ -44,6 +44,10 @@ Bitmap::~Bitmap()
 void* Bitmap::getHandle() const
 {
    return nullptr;
+}
+
+void Bitmap::save(const char* name) const
+{
 }
 
 } // namespace PLT

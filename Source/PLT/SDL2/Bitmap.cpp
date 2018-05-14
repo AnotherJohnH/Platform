@@ -34,7 +34,7 @@ namespace PLT {
 class Bitmap::Impl : public Image
 {
 public:
-   Impl(const char* name, unsigned width, unsigned height)
+   Impl(unsigned width, unsigned height)
    {
       surface = SDL_CreateRGBSurface(0, width, height, 32,
                                      0x00FF0000,
@@ -84,15 +84,24 @@ public:
       return surface;
    }
 
+   void save(const char* name)
+   {
+      char filename[FILENAME_MAX];
+
+      sprintf(filename, "%s.bmp", name);
+
+      SDL_SaveBMP(surface, filename);
+   }
+
 private:
    SDL_Surface*   surface{nullptr};
 };
 
 
-Bitmap::Bitmap(const char* name_, unsigned width_, unsigned height_)
+Bitmap::Bitmap(unsigned width_, unsigned height_)
    : Image(width_, height_)
 {
-   pimpl = new Impl(name_, width_, height_);
+   pimpl = new Impl(width_, height_);
 
    buffer = pimpl->getStorage(pitch);
 }
@@ -113,6 +122,11 @@ Bitmap::~Bitmap()
 void* Bitmap::getHandle() const
 {
    return pimpl->getHandle();
+}
+
+void Bitmap::save(const char* name) const
+{
+   pimpl->save(name);
 }
 
 } // namespace PLT
