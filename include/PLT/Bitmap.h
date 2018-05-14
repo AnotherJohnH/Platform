@@ -51,9 +51,6 @@ public:
    //! Get a platform specific handle for the bitmap
    virtual void* getHandle() const override;
 
-   //! Save bitmap to named file (an appropriate extension will be added)
-   void save(const char* name) const;
-
 private:
    class Impl;
 

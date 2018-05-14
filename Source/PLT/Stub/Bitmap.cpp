@@ -46,8 +46,4 @@ void* Bitmap::getHandle() const
    return nullptr;
 }
 
-void Bitmap::save(const char* name) const
-{
-}
-
 } // namespace PLT

@@ -22,8 +22,6 @@
 
 // SDL2 Bitmap implementation
 
-#include <cstdio>
-
 #include "SDL2/SDL.h"
 
 #include "PLT/Bitmap.h"
@@ -84,15 +82,6 @@ public:
       return surface;
    }
 
-   void save(const char* name)
-   {
-      char filename[FILENAME_MAX];
-
-      sprintf(filename, "%s.bmp", name);
-
-      SDL_SaveBMP(surface, filename);
-   }
-
 private:
    SDL_Surface*   surface{nullptr};
 };
@@ -122,11 +111,6 @@ Bitmap::~Bitmap()
 void* Bitmap::getHandle() const
 {
    return pimpl->getHandle();
-}
-
-void Bitmap::save(const char* name) const
-{
-   pimpl->save(name);
 }
 
 } // namespace PLT

@@ -20,6 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#include <cstdio>
+
 #include "SDL_headers.h"
 
 #include "PLT/Image.h"
@@ -80,6 +82,15 @@ void Image::lineBlit(uint8_t pixel_mask, STB::Colour one, STB::Colour zero,
                      unsigned x, unsigned y)
 {
    defaultLineBlit(pixel_mask, one, zero, x, y);
+}
+
+void Image::save(const char* name) const
+{
+   char filename[FILENAME_MAX];
+
+   sprintf(filename, "%s.bmp", name);
+
+   SDL_SaveBMP(static_cast<SDL_Surface*>(getHandle()), filename);
 }
 
 } // namespace PLT
