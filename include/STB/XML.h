@@ -79,6 +79,19 @@ public:
       return "";
    }
 
+   bool hasAttr(const std::string& attr_name) const
+   {
+      for(const auto& attr : attr_list)
+      {
+         if (attr.getName() == attr_name)
+         {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
    template <typename TYPE>
    void match(const std::string& attr_name, TYPE& value) const
    {
