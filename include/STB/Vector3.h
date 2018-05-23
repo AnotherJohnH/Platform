@@ -76,6 +76,9 @@ public:
    This operator-() const
    { This r; for(unsigned i=0; i<N; ++i) r[i] = -e[i]; return r; }
 
+   This operator+() const
+   { This r; for(unsigned i=0; i<N; ++i) r[i] = +e[i]; return r; }
+
    This operator+(const T& v) const
    { This r; for(unsigned i=0; i<N; ++i) r[i] = e[i] + v; return r; }
 
