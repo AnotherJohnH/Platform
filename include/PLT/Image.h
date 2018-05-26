@@ -45,6 +45,8 @@ public:
       , height(height_)
    {}
 
+   virtual ~Image() {}
+
    //! Returns the size of a pixel (bits)
    static unsigned getPixelBits();
 
@@ -112,8 +114,6 @@ public:
    void save(const char* name) const;
 
 protected:
-   virtual ~Image() {}
-
    //! Clear entire image (back-stop slow implementation)
    void defaultClear(STB::Colour rgb)
    {
