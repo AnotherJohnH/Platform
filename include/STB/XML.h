@@ -66,6 +66,8 @@ public:
 
    const std::string& getName() const { return name; }
 
+   const std::vector<Attr> getAttrList() const { return attr_list; }
+
    std::string operator[](const std::string& attr_name) const
    {
       for(const auto& attr : attr_list)
