@@ -83,6 +83,6 @@ struct ColourDecode
    uint8_t blu() const { return colour >> BLU_LSB; }
 };
 
-} // namespace GUI
+} // namespace STB
 
 #endif // STB_COLOUR_H
