@@ -240,14 +240,15 @@ public:
       else if (isdigit(ch)) { value = ch - '0';       }
       else                  { return false;           }
 
+      sink();
+
       double denominator = 1.0;
 
       while(!isEof())
       {
-         sink();
-
          ch = next();
-         if (ch == '.')
+
+         if ((denominator == 1.0) && (ch == '.'))
          {
             denominator = 10.0;
          }
@@ -267,6 +268,8 @@ public:
                denominator = denominator * 10.0;
             }
          }
+
+         sink();
       }
 
       value *= sign;
