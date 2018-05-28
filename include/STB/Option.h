@@ -154,6 +154,8 @@ public:
       , value(default_value_)
    {}
 
+   const TYPE& get() const { return value; }
+
    // Pretend option is TYPE
 
    operator const TYPE&() const { return value; }
