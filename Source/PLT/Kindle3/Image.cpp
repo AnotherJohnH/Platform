@@ -73,8 +73,9 @@ void Image::lineBlit(uint8_t pixel_mask, STB::Colour one, STB::Colour zero,
    defaultLineBlit(pixel_mask, one, zero, x, y);
 }
 
-void Image::save(const char* name)
+bool Image::save(const char* name)
 {
+   return defaultSave(name);
 }
 
 } // namespace PLT

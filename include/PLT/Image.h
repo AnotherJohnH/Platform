@@ -30,6 +30,7 @@
 #include <cassert>
 
 #include "STB/Colour.h"
+#include "PLT/File.h"
 
 //! Platform abstraction layer
 namespace PLT {
@@ -111,7 +112,7 @@ public:
                  unsigned x, unsigned y);
 
    //! Save and to the named file (an appropriate extension will be added)
-   void save(const char* name) const;
+   bool save(const char* name) const;
 
 protected:
    //! Clear entire image (back-stop slow implementation)
@@ -159,6 +160,31 @@ protected:
          point(pixels & (1<<7) ? one : zero, x + i, y);
          pixels = pixels<<1;
       }
+   }
+
+   //! Write image as PPM format file
+   bool defaultSave(const char* name) const
+   {
+      File file(name, "ppm", "w");
+
+      if (!file.isOpen()) return false;
+
+      file.print("P3\n");
+      file.print("%u %u\n", width, height);
+      file.print("255\n");
+
+      for(unsigned y = 0; y < height; y++)
+      {
+         for(unsigned x = 0; x < width; x++)
+         {
+            STB::ColourDecode pixel = getPixel(x, y);
+
+            file.print("%u %u %u ", pixel.red(), pixel.grn(), pixel.blu());
+         }
+         file.print("\n");
+      }
+
+      return true;
    }
 
    uint8_t* buffer{nullptr};

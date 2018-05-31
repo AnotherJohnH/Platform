@@ -84,13 +84,16 @@ void Image::lineBlit(uint8_t pixel_mask, STB::Colour one, STB::Colour zero,
    defaultLineBlit(pixel_mask, one, zero, x, y);
 }
 
-void Image::save(const char* name) const
+bool Image::save(const char* name) const
 {
+   return defaultSave(name);
+
+   // .bmp is not the most portable
+#if 0
    char filename[FILENAME_MAX];
-
    sprintf(filename, "%s.bmp", name);
-
    SDL_SaveBMP(static_cast<SDL_Surface*>(getHandle()), filename);
+#endif
 }
 
 } // namespace PLT
