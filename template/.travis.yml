@@ -10,10 +10,12 @@ addons:
   apt:
     packages:
     - libsdl2-dev
+    - libsdl2-image-dev
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2_image; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install scons; fi
 
 language: cpp

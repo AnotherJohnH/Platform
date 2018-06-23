@@ -34,6 +34,7 @@ if env['CC'] == 'clang':
 
 env.ParseConfig('sdl2-config --cflags --libs')
 
+env.Append(LIBS      = ['SDL2_image'])
 env.Append(LINKFLAGS = ['-framework', 'CoreMIDI'])
 env.Append(LINKFLAGS = ['-framework', 'CoreFoundation'])
 

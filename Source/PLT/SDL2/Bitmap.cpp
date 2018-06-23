@@ -23,6 +23,7 @@
 // SDL2 Bitmap implementation
 
 #include "SDL2/SDL.h"
+#include "SDL2/SDL_image.h"
 
 #include "PLT/Bitmap.h"
 
@@ -43,7 +44,7 @@ public:
 
    Impl(const char* filename)
    {
-      surface = SDL_LoadBMP(filename);
+      surface = IMG_Load(filename);
       if (surface == nullptr)
       {
          fprintf(stderr, "Failed to open file '%s'\n", filename);
