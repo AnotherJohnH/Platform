@@ -31,7 +31,7 @@ env['CXXFLAGS']  = ['-std=c++11']
 
 env.ParseConfig('sdl2-config --cflags --libs')
 
-env.Append(LIBS = ['SD2_image'])
+env.Append(LIBS = ['SDL2_image'])
 
 Import('source')
 
