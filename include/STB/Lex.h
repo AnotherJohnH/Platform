@@ -123,45 +123,52 @@ public:
 
    //! Try and match a unsigned integer literal
    template <typename TYPE>
-   bool isMatchUnsigned(TYPE& value)
+   bool isMatchUnsigned(TYPE& value, unsigned base=0)
    {
-      char     ch = first();
-      unsigned base;
+      char ch = first();
 
-      if (ch == '0')
+      if (base == 0)
       {
-         sink();
-         ch = next();
+         if (ch == '0')
+         {
+            sink();
+            ch = next();
 
-         if (isdigit(ch))
+            if (isdigit(ch))
+            {
+               value = ch - '0';
+               base = 8;
+            }
+            else if ((ch == 'b') || (ch == 'B'))
+            {
+               value = 0;
+               base = 2;
+            }
+            else if ((ch == 'x') || (ch == 'X'))
+            {
+               value = 0;
+               base = 16;
+            }
+            else
+            {
+               value = 0;
+               return true;
+            }
+         }
+         else if (isdigit(ch))
          {
             value = ch - '0';
-            base = 8;
-         }
-         else if ((ch == 'b') || (ch == 'B'))
-         {
-            value = 0;
-            base = 2;
-         }
-         else if ((ch == 'x') || (ch == 'X'))
-         {
-            value = 0;
-            base = 16;
+            base = 10;
          }
          else
          {
-            value = 0;
-            return true;
+            return false;
          }
-      }
-      else if (isdigit(ch))
-      {
-         value = ch - '0';
-         base = 10;
       }
       else
       {
-         return false;
+         unsink(ch);
+         unsink(' ');
       }
 
       while(!isEof())
@@ -331,9 +338,9 @@ public:
 
    //! Match an unsigned integer literal
    template <typename TYPE>
-   bool matchUnsigned(TYPE& value)
+   bool matchUnsigned(TYPE& value, unsigned base=0)
    {
-      if (isMatchUnsigned(value)) return true;
+      if (isMatchUnsigned(value, base)) return true;
       return error("unsigned integer expected");
    }
 
