@@ -34,7 +34,16 @@ class Bitmap::Impl : public Image
 public:
    Impl(unsigned width, unsigned height)
    {
+#if 0
       surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, PIXEL_FORMAT);
+#else
+      // XXX replace with code above when SDL2.0.5 is more widely available
+      surface = SDL_CreateRGBSurface(0, width, height, 32,
+                                     0x00FF0000,
+                                     0x0000FF00,
+                                     0x000000FF,
+                                     0xFF000000);
+#endif
    }
 
    Impl(const char* filename)

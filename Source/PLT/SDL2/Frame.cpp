@@ -175,7 +175,16 @@ private:
 
    void createSurface(unsigned width_, unsigned height_)
    {
+#if 0
       surface = SDL_CreateRGBSurfaceWithFormat(0, width_, height_, 32, PIXEL_FORMAT);
+#else
+      // XXX replace with code above when SDL2.0.5 is more widely available
+      surface = SDL_CreateRGBSurface(0, width_, height_, 32,
+                                     0x00FF0000,
+                                     0x0000FF00,
+                                     0x000000FF,
+                                     0xFF000000);
+#endif
 
 // TODO understand what's going on here!
 #ifdef PROJ_TARGET_Emscripten
