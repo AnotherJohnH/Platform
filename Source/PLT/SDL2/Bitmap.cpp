@@ -22,8 +22,7 @@
 
 // SDL2 Bitmap implementation
 
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_image.h"
+#include "SDL_headers.h"
 
 #include "PLT/Bitmap.h"
 
@@ -35,11 +34,7 @@ class Bitmap::Impl : public Image
 public:
    Impl(unsigned width, unsigned height)
    {
-      surface = SDL_CreateRGBSurface(0, width, height, 32,
-                                     0x00FF0000,
-                                     0x0000FF00,
-                                     0x000000FF,
-                                     0xFF000000);
+      surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, PIXEL_FORMAT);
    }
 
    Impl(const char* filename)
@@ -51,9 +46,7 @@ public:
       }
       else
       {
-         surface = SDL_ConvertSurfaceFormat(image_surface,
-                                            SDL_PIXELFORMAT_ARGB8888,
-                                            /* not used */ 0);
+         surface = SDL_ConvertSurfaceFormat(image_surface, PIXEL_FORMAT, /* not used */ 0);
 
          SDL_FreeSurface(image_surface);
       }

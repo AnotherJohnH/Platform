@@ -175,18 +175,14 @@ private:
 
    void createSurface(unsigned width_, unsigned height_)
    {
-      surface = SDL_CreateRGBSurface(0, width_, height_, 32,
-                                     0x00FF0000,
-                                     0x0000FF00,
-                                     0x000000FF,
-                                     0xFF000000);
+      surface = SDL_CreateRGBSurfaceWithFormat(0, width_, height_, 32, PIXEL_FORMAT);
 
 // TODO understand what's going on here!
 #ifdef PROJ_TARGET_Emscripten
       texture = SDL_CreateTextureFromSurface(renderer, surface);
 #else
       texture = SDL_CreateTexture(renderer,
-                                  SDL_PIXELFORMAT_ARGB8888,
+                                  PIXEL_FORMAT,
                                   SDL_TEXTUREACCESS_STREAMING,
                                   width_, height_);
 #endif
