@@ -52,7 +52,7 @@ public:
       else
       {
          surface = SDL_ConvertSurfaceFormat(image_surface,
-                                            SDL_PIXELFORMAT_BGRA32,
+                                            SDL_PIXELFORMAT_ARGB8888,
                                             /* not used */ 0);
 
          SDL_FreeSurface(image_surface);
