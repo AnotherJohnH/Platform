@@ -44,10 +44,18 @@ public:
 
    Impl(const char* filename)
    {
-      surface = IMG_Load(filename);
-      if (surface == nullptr)
+      SDL_Surface* image_surface = IMG_Load(filename);
+      if (image_surface == nullptr)
       {
          fprintf(stderr, "Failed to open file '%s'\n", filename);
+      }
+      else
+      {
+         surface = SDL_ConvertSurfaceFormat(image_surface,
+                                            SDL_PIXELFORMAT_BGRA32,
+                                            /* not used */ 0);
+
+         SDL_FreeSurface(image_surface);
       }
    }
 
