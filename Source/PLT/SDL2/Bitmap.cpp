@@ -24,6 +24,17 @@
 
 #include "SDL_headers.h"
 
+#ifdef __clahng__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation"
+#endif
+
+#include "SDL_image.h"
+
+#ifdef __clahng__
+#pragma clang diagnostic pop
+#endif
+
 #include "PLT/Bitmap.h"
 
 namespace PLT {

@@ -30,7 +30,6 @@
 
 #include "SDL.h"
 #include "SDL_audio.h"
-#include "SDL_image.h"
 
 #ifdef __clang__
 #pragma clang diagnostic pop
