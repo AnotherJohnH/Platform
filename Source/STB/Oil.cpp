@@ -31,9 +31,9 @@ namespace OIL {
 
 void Member::write(PLT::File& file, void* that) const
 {
-   file.print("   %s = ", name);
+   file.print("   %s=\"", name);
 
-   if (elements > 1) file.print("{");
+   if (elements > 1) file.print("[");
 
    for(size_t i=0; i<elements; ++i)
    {
@@ -85,27 +85,26 @@ void Member::write(PLT::File& file, void* that) const
       }
    }
 
-   if (elements > 1) file.print("}");
+   if (elements > 1) file.print("]");
 
-   file.print(";\n");
+   file.print("\"\n");
 }
 
 void ClassBase::write(PLT::File& file, void* that) const
 {
-   file.print("%s\n", name);
-   file.print("{\n");
+   file.print("<%s\n", name);
 
    for(const auto& member : member_list)
    {
       member.write(file, that);
    }
 
-   file.print("}\n");
+   file.print("/>\n");
 }
 
 void ClassBase::write(void* that) const
 {
-   PLT::File file(name, "oil", "w");
+   PLT::File file(name, "xml", "w");
 
    write(file, that);
 }
@@ -115,7 +114,7 @@ bool Member::read(Lex& lex, void* that) const
 {
    if (elements > 1)
    {
-      if (!lex.match('{')) return false;
+      if (!lex.match('[')) return false;
    }
 
    for(size_t i=0; i<elements; ++i)
@@ -199,7 +198,7 @@ bool Member::read(Lex& lex, void* that) const
 
    if (elements > 1)
    {
-      if (!lex.match('}')) return false;
+      if (!lex.match(']')) return false;
    }
 
    return true;
@@ -207,11 +206,11 @@ bool Member::read(Lex& lex, void* that) const
 
 bool ClassBase::read(Lex& lex, void* that) const
 {
+   if (!lex.match('<')) return false;
+
    if (!lex.match(name)) return false;
 
-   if (!lex.match('{')) return false;
-
-   while(!lex.isMatch('}'))
+   while(!lex.isMatch("/>"))
    {
       std::string ident;
       if (!lex.matchIdent(ident)) return false;
@@ -221,9 +220,11 @@ bool ClassBase::read(Lex& lex, void* that) const
 
       if (!lex.match('=')) return false;
 
+      if (!lex.match('"')) return false;
+
       if (!member->read(lex, that)) return false;
 
-      if (!lex.match(';')) return false;
+      if (!lex.match('"')) return false;
    }
 
    return true;
@@ -231,7 +232,7 @@ bool ClassBase::read(Lex& lex, void* that) const
 
 bool ClassBase::read(void* that) const
 {
-   LEX::File lex(name, "oil");
+   LEX::File lex(name, "xml");
 
    return read(lex, that);
 }
