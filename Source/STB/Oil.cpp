@@ -233,6 +233,7 @@ bool ClassBase::read(Lex& lex, void* that) const
 bool ClassBase::read(void* that) const
 {
    LEX::File lex(name, "xml");
+   if (lex.isEof()) return false;
 
    return read(lex, that);
 }

@@ -32,17 +32,17 @@
 
 #include "STB/Oil.h"
 
-#include "TRM/Curses.h"
 #include "TRM/App.h"
+#include "TRM/Curses.h"
 
 namespace TRM {
 
-struct Config : public STB::Oil<Config>
+struct TermConfig : public STB::Oil<TermConfig>
 {
    unsigned font_size{18};
    unsigned border_pixels{0};
    unsigned line_space{0};
-   bool invert_video{false};
+   bool     invert_video{false};
 #ifdef PROJ_TARGET_Kindle3
    uint32_t bg_colour{0xFFFFFF};
    uint32_t fg_colour{0x000000};
@@ -52,7 +52,7 @@ struct Config : public STB::Oil<Config>
 #endif
 };
 
-BOIL(Config)
+BOIL(TermConfig)
 {
    MOIL(font_size);
    MOIL(border_pixels);
@@ -60,18 +60,18 @@ BOIL(Config)
    MOIL(bg_colour); FOIL(bg_colour, HEX);
    MOIL(fg_colour); FOIL(fg_colour, HEX);
 }
-EOIL(Config)
+EOIL(TermConfig)
 
 
 class Launcher : public App
 {
 protected:
-   Device* term{nullptr};
-   TRM::Curses  curses;
+   Device*     term{nullptr};
+   TRM::Curses curses;
 
 private:
    STB::Option<const char*> opt_config{'c', "config", "Use alternate config file", "zif.cfg"};
-   Config                   config;
+   TermConfig               config;
    const char*              filename{nullptr};
    unsigned                 cursor{0};
    unsigned                 cursor_limit{0};
@@ -87,7 +87,7 @@ private:
       {
          if(buffer[0] != '#')
          {
-            char* s  = strchr(buffer, '\n');
+            char* s = strchr(buffer, '\n');
             if(s) *s = '\0';
             return true;
          }
@@ -306,13 +306,13 @@ private:
    //! update the terminal configuration
    void configTerminal()
    {
-       term->ioctl(Device::IOCTL_TERM_PALETTE, 0, config.bg_colour);
-       term->ioctl(Device::IOCTL_TERM_PALETTE, 1, config.fg_colour);
-       term->ioctl(Device::IOCTL_TERM_BORDER, config.border_pixels);
-       term->ioctl(Device::IOCTL_TERM_LINE_SPACE, config.line_space);
-       term->ioctl(Device::IOCTL_TERM_FONT_SIZE, config.font_size);
+      term->ioctl(Device::IOCTL_TERM_PALETTE, 0, config.bg_colour);
+      term->ioctl(Device::IOCTL_TERM_PALETTE, 1, config.fg_colour);
+      term->ioctl(Device::IOCTL_TERM_BORDER, config.border_pixels);
+      term->ioctl(Device::IOCTL_TERM_LINE_SPACE, config.line_space);
+      term->ioctl(Device::IOCTL_TERM_FONT_SIZE, config.font_size);
 
-       curses.init();
+      curses.init();
    }
 
    //! Open a config directory (not a real directory)
@@ -463,7 +463,8 @@ public:
             const char*  config_file)
       : App(program, description, link, author, version, copyright_year, args_help)
       , opt_config('c', "config", "Use alternate config file", config_file)
-   {}
+   {
+   }
 };
 
 } // namespace TRM

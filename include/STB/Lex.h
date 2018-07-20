@@ -585,7 +585,11 @@ private:
 
       if (!file->isOpen())
       {
-         error("Failed to open file '%s'", filename);
+         if (ext != nullptr)
+            error("Failed to open file '%s.%s'", filename, ext);
+         else
+            error("Failed to open file '%s'", filename);
+
          close();
       }
       else
