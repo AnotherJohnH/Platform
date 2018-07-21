@@ -31,29 +31,29 @@ namespace OIL {
 
 void Member::write(PLT::File& file, void* that) const
 {
-   file.print("   %s=\"", name);
+   file.printf("   %s=\"", name);
 
-   if (elements > 1) file.print("[");
+   if (elements > 1) file.printf("[");
 
    for(size_t i=0; i<elements; ++i)
    {
-      if (i > 0) file.print(", ");
+      if (i > 0) file.printf(", ");
 
       void* data = (uint8_t*)that + offset + size*i;
 
       switch(type)
       {
       case Type::BOOL:
-         file.print("%s", *(bool*)data ? "true" : "false");
+         file.printf("%s", *(bool*)data ? "true" : "false");
          break;
 
       case Type::SIGNED:
          switch(size)
          {
-         case 1: file.print("%d",   *(int8_t*)data); break;
-         case 2: file.print("%d",   *(int16_t*)data); break;
-         case 4: file.print("%d",   *(int32_t*)data); break;
-         case 8: file.print("%lld", *(int64_t*)data); break;
+         case 1: file.printf("%d",   *(int8_t*)data); break;
+         case 2: file.printf("%d",   *(int16_t*)data); break;
+         case 4: file.printf("%d",   *(int32_t*)data); break;
+         case 8: file.printf("%lld", *(int64_t*)data); break;
          default: assert(!"unexpected member size"); break;
          }
          break;
@@ -65,10 +65,10 @@ void Member::write(PLT::File& file, void* that) const
 
              switch(size)
              {
-             case 1: file.print(hex ? "0x%02x"    : "%u",   *(uint8_t*)data);  break;
-             case 2: file.print(hex ? "0x%04x"    : "%u",   *(uint16_t*)data); break;
-             case 4: file.print(hex ? "0x%08x"    : "%u",   *(uint32_t*)data); break;
-             case 8: file.print(hex ? "0x%016llx" : "%llu", *(uint64_t*)data); break;
+             case 1: file.printf(hex ? "0x%02x"    : "%u",   *(uint8_t*)data);  break;
+             case 2: file.printf(hex ? "0x%04x"    : "%u",   *(uint16_t*)data); break;
+             case 4: file.printf(hex ? "0x%08x"    : "%u",   *(uint32_t*)data); break;
+             case 8: file.printf(hex ? "0x%016llx" : "%llu", *(uint64_t*)data); break;
              default: assert(!"unexpected member size"); break;
              }
       }
@@ -77,29 +77,29 @@ void Member::write(PLT::File& file, void* that) const
       case Type::FLOAT:
          switch(size)
          {
-         case 4: file.print("%g", *(float*)data); break;
-         case 8: file.print("%g", *(double*)data); break;
+         case 4: file.printf("%g", *(float*)data); break;
+         case 8: file.printf("%g", *(double*)data); break;
          default: assert(!"unexpected member size"); break;
          }
          break;
       }
    }
 
-   if (elements > 1) file.print("]");
+   if (elements > 1) file.printf("]");
 
-   file.print("\"\n");
+   file.printf("\"\n");
 }
 
 void ClassBase::write(PLT::File& file, void* that) const
 {
-   file.print("<%s\n", name);
+   file.printf("<%s\n", name);
 
    for(const auto& member : member_list)
    {
       member.write(file, that);
    }
 
-   file.print("/>\n");
+   file.printf("/>\n");
 }
 
 void ClassBase::write(void* that) const

@@ -146,10 +146,7 @@ File::File(const char* path, const char* filename, const char* ext)
 {
 }
 
-File::~File()
-{
-   delete pimpl;
-}
+File::~File() { delete pimpl; }
 
 bool File::isOpen() const { return pimpl->isOpen(); }
 
@@ -169,20 +166,11 @@ bool File::read(void* data, size_t bytes) { return pimpl->read(data, bytes); }
 
 bool File::getLine(char* buffer, size_t size) { return pimpl->getLine(buffer, size); }
 
-void File::print(const char* format, ...)
-{
-   va_list ap;
-   va_start(ap, format);
-   pimpl->vprint(format, ap);
-   va_end(ap);
-}
+void File::vprintf(const char* format, va_list ap) { pimpl->vprint(format, ap); }
 
 bool File::write(const void* data, size_t bytes) { return pimpl->write(data, bytes); }
 
-void File::flush()
-{  
-   pimpl->flush();
-}
+void File::flush() {  pimpl->flush(); }
    
 bool File::error(const char* format, ...)
 {

@@ -27,6 +27,7 @@
 #define PLT_FILE_H
 
 #include <cstddef>
+#include <cstdarg>
 
 namespace PLT {
 
@@ -74,7 +75,16 @@ public:
    bool read(void* data, size_t size);
 
    //! Formated output
-   void print(const char* format, ...);
+   void printf(const char* format, ...)
+   {
+      va_list ap;
+      va_start(ap, format);
+      vprintf(format, ap);
+      va_end(ap);
+   }
+
+   //! Formated output
+   void vprintf(const char* format, va_list ap);
 
    //! Write raw data
    bool write(const void* data, size_t size);

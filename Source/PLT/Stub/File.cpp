@@ -46,7 +46,7 @@ bool File::seek(size_t offset) { return false; }
 
 bool File::read(void* data, size_t bytes) { return false; }
 
-void File::print(const char* format, ...) {}
+void File::vprintf(const char* format, va_list ap) {}
 
 bool File::write(const void* data, size_t bytes) { return false; }
 

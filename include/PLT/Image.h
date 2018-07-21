@@ -165,13 +165,13 @@ protected:
    //! Write image as PPM format file
    bool defaultSave(const char* name) const
    {
-      File file(name, "ppm", "w");
+      File file(nullptr, name, "ppm");
 
-      if (!file.isOpen()) return false;
+      if (!file.openForWrite()) return false;
 
-      file.print("P3\n");
-      file.print("%u %u\n", width, height);
-      file.print("255\n");
+      file.printf("P3\n");
+      file.printf("%u %u\n", width, height);
+      file.printf("255\n");
 
       for(unsigned y = 0; y < height; y++)
       {
@@ -179,9 +179,9 @@ protected:
          {
             STB::ColourDecode pixel = getPixel(x, y);
 
-            file.print("%u %u %u ", pixel.red(), pixel.grn(), pixel.blu());
+            file.printf("%u %u %u ", pixel.red(), pixel.grn(), pixel.blu());
          }
-         file.print("\n");
+         file.printf("\n");
       }
 
       return true;
