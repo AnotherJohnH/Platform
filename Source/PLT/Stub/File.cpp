@@ -24,9 +24,7 @@
 
 namespace PLT {
 
-File::File(const char* filename, const char* mode) {}
-
-File::File(const char* filename, const char* ext, const char* mode) {}
+File::File(const char* path, const char* filename, const char* ext) {}
 
 File::~File() {}
 
@@ -35,6 +33,10 @@ bool File::isOpen() const { return false; }
 bool File::isEof() const { return true; }
 
 const char* File::getFilename() const { return nullptr; }
+
+bool File::openForRead() { return false; }
+
+bool File::openForWrite() { return false; }
 
 bool File::getChar(char& ch) { return false; }
 

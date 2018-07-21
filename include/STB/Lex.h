@@ -576,20 +576,13 @@ private:
    {
       line_no_stack.push_back(line_no);
 
-      if (ext != nullptr)
-         file_stack.push_back(new PLT::File(filename, ext, "r"));
-      else
-         file_stack.push_back(new PLT::File(filename, "r"));
+      file_stack.push_back(new PLT::File(nullptr, filename, ext));
 
-      const PLT::File* file = file_stack.back();
+      PLT::File* file = file_stack.back();
 
-      if (!file->isOpen())
+      if (!file->openForRead())
       {
-         if (ext != nullptr)
-            error("Failed to open file '%s.%s'", filename, ext);
-         else
-            error("Failed to open file '%s'", filename);
-
+         error("Failed to open file '%s'", file->getFilename());
          close();
       }
       else

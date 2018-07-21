@@ -105,13 +105,11 @@ private:
    }
 
 public:
-   SmallLex(const char* filename)
-      : PLT::File(filename, "r")
-   {}
-
-   SmallLex(const char* filename, const char* ext)
-      : PLT::File(filename, ext, "r")
-   {}
+   SmallLex(const char* filename, const char* ext = nullptr)
+      : PLT::File(nullptr, filename, ext)
+   {
+      (void) openForRead();
+   }
 
    const char* getToken() const { return buffer.c_str(); }
 

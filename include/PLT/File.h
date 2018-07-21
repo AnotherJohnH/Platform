@@ -34,18 +34,14 @@ namespace PLT {
 class File
 {
 public:
-   //! Open a file stream
+   //! A file stream
    //
-   // \param filename full filename
-   // \param mode fopen() style mode
-   File(const char* filename, const char* mode);
-
-   //! Open a file stream
-   //
+   // \param path optional path or null
    // \param filename filename
-   // \param ext filename extension
-   // \param mode fopen() style mode
-   File(const char* filename, const char* ext, const char* mode);
+   // \param ext optional filename extension or null
+   File(const char* path,
+        const char* filename,
+        const char* ext = nullptr);
 
    //! Close the file stream
    ~File();
@@ -58,6 +54,12 @@ public:
 
    //! Return true if the file is not open or at the end of the file
    bool isEof() const;
+
+   //! Open file
+   bool openForRead();
+
+   //! Open file
+   bool openForWrite();
 
    //! Get next character from input stream
    bool getChar(char& ch);

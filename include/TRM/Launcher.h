@@ -70,7 +70,7 @@ protected:
    TRM::Curses curses;
 
 private:
-   STB::Option<const char*> opt_config{'c', "config", "Use alternate config file", "zif.cfg"};
+   STB::Option<const char*> opt_config{'c', "config", "Use alternate config file"};
    TermConfig               config;
    const char*              filename{nullptr};
    unsigned                 cursor{0};
@@ -126,12 +126,12 @@ private:
 
       const unsigned first_row = 3;
 
-      PLT::File file(opt_config, "r");
+      PLT::File file(nullptr, opt_config, "cfg");
 
-      if(!file.isOpen())
+      if(!file.openForRead())
       {
          curses.mvaddstr(first_row, 3, "ERROR - failed to open \"");
-         curses.addstr(opt_config);
+         curses.addstr(file.getFilename());
          curses.addstr("\"");
          return;
       }

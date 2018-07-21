@@ -34,19 +34,23 @@ namespace PLT {
 class File::Impl
 {
 public:
-   Impl(const char* filename_, const char* mode_)
-      : filename(filename_)
+   Impl(const char* path_, const char* filename_, const char* ext_)
    {
-      fp = fopen(getFilename(), mode_);
-   }
-   
-   Impl(const char* filename_, const char* ext_, const char* mode_)
-   {
-      filename = filename_;
-      filename += '.';
-      filename += ext_;
+      filename = "";
 
-      fp = fopen(getFilename(), mode_);
+      if(path_ != nullptr)
+      {
+         filename += path_;
+         filename += '/';
+      }
+
+      filename += filename_;
+
+      if(ext_ != nullptr)
+      {
+         filename += '.';
+         filename += ext_;
+      }
    }
    
    ~Impl()
@@ -62,6 +66,14 @@ public:
 
    //! Return true if the file is not open or at the end of file
    bool isEof() const { return !isOpen() || feof(fp); }
+
+   bool open(const char* mode_)
+   {
+      assert(!isOpen());
+
+      fp = fopen(getFilename(), mode_);
+      return fp != NULL;
+   }
    
    //! Get next character from input stream
    bool getChar(char& ch)
@@ -129,13 +141,10 @@ private:
 };
 
 
-File::File(const char* filename, const char* mode)
-   : pimpl(new Impl(filename, mode))
-{}
-
-File::File(const char* filename, const char* ext, const char* mode)
-   : pimpl(new Impl(filename, ext, mode))
-{}
+File::File(const char* path, const char* filename, const char* ext)
+   : pimpl(new Impl(path, filename, ext))
+{
+}
 
 File::~File()
 {
@@ -147,6 +156,10 @@ bool File::isOpen() const { return pimpl->isOpen(); }
 bool File::isEof() const { return pimpl->isEof(); }
 
 const char* File::getFilename() const { return pimpl->getFilename(); }
+
+bool File::openForRead() { return pimpl->open("r"); }
+
+bool File::openForWrite() { return pimpl->open("w"); }
 
 bool File::getChar(char& ch) { return pimpl->getChar(ch); }
 

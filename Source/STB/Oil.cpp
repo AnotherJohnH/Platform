@@ -104,9 +104,12 @@ void ClassBase::write(PLT::File& file, void* that) const
 
 void ClassBase::write(void* that) const
 {
-   PLT::File file(name, "xml", "w");
+   PLT::File file(nullptr, name, "xml");
 
-   write(file, that);
+   if (file.openForWrite())
+   {
+      write(file, that);
+   }
 }
 
 
