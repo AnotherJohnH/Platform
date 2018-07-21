@@ -20,9 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include <cstdio>
+#include <cerrno>
 #include <cstdarg>
+#include <cstdio>
 #include <string>
+#include <sys/stat.h>
 
 #include "PLT/File.h"
 
@@ -176,6 +178,16 @@ bool File::error(const char* format, ...)
    pimpl->verror(format, ap);
    va_end(ap);
    return false;
+}
+
+bool File::createDir(const char* path)
+{
+   if (::mkdir(path, S_IRWXU) == 0)
+   {
+      return true;
+   }
+
+   return errno == EEXIST;
 }
 
 } // namespace PLT

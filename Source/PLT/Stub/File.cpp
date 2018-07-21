@@ -52,4 +52,6 @@ void File::flush() {}
    
 bool File::error(const char* format, ...) { return false; }
 
+bool File::createDir(const char* path) { return false; }
+
 } // namespace PLT
