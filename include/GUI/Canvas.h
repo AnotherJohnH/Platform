@@ -339,8 +339,8 @@ public:
          uint8_t byte       = *alphamap++;
          uint8_t alpha      = byte >> (8 - BPP);
          uint8_t last_alpha = alpha;
-         int32_t  x1         = x;
-         int32_t  x2         = x1;
+         int32_t x1         = x;
+         int32_t x2         = x1;
 
          for(uint32_t u = 0; true;)
          {
@@ -390,16 +390,16 @@ public:
       const uint8_t* map = font->getAlphaMap(ch);
       if(map != nullptr)
       {
-          switch(font->getBPP())
-          {
-          case 1: drawAlphaMap<1>(fg, bg, x, y, w, font->getHeight(), map); break;
-          case 2: drawAlphaMap<2>(fg, bg, x, y, w, font->getHeight(), map); break;
-          case 4: drawAlphaMap<4>(fg, bg, x, y, w, font->getHeight(), map); break;
-          case 8: drawAlphaMap<8>(fg, bg, x, y, w, font->getHeight(), map); break;
+         switch(font->getBPP())
+         {
+         case 1: drawAlphaMap<1>(fg, bg, x, y, w, font->getHeight(), map); break;
+         case 2: drawAlphaMap<2>(fg, bg, x, y, w, font->getHeight(), map); break;
+         case 4: drawAlphaMap<4>(fg, bg, x, y, w, font->getHeight(), map); break;
+         case 8: drawAlphaMap<8>(fg, bg, x, y, w, font->getHeight(), map); break;
 
-          default: break;
-          }
-       }
+         default: break;
+         }
+      }
 
       return w;
    }
@@ -421,8 +421,8 @@ public:
                   uint32_t w = 0, uint32_t h = 0,
                   uint32_t src_x = 0, uint32_t src_y = 0)
    {
-      if (w == 0) w = source.getWidth();
-      if (h == 0) h = source.getHeight();
+      if(w == 0) w = source.getWidth();
+      if(h == 0) h = source.getHeight();
 
       canvasBlit(source, x, y, w, h, src_x, src_y);
    }
@@ -447,7 +447,7 @@ public:
 private:
    static const uint32_t MAX_ALPHA_BPP = 4;
 
-   Vector size;
+   Vector      size;
    STB::Colour alpha_table[1 << MAX_ALPHA_BPP] = {};
 
    //! Clip value to between 0 and limit (inclusive range)

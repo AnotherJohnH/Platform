@@ -20,19 +20,20 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Frame.h
+//! \file Bitmap.h
 //! \brief Platform abstraction interface for 2D rendering on a bitmap buffer
 
 #ifndef GUI_BITMAP_H
 #define GUI_BITMAP_H
 
 #include "PLT/Bitmap.h"
+
 #include "GUI/Canvas.h"
 
 namespace GUI {
 
 //!
-class Bitmap: public Canvas
+class Bitmap : public Canvas
 {
 private:
    PLT::Bitmap bitmap;
@@ -44,19 +45,12 @@ private:
    }
 
 protected:
-   virtual const PLT::Image* canvasGetImage() const override
-   {
-      return &bitmap;
-   }
+   virtual const PLT::Image* canvasGetImage() const override { return &bitmap; }
 
 private:
-   virtual void canvasResize(uint32_t width, uint32_t height) override
-   {
-   }
+   virtual void canvasResize(uint32_t width, uint32_t height) override {}
 
-   virtual void canvasRefresh(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override
-   {
-   }
+   virtual void canvasRefresh(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override {}
 
    virtual void canvasClear(STB::Colour colour) override
    {
@@ -79,7 +73,7 @@ private:
                            uint32_t src_x, uint32_t src_y) override
    {
       const PLT::Image* image = source.canvasGetImage();
-      if (image == nullptr)
+      if(image == nullptr)
       {
          Canvas::canvasBlit(source, x, y, w, h, src_x, src_y);
          return;
@@ -92,13 +86,10 @@ public:
    Bitmap(const char* filename)
       : bitmap(filename)
    {
-       resize(bitmap.getWidth(), bitmap.getHeight());
+      resize(bitmap.getWidth(), bitmap.getHeight());
    }
 
-   PLT::Bitmap* getBitmapPtr()
-   {
-      return &bitmap;
-   }
+   PLT::Bitmap* getBitmapPtr() { return &bitmap; }
 };
 
 } // namespace GUI

@@ -43,8 +43,8 @@ const STB::Colour HIDDEN     = STB::RGBA(0x00, 0x00, 0x00, 0xFF);
 class ColourPair
 {
 protected:
-   STB::Colour  fg_colour{FOREGROUND};
-   STB::Colour  bg_colour{FACE};
+   STB::Colour fg_colour{FOREGROUND};
+   STB::Colour bg_colour{FACE};
 
 public:
    void setForegroundColour(STB::Colour colour) { fg_colour = colour; }

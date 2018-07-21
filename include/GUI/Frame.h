@@ -27,6 +27,7 @@
 #define GUI_FRAME_H
 
 #include "PLT/Frame.h"
+
 #include "GUI/Canvas.h"
 
 namespace GUI {
@@ -48,10 +49,7 @@ private:
    }
 
 protected:
-   virtual const PLT::Image* canvasGetImage() const override
-   {
-      return &frame;
-   }
+   virtual const PLT::Image* canvasGetImage() const override { return &frame; }
 
 private:
    virtual void canvasResize(uint32_t width, uint32_t height) override
@@ -85,7 +83,7 @@ private:
                            uint32_t src_x, uint32_t src_y) override
    {
       const PLT::Image* image = source.canvasGetImage();
-      if (image == nullptr)
+      if(image == nullptr)
       {
          Canvas::canvasBlit(source, x, y, w, h, src_x, src_y);
          return;
@@ -98,12 +96,10 @@ public:
    Frame(const char* title_, unsigned width_ = 0, unsigned height_ = 0, uint32_t flags_ = 0)
       : GUI::Canvas(width_, height_)
       , frame(title_, width_, height_, flags_)
-   {}
-
-   PLT::Frame* getFramePtr()
    {
-      return &frame;
    }
+
+   PLT::Frame* getFramePtr() { return &frame; }
 };
 
 } // namespace GUI

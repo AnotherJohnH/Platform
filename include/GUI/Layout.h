@@ -57,8 +57,8 @@ class Layout
 protected:
    Vector      pos{0, 0};               //!< Absolute position in root canvas
    Vector      size{0, 0};              //!< Width and height
-   SmallVector top_left{0,0};           //!< Top left border for children
-   SmallVector btm_right{0,0};          //!< Bottom right border for children
+   SmallVector top_left{0, 0};          //!< Top left border for children
+   SmallVector btm_right{0, 0};         //!< Bottom right border for children
    Fit         horz_fit{Fit::FIX};      //!< Horizontal fit
    Fit         vert_fit{Fit::FIX};      //!< Vertical fit
    bool        row{false};              //!< Layout children in a row not a column
