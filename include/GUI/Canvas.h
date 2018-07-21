@@ -418,9 +418,12 @@ public:
    //! Blit from another canvas into this canvas
    void drawImage(const Canvas& source,
                   uint32_t x, uint32_t y,
-                  uint32_t w, uint32_t h,
-                  uint32_t src_x, uint32_t src_y)
+                  uint32_t w = 0, uint32_t h = 0,
+                  uint32_t src_x = 0, uint32_t src_y = 0)
    {
+      if (w == 0) w = source.getWidth();
+      if (h == 0) h = source.getHeight();
+
       canvasBlit(source, x, y, w, h, src_x, src_y);
    }
 
