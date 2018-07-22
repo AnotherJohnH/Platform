@@ -20,6 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#include <cassert>
 #include <cerrno>
 #include <cstdarg>
 #include <cstdio>
