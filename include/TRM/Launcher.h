@@ -384,7 +384,10 @@ private:
       term = &term_;
       curses.setDevice(&term_);
 
-      config.read();
+      if (!config.read())
+      {
+         config.write();
+      }
 
       configTerminal();
 

@@ -268,7 +268,7 @@ public:
       : oil_class(OIL::ClassBase::findClass<TYPE>())
    {}
 
-   void read() { oil_class->read(this); }
+   bool read() { return oil_class->read(this); }
 
    void write() { oil_class->write(this); }
 
