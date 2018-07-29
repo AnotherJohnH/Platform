@@ -304,6 +304,7 @@ private:
          else if (lex.isMatch("PUBLIC"))
          {
             lex.matchString(public_literal);
+            (void) lex.isMatchString(system_literal);
          }
 
          lex.match('>');
