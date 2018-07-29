@@ -41,9 +41,9 @@ public:
       : name(name_)
    {}
 
-   const std::string& getName() const { return name; }
+   std::string getName() const { return name; }
 
-   const std::string& getValue() const { return value; }
+   std::string getValue() const { return value; }
 
    void parse(Lex& lex)
    {
@@ -52,8 +52,8 @@ public:
    }
 
 private:
-   std::string  name;
-   std::string  value{};
+   std::string name{};
+   std::string value{};
 };
 
 
@@ -64,7 +64,9 @@ public:
    Element(const std::string& = "")
    {}
 
-   const std::string& getName() const { return name; }
+   std::string getName() const { return name; }
+
+   std::string getValue() const { return value; }
 
    const std::vector<Attr> getAttrList() const { return attr_list; }
 
@@ -177,13 +179,20 @@ protected:
 
       lex.match('>');
 
-      while(lex.isMatch('<'))
+      while(true)
       {
-         if (lex.isMatch('/')) break;
+         if (lex.isMatch('<'))
+         {
+            if (lex.isMatch('/')) break;
 
-         emplace_back();
-         back().parse(lex);
-
+            emplace_back();
+            back().parse(lex);
+         }
+         else
+         {
+            value += lex.next();
+            lex.sink();
+         }
       }
 
       lex.match(name.c_str());
@@ -191,8 +200,9 @@ protected:
    }
 
 private:
-   std::string         name;
-   std::vector<Attr>   attr_list;
+   std::string       name{};
+   std::vector<Attr> attr_list{};
+   std::string       value{};
 };
 
 
@@ -294,7 +304,6 @@ private:
          else if (lex.isMatch("PUBLIC"))
          {
             lex.matchString(public_literal);
-            lex.matchString(system_literal);
          }
 
          lex.match('>');
