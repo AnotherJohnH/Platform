@@ -43,4 +43,5 @@ source+=[env.File('../SDL2/Audio.cpp'),
          env.File('../Stub/Midi.cpp'),
          env.File('../Stub/Sounder.cpp'),
          env.File('../POSIX/Yield.cpp'),
-         env.File('../POSIX/File.cpp')]
+         env.File('../POSIX/File.cpp'),
+         env.File('../POSIX/Socket.cpp')]
