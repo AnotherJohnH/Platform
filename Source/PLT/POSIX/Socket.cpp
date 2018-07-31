@@ -85,6 +85,7 @@ public:
          return true;
       }
 
+      bytes_read = 0;
       return false;
    }
 
@@ -106,7 +107,7 @@ private:
       struct hostent* hp = gethostbyname(hostname);
       if (hp != nullptr)
       {
-          return *hp->h_addr;
+          return *(in_addr_t*)hp->h_addr;
       }
 
       return INADDR_NONE;
