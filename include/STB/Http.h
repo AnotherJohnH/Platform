@@ -139,7 +139,12 @@ public:
          {
             if (!socket.gets(line, sizeof(line))) return 0;
             content_length = strtoul(line, nullptr, 16);
-            if (content_length == 0) break;
+            if (content_length == 0)
+            {
+               // Read final empty line
+               if (!socket.gets(line, sizeof(line))) return 0;
+               break;
+            }
          }
 
          while(content_length > 0)
