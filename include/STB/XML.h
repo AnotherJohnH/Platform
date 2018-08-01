@@ -160,7 +160,7 @@ public:
    }
 
 protected:
-   void parse(Lex& lex)
+   bool parse(Lex& lex)
    {
       lex.matchIdent(name);
 
@@ -174,7 +174,7 @@ protected:
       if (lex.isMatch('/'))
       {
          lex.match('>');
-         return;
+         return true;
       }
 
       lex.match('>');
@@ -186,7 +186,7 @@ protected:
             if (lex.isMatch('/')) break;
 
             emplace_back();
-            back().parse(lex);
+            if (!back().parse(lex)) return true;
          }
          else
          {
@@ -195,8 +195,17 @@ protected:
          }
       }
 
-      lex.match(name.c_str());
+      if (!lex.isMatch(name.c_str()))
+      {
+         lex.error("</%s> expected", name.c_str());
+         std::string term;
+         lex.matchIdent(term);
+         lex.match('>');
+         return false;
+      }
+
       lex.match('>');
+      return true;
    }
 
 private:
