@@ -71,9 +71,11 @@ public:
    //! Close a connection
    void close()
    {
-      assert(isOpen());
-      ::close(sd);
-      sd = 0;
+      if (isOpen())
+      {
+         ::close(sd);
+         sd = 0;
+      }
    }
 
    bool read(void* buffer, size_t buffer_size, size_t& bytes_read)

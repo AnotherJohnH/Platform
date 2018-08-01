@@ -166,14 +166,14 @@ public:
    //! Use HTTP to retrieve a file
    bool getFile(const std::string& path,
                 const std::string& out_file)
-   {  
+   {
       STB::Http http;
       PLT::File file(nullptr, out_file.c_str());
 
       if(!file.openForWrite()) return false;
 
       unsigned status = request([&file](const uint8_t* buffer, size_t size)
-                                {  
+                                {
                                    file.write(buffer, size);
                                 },
                                 "GET",
