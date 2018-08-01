@@ -182,6 +182,14 @@ bool File::error(const char* format, ...)
    return false;
 }
 
+bool File::exists(const char* path)
+{
+   FILE* fp = fopen(path, "r");
+   if (fp == nullptr) return false;
+   fclose(fp);
+   return true;
+}
+
 bool File::createDir(const char* path)
 {
    if (::mkdir(path, S_IRWXU) == 0)

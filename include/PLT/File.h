@@ -96,6 +96,9 @@ public:
    bool error(const char* format, ...);
 
    //! Create a directory
+   static bool exists(const char* path);
+
+   //! Create a directory
    static bool createDir(const char* path);
 
 private:
