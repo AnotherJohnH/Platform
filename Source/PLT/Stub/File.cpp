@@ -56,6 +56,8 @@ bool File::error(const char* format, ...) { return false; }
 
 bool File::exists(const char* path) { return false; }
 
+size_t File::size(const char* path) { return 0; }
+
 bool File::createDir(const char* path) { return false; }
 
 } // namespace PLT

@@ -95,8 +95,11 @@ public:
    //! Report an error
    bool error(const char* format, ...);
 
-   //! Create a directory
+   //! Check for file existance
    static bool exists(const char* path);
+
+   //! Get size of a file
+   static size_t size(const char* path);
 
    //! Create a directory
    static bool createDir(const char* path);

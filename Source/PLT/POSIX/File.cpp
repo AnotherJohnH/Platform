@@ -190,6 +190,16 @@ bool File::exists(const char* path)
    return true;
 }
 
+size_t File::size(const char* path)
+{
+   FILE* fp = fopen(path, "r");
+   if (fp == nullptr) return 0;
+   if (fseek(fp, 0, SEEK_END) != 0) return 0;
+   size_t pos = ftell(fp);
+   fclose(fp);
+   return pos;
+}
+
 bool File::createDir(const char* path)
 {
    if (::mkdir(path, S_IRWXU) == 0)
