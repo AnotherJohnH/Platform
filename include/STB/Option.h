@@ -86,7 +86,11 @@ private:
          printf("%-19s", "");
       }
 
-      printf(" %s\n", description);
+      printf(" %s", description);
+
+      showDefault();
+
+      printf("\n");
    }
 
    //! Check if the given command line argument matches this option
@@ -135,6 +139,9 @@ public:
 
    //! Set option value from a string
    virtual bool set(const char* arg) = 0;
+
+   //! Report the default value on the console
+   virtual void showDefault() const = 0;
 };
 
 
@@ -146,6 +153,8 @@ private:
    TYPE value;
 
    virtual bool set(const char* arg) override;
+
+   virtual void showDefault() const override;
 
 public:
    Option(char short_opt_, const char* long_opt_, const char* description_,

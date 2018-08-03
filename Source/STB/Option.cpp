@@ -34,12 +34,18 @@ bool Option<bool>::set(const char* arg_)
    return false;
 }
 
+template <> void Option<bool>::showDefault() const {}
+
+
 template <>
 bool Option<int32_t>::set(const char* arg_)
 {
    if(arg_ != nullptr) value = int32_t(strtol(arg_, nullptr, 0));
    return true;
 }
+
+template <> void Option<int32_t>::showDefault() const {}
+
 
 template <>
 bool Option<int64_t>::set(const char* arg_)
@@ -48,12 +54,18 @@ bool Option<int64_t>::set(const char* arg_)
    return true;
 }
 
+template <> void Option<int64_t>::showDefault() const {}
+
+
 template <>
 bool Option<uint16_t>::set(const char* arg_)
 {
    if(arg_ != nullptr) value = uint16_t(strtoul(arg_, nullptr, 0));
    return true;
 }
+
+template <> void Option<uint16_t>::showDefault() const {}
+
 
 template <>
 bool Option<uint32_t>::set(const char* arg_)
@@ -62,12 +74,18 @@ bool Option<uint32_t>::set(const char* arg_)
    return true;
 }
 
+template <> void Option<uint32_t>::showDefault() const {}
+
+
 template <>
 bool Option<uint64_t>::set(const char* arg_)
 {
    if(arg_ != nullptr) value = strtoul(arg_, nullptr, 0);
    return true;
 }
+
+template <> void Option<uint64_t>::showDefault() const {}
+
 
 template <>
 bool Option<double>::set(const char* arg_)
@@ -76,11 +94,23 @@ bool Option<double>::set(const char* arg_)
    return true;
 }
 
+template <> void Option<double>::showDefault() const
+{
+   printf(" [%g]", value);
+}
+
+
 template <>
 bool Option<const char*>::set(const char* arg_)
 {
    if(arg_ != nullptr) value = arg_;
    return true;
 }
+
+template <> void Option<const char*>::showDefault() const
+{
+   if (value != nullptr) printf(" [\"%s\"]", value);
+}
+
 
 } // namespace STB
