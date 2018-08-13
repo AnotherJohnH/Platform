@@ -63,6 +63,10 @@ public:
    {
    }
 
+   void operator+=(const char* ch)
+   {
+   }
+
    const char* c_str() const
    {
       return nullptr;
