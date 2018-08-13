@@ -126,7 +126,7 @@ private:
 
       const unsigned first_row = 3;
 
-      PLT::File file(nullptr, opt_config, "cfg");
+      PLT::File file(nullptr, opt_config);
 
       if(!file.openForRead())
       {

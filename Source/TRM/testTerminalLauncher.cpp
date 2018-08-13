@@ -53,7 +53,7 @@ private:
 public:
    MyApp(int argc, const char* argv[])
       : TRM::Launcher(PROGRAM, DESCRIPTION, LINK, AUTHOR, VERSION, COPYRIGHT_YEAR,
-                      "<file>", "cfg")
+                      "<file>", "launcher.cfg")
    {
       parseArgsAndStart(argc, argv);
    }

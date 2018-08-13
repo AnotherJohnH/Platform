@@ -36,6 +36,12 @@ bool Option<bool>::set(const char* arg_)
 
 template <> void Option<bool>::showDefault() const {}
 
+template <>
+const char* Option<bool>::getValueDescription() const
+{
+   return nullptr;
+}
+
 
 template <>
 bool Option<int32_t>::set(const char* arg_)
@@ -44,7 +50,16 @@ bool Option<int32_t>::set(const char* arg_)
    return true;
 }
 
-template <> void Option<int32_t>::showDefault() const {}
+template <> void Option<int32_t>::showDefault() const
+{
+   printf(" [%i]", value);
+}
+
+template <>
+const char* Option<int32_t>::getValueDescription() const
+{
+   return "<integer>";
+}
 
 
 template <>
@@ -54,7 +69,16 @@ bool Option<int64_t>::set(const char* arg_)
    return true;
 }
 
-template <> void Option<int64_t>::showDefault() const {}
+template <> void Option<int64_t>::showDefault() const
+{
+   printf(" [%lli]", value);
+}
+
+template <>
+const char* Option<int64_t>::getValueDescription() const
+{
+   return "<int64>";
+}
 
 
 template <>
@@ -64,7 +88,16 @@ bool Option<uint16_t>::set(const char* arg_)
    return true;
 }
 
-template <> void Option<uint16_t>::showDefault() const {}
+template <> void Option<uint16_t>::showDefault() const
+{
+   printf(" [0x%x]", value);
+}
+
+template <>
+const char* Option<uint16_t>::getValueDescription() const
+{
+   return "<uint16>";
+}
 
 
 template <>
@@ -74,7 +107,16 @@ bool Option<uint32_t>::set(const char* arg_)
    return true;
 }
 
-template <> void Option<uint32_t>::showDefault() const {}
+template <> void Option<uint32_t>::showDefault() const
+{
+   printf(" [%u]", value);
+}
+
+template <>
+const char* Option<uint32_t>::getValueDescription() const
+{
+   return "<unsigned>";
+}
 
 
 template <>
@@ -84,7 +126,16 @@ bool Option<uint64_t>::set(const char* arg_)
    return true;
 }
 
-template <> void Option<uint64_t>::showDefault() const {}
+template <> void Option<uint64_t>::showDefault() const
+{
+   printf(" [0x%llx]", value);
+}
+
+template <>
+const char* Option<uint64_t>::getValueDescription() const
+{
+   return "<uint64>";
+}
 
 
 template <>
@@ -99,6 +150,12 @@ template <> void Option<double>::showDefault() const
    printf(" [%g]", value);
 }
 
+template <>
+const char* Option<double>::getValueDescription() const
+{
+   return "<float>";
+}
+
 
 template <>
 bool Option<const char*>::set(const char* arg_)
@@ -107,10 +164,16 @@ bool Option<const char*>::set(const char* arg_)
    return true;
 }
 
-template <> void Option<const char*>::showDefault() const
+template <>
+void Option<const char*>::showDefault() const
 {
    if (value != nullptr) printf(" [\"%s\"]", value);
 }
 
+template <>
+const char* Option<const char*>::getValueDescription() const
+{
+   return "<string>";
+}
 
 } // namespace STB

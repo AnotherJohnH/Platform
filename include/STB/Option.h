@@ -26,6 +26,8 @@
 #include <cstdio>
 #include <cstring>
 
+#include <string>
+
 namespace STB {
 
 //! Base class for command line options
@@ -65,28 +67,29 @@ private:
    //! Print option help
    void printHelp() const
    {
-      printf("     ");
+      std::string syntax;
 
       if(short_opt != '\0')
       {
-         printf("-%c", short_opt);
-      }
-      else
-      {
-         printf("  ");
+         syntax += '-';
+         syntax += short_opt;
+         if (long_opt) syntax += ',';
       }
 
       if(long_opt != nullptr)
       {
-         printf("%c", short_opt ? ',' : ' ');
-         printf(" --%-15s", long_opt);
-      }
-      else
-      {
-         printf("%-19s", "");
+         syntax += "--";
+         syntax += long_opt;
       }
 
-      printf(" %s", description);
+      const char* value_descr = getValueDescription();
+      if(value_descr != nullptr)
+      {
+         syntax += ' ';
+         syntax += value_descr;
+      }
+
+      printf("     %-24s %s", syntax.c_str(), description);
 
       showDefault();
 
@@ -142,6 +145,9 @@ public:
 
    //! Report the default value on the console
    virtual void showDefault() const = 0;
+
+   //! Return a description of the supplementary option value
+   virtual const char* getValueDescription() const = 0;
 };
 
 
@@ -155,6 +161,8 @@ private:
    virtual bool set(const char* arg) override;
 
    virtual void showDefault() const override;
+
+   virtual const char* getValueDescription() const override;
 
 public:
    Option(char short_opt_, const char* long_opt_, const char* description_,
