@@ -20,6 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#include <cinttypes>
 #include <cstdint>
 #include <cstdlib>
 
@@ -71,7 +72,7 @@ bool Option<int64_t>::set(const char* arg_)
 
 template <> void Option<int64_t>::showDefault() const
 {
-   printf(" [%lli]", value);
+   printf(" [%" PRId64, value);
 }
 
 template <>
@@ -128,7 +129,7 @@ bool Option<uint64_t>::set(const char* arg_)
 
 template <> void Option<uint64_t>::showDefault() const
 {
-   printf(" [0x%llx]", value);
+   printf(" [0x%" PRIx64, value);
 }
 
 template <>
