@@ -29,7 +29,7 @@
 
 namespace STB {
 
-//! Three dimensional vector template
+//! 4x4 matrix template
 template <typename T>
 class Matrix_4x4
 {
