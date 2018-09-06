@@ -25,136 +25,46 @@
 
 #include <cassert>
 #include <cstdarg>
-#include <cstdio>
-
-#include "PLT/Event.h"
-
-#include "GUI/Frame.h"
-#include "GUI/Font/Teletext.h"
 
 #include "STB/Fifo.h"
 
-#include "TRM/Ansi.h"
+#include "PLT/Event.h"
+
+#include "GUI/Font/Teletext.h"
+#include "GUI/Frame.h"
+
+#include "TRM/AnsiImpl.h"
 #include "TRM/Device.h"
 
 namespace TRM {
 
+
+static const unsigned MIN_FONT_WIDTH  = 6;
+static const unsigned MIN_FONT_HEIGHT = 8;
+
+
 //! Terminal device using GUI::Frame back-end
 template <unsigned WIDTH, unsigned HEIGHT>
-class Frame : public Ansi
-            , public Device
+class Frame
+   : public Device
+   , private AnsiImpl<WIDTH/MIN_FONT_WIDTH, HEIGHT/MIN_FONT_HEIGHT>
 {
 private:
-   static const unsigned MIN_FONT_WIDTH  = 6;
-   static const unsigned MIN_FONT_HEIGHT = 8;
-   static const unsigned MAX_COLS        = WIDTH / MIN_FONT_WIDTH;
-   static const unsigned MAX_ROWS        = HEIGHT / MIN_FONT_HEIGHT;
-   static const unsigned PALETTE_SIZE    = 10;
+   using Impl = AnsiImpl<WIDTH / MIN_FONT_WIDTH, HEIGHT / MIN_FONT_HEIGHT>;
 
    static const unsigned DEFAULT_BG_COL = 0;
    static const unsigned DEFAULT_FG_COL = 1;
+   static const uint8_t  RGB_NRM        = 0xC0;
 
-   static const uint8_t RGB_NRM = 0xC0;
-
-   enum class Flash     : uint8_t { OFF, SLOW, FAST };
-   enum class Intensity : uint8_t { NORMAL, BOLD, FAINT };
-
-   class Attr
-   {
-   private:
-      uint8_t attr{};
-      uint8_t bg{};
-      uint8_t fg{};
-
-      void pack(unsigned msb, unsigned lsb, unsigned value)
-      {
-         unsigned bits = msb - lsb + 1;
-         uint16_t mask = ((1 << bits) - 1) << lsb;
-         attr          = attr & ~mask;
-         attr          = attr | ((value << lsb) & mask);
-      }
-
-      unsigned unpack(unsigned msb, unsigned lsb) const
-      {
-         unsigned bits = msb - lsb + 1;
-         uint16_t mask = (1 << bits) - 1;
-         return (attr >> lsb) & mask;
-      }
-
-   public:
-      Attr() { reset(); }
-
-      void reset()
-      {
-         setIntensity(Intensity::NORMAL);
-         setItalic(false);
-         setUnderline(false);
-         setInvert(false);
-         setFont(0);
-         setFgCol(8);
-         setBgCol(8);
-         setFlash(Flash::OFF);
-      }
-
-      Intensity getIntensity() const { return Intensity(unpack( 1,  0)); }
-      bool      isItalic()     const { return      bool(unpack( 2,  2)); }
-      bool      isUnderline()  const { return      bool(unpack( 3,  3)); }
-      bool      isInvert()     const { return      bool(unpack( 4,  4)); }
-      unsigned  getFont()      const { return           unpack( 6,  5);  }
-      unsigned  getFgCol()     const { return           fg;              }
-      unsigned  getBgCol()     const { return           bg;              }
-      Flash     getFlash()     const { return           unpack(15, 15) ? Flash::SLOW : Flash::OFF; }
-
-      bool isBold()   const { return getIntensity() == Intensity::BOLD; }
-      bool isNormal() const { return getIntensity() == Intensity::NORMAL; }
-      bool isFaint()  const { return getIntensity() == Intensity::FAINT; }
-
-      void setIntensity(Intensity intensity) { pack( 1,  0, unsigned(intensity)); }
-      void setItalic(bool on)                { pack( 2,  2, on ? 1 : 0); }
-      void setUnderline(bool on)             { pack( 3,  3, on ? 1 : 0); }
-      void setInvert(bool on)                { pack( 4,  4, on ? 1 : 0); }
-      void setFont(unsigned font)            { pack( 6,  5, font); }
-      void setFlash(Flash flash)             { pack( 7,  7, flash != Flash::OFF ? 1 : 0); }
-      void setFgCol(unsigned col)            { fg = col; }
-      void setBgCol(unsigned col)            { bg = col; }
-
-      static uint8_t rgbToCol256(uint8_t red, uint8_t grn, uint8_t blu)
-      {
-         red /= 51;
-         grn /= 51;
-         blu /= 51;
-         return 16 + red * 36 + grn * 6 + blu;
-      }
-
-      void setRgbFgCol(uint8_t red, uint8_t grn, uint8_t blu) { fg = rgbToCol256(red, grn, blu); }
-
-      void setRgbBgCol(uint8_t red, uint8_t grn, uint8_t blu) { bg = rgbToCol256(red, grn, blu); }
-   };
-
-   // Resources
-   GUI::Frame       frame;
-   const GUI::Font* font{};
-   unsigned         border{0};
-   unsigned         line_space{0};
-   unsigned         num_cols{};
-   unsigned         num_rows{};
-   GUI::Vector      org;
-
-   // State
+   GUI::Frame            frame;
+   const GUI::Font*      font{};
+   unsigned              border{0};
+   unsigned              line_space{0};
+   GUI::Vector           org;
    STB::Colour           default_bg_col{STB::BLACK};
    STB::Colour           default_fg_col{STB::WHITE};
-   signed                col{}, row{};
-   signed                save_col{}, save_row{};
-   Attr                  attr;
-   bool                  echo{};
-   Attr                  cell_attr[MAX_COLS][MAX_ROWS];
-   uint8_t               cell_char[MAX_COLS][MAX_ROWS];
-   STB::Fifo<uint8_t,6>  response;
-   bool                  implicit_cr{};
    unsigned              timeout_ms{0};
-   unsigned              sgr_state{0};
-   uint8_t               sgr_state_red{0};
-   uint8_t               sgr_state_grn{0};
+   STB::Fifo<uint8_t, 6> response;
 
    STB::Colour convertCol256ToRGB(uint8_t col, bool bg)
    {
@@ -197,253 +107,13 @@ private:
       }
    }
 
-   //! CSI cursor movement
-   void csiCursor(uint8_t cmd, unsigned n = 0, unsigned m = 0)
+   // Implement AnsiImpl
+
+   virtual void renderChar(unsigned            c,
+                           unsigned            r,
+                           uint8_t             ch,
+                           typename Impl::Attr at) override
    {
-      if(n == 0) n = 1;
-      if(m == 0) m = 1;
-
-      switch(cmd)
-      {
-      case 'A':           row -= n; break;
-      case 'B':           row += n; break;
-      case 'C': col += n;           break;
-      case 'D': col -= n;           break;
-      case 'E': col =  1; row += n; break;
-      case 'F': col =  1; row -= n; break;
-      case 'G': col =  n;            break;
-      case 'H': col =  m; row =  n;  break;
-
-      default:
-         assert(!"not a cursor command");
-         break;
-      }
-
-      if(row < 1)
-         row = 1;
-      else if(row > signed(num_rows))
-         row = num_rows;
-
-      if(col < 1)
-         col = 1;
-      else if(col > signed(num_cols))
-         col = num_cols;
-   }
-
-   //! Clear part of the display
-   void csiErase(uint8_t cmd, unsigned n)
-   {
-      if(n > 3) return;
-
-      int init_col = col;
-      int init_row = row;
-
-      if(n != 0)
-      {
-         col = 1;
-         if(cmd == 'J') row = 1;
-      }
-
-      int last_col = col;
-      int last_row = row;
-
-      if(n != 1)
-      {
-         last_col = num_cols;
-         if(cmd == 'J') last_row = num_rows;
-      }
-
-      while((row != last_row) || (col != last_col))
-      {
-         ansiGraphic(' ');
-      }
-
-      ansiGraphic(' ');
-
-      col = init_col;
-      row = init_row;
-
-      implicit_cr = false;
-   }
-
-   //! Select Graphic Rendition
-   void csiSGR(unsigned n)
-   {
-      switch(sgr_state)
-      {
-      case 10:
-      case 20:
-         if(n == 5)
-         {
-            sgr_state += 1;
-         }
-         else if(n == 2)
-         {
-            sgr_state += 2;
-         }
-         else
-         {
-            break;
-         }
-         return;
-
-      case 11:
-         attr.setFgCol(n);
-         sgr_state = 0;
-         return;
-
-      case 21:
-         attr.setBgCol(n);
-         sgr_state = 0;
-         return;
-
-      case 12:
-      case 22:
-         sgr_state_red = n;
-         sgr_state++;
-         return;
-
-      case 13:
-      case 23:
-         sgr_state_grn = n;
-         sgr_state++;
-         return;
-
-      case 14:
-         attr.setRgbFgCol(sgr_state_red, sgr_state_grn, n);
-         sgr_state = 0;
-         return;
-
-      case 24:
-         attr.setRgbBgCol(sgr_state_red, sgr_state_grn, n);
-         sgr_state = 0;
-         return;
-
-      case 0:
-      default:
-         break;
-      }
-
-      sgr_state = 0;
-
-      switch(n)
-      {
-      case  0: attr.reset();              break;
-
-      case 22: attr.setIntensity(Intensity::NORMAL); break;
-      case  1: attr.setIntensity(Intensity::BOLD);   break;
-      case  2: attr.setIntensity(Intensity::FAINT);  break;
-
-      case 23: attr.setItalic(false);     break;
-      case  3: attr.setItalic(true);      break;
-
-      case 24: attr.setUnderline(false);  break;
-      case  4: attr.setUnderline(true);   break;
-
-      case 25: attr.setFlash(Flash::OFF);  break;
-      case  5: attr.setFlash(Flash::SLOW); break;
-      case  6: attr.setFlash(Flash::FAST); break;
-
-      case 27: attr.setInvert(false);     break;
-      case  7: attr.setInvert(true);      break;
-
-      case 39: attr.setFgCol(8);          break;
-      case 49: attr.setBgCol(8);          break;
-
-      case 38: sgr_state = 10;            break;
-      case 48: sgr_state = 20;            break;
-
-      default:
-         if((n >= 10) && (n <= 19))
-         {
-            attr.setFont(n - 10);
-         }
-         else if((n >= 30) && (n <= 37))
-         {
-            attr.setFgCol(n - 30);
-         }
-         else if((n >= 40) && (n <= 47))
-         {
-            attr.setBgCol(n - 40);
-         }
-         break;
-      }
-   }
-
-   //! Device Status Report
-   void csiDSR(unsigned n)
-   {
-      switch(n)
-      {
-      case 5: // Status report => ok
-         sendString("\033[0n");
-         break;
-
-      case 6:
-         sendString("\033[");
-         rprintf("%d", row);
-         sendString(";");
-         rprintf("%d", col);
-         sendString("R");
-         break; // Cursor position report
-
-      default:
-        break;
-      }
-   }
-
-   //! Save Cursor Position
-   void csiSCP()
-   {
-      save_col = col;
-      save_row = row;
-   }
-
-   //! Restore Cursor Position
-   void csiRCP()
-   {
-      col = save_col;
-      row = save_row;
-   }
-
-   void scroll()
-   {
-      for(unsigned r = 1; r < num_rows; ++r)
-      {
-         for(unsigned c = 1; c <= num_cols; ++c)
-         {
-            cell_char[c - 1][r - 1] = cell_char[c - 1][r];
-            cell_attr[c - 1][r - 1] = cell_attr[c - 1][r];
-
-            drawChar(c, r);
-         }
-      }
-
-      for(unsigned c = 1; c <= num_cols; ++c)
-      {
-         cell_char[c - 1][num_rows - 1] = ' ';
-         cell_attr[c - 1][num_rows - 1].reset();
-
-         drawChar(c, num_rows);
-      }
-   }
-
-   void nextLine()
-   {
-      col = 1;
-      if(++row > signed(num_rows))
-      {
-         row = num_rows;
-
-         scroll();
-      }
-   }
-
-   void drawChar(unsigned c, unsigned r)
-   {
-      uint8_t ch = cell_char[c - 1][r - 1];
-      Attr    at = cell_attr[c - 1][r - 1];
-
       STB::Colour fg, bg;
 
       if(at.isInvert())
@@ -473,138 +143,11 @@ private:
       if(at.isUnderline() || at.isItalic())
       {
          frame.drawLine(fg, x, y + font->getHeight() - 1, x + font->getWidth(),
-                         y + font->getHeight() - 1);
+                        y + font->getHeight() - 1);
       }
    }
 
-   // implement Ansi
-
-   virtual void ansiReset() override
-   {
-      col = 1;
-      row = 1;
-      attr.reset();
-      echo        = true;
-      implicit_cr = false;
-
-      default_bg_col = STB::BLACK;
-      default_fg_col = STB::WHITE;
-   }
-
-   virtual void ansiGraphic(uint8_t ch) override
-   {
-      cell_char[col - 1][row - 1] = ch;
-      cell_attr[col - 1][row - 1] = attr;
-
-      drawChar(col, row);
-
-      implicit_cr = (col == signed(num_cols));
-      if(implicit_cr)
-      {
-         nextLine();
-      }
-      else
-      {
-         csiCursor('C');
-      }
-   }
-
-   virtual void ansiControl(uint8_t ch) override
-   {
-      switch(ch)
-      {
-      case '\b':
-         csiCursor('D');
-         break;
-
-      case '\n':
-         if(implicit_cr)
-         {
-            implicit_cr = false;
-         }
-         else
-         {
-            nextLine();
-         }
-         break;
-
-      case '\f':
-         csiErase('J', 2);
-         break;
-
-      default:
-         break;
-      }
-   }
-
-   virtual void ansiCsi(uint8_t cmd, const char* seq) override
-   {
-      unsigned n = 0;
-      unsigned m = 0;
-
-      switch(cmd)
-      {
-      case 'A':
-      case 'B':
-      case 'C':
-      case 'D':
-      case 'E':
-      case 'F':
-      case 'G':
-         parseUInt(seq, n);
-         csiCursor(cmd, n);
-         break;
-
-      case 'H':
-      case 'f':
-         parseUInt(seq, n);
-         if(*seq == ';')
-         {
-            parseUInt(++seq, m);
-         }
-         csiCursor('H', n, m);
-         break;
-
-      case 'J':
-      case 'K':
-         parseUInt(seq, n);
-         csiErase(cmd, n);
-         break;
-
-      case 'i':
-         parseUInt(seq, n);
-         // csiAUX(n);
-         break;
-
-      case 'm':
-         parseUInt(seq, n);
-         csiSGR(n);
-         while(*seq == ';')
-         {
-            n = 0;
-            parseUInt(++seq, n);
-            csiSGR(n);
-         }
-         break;
-
-      case 'n':
-         parseUInt(seq, n);
-         csiDSR(n);
-         break;
-
-      case 's':
-         csiSCP();
-         break;
-
-      case 'r':
-         csiRCP();
-         break;
-
-      default: break;
-      }
-   }
-
-   void sendString(const char* s)
+   virtual void returnString(const char* s) override
    {
       while(*s)
       {
@@ -614,17 +157,6 @@ private:
       }
    }
 
-   void rprintf(const char* format, ...)
-   {
-      char temp[32];
-
-      va_list ap;
-      va_start(ap, format);
-      vsprintf(temp, format, ap);
-      va_end(ap);
-
-      sendString(temp);
-   }
 
    int getInput(uint8_t& ch)
    {
@@ -644,8 +176,8 @@ private:
 
       while(true)
       {
-         PLT::Event::Message  event;
-         PLT::Event::Type     type = PLT::Event::wait(event);
+         PLT::Event::Message event;
+         PLT::Event::Type    type = PLT::Event::wait(event);
 
          if(type == PLT::Event::QUIT)
          {
@@ -659,9 +191,9 @@ private:
          }
          else if(type == PLT::Event::KEY_DOWN)
          {
-            if(echo && (event.code < 0x80))
+            if(this->isEchoEnabled() && (event.code < 0x80))
             {
-               ansiWrite(event.code);
+               this->ansiWrite(event.code);
             }
             ch     = event.code;
             status = 1;
@@ -677,15 +209,14 @@ private:
       return status;
    }
 
-   void init()
+   void initLayout()
    {
-      num_cols = (WIDTH - 2*border) / font->getWidth();
-      if(num_cols > MAX_COLS) num_cols = MAX_COLS;
+      unsigned cols = (WIDTH - 2 * border) / font->getWidth();
+      unsigned rows = (HEIGHT - 2 * border) / (font->getHeight() + line_space);
 
-      num_rows = (HEIGHT - 2*border) / (font->getHeight() + line_space);
-      if(num_rows > MAX_ROWS) num_rows = MAX_ROWS;
+      this->resize(cols, rows);
 
-      org.x = (WIDTH - (num_cols * font->getWidth())) / 2;
+      org.x = (WIDTH - (cols * font->getWidth())) / 2;
       org.y = border;
 
       frame.clear(default_bg_col);
@@ -698,8 +229,7 @@ public:
       , border(0)
       , line_space(0)
    {
-      init();
-      ansiReset();
+      initLayout();
    }
 
    ~Frame() { frame.refresh(); }
@@ -707,7 +237,7 @@ public:
    void setFont(const GUI::Font& font_)
    {
       font = &font_;
-      init();
+      initLayout();
    }
 
    // implement PLT::Device
@@ -727,30 +257,30 @@ public:
          break;
 
       case IOCTL_TERM_ECHO:
-         echo   = va_arg(ap, int);
+         this->setEcho(va_arg(ap, int) != 0);
          status = 0;
          break;
 
       case IOCTL_TERM_PALETTE:
       {
-         unsigned col = va_arg(ap, unsigned);
+         unsigned    col = va_arg(ap, unsigned);
          STB::Colour rgb = va_arg(ap, unsigned);
               if (col == DEFAULT_BG_COL) { default_bg_col = rgb; }
          else if (col == DEFAULT_FG_COL) { default_fg_col = rgb; }
-         init();
+         initLayout();
          status = 0;
       }
       break;
 
       case IOCTL_TERM_BORDER:
          border = va_arg(ap, unsigned);
-         init();
+         initLayout();
          status = 0;
          break;
 
       case IOCTL_TERM_LINE_SPACE:
          line_space = va_arg(ap, unsigned);
-         init();
+         initLayout();
          status = 0;
          break;
 
@@ -763,7 +293,7 @@ public:
          else if (font_size >= 12)  { setFont(GUI::font_teletext12); }
          else                       { setFont(GUI::font_teletext9);  }
 
-         init();
+         initLayout();
          status = 0;
       }
       break;
@@ -796,7 +326,7 @@ public:
 
       while(n--)
       {
-         ansiWrite(*ptr++);
+         this->ansiWrite(*ptr++);
       }
 
       return n;
@@ -823,10 +353,10 @@ public:
       return i;
    }
 
-   using Device::write;
    using Device::read;
+   using Device::write;
 };
 
-} // namesapce TRM
+} // namespace TRM
 
 #endif // TRM_FRAME_H
