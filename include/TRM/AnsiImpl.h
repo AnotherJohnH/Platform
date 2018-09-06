@@ -25,6 +25,7 @@
 
 #include <cassert>
 #include <cstdio>
+#include <cstring>
 
 #include "TRM/Ansi.h"
 
@@ -112,6 +113,8 @@ protected:
 
    AnsiImpl()
    {
+      memset(cell_char, 0, sizeof(cell_char));
+
       ansiReset();
    }
 
@@ -143,9 +146,21 @@ private:
       returnString(temp);
    }
 
+   void eraseCursor()
+   {
+      drawChar(col, row, false);
+   }
+
+   void drawCursor()
+   {
+      drawChar(col, row, true);
+   }
+
    //! CSI cursor movement
    void csiCursor(uint8_t cmd, unsigned n = 0, unsigned m = 0)
    {
+      eraseCursor();
+
       if(n == 0) n = 1;
       if(m == 0) m = 1;
 
@@ -174,11 +189,15 @@ private:
          col = 1;
       else if(col > signed(num_cols))
          col = num_cols;
+
+      drawCursor();
    }
 
    //! Clear part of the display
    void csiErase(uint8_t cmd, unsigned n)
    {
+      eraseCursor();
+
       if(n > 3) return;
 
       int init_col = col;
@@ -210,6 +229,8 @@ private:
       row = init_row;
 
       implicit_cr = false;
+
+      drawCursor();
    }
 
    //! Select Graphic Rendition
@@ -348,13 +369,22 @@ private:
    //! Restore Cursor Position
    void csiRCP()
    {
+      eraseCursor();
+
       col = save_col;
       row = save_row;
+
+      drawCursor();
    }
 
-   void drawChar(unsigned c, unsigned r)
+   void drawChar(unsigned c, unsigned r, bool invert = false)
    {
-      renderChar(c, r, cell_char[c - 1][r - 1], cell_attr[c - 1][r - 1]);
+      Attr at = cell_attr[c - 1][r - 1];
+      if (invert)
+      {
+         at.setInvert(!at.isInvert());
+      }
+      renderChar(c, r, cell_char[c - 1][r - 1], at);
    }
 
    void scroll()
@@ -381,6 +411,8 @@ private:
 
    void nextLine()
    {
+      eraseCursor();
+
       col = 1;
       if(++row > signed(num_rows))
       {
@@ -388,6 +420,8 @@ private:
 
          scroll();
       }
+
+      drawCursor();
    }
 
    // implement Ansi
