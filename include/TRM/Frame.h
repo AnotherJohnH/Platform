@@ -340,6 +340,7 @@ public:
 
       for(i = 0; i < n; i++)
       {
+         this->drawCursor(Impl::Cursor::BLOCK);
          frame.refresh();
 
          uint8_t ch{};
@@ -348,6 +349,7 @@ public:
          if(status <= 0) return status;
 
          buffer[i] = ch;
+         this->drawCursor(Impl::Cursor::OFF);
       }
 
       return i;

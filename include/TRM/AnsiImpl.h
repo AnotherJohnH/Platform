@@ -38,6 +38,7 @@ class AnsiImpl : public Ansi
 protected:
    enum class Flash     : uint8_t { OFF, SLOW, FAST };
    enum class Intensity : uint8_t { NORMAL, BOLD, FAINT };
+   enum class Cursor    : uint8_t { OFF, BLOCK, LINE};
 
    class Attr
    {
@@ -95,8 +96,8 @@ protected:
       void setInvert(bool on)                { pack( 4,  4, on ? 1 : 0); }
       void setFont(unsigned font)            { pack( 6,  5, font); }
       void setFlash(Flash flash)             { pack( 7,  7, flash != Flash::OFF ? 1 : 0); }
-      void setFgCol(unsigned col)            { fg = col; }
-      void setBgCol(unsigned col)            { bg = col; }
+      void setFgCol(unsigned colour)         { fg = colour; }
+      void setBgCol(unsigned colour)         { bg = colour; }
 
       static uint8_t rgbToCol256(uint8_t red, uint8_t grn, uint8_t blu)
       {
@@ -137,6 +138,11 @@ protected:
    //! Return a string from terminal emulation
    virtual void returnString(const char* s) = 0;
 
+   void drawCursor(Cursor mode)
+   {
+      drawChar(col, row, mode);
+   }
+
 private:
    //! Return an integer as a string
    void returnInt(signed value)
@@ -146,21 +152,9 @@ private:
       returnString(temp);
    }
 
-   void eraseCursor()
-   {
-      drawChar(col, row, false);
-   }
-
-   void drawCursor()
-   {
-      drawChar(col, row, true);
-   }
-
    //! CSI cursor movement
    void csiCursor(uint8_t cmd, unsigned n = 0, unsigned m = 0)
    {
-      eraseCursor();
-
       if(n == 0) n = 1;
       if(m == 0) m = 1;
 
@@ -172,8 +166,8 @@ private:
       case 'D': col -= n;           break;
       case 'E': col =  1; row += n; break;
       case 'F': col =  1; row -= n; break;
-      case 'G': col =  n;            break;
-      case 'H': col =  m; row =  n;  break;
+      case 'G': col =  n;           break;
+      case 'H': col =  m; row =  n; break;
 
       default:
          assert(!"not a cursor command");
@@ -189,15 +183,11 @@ private:
          col = 1;
       else if(col > signed(num_cols))
          col = num_cols;
-
-      drawCursor();
    }
 
    //! Clear part of the display
    void csiErase(uint8_t cmd, unsigned n)
    {
-      eraseCursor();
-
       if(n > 3) return;
 
       int init_col = col;
@@ -229,8 +219,6 @@ private:
       row = init_row;
 
       implicit_cr = false;
-
-      drawCursor();
    }
 
    //! Select Graphic Rendition
@@ -369,21 +357,21 @@ private:
    //! Restore Cursor Position
    void csiRCP()
    {
-      eraseCursor();
-
       col = save_col;
       row = save_row;
-
-      drawCursor();
    }
 
-   void drawChar(unsigned c, unsigned r, bool invert = false)
+   void drawChar(unsigned c, unsigned r, Cursor cursor_mode = Cursor::OFF)
    {
       Attr at = cell_attr[c - 1][r - 1];
-      if (invert)
+
+      switch(cursor_mode)
       {
-         at.setInvert(!at.isInvert());
+      case Cursor::OFF: break;
+      case Cursor::LINE: at.setUnderline(!at.isUnderline()); break;
+      case Cursor::BLOCK: at.setInvert(!at.isInvert()); break;
       }
+
       renderChar(c, r, cell_char[c - 1][r - 1], at);
    }
 
@@ -411,8 +399,6 @@ private:
 
    void nextLine()
    {
-      eraseCursor();
-
       col = 1;
       if(++row > signed(num_rows))
       {
@@ -420,8 +406,6 @@ private:
 
          scroll();
       }
-
-      drawCursor();
    }
 
    // implement Ansi
@@ -551,7 +535,7 @@ private:
 
    unsigned num_cols{};
    unsigned num_rows{};
-   signed   col{}, row{};
+   signed   col{1}, row{1};
    signed   save_col{}, save_row{};
    Attr     attr;
    bool     echo{};
