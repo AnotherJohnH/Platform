@@ -346,7 +346,11 @@ public:
          uint8_t ch{};
 
          int status = getInput(ch);
-         if(status <= 0) return status;
+         if(status <= 0)
+         {
+            this->drawCursor(Impl::Cursor::OFF);
+            return status;
+         }
 
          buffer[i] = ch;
          this->drawCursor(Impl::Cursor::OFF);
