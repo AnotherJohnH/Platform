@@ -284,6 +284,34 @@ private:
                std::swap(config.bg_colour, config.fg_colour);
             }
          }
+         else if(strcmp(cmd, "Colours") == 0)
+         {
+            if(strcmp(value, "GreenPhosphor") == 0)
+            {
+               config.bg_colour = 0x000000;
+               config.fg_colour = 0x40FF40;
+            }
+            else if(strcmp(value, "AmberPhosphor") == 0)
+            {
+               config.bg_colour = 0x000000;
+               config.fg_colour = 0xFFC000;
+            }
+            else if(strcmp(value, "BluePhosphor") == 0)
+            {
+               config.bg_colour = 0x000000;
+               config.fg_colour = 0xD0F0FF;
+            }
+            else if(strcmp(value, "OldPaper") == 0)
+            {
+               config.bg_colour = 0xF0F0E0;
+               config.fg_colour = 0x382800;
+            }
+            else if(strcmp(value, "White") == 0)
+            {
+               config.bg_colour = 0x000000;
+               config.fg_colour = 0xFFFFFF;
+            }
+         }
          else if(strcmp(cmd, "Border") == 0)
          {
             config.border_pixels = atoi(value);
