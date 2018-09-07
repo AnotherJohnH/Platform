@@ -51,7 +51,11 @@ private:
       return &tio;
    }
 
-   static void restoreTio() { tcsetattr(0, TCSANOW, getTio()); }
+   static void restoreTio()
+   {
+      tcsetattr(0, TCSANOW, getTio());
+      ::puts("\e[?25h");
+   }
 
    static void saveTio()
    {
@@ -162,6 +166,18 @@ public:
 
       case IOCTL_TERM_FONTS:
          status = 1;
+         break;
+
+      case IOCTL_TERM_CURSOR:
+         if (va_arg(ap, int) != 0)
+         {
+            ::puts("\e[?25h");
+         }
+         else
+         {
+            ::puts("\e[?25l");
+         }
+         status = 0;
          break;
 
       default:

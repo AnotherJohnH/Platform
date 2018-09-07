@@ -43,6 +43,7 @@ public:
    static const unsigned long IOCTL_TERM_TIMEOUT_MS = IOCTL_TERM(7);
    static const unsigned long IOCTL_TERM_COLOURS    = IOCTL_TERM(8);
    static const unsigned long IOCTL_TERM_FONTS      = IOCTL_TERM(9);
+   static const unsigned long IOCTL_TERM_CURSOR     = IOCTL_TERM(10);
 
    virtual int open(unsigned oflag) { return 0; }
 

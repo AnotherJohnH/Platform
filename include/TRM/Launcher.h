@@ -311,6 +311,7 @@ private:
       term->ioctl(Device::IOCTL_TERM_BORDER, config.border_pixels);
       term->ioctl(Device::IOCTL_TERM_LINE_SPACE, config.line_space);
       term->ioctl(Device::IOCTL_TERM_FONT_SIZE, config.font_size);
+      term->ioctl(Device::IOCTL_TERM_CURSOR, 0);
 
       curses.init();
    }
@@ -366,14 +367,18 @@ private:
       }
       else
       {
-         // Load and run a game
+         // Launch selection
 
          char story[FILENAME_MAX];
 
          strcpy(story, path);
          strcat(story, selection);
 
+         term->ioctl(Device::IOCTL_TERM_CURSOR, 1);
+
          startTerminalLauncher(story);
+
+         term->ioctl(Device::IOCTL_TERM_CURSOR, 0);
       }
    }
 

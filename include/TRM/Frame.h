@@ -63,6 +63,7 @@ private:
    GUI::Vector           org;
    STB::Colour           default_bg_col{STB::BLACK};
    STB::Colour           default_fg_col{STB::WHITE};
+   bool                  draw_cursor{true};
    unsigned              timeout_ms{0};
    STB::Fifo<uint8_t, 6> response;
 
@@ -311,6 +312,11 @@ public:
          status = 1;
          break;
 
+      case IOCTL_TERM_CURSOR:
+         draw_cursor = va_arg(ap, int) != 0;
+         status = 0;
+         break;
+
       default:
          break;
       }
@@ -340,7 +346,7 @@ public:
 
       for(i = 0; i < n; i++)
       {
-         this->drawCursor(Impl::Cursor::BLOCK);
+         if (draw_cursor) this->drawCursor(Impl::Cursor::BLOCK);
          frame.refresh();
 
          uint8_t ch{};
@@ -353,7 +359,7 @@ public:
          }
 
          buffer[i] = ch;
-         this->drawCursor(Impl::Cursor::OFF);
+         if (draw_cursor) this->drawCursor(Impl::Cursor::OFF);
       }
 
       return i;
