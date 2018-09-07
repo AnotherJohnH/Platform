@@ -311,7 +311,6 @@ private:
       term->ioctl(Device::IOCTL_TERM_BORDER, config.border_pixels);
       term->ioctl(Device::IOCTL_TERM_LINE_SPACE, config.line_space);
       term->ioctl(Device::IOCTL_TERM_FONT_SIZE, config.font_size);
-      term->ioctl(Device::IOCTL_TERM_CURSOR, 0);
 
       curses.init();
    }
@@ -406,6 +405,8 @@ private:
    //! Enter the menu system
    int menu()
    {
+      term->ioctl(Device::IOCTL_TERM_CURSOR, 0);
+
       while(!quit)
       {
          drawHeader();
