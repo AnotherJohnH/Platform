@@ -103,6 +103,14 @@ public:
       SDL_RaiseWindow(window);
 
       createSurface(width_, height_);
+
+      // XXX Fix for SDL2 on OSX 10.14> Not required on older OSX or
+      // other SDL2 targets. This seems to sink three window events that
+      // are necessary before refresh() will function correctly
+      SDL_Event e;
+      SDL_PollEvent(&e);
+      SDL_PollEvent(&e);
+      SDL_PollEvent(&e);
    }
 
    ~Impl()
