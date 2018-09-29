@@ -60,9 +60,9 @@ The following small projects are using Platform...
 [![Build Status](https://travis-ci.org/AnotherJohnH/Platform.svg?branch=master)](https://travis-ci.org/AnotherJohnH/Platform)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13938/badge.svg)](https://scan.coverity.com/projects/anotherjohnh-platform)
 
-### Linux and macOS
+### Linux
 
-The primary target platforms at the moment.
+One of the primary target platforms.
 
 Depend on SDL2, so a development install of SDL2 is required.
 
@@ -71,7 +71,27 @@ Typically the following packages will be required...
 ```
 sudo apt-get install scons
 sudo apt-get install libsdl2-dev
+sudo apt-get install libsdl2-image-dev
 ```
+
+### macOS
+
+One of the primary target platforms.
+
+Depend on SDL2, so a development install of SDL2 is required.
+
+Typically the following packages will be required...
+
+```
+brew update
+brew install scons
+brew install sdl2
+brew install sdl2_image
+```
+
+NOTE: The current version of SDL2 (2.0.8) does not work properly on macOS 10.14
+Mojave. The following [patch](https://hg.libsdl.org/SDL/rev/55489adbb75c)
+seems to resolve the issue.
 
 ### Kindle3
 
