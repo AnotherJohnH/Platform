@@ -104,13 +104,18 @@ public:
 
       createSurface(width_, height_);
 
-      // XXX Fix for SDL2 on OSX 10.14> Not required on older OSX or
-      // other SDL2 targets. This seems to sink three window events that
-      // are necessary before refresh() will function correctly
+#ifdef PROJ_TARGET_macOS
+      // XXX Fix for use with SDL2.0.8 on macOS 10.14. Not required on older
+      // macOS or other SDL2 targets. This seems to sink three window events
+      // that are necessary before refresh() will function correctly.
       SDL_Event e;
-      SDL_PollEvent(&e);
-      SDL_PollEvent(&e);
-      SDL_PollEvent(&e);
+      SDL_WaitEvent(&e);
+      SDL_WaitEvent(&e);
+      SDL_WaitEvent(&e);
+
+      // XXX there is also another problem that requires a patch to SDL2.0.8
+      // itself.
+#endif
    }
 
    ~Impl()
