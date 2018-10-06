@@ -90,9 +90,9 @@ bool Image::save(const char* name) const
 
    // .bmp is not the most portable
 #if 0
-   char filename[FILENAME_MAX];
-   sprintf(filename, "%s.bmp", name);
-   SDL_SaveBMP(static_cast<SDL_Surface*>(getHandle()), filename);
+   std::string filename = name;
+   filename += ".bmp";
+   SDL_SaveBMP(static_cast<SDL_Surface*>(getHandle()), filename.c_str());
 #endif
 }
 
