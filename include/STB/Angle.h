@@ -33,40 +33,54 @@ template <typename TYPE = double>
 class Angle
 {
 public:
+   static constexpr double DEGREES_PER_RADIAN   = 180.0 / M_PI;
+   static constexpr double TURNS_PER_RADIAN     = 0.5   / M_PI;
+   static constexpr double GRADIENTS_PER_RADIAN = 200.0 / M_PI;
+
    enum class Unit
    {
       RAD,
-      DEG
+      DEG,
+      TURN,
+      GON
    };
 
-   //! Access an angle value in degrees
-   class Degrees
+   //! Access to an angle value in units other than radians
+   class Accessor
    {
    public:
-      Degrees(TYPE& ref_) : ref(ref_) {}
+      Accessor(double units_per_radian_, TYPE& radians_)
+         : units_per_radian(units_per_radian_)
+         , radians(radians_)
+      {}
 
-      TYPE operator=(TYPE value)
+      TYPE operator=(TYPE value_in_units)
       {
-         ref = value * M_PI / 180.0;
-         return value;
+         radians = value_in_units / units_per_radian;
+         return value_in_units;
       }
 
-      operator TYPE() const { return ref * 180.0 / M_PI; }
+      operator TYPE() const { return radians * units_per_radian; }
 
    private:
-      TYPE& ref;
+      const double units_per_radian;
+      TYPE&        radians;
    };
 
-   //! Access a const angle value in degrees
-   class ConstDegrees
+   //! Access to a constant angle value in units other than radians
+   class ConstAccessor
    {
    public:
-      ConstDegrees(const TYPE& ref_) : ref(ref_) {}
+      ConstAccessor(double units_per_radian_, const TYPE& radians_)
+         : units_per_radian(units_per_radian_)
+         , radians(radians_)
+      {}
 
-      operator TYPE() const { return ref * 180.0 / M_PI; }
+      operator TYPE() const { return radians * units_per_radian; }
 
    private:
-      const TYPE& ref;
+      const double units_per_radian;
+      const TYPE&  radians;
    };
 
    Angle() = default;
@@ -81,8 +95,10 @@ public:
    {
       switch(unit)
       {
-      case Unit::RAD: this->rad() = value; break;
-      case Unit::DEG: this->deg() = value; break;
+      case Unit::RAD:  this->rad()  = value; break;
+      case Unit::DEG:  this->deg()  = value; break;
+      case Unit::TURN: this->turn() = value; break;
+      case Unit::GON:  this->gon()  = value; break;
       }
    }
 
@@ -95,10 +111,22 @@ public:
    const TYPE& rad() const { return value_rad; }
 
    //! Get degrees accessor
-   Degrees deg() { return Degrees(rad()); }
+   Accessor deg() { return Accessor(DEGREES_PER_RADIAN, rad()); }
 
-   //! Get degrees accessor
-   ConstDegrees deg() const { return ConstDegrees(rad()); }
+   //! Get const degrees accessor
+   ConstAccessor deg() const { return ConstAccessor(DEGREES_PER_RADIAN, rad()); }
+
+   //! Get turns accessor
+   Accessor turn() { return Accessor(TURNS_PER_RADIAN, rad()); }
+
+   //! Get const turns accessor
+   ConstAccessor turn() const { return ConstAccessor(TURNS_PER_RADIAN, rad()); }
+
+   //! Get gradients accessor
+   Accessor gon() { return Accessor(GRADIENTS_PER_RADIAN, rad()); }
+
+   //! Get const gradients accessor
+   ConstAccessor gon() const { return ConstAccessor(GRADIENTS_PER_RADIAN, rad()); }
 
    // Relational operators
    bool operator!=(const Angle& that) const { return rad() != that.rad(); }
@@ -124,6 +152,12 @@ public:
 
    //! Factory for angles with initial value in radians
    static Angle deg(TYPE value) { return Angle(value, Unit::DEG); }
+
+   //! Factory for angles with initial value in turns
+   static Angle turn(TYPE value) { return Angle(value, Unit::TURN); }
+
+   //! Factory for angles with initial value in gradients
+   static Angle gon(TYPE value) { return Angle(value, Unit::GON); }
 
 private:
    TYPE value_rad{0.0};
