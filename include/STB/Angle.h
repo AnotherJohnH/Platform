@@ -130,6 +130,15 @@ public:
    //! Get const gradients accessor
    ConstAccessor gon() const { return ConstAccessor(GRADIENTS_PER_RADIAN, value_rad); }
 
+   //! Get the whole degrees part of an angle
+   signed degrees() const { return signed(deg()); }
+
+   //! Get the whole minutes part of an angle
+   unsigned minutes() const { return unsigned(abs((deg() - degrees()) * 60)); }
+
+   //! Get the seconds part of an angle
+   double seconds() const { return fmod(fabs(deg() * 3600), 60); }
+
    // Relational operators (be very careful!)
    bool operator!=(const Angle& that) const { return rad() != that.rad(); }
    bool operator==(const Angle& that) const { return rad() == that.rad(); }
