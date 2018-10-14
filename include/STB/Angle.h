@@ -83,8 +83,10 @@ public:
       const TYPE&  radians;
    };
 
+   //! Default constructor
    Angle() = default;
 
+   //! Constructor allowing use of 0.0 without units
    Angle(TYPE value)
    {
       assert(value == 0.0 && value_rad == 0.0);
@@ -95,10 +97,10 @@ public:
    {
       switch(unit)
       {
-      case Unit::RAD:  this->rad()  = value; break;
-      case Unit::DEG:  this->deg()  = value; break;
-      case Unit::TURN: this->turn() = value; break;
-      case Unit::GON:  this->gon()  = value; break;
+      case Unit::RAD:  rad()  = value; break;
+      case Unit::DEG:  deg()  = value; break;
+      case Unit::TURN: turn() = value; break;
+      case Unit::GON:  gon()  = value; break;
       }
    }
 
