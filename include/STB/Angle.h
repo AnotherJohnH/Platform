@@ -56,7 +56,7 @@ public:
 
       TYPE operator=(TYPE value_in_units)
       {
-         radians = value_in_units / units_per_radian;
+         radians = fmod(value_in_units / units_per_radian, 2.0 * M_PI);
          return value_in_units;
       }
 
@@ -105,30 +105,30 @@ public:
    void operator=(const Angle& that) { value_rad = that.value_rad; }
 
    //! Get writable reference to angle in radians
-   TYPE& rad() { return value_rad; }
+   Accessor rad() { return Accessor(1.0, value_rad); }
 
    //! Get readable reference to angle in radians
-   const TYPE& rad() const { return value_rad; }
+   ConstAccessor rad() const { return ConstAccessor(1.0, value_rad); }
 
    //! Get degrees accessor
-   Accessor deg() { return Accessor(DEGREES_PER_RADIAN, rad()); }
+   Accessor deg() { return Accessor(DEGREES_PER_RADIAN, value_rad); }
 
    //! Get const degrees accessor
-   ConstAccessor deg() const { return ConstAccessor(DEGREES_PER_RADIAN, rad()); }
+   ConstAccessor deg() const { return ConstAccessor(DEGREES_PER_RADIAN, value_rad); }
 
    //! Get turns accessor
-   Accessor turn() { return Accessor(TURNS_PER_RADIAN, rad()); }
+   Accessor turn() { return Accessor(TURNS_PER_RADIAN, value_rad); }
 
    //! Get const turns accessor
-   ConstAccessor turn() const { return ConstAccessor(TURNS_PER_RADIAN, rad()); }
+   ConstAccessor turn() const { return ConstAccessor(TURNS_PER_RADIAN, value_rad); }
 
    //! Get gradients accessor
-   Accessor gon() { return Accessor(GRADIENTS_PER_RADIAN, rad()); }
+   Accessor gon() { return Accessor(GRADIENTS_PER_RADIAN, value_rad); }
 
    //! Get const gradients accessor
-   ConstAccessor gon() const { return ConstAccessor(GRADIENTS_PER_RADIAN, rad()); }
+   ConstAccessor gon() const { return ConstAccessor(GRADIENTS_PER_RADIAN, value_rad); }
 
-   // Relational operators
+   // Relational operators (be very careful!)
    bool operator!=(const Angle& that) const { return rad() != that.rad(); }
    bool operator==(const Angle& that) const { return rad() == that.rad(); }
    bool operator>=(const Angle& that) const { return rad() >= that.rad(); }
@@ -143,9 +143,9 @@ public:
    TYPE operator/(const Angle& that) const { return rad() / that.rad(); }
    Angle operator*(TYPE value)       const { return Angle::rad(rad() * value); }
 
-   void operator+=(const Angle& that) { rad() += that.rad(); }
-   void operator-=(const Angle& that) { rad() -= that.rad(); }
-   void operator*=(TYPE value)      { rad() *= value; }
+   void operator+=(const Angle& that) { rad() = rad() + that.rad(); }
+   void operator-=(const Angle& that) { rad() = rad() - that.rad(); }
+   void operator*=(TYPE value)        { rad() = rad() * value; }
 
    //! Factory for angles with initial value in degrees
    static Angle rad(TYPE value) { return Angle(value, Unit::RAD); }
