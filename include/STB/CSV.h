@@ -23,6 +23,7 @@
 #ifndef STB_CSV_H
 #define STB_CSV_H
 
+#include <cassert>
 #include <cstdio>
 
 #include <algorithm>
@@ -81,6 +82,8 @@ public:
 
    void readHeader()
    {
+      assert(fp != nullptr);
+
       char line[MAX_LINE_LENGTH];
       if (fgets(line, sizeof(line), fp) == nullptr) return;
 
@@ -154,6 +157,8 @@ public:
 
    bool readRecord(AttrCallBack& call_back) const
    {
+      assert(fp != nullptr);
+
       char line[MAX_LINE_LENGTH];
 
       if (fgets(line, sizeof(line), fp) == nullptr) return false;
