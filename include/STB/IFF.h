@@ -315,9 +315,15 @@ public:
          if (chunk.getType() == type)
          {
             void* data = chunk.alloc();
-            fseek(fp, offset + 8, SEEK_SET);
-            fread(data, chunk.getSize(), 1, fp);
-            return static_cast<TYPE*>(data);
+            if ((fseek(fp, offset + 8, SEEK_SET) == 0) &&
+                (fread(data, chunk.getSize(), 1, fp) == 1))
+            {
+               return static_cast<TYPE*>(data);
+            }
+            else
+            {
+               return nullptr;
+            }
          }
 
          offset += chunk.getFileSize();
