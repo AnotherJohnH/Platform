@@ -228,6 +228,15 @@ public:
          offset += chunk.getFileSize();
       }
 
+      if (fseek(fp, offset_, SEEK_SET) == 0)
+      {
+         Chunk& chunk = addChunk("    ");
+         if (chunk.read(fp))
+         {
+            return &chunk;
+         }
+      }
+
       return nullptr;
    }
 
