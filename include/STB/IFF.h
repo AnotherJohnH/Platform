@@ -143,7 +143,7 @@ public:
 
       if (type.read(fp) && size.read(fp))
       {
-         ok = fseek(fp, size, SEEK_CUR) == 0;
+         ok = fseek(fp, getFileSize() - 8, SEEK_CUR) == 0;
       }
 
       return ok;
