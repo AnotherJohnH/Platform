@@ -65,6 +65,14 @@ public:
       strncpy(value, value_, sizeof(value));
    }
 
+   void get(std::string& v) const
+   {
+      v.clear();
+
+      for(unsigned i=0; i<4; i++)
+         v.push_back(value[i]);
+   }
+
    bool operator==(const char* rhs) const
    {
       return strncmp(value, rhs, sizeof(value)) == 0;
