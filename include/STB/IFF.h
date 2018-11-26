@@ -27,6 +27,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include <string>
 #include <vector>
 
 #include "STB/Endian.h"
@@ -241,7 +242,7 @@ public:
    }
 
    //! Read a document
-   bool read(const char* filename)
+   bool read(const std::string& filename)
    {
       if (!open(filename, "r")) return false;
 
@@ -272,7 +273,7 @@ public:
    }
 
    //! Write a document
-   bool write(const char* filename)
+   bool write(const std::string& filename)
    {
       if (!open(filename, "w")) return false;
 
@@ -339,10 +340,10 @@ private:
    Ident              file_type{};
    std::vector<Chunk> chunk_list;
 
-   bool open(const char* filename, const char* mode)
+   bool open(const std::string& filename, const char* mode)
    {
       if (fp != nullptr) fclose(fp);
-      fp = fopen(filename, mode);
+      fp = fopen(filename.c_str(), mode);
       return fp != nullptr;
    }
 };
