@@ -315,7 +315,7 @@ public:
 
    //! Load the named chunk
    template <typename TYPE>
-   const TYPE* load(const char* type)
+   const TYPE* load(const char* type, uint32_t* size = nullptr)
    {
       size_t offset = 12;
 
@@ -327,6 +327,10 @@ public:
             if ((fseek(fp, offset + 8, SEEK_SET) == 0) &&
                 (fread(data, chunk.getSize(), 1, fp) == 1))
             {
+               if (size != nullptr)
+               {
+                   *size = chunk.getSize();
+               }
                return static_cast<TYPE*>(data);
             }
             else
