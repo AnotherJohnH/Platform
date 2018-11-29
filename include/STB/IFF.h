@@ -60,9 +60,9 @@ private:
    char value[4];
 
 public:
-   Ident(const char* value_ = "    ")
+   Ident(const std::string& value_ = "    ")
    {
-      strncpy(value, value_, sizeof(value));
+      strncpy(value, value_.c_str(), sizeof(value));
    }
 
    void get(std::string& v) const
@@ -73,12 +73,12 @@ public:
          v.push_back(value[i]);
    }
 
-   bool operator==(const char* rhs) const
+   bool operator==(const std::string& rhs) const
    {
-      return strncmp(value, rhs, sizeof(value)) == 0;
+      return strncmp(value, rhs.c_str(), sizeof(value)) == 0;
    }
 
-   bool operator!=(const char* rhs) const
+   bool operator!=(const std::string& rhs) const
    {
       return !operator==(rhs);
    }
@@ -105,7 +105,7 @@ public:
 class Chunk
 {
 public:
-   Chunk(const char* type_, size_t reserve_ = 0)
+   Chunk(const std::string& type_, size_t reserve_ = 0)
       : type(type_)
    {
       bytes.reserve(reserve_);
@@ -198,7 +198,7 @@ class Document
 public:
    Document() = default;
 
-   Document(const char* document_type_, const char* file_type_)
+   Document(const std::string& document_type_, const std::string& file_type_)
       : document_type(document_type_)
       , file_type(file_type_)
    {
@@ -210,19 +210,33 @@ public:
    }
 
    //! Test document type
-   bool isDocType(const char* type) const { return document_type == type; }
+   bool isDocType(const std::string& type) const { return document_type == type; }
 
    //! Test file type
-   bool isFileType(const char* type) const { return file_type == type; }
+   bool isFileType(const std::string& type) const { return file_type == type; }
 
    //! Add a new chunk
-   Chunk& addChunk(const char* type, size_t reserve = 0)
+   Chunk& addChunk(const std::string& type, size_t reserve = 0)
    {
       chunk_list.emplace_back(type, reserve);
       return chunk_list.back();
    }
 
-   //! Find a chunk by name
+   //! Find a chunk by type
+   Chunk* findChunk(const std::string& type)
+   {
+      for(auto& chunk : chunk_list)
+      {
+         if (chunk.getType() == type)
+         {
+            return &chunk;
+         }
+      }
+
+      return nullptr;
+   }
+
+   //! Find a chunk by offset
    Chunk* findChunk(uint32_t offset_)
    {
       size_t offset = 12;
@@ -315,7 +329,7 @@ public:
 
    //! Load the named chunk
    template <typename TYPE>
-   const TYPE* load(const char* type, uint32_t* size = nullptr)
+   const TYPE* load(const std::string& type, uint32_t* size = nullptr)
    {
       size_t offset = 12;
 
