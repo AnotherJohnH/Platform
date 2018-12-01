@@ -185,6 +185,12 @@ public:
       push(&data, sizeof(TYPE));
    }
 
+   void clear()
+   {
+      bytes.clear();
+      size = 0;
+   }
+
 private:
    Ident                 type;
    UInt32                size;
@@ -216,10 +222,16 @@ public:
    bool isFileType(const std::string& type) const { return file_type == type; }
 
    //! Add a new chunk
-   Chunk& addChunk(const std::string& type, size_t reserve = 0)
+   Chunk* newChunk(const std::string& type, size_t reserve = 0)
    {
+      Chunk* chunk = findChunk(type);
+      if (chunk != nullptr)
+      {
+         chunk->clear();
+         return chunk;
+      }
       chunk_list.emplace_back(type, reserve);
-      return chunk_list.back();
+      return &chunk_list.back();
    }
 
    //! Find a chunk by type
@@ -253,10 +265,10 @@ public:
 
       if (fseek(fp, offset_, SEEK_SET) == 0)
       {
-         Chunk& chunk = addChunk("    ");
-         if (chunk.read(fp))
+         Chunk* chunk = newChunk("    ");
+         if (chunk->read(fp))
          {
-            return &chunk;
+            return chunk;
          }
       }
 
@@ -266,6 +278,8 @@ public:
    //! Read a document
    bool read(const std::string& filename)
    {
+      clear();
+
       if (!open(filename, "r")) return false;
 
       bool ok = false;
@@ -280,14 +294,14 @@ public:
 
          while(size < file_size)
          {
-            Chunk& chunk = addChunk("    ");
-            if (!chunk.read(fp))
+            Chunk* chunk = newChunk("    ");
+            if (!chunk->read(fp))
             {
                ok = false;
                break;
             }
 
-            size += chunk.getFileSize();
+            size += chunk->getFileSize();
          }
       }
 
@@ -357,6 +371,11 @@ public:
       }
 
       return nullptr;
+   }
+
+   void clear()
+   {
+      chunk_list.clear();
    }
 
 private:
