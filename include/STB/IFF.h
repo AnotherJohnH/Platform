@@ -126,8 +126,10 @@ public:
       return file_size + 8;
    }
 
+   bool empty() const { return bytes.empty(); }
+
    //! Get chunk data
-   const void* getData() const { return bytes.data(); }
+   const void* data() const { return bytes.data(); }
 
    //! Allocate chunk data
    void* alloc()
@@ -351,20 +353,23 @@ public:
       {
          if (chunk.getType() == type)
          {
-            void* data = chunk.alloc();
-            if ((fseek(fp, offset + 8, SEEK_SET) == 0) &&
-                (fread(data, chunk.getSize(), 1, fp) == 1))
+            if (chunk.empty() && (fp != nullptr))
             {
-               if (size != nullptr)
+               // Try and load the chunk from disk
+               void* data = chunk.alloc();
+               if ((fseek(fp, offset + 8, SEEK_SET) != 0) ||
+                   (fread(data, chunk.getSize(), 1, fp) != 1))
                {
-                   *size = chunk.getSize();
+                  chunk.clear();
                }
-               return static_cast<TYPE*>(data);
             }
-            else
+
+            if (!chunk.empty() && (size != nullptr))
             {
-               return nullptr;
+               *size = chunk.getSize();
             }
+
+            return static_cast<const TYPE*>(chunk.data());
          }
 
          offset += chunk.getFileSize();
