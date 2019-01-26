@@ -135,6 +135,16 @@ public:
    //! Clear the screen
    void clear() { addstr("\033[2J\033[H"); }
 
+   //! Set the scroll region
+   void setscrreg(int top, int btm)
+   {
+      addstr("\033[");
+      adduint(unsigned(top));
+      addch(';');
+      adduint(unsigned(btm));
+      addch('r');
+   }
+
    //! Clear to the end of the line
    void clrtoeol() { addstr("\033[2K"); }
 

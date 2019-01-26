@@ -128,8 +128,10 @@ protected:
    //! Resize the terminal
    void resize(unsigned num_cols_, unsigned num_rows_)
    {
-      num_cols = num_cols_ > MAX_COLS ? MAX_COLS : num_cols_;
-      num_rows = num_rows_ > MAX_ROWS ? MAX_ROWS : num_rows_;
+      num_cols   = num_cols_ > MAX_COLS ? MAX_COLS : num_cols_;
+      num_rows   = num_rows_ > MAX_ROWS ? MAX_ROWS : num_rows_;
+      top_margin = 1;
+      btm_margin = num_rows;
    }
 
    //! Render a character in the terminal emulation
@@ -176,8 +178,8 @@ private:
 
       if(row < 1)
          row = 1;
-      else if(row > signed(num_rows))
-         row = num_rows;
+      else if(row > signed(btm_margin))
+         row = btm_margin;
 
       if(col < 1)
          col = 1;
@@ -377,7 +379,7 @@ private:
 
    void scroll()
    {
-      for(unsigned r = 1; r < num_rows; ++r)
+      for(unsigned r = top_margin; r < btm_margin; ++r)
       {
          for(unsigned c = 1; c <= num_cols; ++c)
          {
@@ -390,19 +392,19 @@ private:
 
       for(unsigned c = 1; c <= num_cols; ++c)
       {
-         cell_char[c - 1][num_rows - 1] = ' ';
-         cell_attr[c - 1][num_rows - 1].reset();
+         cell_char[c - 1][btm_margin - 1] = ' ';
+         cell_attr[c - 1][btm_margin - 1].reset();
 
-         drawChar(c, num_rows);
+         drawChar(c, btm_margin);
       }
    }
 
    void nextLine()
    {
       col = 1;
-      if(++row > signed(num_rows))
+      if(++row > signed(btm_margin))
       {
-         row = num_rows;
+         row = btm_margin;
 
          scroll();
       }
@@ -520,12 +522,22 @@ private:
          csiDSR(n);
          break;
 
-
       case 's':
          csiSCP();
          break;
 
-      case 'r':
+      case 'r': // not strictly ANSI
+         top_margin = 1;
+         parseUInt(seq, top_margin);
+         btm_margin = num_rows;
+         if(*seq == ';')
+         {
+            parseUInt(++seq, btm_margin);
+         }
+         btm_margin -= 1;
+         break;
+
+      case 'u':
          csiRCP();
          break;
 
@@ -545,6 +557,8 @@ private:
    uint8_t  sgr_state{0};
    uint8_t  sgr_state_red{0};
    uint8_t  sgr_state_grn{0};
+   unsigned top_margin{1};
+   unsigned btm_margin{};
 };
 
 
