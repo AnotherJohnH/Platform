@@ -178,8 +178,8 @@ private:
 
       if(row < 1)
          row = 1;
-      else if(row > signed(btm_margin))
-         row = btm_margin;
+      else if(row > signed(num_rows))
+         row = num_rows;
 
       if(col < 1)
          col = 1;
@@ -402,9 +402,9 @@ private:
    void nextLine()
    {
       col = 1;
-      if(++row > signed(btm_margin))
+      if(++row > signed(num_rows))
       {
-         row = btm_margin;
+         row = num_rows;
 
          scroll();
       }
