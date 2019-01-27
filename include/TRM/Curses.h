@@ -146,7 +146,7 @@ public:
    }
 
    //! Clear to the end of the line
-   void clrtoeol() { addstr("\033[2K"); }
+   void clrtoeol() { addstr("\033[0K"); }
 
    //! Turn on all the attributes in the mask
    void attron(unsigned attr_) { attrset(attr | attr_); }
