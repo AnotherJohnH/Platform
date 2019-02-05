@@ -273,6 +273,22 @@ public:
       return status > 0 ? ch : status;
    }
 
+   //! Set cursor visibility
+   void curs_set(unsigned cmd)
+   {
+      switch(cmd)
+      {
+      case 0:
+         dev->ioctl(Device::IOCTL_TERM_CURSOR, 0);
+         break;
+
+      case 1:
+      case 2:
+         dev->ioctl(Device::IOCTL_TERM_CURSOR, 1);
+         break;
+      }
+   }
+
 private:
    Device* dev{nullptr};
    unsigned attr{0};
