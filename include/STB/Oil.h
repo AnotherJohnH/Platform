@@ -167,6 +167,8 @@ public:
 #endif
    }
 
+   bool exists(void* that) const;
+
    void write(void* that) const;
 
    bool read(void* that) const;
@@ -267,6 +269,8 @@ public:
    Oil()
       : oil_class(OIL::ClassBase::findClass<TYPE>())
    {}
+
+   bool exists() { return oil_class->exists(this); }
 
    bool read() { return oil_class->read(this); }
 

@@ -241,6 +241,14 @@ bool ClassBase::read(void* that) const
    return read(lex, that);
 }
 
+bool ClassBase::exists(void* that) const
+{
+   std::string filename = name;
+   filename += ".xml";
+
+   return PLT::File::exists(filename.c_str());
+}
+
 } // namespace OIL
 
 } // namespace STB

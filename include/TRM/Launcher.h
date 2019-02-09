@@ -416,9 +416,9 @@ private:
       term = &term_;
       curses.setDevice(&term_);
 
-      if (!config.read())
+      if (config.exists())
       {
-         config.write();
+         config.read();
       }
 
       configTerminal();
