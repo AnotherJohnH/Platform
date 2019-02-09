@@ -21,7 +21,7 @@
 #-------------------------------------------------------------------------------
 
 app      = 'PlatformTest'
-version  = '0.0.3'
+version  = '0.0.4'
 
 plt_source = ['PLT/test/testAudioOut.cpp',
               'PLT/test/testAudioIn.cpp',
