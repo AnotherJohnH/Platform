@@ -23,7 +23,6 @@
 # Construct a target platform specific build environment
 
 import os, sys
-from subprocess import *
 
 env = Environment(ENV = os.environ)
 
@@ -72,6 +71,9 @@ SConscript('Source/PLT/'+target+'/config.scons', exports=['env','source'])
 
 Import('version')
 
+proj_commit = os.popen("git log --pretty=format:'%H' -n 1").read()
+
+env.Append(CCFLAGS = '-DPROJ_COMMIT=\\"'+proj_commit+'\\"')
 env.Append(CCFLAGS = '-DPROJ_VERSION=\\"'+version+'\\"')
 env.Append(CCFLAGS = '-DPROJ_MACHINE='+env['machine'])
 env.Append(CCFLAGS = '-DPROJ_TARGET_'+target)

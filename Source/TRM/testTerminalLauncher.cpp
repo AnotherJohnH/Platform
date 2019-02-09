@@ -27,7 +27,6 @@
 #define  DESCRIPTION     "A test"
 #define  LINK            "https://github.com/AnotherJohnH/Platform"
 #define  AUTHOR          "John D. Haughton"
-#define  VERSION         PROJ_VERSION
 #define  COPYRIGHT_YEAR  "2017"
 
 class MyApp : public TRM::Launcher
@@ -52,7 +51,7 @@ private:
 
 public:
    MyApp(int argc, const char* argv[])
-      : TRM::Launcher(PROGRAM, DESCRIPTION, LINK, AUTHOR, VERSION, COPYRIGHT_YEAR,
+      : TRM::Launcher(PROGRAM, DESCRIPTION, LINK, AUTHOR, PROJ_VERSION, COPYRIGHT_YEAR,
                       "<file>", "launcher.cfg")
    {
       parseArgsAndStart(argc, argv);

@@ -30,7 +30,6 @@
 `#'define  `LINK'            "LINK"
 `#'define  COPYRIGHT_YEAR  "YEAR"
 `#'define  `AUTHOR'          "AUTHOR"
-`#'define  `VERSION'         PROJ_VERSION
 
 
 class APPLICATION`App' : public STB::ConsoleApp
@@ -44,7 +43,7 @@ private:
 
 public:
    APPLICATION`App'(int argc, const char* argv[])
-      : ConsoleApp(PROGRAM, `DESCRIPTION', `LINK', `AUTHOR', `VERSION', COPYRIGHT_YEAR)
+      : ConsoleApp(PROGRAM, `DESCRIPTION', `LINK', `AUTHOR', PROJ_VERSION, COPYRIGHT_YEAR)
    {
       parseArgsAndStart(argc, argv);
    }

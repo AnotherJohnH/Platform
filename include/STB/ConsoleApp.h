@@ -63,6 +63,7 @@ private:
       }
       printf("Author       : %s\n", author);
       printf("Version      : %s\n", version);
+      printf("Commit       : %s\n", PROJ_COMMIT);
       printf("Built        : %s %s\n", __TIME__, __DATE__);
       printf("Compiler     : %s\n", __VERSION__);
 #if defined(__arm__)
