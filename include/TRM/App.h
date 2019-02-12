@@ -48,7 +48,8 @@ private:
    Display display = Display::SVGA;
 #endif
 
-   STB::Option<bool> opt_term{'t', "term", "Use the parent terminal (not the built in terminal)"};
+   STB::Option<bool> opt_term{'t', "term", "Use the parent terminal "
+                                           "(not the built in terminal emulator)"};
    STB::Option<bool> opt_k3{  'K', "k3",   "Kindle 3 display 600x800"};
    STB::Option<bool> opt_vga{ 'V', "vga",  "VGA display      640x480"};
    STB::Option<bool> opt_svga{'S', "svga", "SVGA display     800x600"};
