@@ -278,7 +278,9 @@ public:
    }
 
    //! Read a document
-   bool read(const std::string& filename)
+   bool read(const std::string& filename,
+             const std::string& doc_type_,
+             const std::string& file_type_)
    {
       clear();
 
@@ -287,8 +289,10 @@ public:
       bool ok = false;
 
       if (document_type.read(fp) &&
+          isDocType(doc_type_) &&
           file_size.read(fp) &&
-          file_type.read(fp))
+          file_type.read(fp) &&
+          isFileType(file_type_))
       {
          ok = true;
 
