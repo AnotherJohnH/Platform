@@ -460,7 +460,9 @@ public:
    //! Sink the next character from the input stream
    void sink()
    {
-      buffer.pop_back();
+      // pop_back() would be nicer and is in C++11 but appears
+      // to be undefined with a gcc 4.7 toolchain
+      buffer.erase(buffer.end() - 1);
    }
 
    //! Return a character to the input stream
