@@ -52,7 +52,11 @@ mtl_source = ['MTL/testDigital.cpp']
 env,libs = SConscript('build.scons', ['app', 'version'])
 
 # Project specific build config
-env.Append(CCFLAGS = ['-O3'])
+debug = ARGUMENTS.get('debug', 0)
+if int(debug) == 0:
+   env.Append(CCFLAGS = ['-O3', '-DNDEBUG'])
+else:
+   env.Append(CCFLAGS = ['-O0', '-g'])
 
 # Generate final source list
 if env['startup'] == []:
