@@ -24,12 +24,15 @@
 
 #include <assert.h>
 #include <fcntl.h>
-#include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+// C++11 threads would be nicer but don't seem to be able to link
+// against any libs that actually work at runtime
+#include <pthread.h>
 
 #include "PLT/Event.h"
 #include "STB/Fifo.h"
@@ -86,6 +89,7 @@ private:
    pthread_t             tmr_td;
    volatile uint32_t     tmr_period_ms;
    pthread_mutex_t       fifo_mutex;
+   pthread_cond_t        fifo_cv;
    STB::Fifo<uint16_t,4> fifo;
 
    //! Push an event in a thread safe manner
@@ -94,38 +98,45 @@ private:
       uint16_t ev = (uint16_t(type) << 8) | code;
 
       pthread_mutex_lock(&fifo_mutex);
+
       if (!fifo.full()) fifo.push(ev);
+      pthread_cond_signal(&fifo_cv);
+
       pthread_mutex_unlock(&fifo_mutex);
    }
 
    //! Get next event in a thread safe manner
    bool popEvent(bool block, PLT::Event::Type& type, uint8_t& code)
    {
-      while(true)
+      bool new_event;
+
+      pthread_mutex_lock(&fifo_mutex);
+
+      if (block)
       {
-         uint16_t ev;
-
-         pthread_mutex_lock(&fifo_mutex);
-         bool ok = !fifo.empty();
-         if(ok)
+         while(fifo.empty())
          {
-            ev = fifo.back();
-            fifo.pop();
-         }
-         pthread_mutex_unlock(&fifo_mutex);
-
-         if(ok)
-         {
-            type = PLT::Event::Type(ev >> 8);
-            code = uint8_t(ev);
-            return true;
+            pthread_cond_wait(&fifo_cv, &fifo_mutex);
          }
 
-         if(!block)
-         {
-            return false;
-         }
+         new_event = true;
       }
+      else
+      {
+         new_event = !fifo.empty();
+      }
+
+      if (new_event)
+      {
+         uint16_t ev = fifo.back();
+         fifo.pop();
+         type = PLT::Event::Type(ev >> 8);
+         code = uint8_t(ev);
+      }
+
+      pthread_mutex_unlock(&fifo_mutex);
+
+      return new_event;
    }
 
    //! Loop to wait for key events
