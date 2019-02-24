@@ -66,6 +66,7 @@ private:
    bool                  draw_cursor{true};
    unsigned              timeout_ms{0};
    STB::Fifo<uint8_t, 6> response;
+   bool                  shift{false};
 
    STB::Colour convertCol256ToRGB(uint8_t col, bool bg)
    {
@@ -158,6 +159,41 @@ private:
       }
    }
 
+   uint8_t shiftChar(uint8_t ch)
+   {
+      if ((ch >= 'a') && (ch <= 'z'))
+      {
+         return ch - 'a' + 'A';
+      }
+
+      // TODO configurable to actual keyboard
+      switch(ch)
+      {
+      case '1': return '!';
+      case '2': return '@';
+      case '3': return '#';
+      case '4': return '$';
+      case '5': return '%';
+      case '6': return '^';
+      case '7': return '&';
+      case '8': return '*';
+      case '9': return '(';
+      case '0': return ')';
+      case '-': return '_';
+      case '=': return '+';
+      case '[': return '{';
+      case ']': return '}';
+      case ';': return ':';
+      case '\'': return '"';
+      case '\\': return '|';
+      case '`': return '~';
+      case ',': return '<';
+      case '.': return '>';
+      case '/': return '?';
+      }
+
+      return ch;
+   }
 
    int getInput(uint8_t& ch)
    {
@@ -192,13 +228,34 @@ private:
          }
          else if(type == PLT::Event::KEY_DOWN)
          {
-            if(this->isEchoEnabled() && (event.code < 0x80))
+            if((event.code == PLT::KeyCode::LSHIFT) ||
+               (event.code == PLT::KeyCode::RSHIFT))
             {
-               this->ansiWrite(event.code);
+               shift = true;
             }
-            ch     = event.code;
-            status = 1;
-            break;
+            else
+            {
+               if (shift)
+               {
+                  event.code = shiftChar(event.code);
+               }
+
+               if(this->isEchoEnabled() && (event.code < 0x80))
+               {
+                  this->ansiWrite(event.code);
+               }
+               ch     = event.code;
+               status = 1;
+               break;
+            }
+         }
+         else if(type == PLT::Event::KEY_UP)
+         {
+            if((event.code == PLT::KeyCode::LSHIFT) ||
+               (event.code == PLT::KeyCode::RSHIFT))
+            {
+               shift = false;
+            }
          }
       }
 
