@@ -85,12 +85,15 @@ class EventImpl
 private:
    static const uint16_t TIMER_EV = 0xFF00;
 
-   pthread_t             key_td;
-   pthread_t             tmr_td;
-   volatile uint32_t     tmr_period_ms;
+   pthread_t             key_td{0};
    pthread_mutex_t       fifo_mutex;
    pthread_cond_t        fifo_cv;
    STB::Fifo<uint16_t,4> fifo;
+
+   pthread_t             timer_td{0};
+   volatile uint32_t     timer_period_ms{0};
+   pthread_mutex_t       timer_mutex;
+   pthread_cond_t        timer_cv;
 
    //! Push an event in a thread safe manner
    void pushEvent(PLT::Event::Type type, uint8_t code = 0)
@@ -201,31 +204,39 @@ private:
    {
       EventImpl* impl = (EventImpl*)ptr;
       impl->keyEventLoop();
-      return 0;
+      return nullptr;
    }
 
    //! Loop to wait for periodic timer events
-   void tmrEventLoop()
+   void timerEventLoop()
    {
       while(true)
       {
-         usleep(tmr_period_ms * 1000);
+         pthread_mutex_lock(&timer_mutex);
+
+         while(timer_period_ms == 0)
+         {
+            pthread_cond_wait(&timer_cv, &timer_mutex);
+         }
+
+         unsigned period_ms = timer_period_ms;
+
+         pthread_mutex_unlock(&timer_mutex);
+
+         usleep(period_ms * 1000);
          pushEvent(PLT::Event::TIMER);
       }
    }
 
-   static void* thunkTmrEventLoop(void* ptr)
+   static void* thunkTimerEventLoop(void* ptr)
    {
       EventImpl* impl = (EventImpl*)ptr;
-      impl->tmrEventLoop();
-      return 0;
+      impl->timerEventLoop();
+      return nullptr;
    }
 
 public:
    EventImpl()
-      : key_td(0)
-      , tmr_td(0)
-      , tmr_period_ms(0)
    {
       pthread_mutex_init(&fifo_mutex, 0);
 
@@ -237,19 +248,26 @@ public:
    ~EventImpl()
    {
       pthread_cancel(key_td);
-      pthread_cancel(tmr_td);
+      pthread_cancel(timer_td);
    }
 
    void setTimer(uint32_t period_ms)
    {
-      tmr_period_ms = period_ms;
+      if(period_ms == timer_period_ms) return;
 
-      if(tmr_td == 0)
+      if(timer_td == 0)
       {
          pthread_attr_t attr;
          pthread_attr_init(&attr);
-         pthread_create(&tmr_td, &attr, thunkTmrEventLoop, this);
+         pthread_create(&timer_td, &attr, thunkTimerEventLoop, this);
       }
+
+      pthread_mutex_lock(&timer_mutex);
+
+      timer_period_ms = period_ms;
+      pthread_cond_signal(&timer_cv);
+
+      pthread_mutex_unlock(&timer_mutex);
    }
 
    PLT::Event::Type getEvent(PLT::Event::Message& event, bool block)
