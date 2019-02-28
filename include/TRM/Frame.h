@@ -65,6 +65,7 @@ private:
    STB::Colour           default_fg_col{STB::WHITE};
    bool                  draw_cursor{true};
    unsigned              timeout_ms{0};
+   unsigned              sleep_ms{0};
    STB::Fifo<uint8_t, 6> response;
    bool                  shift{false};
 
@@ -107,6 +108,22 @@ private:
             return STB::GREY(lvl);
          }
       }
+   }
+
+   void screenSave(bool on)
+   {
+      if (on)
+      {
+         frame.clear(default_bg_col);
+         PLT::Event::setTimer(0);
+      }
+      else
+      {
+         this->redraw();
+         PLT::Event::setTimer(timeout_ms != 0 ? timeout_ms : sleep_ms);
+      }
+
+      frame.refresh();
    }
 
    // Implement AnsiImpl
@@ -195,36 +212,46 @@ private:
       return ch;
    }
 
-   int getInput(uint8_t& ch)
+   uint8_t getInput()
    {
+      uint8_t ch{};
+
       if(!response.empty())
       {
          ch = response.back();
          response.pop();
-         return 1;
+         return ch;
       }
 
-      int status;
+      PLT::Event::setTimer(timeout_ms != 0 ? timeout_ms : sleep_ms);
 
-      if(timeout_ms != 0)
-      {
-         PLT::Event::setTimer(timeout_ms);
-      }
+      bool screen_save{false};
 
       while(true)
       {
          PLT::Event::Message event;
          PLT::Event::Type    type = PLT::Event::wait(event);
 
-         if(type == PLT::Event::QUIT)
+         if (screen_save)
          {
-            status = -1;
+            screenSave(/* on */false);
+            screen_save = false;
+         }
+         else if(type == PLT::Event::QUIT)
+         {
+            ch = PLT::QUIT;
             break;
          }
          else if(type == PLT::Event::TIMER)
          {
-            status = 0;
-            break;
+            if(timeout_ms != 0)
+            {
+               ch = PLT::TIMEOUT;
+               break;
+            }
+
+            screenSave(/* on */true);
+            screen_save = true;
          }
          else if(type == PLT::Event::KEY_DOWN)
          {
@@ -244,8 +271,8 @@ private:
                {
                   this->ansiWrite(event.code);
                }
-               ch     = event.code;
-               status = 1;
+
+               ch = event.code;
                break;
             }
          }
@@ -259,12 +286,9 @@ private:
          }
       }
 
-      if(timeout_ms != 0)
-      {
-         PLT::Event::setTimer(0);
-      }
+      PLT::Event::setTimer(0);
 
-      return status;
+      return ch;
    }
 
    void initLayout()
@@ -374,6 +398,11 @@ public:
          status = 0;
          break;
 
+      case IOCTL_TERM_SLEEP:
+         sleep_ms = va_arg(ap, unsigned) * 1000;
+         status = 0;
+         break;
+
       default:
          break;
       }
@@ -406,13 +435,20 @@ public:
          if (draw_cursor) this->drawCursor(Impl::Cursor::BLOCK);
          frame.refresh();
 
-         uint8_t ch{};
+         uint8_t ch = getInput();
 
-         int status = getInput(ch);
-         if(status <= 0)
+         switch(ch)
          {
+         case PLT::QUIT:
             this->drawCursor(Impl::Cursor::OFF);
-            return status;
+            return -1;
+
+         case PLT::TIMEOUT:
+            this->drawCursor(Impl::Cursor::OFF);
+            return 0;
+
+         default:
+            break;
          }
 
          buffer[i] = ch;

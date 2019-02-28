@@ -43,6 +43,7 @@ struct TermConfig : public STB::Oil<TermConfig>
    unsigned border_pixels{0};
    unsigned line_space{0};
    bool     invert_video{false};
+   unsigned sleep{1};
 #ifdef PROJ_TARGET_Kindle3
    uint32_t bg_colour{0xFFFFFF};
    uint32_t fg_colour{0x000000};
@@ -57,6 +58,7 @@ BOIL(TermConfig)
    MOIL(font_size);
    MOIL(border_pixels);
    MOIL(line_space);
+   MOIL(sleep);
    MOIL(bg_colour); FOIL(bg_colour, HEX);
    MOIL(fg_colour); FOIL(fg_colour, HEX);
 }
@@ -324,6 +326,10 @@ private:
          {
             config.font_size = atoi(value);
          }
+         else if(strcmp(cmd, "Sleep") == 0)
+         {
+            config.sleep = atoi(value) * 60;
+         }
 
          configTerminal();
 
@@ -339,6 +345,7 @@ private:
       term->ioctl(Device::IOCTL_TERM_BORDER, config.border_pixels);
       term->ioctl(Device::IOCTL_TERM_LINE_SPACE, config.line_space);
       term->ioctl(Device::IOCTL_TERM_FONT_SIZE, config.font_size);
+      term->ioctl(Device::IOCTL_TERM_SLEEP, config.sleep);
 
       curses.init();
    }

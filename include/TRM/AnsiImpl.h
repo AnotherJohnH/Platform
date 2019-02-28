@@ -145,6 +145,18 @@ protected:
       drawChar(col, row, mode);
    }
 
+   //! Redraw the screen
+   void redraw()
+   {
+      for(unsigned r = 1; r <= num_rows; ++r)
+      {
+         for(unsigned c = 1; c <= num_cols; ++c)
+         {
+            drawChar(c, r);
+         }
+      }
+   }
+
 private:
    //! Return an integer as a string
    void returnInt(signed value)

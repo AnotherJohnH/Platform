@@ -69,7 +69,10 @@ enum KeyCode : uint8_t
    SELECT    = 0x9E,
    MENU      = 0x9F,
    VOL_DOWN  = 0xA0,  //!< Volume down
-   VOL_UP    = 0xA1   //!< Volume up
+   VOL_UP    = 0xA1,  //!< Volume up
+
+   QUIT      = 0xF0,
+   TIMEOUT   = 0xF1
 };
 
 } // namespace PLT
