@@ -66,6 +66,7 @@ private:
    bool                  draw_cursor{true};
    unsigned              timeout_ms{0};
    unsigned              sleep_ms{0};
+   GUI::Canvas*          sleep_image{nullptr};
    STB::Fifo<uint8_t, 6> response;
    bool                  shift{false};
 
@@ -115,6 +116,13 @@ private:
       if (on)
       {
          frame.clear(default_bg_col);
+         if (sleep_image != nullptr)
+         {
+            frame.canvasBlit(*sleep_iamge,
+                             0, 0,
+                             frame.getWidth(), frame.getHeight(),
+                             0, 0);
+         }
          PLT::Event::setTimer(0);
       }
       else
@@ -400,6 +408,11 @@ public:
 
       case IOCTL_TERM_SLEEP:
          sleep_ms = va_arg(ap, unsigned) * 1000;
+         status = 0;
+         break;
+
+      case IOCTL_TERM_SLEEP_IMAGE:
+         sleep_image = va_arg(ap, GUI::Canvas*):
          status = 0;
          break;
 
