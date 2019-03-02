@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 // C++11 threads would be nicer but don't seem to be able to link
@@ -41,9 +42,9 @@
 
 // ALT    ?
 
-static const uint8_t DEL = PLT::BACKSPACE;
-static const uint8_t RET = PLT::RETURN;
-static const uint8_t LSH = PLT::LSHIFT;
+static const uint8_t DEL = PLT::BACKSPACE; // Del
+static const uint8_t RET = PLT::RETURN;    // <-+
+static const uint8_t LSH = PLT::LSHIFT;    // ^
 static const uint8_t UP  = PLT::UP;        // Cursor up
 static const uint8_t DWN = PLT::DOWN;      // Cursor down
 static const uint8_t LFT = PLT::LEFT;      // Cursor left
@@ -214,25 +215,41 @@ private:
    //! Loop to wait for periodic timer events
    void timerEventLoop()
    {
+      pthread_mutex_lock(&timer_mutex);
+
       while(true)
       {
-         pthread_mutex_lock(&timer_mutex);
-
          while(timer_period_ms == 0)
          {
+            // Wait for timer to be started
             pthread_cond_wait(&timer_cv, &timer_mutex);
          }
 
-         unsigned period_ms = timer_period_ms;
-
-         pthread_mutex_unlock(&timer_mutex);
-
-         usleep(period_ms * 1000);
-
-         if(timer_period_ms != 0)
+         while(timer_period_ms != 0)
          {
-            LOG("timer: push event\n");
-            pushEvent(PLT::Event::TIMER);
+            // Get current time
+            struct timeval now;
+            gettimeofday(&now, nullptr);
+
+            // Add timer period to the current time
+            struct timespec then;
+            unsigned delay_ms = timer_period_ms % 1000;
+            then.tv_nsec = (now.tv_usec + delay_ms*1000) * 1000;
+            unsigned delay_s  = timer_period_ms / 1000;
+            then.tv_sec  = now.tv_sec + delay_s;
+            if (then.tv_nsec >= 1000000000)
+            {
+               then.tv_nsec -= 1000000000;
+               then.tv_sec  += 1;
+            }
+
+            // Wait for timer to expire or be reset
+            int status = pthread_cond_timedwait(&timer_cv, &timer_mutex, &then);
+            if (status == ETIMEDOUT)
+            {
+               // Post a timer event
+               pushEvent(PLT::Event::TIMER);
+            }
          }
       }
    }
