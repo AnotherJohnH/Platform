@@ -23,6 +23,7 @@
 // Kindle3 Linux event
 
 #include <assert.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -203,7 +204,10 @@ private:
    static void* thunkKeyEventLoop(void* ptr)
    {
       EventImpl* impl = (EventImpl*)ptr;
-      impl->keyEventLoop();
+      while(true)
+      {
+         impl->keyEventLoop();
+      }
       return nullptr;
    }
 
@@ -224,7 +228,12 @@ private:
          pthread_mutex_unlock(&timer_mutex);
 
          usleep(period_ms * 1000);
-         pushEvent(PLT::Event::TIMER);
+
+         if(timer_period_ms != 0)
+         {
+            LOG("timer: push event\n");
+            pushEvent(PLT::Event::TIMER);
+         }
       }
    }
 
