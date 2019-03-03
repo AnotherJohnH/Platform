@@ -22,6 +22,7 @@
 
 // Stub RTC implementation
 
+#include <ctime>
 #include <sys/time.h>
 
 #include "PLT/Rtc.h"
