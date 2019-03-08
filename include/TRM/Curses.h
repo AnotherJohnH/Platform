@@ -159,11 +159,11 @@ public:
    {
       attr = attr_;
       addstr("\033[0");
-      if(attr & A_BOLD)      addstr(";1");
-      if(attr & A_ITALIC)    addstr(";3");
-      if(attr & A_UNDERLINE) addstr(";4");
-      if(attr & A_REVERSE)   addstr(";7");
-      if(attr & A_FIXED)     addstr(";11");
+      if(attr & A_BOLD)      addstr("1");   else addstr("22");
+      if(attr & A_ITALIC)    addstr(";3");  else addstr(";23");
+      if(attr & A_UNDERLINE) addstr(";4");  else addstr(";24");
+      if(attr & A_REVERSE)   addstr(";7");  else addstr(";27");
+      if(attr & A_FIXED)     addstr(";11"); else addstr(";10");
       addstr("m");
    }
 
