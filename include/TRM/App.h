@@ -39,13 +39,14 @@ private:
       KINDLE3,
       VGA,
       SVGA,
-      XGA
+      XGA,
+      SXGA
    };
 
 #ifdef PROJ_TARGET_Kindle3
    Display display = Display::KINDLE3;
 #else
-   Display display = Display::SVGA;
+   Display display = Display::XGA;
 #endif
 
    STB::Option<bool> opt_term{'t', "term", "Use the parent terminal "
@@ -54,6 +55,7 @@ private:
    STB::Option<bool> opt_vga{ 'V', "vga",  "VGA display      640x480"};
    STB::Option<bool> opt_svga{'S', "svga", "SVGA display     800x600"};
    STB::Option<bool> opt_xga{ 'X', "xga",  "XGA display     1024x768"};
+   STB::Option<bool> opt_sxga{'\0',"sxga", "SXGA display    1280x1024"};
 #endif
 
    virtual int startConsoleApp() override
@@ -75,6 +77,7 @@ private:
          else if (opt_vga)  display = Display::VGA;
          else if (opt_svga) display = Display::SVGA;
          else if (opt_xga)  display = Display::XGA;
+         else if (opt_sxga) display = Display::SXGA;
          
          switch(display)
          {
@@ -82,6 +85,7 @@ private:
          case Display::VGA:     return launchDisplay< 640,480>();
          case Display::SVGA:    return launchDisplay< 800,600>();
          case Display::XGA:     return launchDisplay<1024,768>();
+         case Display::SXGA:    return launchDisplay<1280,1024>();
          }
 
          assert(!"Display selection bug");
