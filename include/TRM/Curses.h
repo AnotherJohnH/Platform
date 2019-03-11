@@ -158,7 +158,7 @@ public:
    void attrset(unsigned attr_)
    {
       attr = attr_;
-      addstr("\033[0");
+      addstr("\033[");
       if(attr & A_BOLD)      addstr("1");   else addstr("22");
       if(attr & A_ITALIC)    addstr(";3");  else addstr(";23");
       if(attr & A_UNDERLINE) addstr(";4");  else addstr(";24");
