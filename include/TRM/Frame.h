@@ -69,6 +69,7 @@ private:
    GUI::Canvas*          sleep_image{nullptr};
    STB::Fifo<uint8_t, 6> response;
    bool                  shift{false};
+   bool                  caps_lock{false};
 
    STB::Colour convertCol256ToRGB(uint8_t col, bool bg)
    {
@@ -271,9 +272,21 @@ private:
             {
                shift = true;
             }
+            else if(event.code == PLT::KeyCode::CAPSLOCK)
+            {
+               caps_lock = !caps_lock;
+            }
+            else if((event.code == PLT::KeyCode::LCTRL) ||
+                    (event.code == PLT::KeyCode::LALT)  ||
+                    (event.code == PLT::KeyCode::LCMD)  ||
+                    (event.code == PLT::KeyCode::RCMD)  ||
+                    (event.code == PLT::KeyCode::RALT))
+            {
+                // Ignore these keys for now
+            }
             else
             {
-               if (shift)
+               if (shift || caps_lock)
                {
                   event.code = shiftChar(event.code);
                }

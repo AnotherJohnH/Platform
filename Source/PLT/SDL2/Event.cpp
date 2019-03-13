@@ -92,6 +92,8 @@ static uint8_t translate_key(SDL_Keycode key)
    case SDLK_LEFT:      return PLT::LEFT;
    case SDLK_BACKSPACE: return PLT::BACKSPACE;
    case SDLK_RETURN:    return PLT::RETURN;
+   case SDLK_RGUI:      return PLT::RCMD;
+   case SDLK_LGUI:      return PLT::LCMD;
    case 0xA7:           return '`';
    default:             return key;
    }
