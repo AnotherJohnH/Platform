@@ -132,6 +132,15 @@ public:
       addnstr(s, n);
    }
 
+   void reset()
+   {
+      clear();
+      attrset(0);
+      fgcolour(9);
+      bgcolour(9);
+      fontset(0);
+   }
+
    //! Clear the screen
    void clear() { addstr("\033[2J\033[H"); }
 
