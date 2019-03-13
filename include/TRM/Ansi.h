@@ -155,7 +155,7 @@ public:
             case APC: state = State::APPLICATION_PROGRAM_COMMAND; break;
 
             default:
-               if ((ch < 0x20) || ((ch >= 0x7E) && (ch < 0xA0)))
+               if ((ch < 0x20) || ((ch > 0x7E) && (ch < 0xA0)))
                {
                   ansiControl(ch);
                }
