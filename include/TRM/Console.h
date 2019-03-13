@@ -110,8 +110,19 @@ private:
       {
          if(inputPush() == 0x1B)
          {
-            if(inputPush() == 0x5B)
+            switch(inputPush())
             {
+            case 'O':
+               switch(inputPush())
+               {
+               case 'P': input.clear(); return PLT::F1;
+               case 'Q': input.clear(); return PLT::F2;
+               case 'R': input.clear(); return PLT::F3;
+               case 'S': input.clear(); return PLT::F4;
+               }
+               break;
+
+            case '[':
                switch(inputPush())
                {
                case 'A': input.clear(); return PLT::UP;
@@ -119,6 +130,7 @@ private:
                case 'C': input.clear(); return PLT::RIGHT;
                case 'D': input.clear(); return PLT::LEFT;
                }
+               break;
             }
          }
       }
