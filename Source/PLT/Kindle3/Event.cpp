@@ -97,6 +97,8 @@ private:
    pthread_mutex_t       timer_mutex;
    pthread_cond_t        timer_cv;
 
+   bool                  sym_pressed{false};
+
    //! Push an event in a thread safe manner
    void pushEvent(PLT::Event::Type type, uint8_t code = 0)
    {
@@ -144,6 +146,47 @@ private:
       return new_event;
    }
 
+   void keyEvent(bool down, uint8_t code)
+   {
+      if (code == SYM)
+      {
+         sym_pressed = down;
+      }
+      else
+      {
+         if (sym_pressed)
+         {
+            switch(code)
+            {
+            case 'q': code = '1';  break;
+            case 'w': code = '2';  break;
+            case 'e': code = '3';  break;
+            case 'r': code = '4';  break;
+            case 't': code = '5';  break;
+            case 'y': code = '6';  break;
+            case 'u': code = '7';  break;
+            case 'i': code = '8';  break;
+            case 'o': code = '9';  break;
+            case 'p': code = '0';  break;
+
+            case 'a': code = '-';  break;
+            case 's': code = '=';  break;
+            case 'd': code = '[';  break;
+            case 'f': code = ']';  break;
+            case 'j': code = ';';  break;
+            case 'k': code = ''';  break;
+            case 'l': code = '\\'; break;
+
+            case 'z': code = '`';  break;
+            case 'n': code = ',';  break;
+            case 'm': code = '/';  break;
+            }
+         }
+
+         pushEvent(down ? PLT::Event::KEY_DOWN : PLT::Event::KEY_UP, code);
+      }
+   }
+
    //! Loop to wait for key events
    void keyEventLoop()
    {
@@ -187,8 +230,8 @@ private:
                {
                   switch(buffer[12])
                   {
-                  case 0: pushEvent(PLT::Event::KEY_UP,   event_decode[buffer[10]]); break;
-                  case 1: pushEvent(PLT::Event::KEY_DOWN, event_decode[buffer[10]]); break;
+                  case 0: keyEvent(/* down */ false, event_decode[buffer[10]]); break;
+                  case 1: keyEvent(/* down */ true,  event_decode[buffer[10]]); break;
                   default: break;
                   }
                }
