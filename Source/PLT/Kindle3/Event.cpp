@@ -174,7 +174,7 @@ private:
             case 'd': code = '[';  break;
             case 'f': code = ']';  break;
             case 'j': code = ';';  break;
-            case 'k': code = ''';  break;
+            case 'k': code = '\''; break;
             case 'l': code = '\\'; break;
 
             case 'z': code = '`';  break;
