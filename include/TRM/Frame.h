@@ -219,6 +219,9 @@ private:
       case ',': return '<';
       case '.': return '>';
       case '/': return '?';
+
+      case PLT::UP:   return PLT::PAGE_UP;
+      case PLT::DOWN: return PLT::PAGE_DOWN;
       }
 
       return ch;
