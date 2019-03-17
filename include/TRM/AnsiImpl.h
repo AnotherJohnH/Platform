@@ -114,6 +114,7 @@ protected:
 
    AnsiImpl()
    {
+      memset(cell_attr, 0, sizeof(cell_char));
       memset(cell_char, 0, sizeof(cell_char));
 
       ansiReset();
@@ -424,15 +425,6 @@ private:
 
    // implement Ansi
 
-   virtual void ansiReset() override
-   {
-      col = 1;
-      row = 1;
-      attr.reset();
-      echo        = true;
-      implicit_cr = false;
-   }
-
    virtual void ansiGraphic(uint8_t ch) override
    {
       cell_char[col - 1][row - 1] = ch;
@@ -557,6 +549,20 @@ private:
       }
    }
 
+   virtual void ansiReset() override
+   {
+      col = 1;
+      row = 1;
+      attr.reset();
+      echo           = true;
+      implicit_cr    = false;
+      sgr_state      = 0;
+      sgr_state_red  = 0;
+      sgr_state_grn  = 0;
+      top_margin     = 1;
+      btm_margin     = num_rows;
+   }
+
    unsigned num_cols{};
    unsigned num_rows{};
    signed   col{1}, row{1};
@@ -565,7 +571,7 @@ private:
    bool     echo{};
    Attr     cell_attr[MAX_COLS][MAX_ROWS];
    uint8_t  cell_char[MAX_COLS][MAX_ROWS];
-   bool     implicit_cr{};
+   bool     implicit_cr{false};
    uint8_t  sgr_state{0};
    uint8_t  sgr_state_red{0};
    uint8_t  sgr_state_grn{0};

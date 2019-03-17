@@ -134,6 +134,7 @@ public:
 
    void reset()
    {
+      addstr("\033c");
       clear();
       attrset(0);
       fgcolour(9);
