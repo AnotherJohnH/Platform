@@ -451,6 +451,13 @@ private:
          csiCursor('D');
          break;
 
+      case '\t':
+         while((col % tab_size) != 0)
+         {
+            ansiGraphic(' ');
+         }
+         break;
+
       case '\n':
          if(implicit_cr)
          {
@@ -577,6 +584,7 @@ private:
    uint8_t  sgr_state_grn{0};
    unsigned top_margin{1};
    unsigned btm_margin{};
+   unsigned tab_size{8};
 };
 
 
