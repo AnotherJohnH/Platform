@@ -48,6 +48,9 @@ public:
 
    ~Bitmap();
 
+   //! Resize the bitmap, the current pixel data is lost
+   void resize(unsigned width, unsigned height);
+
    //! Get a platform specific handle for the bitmap
    virtual void* getHandle() const override;
 

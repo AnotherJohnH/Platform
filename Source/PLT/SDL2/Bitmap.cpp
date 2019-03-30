@@ -40,16 +40,47 @@
 namespace PLT {
 
 //! Memory image buffer
-class Bitmap::Impl : public Image
+class Bitmap::Impl
 {
 public:
-   Impl(unsigned width, unsigned height)
+   Impl() = default;
+
+   ~Impl()
    {
+      resize(0, 0);
+   }
+
+   void load(const char* filename)
+   {
+      SDL_Surface* image_surface = IMG_Load(filename);
+      if (image_surface == nullptr)
+      {
+         fprintf(stderr, "Failed to open file '%s'\n", filename);
+         return;
+      }
+
+      surface = SDL_ConvertSurfaceFormat(image_surface, PIXEL_FORMAT, /* not used */ 0);
+
+      SDL_FreeSurface(image_surface);
+   }
+
+   void resize(unsigned width_, unsigned height_)
+   {
+      if (surface != nullptr)
+      {
+         SDL_FreeSurface(surface);
+      }
+
+      if ((width_ == 0) || (height_ == 0))
+      {
+         return;
+      }
+
 #if 0
       surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, PIXEL_FORMAT);
 #else
       // XXX replace with code above when SDL2.0.5 is more widely available
-      surface = SDL_CreateRGBSurface(0, width, height, 32,
+      surface = SDL_CreateRGBSurface(0, width_, height_, 32,
                                      0x00FF0000,
                                      0x0000FF00,
                                      0x000000FF,
@@ -57,77 +88,54 @@ public:
 #endif
    }
 
-   Impl(const char* filename)
+   uint8_t* getData(unsigned& width_, unsigned& height_, unsigned& pitch_)
    {
-      SDL_Surface* image_surface = IMG_Load(filename);
-      if (image_surface == nullptr)
+      if(surface == nullptr)
       {
-         fprintf(stderr, "Failed to open file '%s'\n", filename);
+         return nullptr;
       }
-      else
-      {
-         surface = SDL_ConvertSurfaceFormat(image_surface, PIXEL_FORMAT, /* not used */ 0);
 
-         SDL_FreeSurface(image_surface);
-      }
-   }
+      width_  = surface->w;
+      height_ = surface->h;
+      pitch_  = surface->pitch;
 
-   ~Impl()
-   {
-      SDL_FreeSurface(surface);
-   }
-
-   void getSize(unsigned& width, unsigned& height)
-   {
-      if (surface != nullptr)
-      {
-         width  = surface->w;
-         height = surface->h;
-      }
-      else
-      {
-         width  = 0;
-         height = 0;
-      }
-   }
-
-   uint8_t* getStorage(unsigned& pitch)
-   {
-      if(surface == nullptr) return nullptr;
-
-      pitch = surface->pitch;
       return (uint8_t*)surface->pixels;
    }
 
-   virtual void* getHandle() const override
-   {
-      return surface;
-   }
+   void* getHandle() const { return surface; }
 
 private:
-   SDL_Surface*   surface{nullptr};
+   SDL_Surface* surface{nullptr};
 };
 
 
 Bitmap::Bitmap(unsigned width_, unsigned height_)
    : Image(width_, height_)
 {
-   pimpl = new Impl(width_, height_);
+   pimpl = new Impl();
 
-   buffer = pimpl->getStorage(pitch);
+   resize(width_, height_);
 }
 
 Bitmap::Bitmap(const char* filename_)
 {
-   pimpl  = new Impl(filename_);
+   pimpl = new Impl();
 
-   pimpl->getSize(width, height);
-   buffer = pimpl->getStorage(pitch);
+   pimpl->load(filename_);
+
+   buffer = pimpl->getData(width, height, pitch);
 }
 
 Bitmap::~Bitmap()
 {
    delete pimpl;
+}
+
+void Bitmap::resize(unsigned width_, unsigned height_)
+{
+   pimpl->resize(width_, height_);
+
+   buffer = pimpl->getData(width_, height_, pitch);
 }
 
 void* Bitmap::getHandle() const

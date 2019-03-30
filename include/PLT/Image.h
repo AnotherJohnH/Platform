@@ -111,7 +111,7 @@ public:
    void lineBlit(uint8_t pixel_mask, STB::Colour one, STB::Colour zero,
                  unsigned x, unsigned y);
 
-   //! Save and to the named file (an appropriate extension will be added)
+   //! Save to the named file (an appropriate extension will be added)
    bool save(const char* name) const;
 
 protected:
