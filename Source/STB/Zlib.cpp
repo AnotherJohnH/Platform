@@ -20,19 +20,13 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include <cassert>
-#include <cstdint>
+// See RFC-1950
 
-#include <string>
+#include <cstdint>
 
 #include "STB/Zlib.h"
 
 namespace STB {
-
-static void error(const std::string& message)
-{
-   fprintf(stderr, "ERR: ZLIB %s\n", message.c_str());
-}
 
 size_t ZLib::inflate()
 {
@@ -49,7 +43,7 @@ size_t ZLib::inflate()
 
    if (preset_dictionary)
    {
-      error("format with dictionary not supported");
+      io->error("ZLIB stream with preset dictionary not supported");
       return 0;
    }
 
@@ -67,7 +61,7 @@ size_t ZLib::inflate()
       break;
 
    default:
-      error("compression method must be DEFLATE");
+      io->error("compression method must be DEFLATE");
       break;
    }
 
@@ -81,7 +75,7 @@ size_t ZLib::inflate()
 
       if (adler32 != crc)
       {
-         error("CRC failure");
+         io->error("CRC failure");
       }
     }
 

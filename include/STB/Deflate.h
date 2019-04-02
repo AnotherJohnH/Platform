@@ -24,6 +24,7 @@
 #define STB_DEFLATE_H
 
 #include <cstdint>
+#include <string>
 
 namespace STB {
 
@@ -35,6 +36,7 @@ public:
    public:
       virtual uint8_t getByte()        = 0;
       virtual bool    putByte(uint8_t) = 0;
+      virtual void    error(const std::string&) {}
    };
 
    Deflate(Io* io_) : io(io_) {}

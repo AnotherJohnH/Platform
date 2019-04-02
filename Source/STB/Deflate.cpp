@@ -20,10 +20,13 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#include "STB/Deflate.h"
+
 namespace STB {
 
 size_t Deflate::inflate(size_t log2_window_size)
 {
+   (void) io;
    return 0;
 }
 

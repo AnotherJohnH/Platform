@@ -54,15 +54,20 @@ public:
    }
 
 private:
-   virtual uint8_t getByte()
+   virtual uint8_t getByte() override
    {
       return io->getByte();
    }
 
-   virtual bool putByte(uint8_t byte)
+   virtual bool putByte(uint8_t byte) override
    {
       adler32CRC(crc, byte);
       return io->putByte(byte);
+   }
+
+   virtual void error(const std::string& message) override
+   {
+      io->error(message);
    }
 
    Io*      io{nullptr};
