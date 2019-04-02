@@ -82,11 +82,15 @@ private:
       bitmap.blit(*image, x, y, w, h, src_x, src_y);
    }
 
+   bool readPNG(const char* filename);
+
 public:
    Bitmap(const char* filename)
-      : bitmap(filename)
    {
-      resize(bitmap.getWidth(), bitmap.getHeight());
+      if (readPNG(filename))
+      {
+         resize(bitmap.getWidth(), bitmap.getHeight());
+      }
    }
 
    PLT::Bitmap* getBitmapPtr() { return &bitmap; }

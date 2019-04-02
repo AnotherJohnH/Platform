@@ -50,20 +50,6 @@ public:
       resize(0, 0);
    }
 
-   void load(const char* filename)
-   {
-      SDL_Surface* image_surface = IMG_Load(filename);
-      if (image_surface == nullptr)
-      {
-         fprintf(stderr, "Failed to open file '%s'\n", filename);
-         return;
-      }
-
-      surface = SDL_ConvertSurfaceFormat(image_surface, PIXEL_FORMAT, /* not used */ 0);
-
-      SDL_FreeSurface(image_surface);
-   }
-
    void resize(unsigned width_, unsigned height_)
    {
       if (surface != nullptr)
@@ -77,7 +63,7 @@ public:
       }
 
 #if 0
-      surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, PIXEL_FORMAT);
+      surface = SDL_CreateRGBSurfaceWithFormat(0, width_, height_, 32, PIXEL_FORMAT);
 #else
       // XXX replace with code above when SDL2.0.5 is more widely available
       surface = SDL_CreateRGBSurface(0, width_, height_, 32,
@@ -117,15 +103,6 @@ Bitmap::Bitmap(unsigned width_, unsigned height_)
    resize(width_, height_);
 }
 
-Bitmap::Bitmap(const char* filename_)
-{
-   pimpl = new Impl();
-
-   pimpl->load(filename_);
-
-   buffer = pimpl->getData(width, height, pitch);
-}
-
 Bitmap::~Bitmap()
 {
    delete pimpl;
@@ -135,7 +112,7 @@ void Bitmap::resize(unsigned width_, unsigned height_)
 {
    pimpl->resize(width_, height_);
 
-   buffer = pimpl->getData(width_, height_, pitch);
+   buffer = pimpl->getData(width, height, pitch);
 }
 
 void* Bitmap::getHandle() const

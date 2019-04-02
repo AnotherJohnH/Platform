@@ -41,10 +41,7 @@ public:
    //
    //! \param width (pixels)
    //! \param height (pixels)
-   Bitmap(unsigned width, unsigned height);
-
-   //! Create a bitmap from a file
-   Bitmap(const char* filename);
+   Bitmap(unsigned width = 0, unsigned height = 0);
 
    ~Bitmap();
 

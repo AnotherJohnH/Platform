@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2019 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,17 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// Stub Bitmap implementation
+// See RFC-2083
 
-#include "PLT/Bitmap.h"
+#include "GUI/Bitmap.h"
 
-namespace PLT {
 
-Bitmap::Bitmap(unsigned width_, unsigned height_)
-   : Image(width_, height_)
+namespace GUI {
+
+//! Read ".png" format file.
+bool Bitmap::readPNG(const char* filename)
 {
-   pimpl = nullptr;
+   return false;
 }
 
-Bitmap::~Bitmap()
-{
 }
-
-void* Bitmap::getHandle() const
-{
-   return nullptr;
-}
-
-} // namespace PLT

@@ -16,4 +16,5 @@ source += [File('GUI/FontTeletext18.cpp')]
 source += [File('GUI/FontTeletext15.cpp')]
 source += [File('GUI/FontTeletext12.cpp')]
 source += [File('GUI/FontTeletext9.cpp')]
+source += [File('GUI/BitmapPNG.cpp')]
 
