@@ -21,6 +21,8 @@
 //------------------------------------------------------------------------------
 
 // See RFC-1951
+//
+// NOTE some comments and code snippets have been derived from the RFC
 
 #include <cassert>
 #include <cstdint>
@@ -44,7 +46,7 @@ public:
        window.resize(window_size);
    }
 
-   //! Inflate a DEFLATE stream of data.
+   //! Inflate a DEFLATE stream \return number of bytes in the output stream
    size_t inflate()
    {
       bytes_out = 0;
@@ -138,7 +140,7 @@ private:
       return node;
    }
 
-   //! Calculate huffman codes from bit length data.
+   //! Compute ascending Huffman codes from bit length dat
    static void huffBitLengthToCodes(HuffCode* table, unsigned num_codes)
    {
       // Count the number of codes for each bit length
@@ -168,7 +170,7 @@ private:
       }
    }
 
-   //! Build a binary tree to decode a huffman encoded stream.
+   //! Build a binary tree to decode a huffman encoded stream
    HuffNode* buildHuffmanTree(HuffCode* table, unsigned num_codes)
    {
       huffBitLengthToCodes(table, num_codes);
@@ -240,7 +242,7 @@ private:
       HuffCode code[LIT_LEN_CODES];
       unsigned i;
 
-      // Get code length code length table (permutated order)
+      // Get code length code length table
       for(i = 0; i < hclen; i++)
       {
          code[ code_length_order[i] ].len = getBits(3);
@@ -364,7 +366,7 @@ private:
       return dist;
    }
 
-   //! Decode literal/length value from DEFLATE input stream
+   //! Decode literal or length value from DEFLATE input stream
    int decodeLitLen()
    {
       static ExtraBits extra[29] =
@@ -397,7 +399,7 @@ private:
       return lit_len;
    }
 
-   //! Decode code bit length value from DEFLATE input stream.
+   //! Decode code bit length value from DEFLATE input stream
    unsigned decodeCodeLen(HuffNode* tree, unsigned& prev_code_len, unsigned& repeat)
    {
       unsigned code_len = getSymbol(tree);
