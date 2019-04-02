@@ -6,6 +6,8 @@ Import('source')
 source += [File('STB/Option.cpp')]
 source += [File('STB/Midi.cpp')]
 source += [File('STB/Oil.cpp')]
+source += [File('STB/Deflate.cpp')]
+source += [File('STB/Zlib.cpp')]
  
 source += [File('GUI/FontLED11.cpp')]
 source += [File('GUI/FontLED22.cpp')]
