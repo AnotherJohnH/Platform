@@ -64,7 +64,7 @@ public:
             uint16_t len  = uint16_t(getBits(16));
             uint16_t nlen = uint16_t(getBits(16));
 
-            if (nlen != ~len)
+            if (nlen != uint16_t(~len))
             {
                io->error("DEFLATE LEN != ~NLEN");
                return 0;
@@ -379,7 +379,7 @@ private:
 
       int lit_len = getSymbol(lit_len_tree);
 
-      if (lit_len > END_OF_BLOCK_LIT)
+      if (lit_len > signed(END_OF_BLOCK_LIT))
       {
          lit_len -= END_OF_BLOCK_LIT + 1;
 
