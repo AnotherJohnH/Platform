@@ -59,8 +59,6 @@ public:
          quit           = getBits(1);
          unsigned btype = getBits(2);
 
-         printf("quit=%u byte=%u\n", quit, btype);
-
          if (btype == 0b00)
          {
             skipToNextByte();
