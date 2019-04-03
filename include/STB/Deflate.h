@@ -35,7 +35,7 @@ public:
    {
    public:
       virtual uint8_t getByte()        = 0;
-      virtual bool    putByte(uint8_t) = 0;
+      virtual void    putByte(uint8_t) = 0;
       virtual void    error(const std::string&) {}
    };
 

@@ -59,6 +59,8 @@ public:
          quit           = getBits(1);
          unsigned btype = getBits(2);
 
+         printf("quit=%u byte=%u\n", quit, btype);
+
          if (btype == 0b00)
          {
             skipToNextByte();
@@ -72,7 +74,7 @@ public:
                return 0;
             }
 
-            quit = !copyBlock(len);
+            copyBlock(len);
          }
          else
          {
@@ -83,7 +85,7 @@ public:
             default:   io->error("DEFLATE bad block type"); return 0;
             }
 
-            quit = !inflateBlock();
+            inflateBlock();
          }
       }
 
@@ -323,10 +325,10 @@ private:
       }
    }
 
-   bool putByte(uint8_t byte)
+   void putByte(uint8_t byte)
    {
       window[bytes_out++ & window_mask] = byte;
-      return io->putByte(byte);
+      io->putByte(byte);
    }
 
    int getSymbol(HuffNode* tree)
@@ -432,23 +434,16 @@ private:
    }
 
    //! Copy a block of data
-   bool copyBlock(unsigned length)
+   void copyBlock(unsigned length)
    {
       for(unsigned i=0; i<length; i++)
       {
-         uint8_t byte = uint8_t(getBits(8));
-
-         if (!putByte(byte))
-         {
-            return false;
-         }
+         putByte(uint8_t(getBits(8)));
       }
-
-      return true;
    }
 
    //! Inflate a DEFLATE block of data via LZ77 decompressor
-   bool inflateBlock()
+   void inflateBlock()
    {
       while(true)
       {
@@ -459,12 +454,7 @@ private:
 
             for(signed len = lit_len; len < 0; len++)
             {
-               uint8_t byte = window[(bytes_out - dist) & window_mask];
-
-               if (!putByte(byte))
-               {
-                  return false;
-               }
+               putByte(window[(bytes_out - dist) & window_mask]);
             }
          }
          else if (lit_len == END_OF_BLOCK_LIT)
@@ -473,16 +463,9 @@ private:
          }
          else
          {
-            uint8_t byte = uint8_t(lit_len);
-
-            if (!putByte(byte))
-            {
-               return false;
-            }
+            putByte(uint8_t(lit_len));
          }
       }
-
-      return true;
    }
 
    // I/O state

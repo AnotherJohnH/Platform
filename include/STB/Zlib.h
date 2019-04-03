@@ -59,10 +59,10 @@ private:
       return io->getByte();
    }
 
-   virtual bool putByte(uint8_t byte) override
+   virtual void putByte(uint8_t byte) override
    {
       adler32CRC(crc, byte);
-      return io->putByte(byte);
+      io->putByte(byte);
    }
 
    virtual void error(const std::string& message) override
