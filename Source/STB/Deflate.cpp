@@ -78,8 +78,8 @@ public:
          {
             switch(btype)
             {
-            case 0b01: deflateFixedHuffman();   break;
-            case 0b10: deflateDynamicHuffman(); break;
+            case 0b01: buildFixedHuffmanTrees();   break;
+            case 0b10: buildDynamicHuffmanTrees(); break;
             default:   io->error("DEFLATE bad block type"); return 0;
             }
 
@@ -140,7 +140,7 @@ private:
       return node;
    }
 
-   //! Compute ascending Huffman codes from bit length dat
+   //! Compute ascending sequence of Huffman codes from bit length data
    static void huffBitLengthToCodes(HuffCode* table, unsigned num_codes)
    {
       // Count the number of codes for each bit length
@@ -205,8 +205,8 @@ private:
       return root;
    }
 
-   //! Create decode trees for fixed huffman block
-   void deflateFixedHuffman()
+   //! Build Huffman trees with a static configuration
+   void buildFixedHuffmanTrees()
    {
       resetNodeAlloc();
 
@@ -224,8 +224,8 @@ private:
       dist_tree = buildHuffmanTree(code, DISTANCE_CODES);
    }
 
-   //! Create decode trees for dynamic huffman block
-   void deflateDynamicHuffman()
+   //! Build Huffman trees with a dynamic configuration from the stream
+   void buildDynamicHuffmanTrees()
    {
       resetNodeAlloc();
 
@@ -234,7 +234,7 @@ private:
          16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15
       };
 
-      // Get size of code length tables
+      // Read size of code length tables
       unsigned hlit  = getBits(5) + END_OF_BLOCK_LIT + 1;
       unsigned hdist = getBits(5) + 1;
       unsigned hclen = getBits(4) + 4;
@@ -242,7 +242,7 @@ private:
       HuffCode code[LIT_LEN_CODES];
       unsigned i;
 
-      // Get code length code length table
+      // Read code length table
       for(i = 0; i < hclen; i++)
       {
          code[ code_length_order[i] ].len = getBits(3);
@@ -258,7 +258,7 @@ private:
       unsigned prev_code_len = 0;
       unsigned code_len;
 
-      // Get literal/length code length table
+      // Read literal/length code length table
       for(i = 0; i < hlit;)
       {
          code_len = decodeCodeLen(code_len_tree, prev_code_len, repeat);
@@ -274,7 +274,7 @@ private:
 
       lit_len_tree = buildHuffmanTree(code, LIT_LEN_CODES);
 
-      // Get distance code length table
+      // Read distance code length table
       for(i = 0; i < hdist;)
       {
          code_len = decodeCodeLen(code_len_tree, prev_code_len, repeat);
@@ -341,7 +341,7 @@ private:
       return node->symbol;
    }
 
-   //! Decode distance value from DEFLATE input stream
+   //! Decode distance value from DEFLATE stream
    unsigned decodeDist()
    {
       static ExtraBits extra[30] =
@@ -366,7 +366,7 @@ private:
       return dist;
    }
 
-   //! Decode literal or length value from DEFLATE input stream
+   //! Decode literal or length value from DEFLATE stream
    int decodeLitLen()
    {
       static ExtraBits extra[29] =
@@ -399,7 +399,7 @@ private:
       return lit_len;
    }
 
-   //! Decode code bit length value from DEFLATE input stream
+   //! Decode code bit length value from DEFLATE stream
    unsigned decodeCodeLen(HuffNode* tree, unsigned& prev_code_len, unsigned& repeat)
    {
       unsigned code_len = getSymbol(tree);
