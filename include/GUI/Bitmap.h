@@ -93,7 +93,7 @@ public:
       }
    }
 
-   PLT::Bitmap* getBitmapPtr() { return &bitmap; }
+   const PLT::Bitmap& getBitmap() const { return bitmap; }
 };
 
 } // namespace GUI
