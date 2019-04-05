@@ -400,21 +400,21 @@ private:
    {
       if (first)
       {
-         for(signed i = bytes_per_pixel; i < (pitch - 1); i++)
+         for(unsigned i = bytes_per_pixel; i < (pitch - 1); i++)
          {
             uint8_t& x = line[i];
             uint8_t  a = line[i - bytes_per_pixel];
-            x = x + (a/2);
+            x = x + a/2;
          }
       }
       else
       {
-         signed i;
+         unsigned i;
 
          for(i = 0; i < bytes_per_pixel; i++)
          {
             uint8_t& x = line[i];
-            uint8_t  b = line[i - signed(pitch)];
+            uint8_t  b = line[signed(i) - signed(pitch)];
             x = x + b/2;
          }
 
@@ -422,7 +422,7 @@ private:
          {
             uint8_t& x = line[i];
             uint8_t  a = line[i - bytes_per_pixel];
-            uint8_t  b = line[i - signed(pitch)];
+            uint8_t  b = line[signed(i) - signed(pitch)];
             x = x + (a + b)/2;
          }
       }
@@ -433,7 +433,7 @@ private:
    {
       if (first)
       {
-         for(signed i = bytes_per_pixel; i < (pitch - 1); i++)
+         for(unsigned i = bytes_per_pixel; i < (pitch - 1); i++)
          {
             uint8_t& x = line[i];
             uint8_t  a = line[i - bytes_per_pixel];
@@ -442,12 +442,12 @@ private:
       }
       else
       {
-         signed i;
+         unsigned i;
 
          for(i = 0; i < bytes_per_pixel; i++)
          {
             uint8_t& x = line[i];
-            uint8_t  b = line[i - signed(pitch)];
+            uint8_t  b = line[signed(i) - signed(pitch)];
             x = x + b;
          }
 
@@ -455,8 +455,8 @@ private:
          {
             uint8_t& x = line[i];
             uint8_t  a = line[i - bytes_per_pixel];
-            uint8_t  b = line[i - signed(pitch)];
-            uint8_t  c = line[i - signed(pitch) - bytes_per_pixel];
+            uint8_t  b = line[signed(i) - signed(pitch)];
+            uint8_t  c = line[signed(i) - signed(pitch) - bytes_per_pixel];
 
             signed   p  = a + b - c;
             unsigned pa = abs(p - a);
@@ -498,7 +498,7 @@ private:
          break;
 
       case FILTER_SUB:
-         for(signed i = bytes_per_pixel; i < (pitch - 1); i++)
+         for(unsigned i = bytes_per_pixel; i < (pitch - 1); i++)
          {
             uint8_t& x = line[i];
             uint8_t  a = line[i - bytes_per_pixel];
@@ -509,10 +509,10 @@ private:
       case FILTER_UP:
          if (!first)
          {
-            for(signed i = 0; i < (pitch - 1); i++)
+            for(unsigned i = 0; i < (pitch - 1); i++)
             {
                uint8_t& x = line[i];
-               uint8_t  b = line[i - signed(pitch)];
+               uint8_t  b = line[signed(i) - signed(pitch)];
                x = x + b;
             }
          }
