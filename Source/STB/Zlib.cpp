@@ -32,10 +32,8 @@ size_t ZLib::inflate()
 {
    static const unsigned ZLIB_CM_DEFLATE = 8;
 
-   crc = 0;
-
-   uint8_t cmf = io->getByte();
-   uint8_t flg = io->getByte();
+   uint8_t cmf = getByte();
+   uint8_t flg = getByte();
 
    unsigned compression_method = cmf & 0b1111;
    unsigned compression_info   = (cmf >> 4) & 0b1111;
@@ -43,11 +41,13 @@ size_t ZLib::inflate()
 
    if (preset_dictionary)
    {
-      io->error("ZLIB stream with preset dictionary not supported");
+      error("ZLIB stream with preset dictionary not supported");
       return 0;
    }
 
    size_t size = 0;
+
+   adler32reset();
 
    switch(compression_method)
    {
@@ -61,21 +61,21 @@ size_t ZLib::inflate()
       break;
 
    default:
-      io->error("compression method must be DEFLATE");
+      error("compression method must be DEFLATE");
       break;
    }
 
    if (size != 0)
    {
       uint32_t adler32;
-      adler32  = io->getByte() << 24;
-      adler32 |= io->getByte() << 16;
-      adler32 |= io->getByte() << 8;
-      adler32 |= io->getByte();
+      adler32  = getByte() << 24;
+      adler32 |= getByte() << 16;
+      adler32 |= getByte() << 8;
+      adler32 |= getByte();
 
-      if (adler32 != crc)
+      if (adler32 != adler32crc())
       {
-         io->error("CRC failure");
+         error("CRC failure");
       }
     }
 

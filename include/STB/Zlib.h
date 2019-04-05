@@ -39,21 +39,27 @@ public:
    //! Inflate Z-lib I/O stream
    size_t inflate(); 
 
-   //! Update CRC with the Adler-32 algorithm
-   static void adler32CRC(uint32_t& crc, uint8_t byte)
+private:
+   void adler32reset()
    {
-      static const uint32_t BASE = 65521; // Largest prime smaller that 65536
-
-      uint32_t s1 = crc & 0xFFFF;
-      uint32_t s2 = crc >> 16;
-
-      s1 = (s1 + byte) % BASE;
-      s2 = (s1 + s2) % BASE;
-
-      crc = (s2 << 16) | s1;
+      crc_lsh = 1;
+      crc_msh = 0;
    }
 
-private:
+   //! Update CRC using the Adler-32 algorithm
+   void adler32update(uint8_t byte)
+   {
+      static const uint32_t ADLER32_BASE = 65521; // Largest prime smaller that 65536
+
+      crc_lsh = (crc_lsh + byte) % ADLER32_BASE;
+      crc_msh = (crc_lsh + crc_msh) % ADLER32_BASE;
+   }
+
+   uint32_t adler32crc() const
+   {
+      return (crc_msh << 16) | crc_lsh;
+   }
+
    virtual uint8_t getByte() override
    {
       return io->getByte();
@@ -61,7 +67,7 @@ private:
 
    virtual void putByte(uint8_t byte) override
    {
-      adler32CRC(crc, byte);
+      adler32update(byte);
       io->putByte(byte);
    }
 
@@ -71,7 +77,8 @@ private:
    }
 
    Io*      io{nullptr};
-   uint32_t crc{0};
+   uint32_t crc_lsh{0};
+   uint32_t crc_msh{0};
 };
 
 } // namespace STB
