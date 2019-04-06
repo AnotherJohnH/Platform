@@ -455,7 +455,7 @@ private:
                putByte(window[(bytes_out - dist) & window_mask]);
             }
          }
-         else if (lit_len == END_OF_BLOCK_LIT)
+         else if (lit_len == signed(END_OF_BLOCK_LIT))
          {
             break;
          }
