@@ -36,6 +36,10 @@ Bitmap::~Bitmap()
 {
 }
 
+void Bitmap::resize(unsigned width_, unsigned height_)
+{
+}
+
 void* Bitmap::getHandle() const
 {
    return nullptr;
