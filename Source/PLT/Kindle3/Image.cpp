@@ -30,8 +30,9 @@ unsigned Image::getPixelBits() { return 4; }
 
 uint32_t Image::getPixel(unsigned x, unsigned y) const
 {
-   uint8_t pair = buffer[(x + y * pitch) / 2];
-   uint8_t grey = x & 1 ? (pair << 4) : (pair & 0xF0);
+   uint8_t pair = buffer[(x/2) + y * pitch];
+   uint8_t blackness = x & 1 ? (pair << 4) : (pair & 0xF0);
+   uint8_t grey = 0xF - blackness;
    return (grey << 16) | (grey << 8) | grey;
 }
 
