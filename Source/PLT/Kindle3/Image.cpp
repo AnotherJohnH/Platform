@@ -32,14 +32,14 @@ uint32_t Image::getPixel(unsigned x, unsigned y) const
 {
    uint8_t pair = buffer[(x/2) + y * pitch];
    uint8_t blackness = x & 1 ? (pair << 4) : (pair & 0xF0);
-   uint8_t grey = 0xF - blackness;
+   uint8_t grey = 0xF0 - blackness;
    return (grey << 16) | (grey << 8) | grey;
 }
 
 void Image::point(STB::Colour rgb, unsigned x, unsigned y)
 {
-   uint8_t& pair = buffer[(x + y * pitch) / 2];
    uint8_t grey = 0xF - (STB::ColourDecode(rgb).grn() >> 4);
+   uint8_t& pair = buffer[(x/2) + y * pitch];
    if(x & 1)
    {
       pair = (pair & 0xF0) | grey;
@@ -65,6 +65,7 @@ void Image::blit(const Image& source,
                  unsigned w, unsigned h,
                  unsigned src_x, unsigned src_y)
 {
+   // TODO optimise this
    defaultBlit(source, x, y, w, h, src_x, src_y);
 }
 

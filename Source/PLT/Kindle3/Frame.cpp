@@ -105,7 +105,7 @@ public:
 
    uint8_t* getStorage(unsigned& pitch)
    {
-      pitch = width;
+      pitch = (width + 1)/2;
       return buffer;
    }
 
