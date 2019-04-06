@@ -114,9 +114,10 @@ private:
 
    void screenSave(bool on)
    {
+      frame.clear(default_bg_col);
+
       if (on)
       {
-         frame.clear(default_bg_col);
          if (sleep_image != nullptr)
          {
             frame.drawImage(*sleep_image,
