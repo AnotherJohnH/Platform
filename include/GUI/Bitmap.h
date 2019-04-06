@@ -93,6 +93,13 @@ public:
       }
    }
 
+   Bitmap(unsigned width, unsigned height)
+   {
+      resize(width, height);
+   }
+
+   virtual ~Bitmap() {}
+
    const PLT::Bitmap& getBitmap() const { return bitmap; }
 };
 
