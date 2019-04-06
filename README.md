@@ -71,7 +71,6 @@ Typically the following packages will be required...
 ```
 sudo apt-get install scons
 sudo apt-get install libsdl2-dev
-sudo apt-get install libsdl2-image-dev
 ```
 
 ### macOS
@@ -86,7 +85,6 @@ Typically the following packages will be required...
 brew update
 brew install scons
 brew install sdl2
-brew install sdl2_image
 ```
 
 NOTE: The current version of SDL2 (2.0.8) does not work properly on macOS 10.14
