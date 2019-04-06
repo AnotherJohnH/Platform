@@ -83,13 +83,15 @@ private:
                            uint32_t src_x, uint32_t src_y) override
    {
       const PLT::Image* image = source.canvasGetImage();
-      if(image == nullptr)
+
+      if(image->getHandle() == nullptr)
       {
          Canvas::canvasBlit(source, x, y, w, h, src_x, src_y);
-         return;
       }
-
-      frame.blit(*image, x, y, w, h, src_x, src_y);
+      else
+      {
+         frame.blit(*image, x, y, w, h, src_x, src_y);
+      }
    }
 
 public:
