@@ -119,13 +119,10 @@ private:
          frame.clear(default_bg_col);
          if (sleep_image != nullptr)
          {
-#if 0
-// TODO fix all this
-            frame.canvasBlit(*sleep_image,
-                             0, 0,
-                             frame.getWidth(), frame.getHeight(),
-                             0, 0);
-#endif
+            frame.drawImage(*sleep_image,
+                            0, 0,
+                            frame.getWidth(), frame.getHeight(),
+                            0, 0);
          }
          PLT::Event::setTimer(0);
       }
@@ -431,7 +428,7 @@ public:
          break;
 
       case IOCTL_TERM_SLEEP_IMAGE:
-         //sleep_image = va_arg(ap, GUI::Canvas*):
+         sleep_image = va_arg(ap, GUI::Canvas*);
          status = 0;
          break;
 
