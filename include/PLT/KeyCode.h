@@ -37,6 +37,7 @@ enum KeyCode : uint8_t
    RETURN    = 0x0A,
    ESCAPE    = 0x1B,
 
+   DELETE    = 0x7F,
    POUND     = 0x80,
    F1        = 0x81,
    F2        = 0x82,
@@ -52,7 +53,7 @@ enum KeyCode : uint8_t
    F12       = 0x8C,
 
    CAPSLOCK  = 0x8E,
-   BACK      = 0x8F,
+   BREAK     = 0x8F,
    UP        = 0x90,  //!< Cursor up
    DOWN      = 0x91,  //!< Cursor down
    LEFT      = 0x92,  //!< Cursor left
@@ -72,7 +73,6 @@ enum KeyCode : uint8_t
    VOL_UP    = 0xA1,  //!< Volume up
    LCMD      = 0xA2,  //!< Left cmd
    RCMD      = 0xA3,  //!< Right cmd
-   BREAK     = 0xA4,
 
    QUIT      = 0xF0,
    TIMEOUT   = 0xF1
