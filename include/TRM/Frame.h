@@ -448,7 +448,12 @@ public:
 
       while(n--)
       {
-         this->ansiWrite(*ptr++);
+         uint8_t ch = *ptr++;
+         this->ansiWrite(ch);
+         if (ch == '\n')
+         {
+            frame.refresh();
+         }
       }
 
       return n;
