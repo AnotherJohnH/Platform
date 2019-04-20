@@ -200,7 +200,7 @@ private:
          }
          else if (aa_pressed)
          {
-            if ((code >= 'a') && (code <= z))
+            if ((code >= 'a') && (code <= 'z'))
             {
                code += 'A' - 'a';
             }
