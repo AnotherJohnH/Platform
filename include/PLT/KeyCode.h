@@ -72,6 +72,7 @@ enum KeyCode : uint8_t
    VOL_UP    = 0xA1,  //!< Volume up
    LCMD      = 0xA2,  //!< Left cmd
    RCMD      = 0xA3,  //!< Right cmd
+   BREAK     = 0xA4,
 
    QUIT      = 0xF0,
    TIMEOUT   = 0xF1
