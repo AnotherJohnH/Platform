@@ -98,6 +98,8 @@ private:
    pthread_cond_t        timer_cv;
 
    bool                  sym_pressed{false};
+   bool                  lsh_pressed{false};
+   bool                  aa_pressed{false};
 
    //! Push an event in a thread safe manner
    void pushEvent(PLT::Event::Type type, uint8_t code = 0)
@@ -148,13 +150,12 @@ private:
 
    void keyEvent(bool down, uint8_t code)
    {
-      if (code == SYM)
-      {
-         sym_pressed = down;
-      }
+           if (code == SYM) { sym_pressed = down; }
+      else if (code == LSH) { lsh_pressed = down; }
+      else if (code == AA)  { aa_pressed  = down; }
       else
       {
-         if (sym_pressed)
+         if (lsh_pressed)
          {
             switch(code)
             {
@@ -168,7 +169,22 @@ private:
             case 'i': code = '8';  break;
             case 'o': code = '9';  break;
             case 'p': code = '0';  break;
-
+            }
+         }
+         else if (sym_pressed)
+         {
+            switch(code)
+            {
+            case 'q': code = '!';  break;
+            case 'w': code = '@';  break;
+            case 'e': code = '#';  break;
+            case 'r': code = '$';  break;
+            case 't': code = '%';  break;
+            case 'y': code = '^';  break;
+            case 'u': code = '&';  break;
+            case 'i': code = '*';  break;
+            case 'o': code = '(';  break;
+            case 'p': code = ')';  break;
             case 'a': code = '-';  break;
             case 's': code = '=';  break;
             case 'd': code = '[';  break;
@@ -180,6 +196,13 @@ private:
             case 'z': code = '`';  break;
             case 'n': code = ',';  break;
             case 'm': code = '/';  break;
+            }
+         }
+         else if (aa_pressed)
+         {
+            if ((code >= 'a') && (code <= z))
+            {
+               code += 'A' - 'a';
             }
          }
 
