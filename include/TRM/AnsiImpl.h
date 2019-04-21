@@ -114,7 +114,7 @@ protected:
 
    AnsiImpl()
    {
-      memset(cell_attr, 0, sizeof(cell_char));
+      memset(cell_attr, 0, sizeof(cell_attr));
       memset(cell_char, 0, sizeof(cell_char));
 
       ansiReset();
