@@ -26,6 +26,8 @@
 #ifndef GUI_BITMAP_H
 #define GUI_BITMAP_H
 
+#include <string>
+
 #include "PLT/Bitmap.h"
 
 #include "GUI/Canvas.h"
@@ -82,15 +84,14 @@ private:
       bitmap.blit(*image, x, y, w, h, src_x, src_y);
    }
 
-   bool readPNG(const char* filename);
+   bool readPNG(const std::string& filename);
 
 public:
-   Bitmap(const char* filename)
+   Bitmap() = default;
+
+   Bitmap(const std::string& filename)
    {
-      if (readPNG(filename))
-      {
-         resize(bitmap.getWidth(), bitmap.getHeight());
-      }
+      readFromFile(filename);
    }
 
    Bitmap(unsigned width, unsigned height)
@@ -99,6 +100,14 @@ public:
    }
 
    virtual ~Bitmap() {}
+
+   bool readFromFile(const std::string& filename)
+   {
+      if (!readPNG(filename)) return false;
+
+      resize(bitmap.getWidth(), bitmap.getHeight());
+      return true;
+   }
 
    const PLT::Bitmap& getBitmap() const { return bitmap; }
 };

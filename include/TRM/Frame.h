@@ -32,6 +32,7 @@
 
 #include "GUI/Font/Teletext.h"
 #include "GUI/Frame.h"
+#include "GUI/Bitmap.h"
 
 #include "TRM/AnsiImpl.h"
 #include "TRM/Device.h"
@@ -66,7 +67,7 @@ private:
    bool                  draw_cursor{true};
    unsigned              timeout_ms{0};
    unsigned              sleep_ms{0};
-   GUI::Canvas*          sleep_image{nullptr};
+   GUI::Bitmap           sleep_image{};
    STB::Fifo<uint8_t, 6> response;
    bool                  shift{false};
    bool                  caps_lock{false};
@@ -118,9 +119,9 @@ private:
 
       if (on)
       {
-         if (sleep_image != nullptr)
+         if (sleep_image.getWidth() != 0)
          {
-            frame.drawImage(*sleep_image,
+            frame.drawImage(sleep_image,
                             0, 0,
                             frame.getWidth(), frame.getHeight(),
                             0, 0);
@@ -429,8 +430,10 @@ public:
          break;
 
       case IOCTL_TERM_SLEEP_IMAGE:
-         sleep_image = va_arg(ap, GUI::Canvas*);
-         status = 0;
+         if (sleep_image.readFromFile(va_arg(ap, const char*)))
+         {
+            status = 0;
+         }
          break;
 
       default:

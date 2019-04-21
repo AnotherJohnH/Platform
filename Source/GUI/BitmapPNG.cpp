@@ -45,9 +45,9 @@ public:
 
    ~PNG() = default;
 
-   bool load(PLT::Bitmap* bitmap, const char* filename)
+   bool load(PLT::Bitmap* bitmap, const std::string& filename)
    {
-      FILE* fp = fopen(filename, "r");
+      FILE* fp = fopen(filename.c_str(), "r");
       if (fp == nullptr)
       {
          error("Failed to open file");
@@ -744,7 +744,7 @@ private:
 namespace GUI {
 
 //! Read bitmap from .png file
-bool Bitmap::readPNG(const char* filename)
+bool Bitmap::readPNG(const std::string& filename)
 {
    return PNG().load(&bitmap, filename);
 }
