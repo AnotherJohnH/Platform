@@ -50,20 +50,34 @@ private:
 
    size_t getSize() const { return pitch * height; }
 
-   static void error(const char* message)
+   static void error(const char* format, ...)
    {
-      fprintf(stderr, "ERROR - %s\n", message);
+      va_list ap;
+
+      fprintf(stderr, "ERROR - ");
+
+      va_start(ap, format);
+      vfprintf(stderr, format, ap);
+      va_end(ap);
+
+      fprintf(stderr, "\n");
       exit(1);
+   }
+
+   static int openDev(const char* filename)
+   {
+      int fd = open(filename, O_RDWR);
+      if(-1 == fd)
+      {
+         error("Failed to open \"%s\"", filename);
+      }
+      return fd;
    }
 
 public:
    Impl()
    {
-      int fd = open("/dev/fb0", O_RDWR);
-      if(-1 == fd)
-      {
-         error("Failed to open \"/dev/fb0\"");
-      }
+      int fd = openDev("/dev/fb0");
 
       struct fb_var_screeninfo screeninfo;
       int                      status = ioctl(fd, FBIOGET_VSCREENINFO, &screeninfo);
@@ -122,8 +136,8 @@ Frame::~Frame() { delete pimpl; }
 
 void Frame::resize(unsigned width_, unsigned height_)
 {
-   width  = std::min(width_,  impl->getWidth());
-   height = std::min(height_, impl->getHeight());
+   width  = std::min(width_,  pimpl->getWidth());
+   height = std::min(height_, pimpl->getHeight());
 }
 
 void Frame::refresh() { pimpl->refresh(); }
