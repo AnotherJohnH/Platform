@@ -30,7 +30,7 @@ env['OBJPREFIX'] = 'obj/'+env['machine']+'/'
 env['LIBPREFIX'] = 'lib/'+env['machine']+'/lib'
 
 PREFIX  = 'arm-linux-gnueabihf-'
-VERSION = '-4.7'  # at least, to ensure C++11 support
+VERSION = '-4.8'  # at least 4.7 required for C++11 support
 
 env['AS']        = PREFIX+'as'+VERSION
 env['CC']        = PREFIX+'gcc'+VERSION
