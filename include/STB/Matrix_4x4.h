@@ -38,6 +38,14 @@ public:
 
    Matrix_4x4() = default;
 
+   void setIdentity()
+   {
+      a = 1; b = 0; c = 0; d = 0;
+      e = 0; f = 1; g = 0; h = 0;
+      i = 0; j = 0; k = 1; l = 0;
+      m = 0; n = 0; o = 0; p = 1;
+   }
+
    void setTranslate(T x, T y, T z)
    {
       a = 1; b = 0; c = 0; d = x;
