@@ -65,7 +65,7 @@ public:
       virtual ~AttrCallBack() = default;
 
    public:
-      virtual void setAttr(FIELD_ID id, const char* value) = 0;
+      virtual void setAttr(FIELD_ID id, const std::string& value) = 0;
    };
 
    Document(const std::string& filename)
