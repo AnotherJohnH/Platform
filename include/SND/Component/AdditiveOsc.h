@@ -27,33 +27,33 @@
 
 namespace SND {
 
-//! Oscilator with controllable (sine wave) harmonics
-template <unsigned NUM_HARMONICS>
+//! Oscilator with fourier coefficient controls
+template <unsigned N>
 class AdditiveOsc : public WaveTableOsc
 {
 public:
-   ControlIn<double> harmonic[NUM_HARMONICS];
+   ControlIn<double> a[N+1];
+   ControlIn<double> b[N+1];
 
    AdditiveOsc(Freq freq_hz = 0.0)
       : WaveTableOsc(freq_hz)
    {
-      for(unsigned i = 0; i < NUM_HARMONICS; i++)
+      for(size_t n = 0; n <= N; n++)
       {
-         harmonic[i].setObserver(this);
+         a[n].setObserver(this);
+         b[n].setObserver(this);
       }
    }
 
 private:
-
-   // TODO convert back to Lambda when embedded builds
-   // allow
-
+   // TODO convert back to Lambda when embedded builds allow
    double func(double t)
    {
-      double value = 0.0;
-      for(unsigned i = 1; i <= NUM_HARMONICS; i++)
+      double value = a[0] / 2.0;
+      for(size_t n = 1; n <= N; n++)
       {
-         value += harmonic[i - 1] * STB::Waveform::sine(i * t);
+         value += a[n] * STB::Waveform::sine(n * t);
+         value += b[n] * STB::Waveform::cosine(n * t);
       }
       return value;
    }
@@ -67,7 +67,6 @@ private:
    virtual void controlEvent(Control* control) override
    {
       WaveTableOsc::controlEvent(control);
-
       computeWave(thunk, this);
    }
 };
