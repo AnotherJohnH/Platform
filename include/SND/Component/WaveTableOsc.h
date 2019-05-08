@@ -32,6 +32,13 @@ namespace SND {
 //! Base class for table based oscillators
 class WaveTableOsc : public Osc
 {
+public:
+   const Signal* getTable(size_t& size) const
+   {
+      size = PHASE_PERIOD;
+      return table;
+   }
+
 protected:
    Signal table[PHASE_PERIOD];
 
