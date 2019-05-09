@@ -100,10 +100,19 @@ protected:
    }
 
 public:
-   Field(Widget* parent, unsigned code_, const char* initial_)
-      : Widget(parent)
-      //, code(code_)
+   Field() = default;
+
+   Field(Widget* parent_, unsigned code_, const char* initial_)
    {
+      init(parent_, code_, initial_);
+   }
+ 
+   void init(Widget* parent_, unsigned code_, const char* initial_)
+   {
+      setParent(parent_);
+
+      // code = code_;
+
       value[COLS] = '\0';
       setValue(initial_);
 

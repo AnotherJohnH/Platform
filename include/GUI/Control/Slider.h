@@ -141,12 +141,21 @@ private:
    }
 
 public:
-   Slider(Widget* parent, unsigned code_, unsigned length_ = LENGTH, bool vertical_ = true)
-      : Widget(parent)
-      , code(code_)
-      , vertical(vertical_)
-      , length(length_)
+   Slider() = default;
+
+   Slider(Widget* parent_, unsigned code_, unsigned length_ = LENGTH, bool vertical_ = true)
    {
+      init(parent_, code_, length_, vertical_);
+   }
+
+   void init(Widget* parent_, unsigned code_, unsigned length_ = LENGTH, bool vertical_ = true)
+   {
+      setParent(parent_);
+
+      code     = code_;
+      vertical = vertical_;
+      length   = length_;
+
       if(vertical)
       {
          size.x = BORDER * 2;

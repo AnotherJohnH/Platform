@@ -30,9 +30,16 @@ namespace GUI {
 class Col : public Widget
 {
 public:
-   Col(Widget* parent, unsigned space = 0)
-      : Widget(parent)
+   Col() = default;
+
+   Col(Widget* parent_, unsigned space = 0)
    {
+      init(parent_, space);
+   }
+
+   void init(Widget* parent_, unsigned space = 0)
+   {
+      setParent(parent_);
       row = false;
       setBorderAndGap(space);
       setShrink();

@@ -252,14 +252,19 @@ protected:
 public:
    Widget(Widget* parent_ = nullptr)
    {
-      if(parent_)
+      setParent(parent_);
+   }
+
+   virtual ~Widget() {}
+
+   void setParent(Widget* parent_)
+   {
+      if (parent_ != nullptr)
       {
          assert(parent_ != this);
          parent_->pushBack(this);
       }
    }
-
-   virtual ~Widget() {}
 
    bool isParentRow() const { return parent ? parent->isRow() : false; }
 

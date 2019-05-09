@@ -69,9 +69,14 @@ protected:
 public:
    Text() = default;
 
-   Text(Widget* parent, const char* text_)
-      : Widget(parent)
+   Text(Widget* parent_, const char* text_)
    {
+      init(parent_, text_);
+   }
+
+   void init(Widget* parent_, const char* text_)
+   {
+      setParent(parent_);
       setText(text_);
       setCols(len);
    }

@@ -173,6 +173,8 @@ public:
 
    void refresh()
    {
+      if (texture == nullptr) return;
+
       SDL_UpdateTexture(texture, nullptr, surface->pixels, surface->pitch);
       SDL_RenderCopy(renderer, texture, nullptr, nullptr);
       SDL_RenderPresent(renderer);
