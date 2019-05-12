@@ -66,7 +66,14 @@ public:
       Uint32 sdl_flags = 0;
 
 #ifndef PROJ_TARGET_Emscripten
+      // Always try for high DPI
       sdl_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
+
+      // High DPI only works with widths that are a multiple of 4
+      if ((width_ & 3) != 0)
+      {
+         width_ = (width_ + 4) & ~3;
+      }
 #endif
 
       if(flags & Frame::FULL_SCREEN) sdl_flags |= SDL_WINDOW_FULLSCREEN;
