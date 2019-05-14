@@ -23,7 +23,8 @@
 #ifndef GUI_CONTROL_BAR_H
 #define GUI_CONTROL_BAR_H
 
-#include "GUI/Widget.h"
+#include "Colour.h"
+#include "Widget.h"
 
 namespace GUI {
 

@@ -23,7 +23,7 @@
 #ifndef GUI_CONTROL_ROW_H
 #define GUI_CONTROL_ROW_H
 
-#include "GUI/Widget.h"
+#include "Widget.h"
 
 namespace GUI {
 

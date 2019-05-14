@@ -23,7 +23,8 @@
 #ifndef GUI_CONTROL_BUTTON_H
 #define GUI_CONTROL_BUTTON_H
 
-#include "GUI/Control/Row.h"
+#include "Colour.h"
+#include "Row.h"
 
 namespace GUI {
 

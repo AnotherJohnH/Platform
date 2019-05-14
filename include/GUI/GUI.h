@@ -23,9 +23,11 @@
 #ifndef GUI_H
 #define GUI_H
 
+#include "Control/App.h"
 #include "Control/Bar.h"
 #include "Control/Button.h"
 #include "Control/Col.h"
+#include "Control/Colour.h"
 #include "Control/Expand.h"
 #include "Control/Field.h"
 #include "Control/MenuBar.h"
@@ -41,7 +43,5 @@
 #include "Font/LED.h"
 #include "Font/New.h"
 #include "Font/Teletext.h"
-
-#include "App.h"
 
 #endif

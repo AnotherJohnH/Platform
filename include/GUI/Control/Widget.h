@@ -27,7 +27,7 @@
 #include <cstdint>
 
 #include "GUI/Canvas.h"
-#include "GUI/Layout.h"
+#include "Layout.h"
 #include "STB/Tree.h"
 
 namespace GUI {

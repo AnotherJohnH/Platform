@@ -37,6 +37,31 @@ namespace GUI {
 //!
 class Bitmap : public Canvas
 {
+public:
+   Bitmap() = default;
+
+   Bitmap(const std::string& filename)
+   {
+      readFromFile(filename);
+   }
+
+   Bitmap(unsigned width, unsigned height)
+   {
+      resize(width, height);
+   }
+
+   virtual ~Bitmap() {}
+
+   bool readFromFile(const std::string& filename)
+   {
+      if (!readPNG(filename)) return false;
+
+      resize(bitmap.getWidth(), bitmap.getHeight());
+      return true;
+   }
+
+   const PLT::Bitmap& getBitmap() const { return bitmap; }
+
 private:
    PLT::Bitmap bitmap;
 
@@ -46,10 +71,8 @@ private:
       return bitmap.getPixel(x, y);
    }
 
-protected:
    virtual const PLT::Image* canvasGetImage() const override { return &bitmap; }
 
-private:
    virtual void canvasResize(uint32_t width, uint32_t height) override {}
 
    virtual void canvasRefresh(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override {}
@@ -85,31 +108,6 @@ private:
    }
 
    bool readPNG(const std::string& filename);
-
-public:
-   Bitmap() = default;
-
-   Bitmap(const std::string& filename)
-   {
-      readFromFile(filename);
-   }
-
-   Bitmap(unsigned width, unsigned height)
-   {
-      resize(width, height);
-   }
-
-   virtual ~Bitmap() {}
-
-   bool readFromFile(const std::string& filename)
-   {
-      if (!readPNG(filename)) return false;
-
-      resize(bitmap.getWidth(), bitmap.getHeight());
-      return true;
-   }
-
-   const PLT::Bitmap& getBitmap() const { return bitmap; }
 };
 
 } // namespace GUI

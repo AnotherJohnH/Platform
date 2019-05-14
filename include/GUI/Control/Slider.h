@@ -23,7 +23,7 @@
 #ifndef GUI_CONTROL_SLIDER_H
 #define GUI_CONTROL_SLIDER_H
 
-#include "GUI/Control/Row.h"
+#include "Row.h"
 
 namespace GUI {
 

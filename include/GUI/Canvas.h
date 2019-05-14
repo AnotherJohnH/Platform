@@ -27,13 +27,16 @@
 #include <cstdlib>
 #include <utility>
 
-#include "GUI/Colour.h"
+#include "STB/Colour.h"
+
 #include "GUI/Font.h"
 #include "GUI/Vector.h"
 
 namespace PLT { class Image; }
 
 namespace GUI {
+
+const STB::Colour HIDDEN = STB::RGBA(0x00, 0x00, 0x00, 0xFF);
 
 //! Abstract drawable class
 class Canvas
@@ -63,7 +66,7 @@ public:
    STB::Colour getPixel(int32_t x, int32_t y) const
    {
       return isVisible(x, y) ? canvasGetPixel(x, y)
-                             : GUI::HIDDEN;
+                             : HIDDEN;
 
    }
 
@@ -457,7 +460,7 @@ protected:
    virtual void canvasPoint(STB::Colour colour, int32_t x, int32_t y) = 0;
 
    //! Get colour of single pixel in the frame buffer
-   virtual STB::Colour canvasGetPixel(int32_t x, int32_t y) const { return GUI::HIDDEN; }
+   virtual STB::Colour canvasGetPixel(int32_t x, int32_t y) const { return HIDDEN; }
 
    //! Get pointer to underlying frame buffer
    virtual const PLT::Image* canvasGetImage() const { return nullptr; }

@@ -25,8 +25,10 @@
 
 #include <cstring>
 
-#include "GUI/Widget.h"
 #include "PLT/Event.h"
+
+#include "Colour.h"
+#include "Widget.h"
 
 namespace GUI {
 

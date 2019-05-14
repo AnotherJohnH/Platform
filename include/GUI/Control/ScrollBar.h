@@ -23,9 +23,9 @@
 #ifndef GUI_CONTROL_SCROLL_BAR_H
 #define GUI_CONTROL_SCROLL_BAR_H
 
-#include "GUI/Control/Expand.h"
-#include "GUI/Control/TextButton.h"
-#include "GUI/Widget.h"
+#include "Expand.h"
+#include "TextButton.h"
+#include "Widget.h"
 
 namespace GUI {
 

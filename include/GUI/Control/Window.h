@@ -24,10 +24,11 @@
 #define GUI_CONTROL_WINDOW_H
 
 #include "GUI/Frame.h"
-#include "GUI/Control/Col.h"
+
+#include "Col.h"
+#include "Colour.h"
 
 namespace GUI {
-
 
 class Window : public Col, public Frame
 {

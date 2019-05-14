@@ -27,7 +27,6 @@
 
 namespace GUI {
 
-
 // Some pre-defined packed colour values
 const STB::Colour BACKGROUND = STB::WHITE;
 const STB::Colour FOREGROUND = STB::BLACK;
@@ -36,8 +35,6 @@ const STB::Colour SHADOW     = STB::GREY(0x80);
 const STB::Colour FACE       = STB::GREY(0xB0);
 const STB::Colour LIGHT      = STB::GREY(0xD0);
 const STB::Colour HILIGHT    = STB::GREY(0xF0);
-const STB::Colour HIDDEN     = STB::RGBA(0x00, 0x00, 0x00, 0xFF);
-
 
 //! Background and foreground colour pair
 class ColourPair
@@ -50,7 +47,6 @@ public:
    void setForegroundColour(STB::Colour colour) { fg_colour = colour; }
    void setBackgroundColour(STB::Colour colour) { bg_colour = colour; }
 };
-
 
 } // namespace GUI
 

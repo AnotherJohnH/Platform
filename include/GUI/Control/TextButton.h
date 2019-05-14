@@ -23,8 +23,8 @@
 #ifndef GUI_CONTROL_TEXT_BUTTON_H
 #define GUI_CONTROL_TEXT_BUTTON_H
 
-#include "GUI/Control/Button.h"
-#include "GUI/Control/Text.h"
+#include "Button.h"
+#include "Text.h"
 
 namespace GUI {
 

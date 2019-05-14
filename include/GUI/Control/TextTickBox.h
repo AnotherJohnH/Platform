@@ -23,10 +23,9 @@
 #ifndef GUI_CONTROL_TEXT_TICK_BOX_H
 #define GUI_CONTROL_TEXT_TICK_BOX_H
 
-#include "GUI/Control/Row.h"
-#include "GUI/Control/Text.h"
-#include "GUI/Control/TickBox.h"
-
+#include "Row.h"
+#include "Text.h"
+#include "TickBox.h"
 
 namespace GUI {
 
