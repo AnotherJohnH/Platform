@@ -23,12 +23,14 @@
 #ifndef GUI_VECTOR_H
 #define GUI_VECTOR_H
 
+#include <cstdint>
+
 #include "STB/Vector2.h"
 
 namespace GUI {
 
-using Vector      = STB::Vector2<uint16_t>;
-using SmallVector = STB::Vector2<uint8_t>;
+using Vector      = STB::Vector2<int16_t>;
+using SmallVector = STB::Vector2<int8_t>;
 
 } // namespace GUI
 

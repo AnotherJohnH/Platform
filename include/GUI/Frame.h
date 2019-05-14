@@ -82,7 +82,7 @@ private:
                            uint32_t w, uint32_t h,
                            uint32_t src_x, uint32_t src_y) override
    {
-      const PLT::Image* image = source.canvasGetImage();
+      const PLT::Image* image = source.getImage();
 
       if(image->getHandle() == nullptr)
       {

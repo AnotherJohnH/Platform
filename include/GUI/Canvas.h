@@ -39,10 +39,7 @@ namespace GUI {
 class Canvas
 {
 public:
-   Canvas()
-      : size(0, 0)
-   {
-   }
+   Canvas() = default;
 
    Canvas(uint32_t width_, uint32_t height_)
       : size(width_, height_)
@@ -50,23 +47,24 @@ public:
    }
 
    //! Get canvas width (pixels)
-   uint32_t getWidth() const { return size.x; }
+   int32_t getWidth() const { return size.x; }
 
    //! Get canvas height (pixels)
-   uint32_t getHeight() const { return size.y; }
+   int32_t getHeight() const { return size.y; }
 
    //! Test pixel co-ordinates are inside the canvass boundaries
    bool isVisible(int32_t x, int32_t y) const
    {
-      return (x >= 0) && (x < int32_t(getWidth())) && (y >= 0) && (y < int32_t(getHeight()));
+      return (x >= 0) && (x < getWidth()) &&
+             (y >= 0) && (y < getHeight());
    }
 
    //! Get colour of single pixel in the frame buffer
    STB::Colour getPixel(int32_t x, int32_t y) const
    {
-      if(!isVisible(x, y)) return GUI::HIDDEN;
+      return isVisible(x, y) ? canvasGetPixel(x, y)
+                             : GUI::HIDDEN;
 
-      return canvasGetPixel(x, y);
    }
 
    //! Set a single pixel
@@ -83,7 +81,7 @@ public:
    {
       clipAndSort(x1, x2, size.x);
 
-      if((y >= 0) && (y < int32_t(size.y)))
+      if((y >= 0) && (y < getHeight()))
       {
          canvasSpan(colour, x1, y, x2);
       }
@@ -145,8 +143,10 @@ public:
    }
 
    //! Fill a triangle
-   void fillTriangle(STB::Colour colour, int32_t x1, int32_t y1, int32_t x2, int32_t y2, int32_t x3,
-                     int32_t y3)
+   void fillTriangle(STB::Colour colour,
+                     int32_t x1, int32_t y1,
+                     int32_t x2, int32_t y2,
+                     int32_t x3, int32_t y3)
    {
       if(y2 < y1)
       {
@@ -319,14 +319,15 @@ public:
 
    //! Draw an alphamap
    template <uint32_t BPP>
-   void drawAlphaMap(STB::Colour fg, STB::Colour bg, int32_t x, int32_t y, uint32_t w, uint32_t h,
+   void drawAlphaMap(STB::Colour fg, STB::Colour bg,
+                     int32_t x, int32_t y, uint32_t w, uint32_t h,
                      const uint8_t* alphamap)
    {
       uint32_t shift;
-      if(BPP > MAX_ALPHA_BPP)
+      if(BPP > LOG2_MAX_ALPHA_BPP)
       {
-         shift = BPP - MAX_ALPHA_BPP;
-         preComputeAlpha(fg, bg, MAX_ALPHA_BPP);
+         shift = BPP - LOG2_MAX_ALPHA_BPP;
+         preComputeAlpha(fg, bg, LOG2_MAX_ALPHA_BPP);
       }
       else
       {
@@ -383,7 +384,8 @@ public:
    }
 
    //! Draw a single character from a font
-   uint32_t drawChar(STB::Colour fg, STB::Colour bg, int32_t x, int32_t y, const Font* font, uint8_t ch)
+   uint32_t drawChar(STB::Colour fg, STB::Colour bg,
+                     int32_t x, int32_t y, const Font* font, uint8_t ch)
    {
       uint32_t w = font->getWidth();
 
@@ -405,7 +407,8 @@ public:
    }
 
    //! Draw a string of text
-   void drawText(STB::Colour fg, STB::Colour bg, int32_t x, int32_t y, const Font* font, const char* s)
+   void drawText(STB::Colour fg, STB::Colour bg,
+                 int32_t x, int32_t y, const Font* font, const char* s)
    {
       assert(s);
 
@@ -417,9 +420,9 @@ public:
 
    //! Blit from another canvas into this canvas
    void drawImage(const Canvas& source,
-                  uint32_t x, uint32_t y,
+                  int32_t x, int32_t y,
                   uint32_t w = 0, uint32_t h = 0,
-                  uint32_t src_x = 0, uint32_t src_y = 0)
+                  int32_t src_x = 0, int32_t src_y = 0)
    {
       if(w == 0) w = source.getWidth();
       if(h == 0) h = source.getHeight();
@@ -444,24 +447,83 @@ public:
       canvasResize(size.x, size.y);
    }
 
-private:
-   static const uint32_t MAX_ALPHA_BPP = 4;
+   //! Get pointer to underlying frame buffer
+   const PLT::Image* getImage() const { return canvasGetImage(); }
 
-   Vector      size;
-   STB::Colour alpha_table[1 << MAX_ALPHA_BPP] = {};
+protected:
+   // Overide the following interface with a frame buffer implementation
+
+   //! Set a single pixel in the frame buffer
+   virtual void canvasPoint(STB::Colour colour, int32_t x, int32_t y) = 0;
+
+   //! Get colour of single pixel in the frame buffer
+   virtual STB::Colour canvasGetPixel(int32_t x, int32_t y) const { return GUI::HIDDEN; }
+
+   //! Get pointer to underlying frame buffer
+   virtual const PLT::Image* canvasGetImage() const { return nullptr; }
+
+   //! Resize the frame buffer
+   virtual void canvasResize(uint32_t width, uint32_t height) { assert(!"no implementation"); }
+
+   //! Refresh a rectangular region of the frame buffer
+   virtual void canvasRefresh(int32_t x1, int32_t y1, int32_t x2, int32_t y2) {}
+
+   //! Clear frame buffer to a single colour
+   virtual void canvasClear(STB::Colour colour)
+   {
+      for(int32_t y = 0; y < size.y; y++)
+      {
+         canvasSpan(colour, 0, y, size.x);
+      }
+   }
+
+   //! Set a horizontal row of pixels in the frame buffer
+   virtual void canvasSpan(STB::Colour colour, int32_t x1, int32_t y, int32_t x2)
+   {
+      assert(x1 < x2);
+
+      for(int32_t x = x1; x < x2; x++)
+      {
+         canvasPoint(colour, x, y);
+      }
+   }
+
+   //! Blit from another canvas into this canvas
+   virtual void canvasBlit(const Canvas& source,
+                           uint32_t x, uint32_t y,
+                           uint32_t w, uint32_t h,
+                           uint32_t src_x, uint32_t src_y)
+   {
+      assert((src_x + w) <= source.getWidth());
+      assert((src_y + h) <= source.getHeight());
+
+      for(uint32_t u = 0; u < w; u++)
+      {
+         for(uint32_t v = 0; v < h; v++)
+         {
+            canvasPoint(source.getPixel(src_x + u, src_y + v), x + u, y + v);
+         }
+      }
+   }
+
+private:
+   static const uint32_t LOG2_MAX_ALPHA_BPP = 4;
+
+   Vector      size{0, 0};
+   STB::Colour alpha_table[1 << LOG2_MAX_ALPHA_BPP] = {};
 
    //! Clip value to between 0 and limit (inclusive range)
-   void clip(int32_t& value, uint32_t limit)
+   void clip(int32_t& value, int32_t limit)
    {
       if(value < 0)
          value = 0;
-      else if(value > int32_t(limit))
+      else if(value > limit)
          value = limit;
    }
 
    //! Clip two values to between 0 and limit (inclusive range) and
    //  ensure swap the values if the first is greater than the second
-   void clipAndSort(int32_t& value1, int32_t& value2, uint32_t limit)
+   void clipAndSort(int32_t& value1, int32_t& value2, int32_t limit)
    {
       clip(value1, limit);
       clip(value2, limit);
@@ -475,7 +537,7 @@ private:
    //! Compute alpha LUT for rendering alpha maps
    void preComputeAlpha(STB::Colour fg_, STB::Colour bg_, uint32_t bpp)
    {
-      assert(bpp <= MAX_ALPHA_BPP);
+      assert(bpp <= LOG2_MAX_ALPHA_BPP);
 
       uint32_t max_alpha = (1 << bpp) - 1;
 
@@ -495,64 +557,6 @@ private:
                STB::RGB((fg.red() * alpha + bg.red() * (max_alpha - alpha)) / max_alpha,
                         (fg.grn() * alpha + bg.grn() * (max_alpha - alpha)) / max_alpha,
                         (fg.blu() * alpha + bg.blu() * (max_alpha - alpha)) / max_alpha);
-         }
-      }
-   }
-
-   // Overide the following interface with a frame buffer implementation
-
-   //! Get colour of single pixel in the frame buffer
-   virtual STB::Colour canvasGetPixel(int32_t x, int32_t y) const { return GUI::HIDDEN; }
-
-public:
-   //! Get pointer to underlying frame buffer
-   virtual const PLT::Image* canvasGetImage() const { return nullptr; }
-
-private:
-   //! Resize the frame buffer
-   virtual void canvasResize(uint32_t width, uint32_t height) { assert(!"no implementation"); }
-
-   //! Refresh a rectangular region of the frame buffer
-   virtual void canvasRefresh(int32_t x1, int32_t y1, int32_t x2, int32_t y2) {}
-
-   //! Clear frame buffer to a single colour
-   virtual void canvasClear(STB::Colour colour)
-   {
-      for(int32_t y = 0; y < size.y; y++)
-      {
-         canvasSpan(colour, 0, y, size.x);
-      }
-   }
-
-   //! Set a single pixel in the frame buffer
-   virtual void canvasPoint(STB::Colour colour, int32_t x, int32_t y) = 0;
-
-   //! Set a horizontal row of pixels in the frame buffer
-   virtual void canvasSpan(STB::Colour colour, int32_t x1, int32_t y, int32_t x2)
-   {
-      assert(x1 < x2);
-
-      for(int32_t x = x1; x < x2; x++)
-      {
-         canvasPoint(colour, x, y);
-      }
-   }
-
-protected:
-   //! Blit from another canvas into this canvas
-   virtual void canvasBlit(const Canvas& source,
-                           uint32_t x, uint32_t y,
-                           uint32_t w, uint32_t h,
-                           uint32_t src_x, uint32_t src_y)
-   {
-      assert((src_x + w) <= source.getWidth());
-      assert((src_y + h) <= source.getHeight());
-
-      for(uint32_t u = 0; u < w; u++)
-      {
-         for(uint32_t v = 0; v < h; v++)
-         {
-            canvasPoint(source.getPixel(src_x + u, src_y + v), x + u, y + v);
          }
       }
    }
