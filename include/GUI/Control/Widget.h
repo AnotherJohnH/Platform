@@ -179,8 +179,8 @@ private:
    //! Recursively determine the minimum size of this item and this items children
    void layoutSizeShrink()
    {
-      unsigned width  = 0;
-      unsigned height = 0;
+      signed width  = 0;
+      signed height = 0;
 
       for(Widget* child = children; child; child = child->next)
       {
