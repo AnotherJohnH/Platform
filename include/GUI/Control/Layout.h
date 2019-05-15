@@ -67,13 +67,13 @@ protected:
    Align       vert_align{Align::TOP};  //!< Vertical alignment mode for children
 
 public:
-   unsigned getX() const { return pos.x; }
-   unsigned getY() const { return pos.y; }
+   signed getX() const { return pos.x; }
+   signed getY() const { return pos.y; }
 
-   unsigned getWidth() const { return size.x; }
-   unsigned getHeight() const { return size.y; }
+   signed getWidth() const { return size.x; }
+   signed getHeight() const { return size.y; }
 
-   bool isHit(unsigned x_, unsigned y_) const
+   bool isHit(signed x_, signed y_) const
    {
       return (x_ >= pos.x) && (x_ < (pos.x + size.x)) && (y_ >= pos.y) && (y_ < (pos.y + size.y));
    }
