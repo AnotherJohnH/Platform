@@ -35,10 +35,76 @@ private:
    static const unsigned LESS = 1;
    static const unsigned MORE = 2;
 
+   class Symbol : public Widget
+   {
+   public:
+      Symbol(Widget* parent_, unsigned code_, bool vertical_)
+         : Widget(parent_)
+         , code(code_)
+      {
+         setSize(14, 14);
+         row = !vertical_;
+      }
+
+   private:
+      unsigned code{};
+
+      virtual void eventDraw(Canvas& canvas) override
+      {
+         if (isRow())
+         {
+            if (code == MORE)
+            {
+               canvas.fillTriangle(GUI::FOREGROUND,
+                                   pos.x + size.x, pos.y + size.y/2,
+                                   pos.x,          pos.y,
+                                   pos.x,          pos.y + size.y);
+            }
+            else
+            {
+               canvas.fillTriangle(GUI::FOREGROUND,
+                                   pos.x         , pos.y + size.y/2,
+                                   pos.x + size.x, pos.y,
+                                   pos.x + size.x, pos.y + size.y);
+            }
+         }
+         else
+         {
+            if (code == MORE)
+            {
+               canvas.fillTriangle(GUI::FOREGROUND,
+                                   pos.x + size.x/2, pos.y + size.y,
+                                   pos.x,            pos.y,
+                                   pos.x + size.x,   pos.y);
+            }
+            else
+            {
+               canvas.fillTriangle(GUI::FOREGROUND,
+                                   pos.x + size.x/2, pos.y,
+                                   pos.x,            pos.y + size.y,
+                                   pos.x + size.x,   pos.y + size.y);
+            }
+         }
+      }
+   };
+
+   class ScrollButton : public Button
+   {
+   private:
+      Symbol symbol;
+
+   public:
+      ScrollButton(Widget* parent_, unsigned code_)
+         : Button(parent_, code_)
+         , symbol(this, code_, parent->isParentRow())
+      {
+      }
+   };
+
    // const unsigned  code;
-   TextButton btn_scroll_less;
-   Expand     spacer;
-   TextButton btn_scroll_more;
+   ScrollButton  btn_scroll_less{this, LESS};
+   Expand        spacer{this};
+   ScrollButton  btn_scroll_more{this, MORE};
 
    virtual void eventDraw(Canvas& canvas) override
    {
@@ -50,9 +116,6 @@ public:
    ScrollBar(Widget* parent, unsigned code_)
       : Widget(parent)
       //, code(code_)
-      , btn_scroll_less(this, LESS, "<")
-      , spacer(this)
-      , btn_scroll_more(this, MORE, ">")
    {
       row = !parent->isRow();
       setShrink();
