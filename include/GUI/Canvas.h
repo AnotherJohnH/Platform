@@ -171,16 +171,17 @@ public:
 
       if(y3 == y1) return;
 
-      int32_t dxe = ((x3 - x1) << 16) / (y3 - y1);
-      int32_t dxs;
-
       int32_t y  = y1;
-      int32_t xs = x1 << 16;
-      int32_t xe;
+
+      int32_t xe = x1 << 16;
+      int32_t dxe = ((x3 - x1) << 16) / (y3 - y1);
+
+      int32_t xs;
+      int32_t dxs;
 
       if(y2 > y1)
       {
-         xe = x1 << 16;
+         xs = x1 << 16;
 
          dxs = ((x2 - x1) << 16) / (y2 - y1);
 
@@ -197,7 +198,7 @@ public:
       }
       else
       {
-         xe = x2 << 16;
+         xs = x2 << 16;
       }
 
       if(y3 == y2) return;
