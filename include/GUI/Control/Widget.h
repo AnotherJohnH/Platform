@@ -208,12 +208,12 @@ private:
          }
       }
 
-      if(horz_fit != Fit::FIX)
+      if(horz_fit != Fit::FIXED)
       {
          size.x = width + top_left.x + btm_right.x;
       }
 
-      if(vert_fit != Fit::FIX)
+      if(vert_fit != Fit::FIXED)
       {
          size.y = height + top_left.y + btm_right.y;
       }

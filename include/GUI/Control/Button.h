@@ -64,6 +64,7 @@ private:
       }
    }
 
+protected:
    // Implement Widget events
 
    virtual void eventDraw(Canvas& canvas) override

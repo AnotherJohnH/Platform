@@ -30,16 +30,15 @@
 
 namespace GUI {
 
-// Size fit
+//! Size fit
 enum class Fit : uint8_t
 {
-   FIX = 0,
-   SHRINK, // Shrink to minimum size that contains children
-   EXPAND  // Expand to maximum size that parent allows
+   FIXED = 0, // Size cannot change
+   SHRINK,    // Shrink to minimum size that contains children
+   EXPAND     // Expand to maximum size that parent allows
 };
 
-
-// Alignment for children
+//! Alignment for children
 enum class Align : uint8_t
 {
    LEFT = 0,
@@ -50,7 +49,6 @@ enum class Align : uint8_t
    BOTTOM = RIGHT
 };
 
-
 //! Widget layout
 class Layout
 {
@@ -59,8 +57,8 @@ protected:
    Vector      size{0, 0};              //!< Width and height
    SmallVector top_left{0, 0};          //!< Top left border for children
    SmallVector btm_right{0, 0};         //!< Bottom right border for children
-   Fit         horz_fit{Fit::FIX};      //!< Horizontal fit
-   Fit         vert_fit{Fit::FIX};      //!< Vertical fit
+   Fit         horz_fit{Fit::FIXED};    //!< Horizontal fit
+   Fit         vert_fit{Fit::FIXED};    //!< Vertical fit
    bool        row{false};              //!< Layout children in a row not a column
    uint8_t     gap{0};                  //!< Gap between children
    Align       horz_align{Align::LEFT}; //!< Horizontal alignment mode for children
@@ -75,7 +73,8 @@ public:
 
    bool isHit(signed x_, signed y_) const
    {
-      return (x_ >= pos.x) && (x_ < (pos.x + size.x)) && (y_ >= pos.y) && (y_ < (pos.y + size.y));
+      return (x_ >= pos.x) && (x_ < (pos.x + size.x)) &&
+             (y_ >= pos.y) && (y_ < (pos.y + size.y));
    }
 
    bool isRow() const { return row; }
@@ -86,7 +85,7 @@ public:
       size.x = width;
       size.y = height;
 
-      horz_fit = vert_fit = Fit::FIX;
+      horz_fit = vert_fit = Fit::FIXED;
    }
 
    //! This items will shrink to fit it's children
