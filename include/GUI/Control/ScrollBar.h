@@ -101,9 +101,27 @@ private:
       }
    };
 
+   class ScrollSlider : public Widget
+   {
+   public:
+      ScrollSlider(Widget* parent)
+         : Widget(parent)
+      {
+         setExpand();
+         row = parent->isParentRow();
+      }
+
+   private:
+      // unsigned pos{0};
+
+      virtual void eventDraw(Canvas& canvas) override
+      {
+      }
+   };
+
    // const unsigned  code;
    ScrollButton  btn_scroll_less{this, LESS};
-   Expand        spacer{this};
+   ScrollSlider  spacer{this};
    ScrollButton  btn_scroll_more{this, MORE};
 
    virtual void eventDraw(Canvas& canvas) override
@@ -117,8 +135,18 @@ public:
       : Widget(parent)
       //, code(code_)
    {
-      row = !parent->isRow();
-      setShrink();
+      if (!parent->isRow())
+      {
+         row = true;
+         horz_fit = Fit::EXPAND;
+         vert_fit = Fit::SHRINK;
+      }
+      else
+      {
+         row = false;
+         horz_fit = Fit::SHRINK;
+         vert_fit = Fit::EXPAND;
+      }
    }
 };
 

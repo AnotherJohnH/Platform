@@ -70,6 +70,9 @@ public:
       // Resize any expanding widgets
       layoutSizeExpand();
 
+      eventResize();
+
+      // Calculate widget positions
       layoutPos();
 
       raiseEvent(this, EVENT_REDRAW);
@@ -182,7 +185,7 @@ private:
       signed width  = 0;
       signed height = 0;
 
-      for(Widget* child = children; child; child = child->next)
+      for(Widget* child = children; child != nullptr; child = child->next)
       {
          child->layoutSizeShrink();
 
@@ -217,8 +220,6 @@ private:
       {
          size.y = height + top_left.y + btm_right.y;
       }
-
-      eventResize();
    }
 
    //! Recursively resize this item and this items children
@@ -227,7 +228,7 @@ private:
       unsigned n     = 0;
       unsigned total = 0;
 
-      for(Widget* child = children; child; child = child->next)
+      for(Widget* child = children; child != nullptr; child = child->next)
       {
          if(row)
          {
@@ -241,38 +242,33 @@ private:
          }
       }
 
+      unsigned width  = size.x - top_left.x - btm_right.x;
+      unsigned height = size.y - top_left.y - btm_right.y;
+
       if(n > 0)
       {
-         unsigned width  = 0;
-         unsigned height = 0;
-
          if(row)
          {
             width  = (size.x - top_left.x - btm_right.x - total) / n;
-            height = size.y - top_left.y - btm_right.y;
          }
          else
          {
-            width  = size.x - top_left.x - btm_right.x;
             height = (size.y - top_left.y - btm_right.y - total) / n;
-         }
-
-         for(Widget* child = children; child; child = child->next)
-         {
-            if(child->horz_fit == Fit::EXPAND)
-            {
-               child->size.x = width;
-            }
-
-            if(child->vert_fit == Fit::EXPAND)
-            {
-               child->size.y = height;
-            }
          }
       }
 
-      for(Widget* child = children; child; child = child->next)
+      for(Widget* child = children; child != nullptr; child = child->next)
       {
+         if(child->horz_fit == Fit::EXPAND)
+         {
+            child->size.x = width;
+         }
+
+         if(child->vert_fit == Fit::EXPAND)
+         {
+            child->size.y = height;
+         }
+
          child->layoutSizeExpand();
       }
    }
