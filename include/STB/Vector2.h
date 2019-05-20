@@ -50,6 +50,8 @@ public:
       };
    };
 
+   using type = T;
+
    static size_t size() { return N; }
 
    // clang-format off

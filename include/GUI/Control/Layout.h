@@ -79,6 +79,11 @@ public:
 
    bool isRow() const { return row; }
 
+   void setRow(bool row_ = true)
+   {
+      row = row_;
+   }
+
    //! Set a fixed size for this item
    void setSize(unsigned width, unsigned height)
    {

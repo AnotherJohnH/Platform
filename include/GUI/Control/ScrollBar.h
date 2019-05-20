@@ -31,63 +31,75 @@ namespace GUI {
 
 class ScrollBar : public Widget
 {
-private:
-   static const unsigned LESS = 1;
-   static const unsigned MORE = 2;
+public:
+   ScrollBar(Widget* parent, unsigned code_)
+      : Widget(parent)
+      , code(code_)
+   {
+      row = !parent->isRow();
 
+      horz_fit = row ? Fit::EXPAND : Fit::SHRINK;
+      vert_fit = row ? Fit::SHRINK : Fit::EXPAND;
+
+      slider.setRow(row);
+   }
+
+   //! Get current window size (0..1)
+   double getWindow() const { return slider.getWindow(); }
+
+   //! Get current offset (0..1)
+   double getOffset() const { return slider.getOffset(); }
+
+   //! Set window size (0..1)
+   void setWindow(double window_) { slider.setWindow(window_); }
+
+   //! Set offset (0..1)
+   void setOffset(double offset_) { slider.setOffset(offset_); }
+
+private:
+   //! Scroll bar button symbols
    class Symbol : public Widget
    {
    public:
-      Symbol(Widget* parent_, unsigned code_, bool vertical_)
+      Symbol(Widget* parent_, unsigned code_, bool vertical_, unsigned size_ = 14)
          : Widget(parent_)
          , code(code_)
       {
-         setSize(14, 14);
+         setSize(size_, size_);
          row = !vertical_;
       }
 
    private:
-      unsigned code{};
+      const unsigned code{};
 
       virtual void eventDraw(Canvas& canvas) override
       {
          if (isRow())
          {
-            if (code == MORE)
-            {
-               canvas.fillTriangle(GUI::FOREGROUND,
-                                   pos.x + size.x, pos.y + size.y/2,
-                                   pos.x,          pos.y,
-                                   pos.x,          pos.y + size.y);
-            }
-            else
-            {
-               canvas.fillTriangle(GUI::FOREGROUND,
-                                   pos.x         , pos.y + size.y/2,
-                                   pos.x + size.x, pos.y,
-                                   pos.x + size.x, pos.y + size.y);
-            }
+            signed xt = pos.x;
+            signed xb = pos.x + size.x;
+            if (code == EV_MORE) std::swap(xt, xb);
+
+            canvas.fillTriangle(GUI::FOREGROUND,
+                                xt, pos.y + size.y/2,
+                                xb, pos.y,
+                                xb, pos.y + size.y);
          }
          else
          {
-            if (code == MORE)
-            {
-               canvas.fillTriangle(GUI::FOREGROUND,
-                                   pos.x + size.x/2, pos.y + size.y,
-                                   pos.x,            pos.y,
-                                   pos.x + size.x,   pos.y);
-            }
-            else
-            {
-               canvas.fillTriangle(GUI::FOREGROUND,
-                                   pos.x + size.x/2, pos.y,
-                                   pos.x,            pos.y + size.y,
-                                   pos.x + size.x,   pos.y + size.y);
-            }
+            signed yt = pos.y;
+            signed yb = pos.y + size.y;
+            if (code == EV_MORE) std::swap(yt, yb);
+
+            canvas.fillTriangle(GUI::FOREGROUND,
+                                pos.x + size.x/2, yt,
+                                pos.x,            yb,
+                                pos.x + size.x,   yb);
          }
       }
    };
 
+   //! Scroll bar buttons
    class ScrollButton : public Button
    {
    private:
@@ -101,6 +113,7 @@ private:
       }
    };
 
+   //! Scroll bar slider
    class ScrollSlider : public Widget
    {
    public:
@@ -108,21 +121,147 @@ private:
          : Widget(parent)
       {
          setExpand();
-         row = parent->isParentRow();
+      }
+
+      double getWindow() const { return double(window) / mux(size.x, size.y); }
+
+      double getOffset() const { return double(offset) / mux(size.x, size.y); }
+
+      void setWindow(double window_)
+      {
+         signed max = mux(size.x, size.y);
+
+         window = window_ * max;
+
+         if (window > max)
+         {
+            window = max;
+         }
+         else if (window < MIN_SLIDER_SIZE)
+         {
+            window = MIN_SLIDER_SIZE;
+         }
+      }
+
+      void setOffset(double offset_)
+      {
+      }
+
+      void nudge(signed dir)
+      {
+          changeValue(dir * window);
       }
 
    private:
-      // unsigned pos{0};
+      static const unsigned MIN_SLIDER_SIZE = 14;
+
+      Vector::type offset{0};
+      Vector::type window{MIN_SLIDER_SIZE};
+      Vector::type ref;
+      bool         select{false};
+
+      template <typename TYPE>
+      const TYPE& mux(const TYPE& row_value, const TYPE& col_value) const
+      {
+         return row ? row_value : col_value;
+      }
 
       virtual void eventDraw(Canvas& canvas) override
       {
+         canvas.fillRect(LIGHT, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+
+         Vector tl, br;
+         getSliderCorners(tl, br);
+
+         canvas.fillRect(FACE,    tl.x,     tl.y,     br.x, br.y);
+         canvas.drawLine(SHADOW,  br.x - 1, br.y - 1, br.x, tl.y);
+         canvas.drawLine(SHADOW,  br.x - 1, br.y - 1, tl.x, br.y);
+         canvas.drawLine(HILIGHT, tl.x,     tl.y,     br.x, tl.y);
+         canvas.drawLine(HILIGHT, tl.x,     tl.y,     tl.x, br.y);
+      }
+
+      virtual void eventKeyPress(uint8_t key, bool down_) override
+      {
+         if(down_)
+         {
+            if(key == mux(PLT::LEFT, PLT::UP))
+            {
+               nudge(-1);
+            }
+            else if(key == mux(PLT::RIGHT, PLT::DOWN))
+            {
+               nudge(+1);
+            }
+         }
+      }
+
+      virtual void eventBtnPress(unsigned x, unsigned y, bool select_, bool down_) override
+      {
+         if(down_)
+         {
+            Vector tl, br;
+            getSliderCorners(tl, br);
+
+            select = (x >= tl.x) && (x < br.x) && (y >= tl.y) && (y < br.y);
+            if (select)
+            {
+               ref = mux(x, y);
+            }
+            else if (mux(x, y) < mux(tl.x, tl.y))
+            {
+               nudge(-1);
+            }
+            else if (mux(x, y) > mux(br.x, br.y))
+            {
+               nudge(+1);
+            }
+
+            raiseEvent(this, EVENT_FOCUS);
+         }
+         else
+         {
+            select = false;
+         }
+      }
+
+      virtual void eventPtrMove(unsigned x, unsigned y) override
+      {
+         if(select)
+         {
+            changeValue(mux(x, y) - ref);
+            ref = mux(x, y);
+         }
+      }
+
+      void getSliderCorners(Vector& tl, Vector& br)
+      {
+         tl.x = pos.x + mux(offset, Vector::type(0));
+         tl.y = pos.y + mux(Vector::type(0), offset);
+         br.x = tl.x  + mux(window, size.x);
+         br.y = tl.y  + mux(size.y, window);
+      }
+
+      void changeValue(signed delta)
+      {
+         offset += delta;
+         signed max = mux(size.x, size.y);
+
+         if (offset < 0)
+            offset = 0;
+         else if ((offset + window) > max)
+            offset = max - window;
+
+         raiseEvent(this, EVENT_REDRAW);
+         raiseEvent(this, EV_CHANGE);
       }
    };
 
-   // const unsigned  code;
-   ScrollButton  btn_scroll_less{this, LESS};
-   ScrollSlider  spacer{this};
-   ScrollButton  btn_scroll_more{this, MORE};
+   enum Evnet : unsigned { EV_LESS, EV_MORE, EV_CHANGE };
+
+   const unsigned code;
+   ScrollButton   btn_scroll_less{this, EV_LESS};
+   ScrollSlider   slider{this};
+   ScrollButton   btn_scroll_more{this, EV_MORE};
 
    virtual void eventDraw(Canvas& canvas) override
    {
@@ -130,22 +269,24 @@ private:
       canvas.drawRect(SHADOW, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
    }
 
-public:
-   ScrollBar(Widget* parent, unsigned code_)
-      : Widget(parent)
-      //, code(code_)
+   //! Intercept events from child widgets
+   virtual void raiseEvent(Widget* source_, unsigned code_) override
    {
-      if (!parent->isRow())
+      if (code_ == EV_LESS)
       {
-         row = true;
-         horz_fit = Fit::EXPAND;
-         vert_fit = Fit::SHRINK;
+         slider.nudge(-1);
+      }
+      else if (code_ == EV_MORE)
+      {
+         slider.nudge(+1);
+      }
+      else if (code_ == EV_CHANGE)
+      {
+         Widget::raiseEvent(this, code);
       }
       else
       {
-         row = false;
-         horz_fit = Fit::SHRINK;
-         vert_fit = Fit::EXPAND;
+         Widget::raiseEvent(source_, code_);
       }
    }
 };
