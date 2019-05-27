@@ -30,7 +30,7 @@ namespace GUI {
 class Slider : public Widget
 {
 private:
-   static const unsigned KNOB   = 8;
+   static const signed   KNOB   = 8;
    static const unsigned BORDER = 16;
    static const unsigned LENGTH = 100;
 
