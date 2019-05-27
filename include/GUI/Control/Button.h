@@ -85,7 +85,7 @@ protected:
       Widget::eventDraw(canvas);
    }
 
-   virtual void eventBtnPress(unsigned x, unsigned y, bool select_, bool down_) override
+   virtual void eventBtnPress(signed x, signed y, bool select_, bool down_) override
    {
       operate(down_, isHit(x, y), select_);
    }

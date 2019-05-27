@@ -153,7 +153,7 @@ private:
       }
 
    private:
-      static const unsigned MIN_SLIDER_SIZE = 14;
+      static const signed MIN_SLIDER_SIZE = 14;
 
       Vector::type offset{0};
       Vector::type window{MIN_SLIDER_SIZE};
@@ -195,7 +195,7 @@ private:
          }
       }
 
-      virtual void eventBtnPress(unsigned x, unsigned y, bool select_, bool down_) override
+      virtual void eventBtnPress(signed x, signed y, bool select_, bool down_) override
       {
          if(down_)
          {

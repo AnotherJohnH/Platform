@@ -107,7 +107,7 @@ private:
       canvas.drawLine(DARK,  v.x + KNOB, v.y + KNOB, v.x - KNOB, v.y + KNOB);
    }
 
-   virtual void eventBtnPress(unsigned x, unsigned y, bool select_, bool down_) override
+   virtual void eventBtnPress(signed x, signed y, bool select_, bool down_) override
    {
       if(down_)
       {

@@ -62,7 +62,7 @@ protected:
                       value);
    }
 
-   virtual void eventBtnPress(unsigned x, unsigned y, bool select, bool down_) override
+   virtual void eventBtnPress(signed x, signed y, bool select, bool down_) override
    {
       if(down_)
       {

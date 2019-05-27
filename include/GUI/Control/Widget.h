@@ -99,7 +99,7 @@ public:
    }
 
    //! Handle mouse button press event
-   virtual void eventBtnPress(unsigned x, unsigned y, bool select, bool down)
+   virtual void eventBtnPress(signed x, signed y, bool select, bool down)
    {
       //  Default float up to top level
       if(parent)
