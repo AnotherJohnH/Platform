@@ -256,7 +256,7 @@ private:
       }
    };
 
-   enum Evnet : unsigned { EV_LESS, EV_MORE, EV_CHANGE };
+   enum Event : unsigned { EV_LESS = 1, EV_MORE, EV_CHANGE };
 
    const unsigned code;
    ScrollButton   btn_scroll_less{this, EV_LESS};
