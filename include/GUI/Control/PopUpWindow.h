@@ -20,29 +20,27 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_H
-#define GUI_H
+#ifndef GUI_CONTROL_POP_UP_WINDOW_H
+#define GUI_CONTROL_POP_UP_WINDOW_H
 
-#include "Control/App.h"
-#include "Control/Bar.h"
-#include "Control/Button.h"
-#include "Control/Col.h"
-#include "Control/Colour.h"
-#include "Control/Expand.h"
-#include "Control/Field.h"
-#include "Control/MenuBar.h"
-#include "Control/Row.h"
-#include "Control/ScrollBar.h"
-#include "Control/Slider.h"
-#include "Control/Text.h"
-#include "Control/TextButton.h"
-#include "Control/TextTickBox.h"
-#include "Control/TickBox.h"
-#include "Control/Window.h"
-#include "Control/PopUpWindow.h"
+#include "Window.h"
 
-#include "Font/LED.h"
-#include "Font/New.h"
-#include "Font/Teletext.h"
+namespace GUI {
+
+class PopUpWindow : public Window
+{
+public:
+   PopUpWindow(Window*     parent,
+               const char* title_,
+               unsigned    width_ = 0,
+               unsigned    height_ = 0,
+               uint32_t    flags_ = 0)
+      : Window(title_, width_, height_, parent->getDefaultFont(), flags_)
+   {
+      parent->addChild(this);
+   }
+};
+
+} // namespace GUI
 
 #endif

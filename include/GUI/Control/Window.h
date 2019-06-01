@@ -32,34 +32,12 @@ namespace GUI {
 
 class Window : public Col, public Frame
 {
-private:
-   const Font* const font{nullptr};
-   unsigned          timer_code{0};
-   Widget*           focus{nullptr};
-
-   // Implement Widget
-
-   virtual void eventResize() override { Frame::resize(Widget::size.x, Widget::size.y); }
-
-   virtual void eventDraw(Canvas&) override { Canvas::clear(FACE); }
-
-   virtual const Font* getDefaultFont() const override { return font; }
-
-   virtual void appEvent(Widget* item_, unsigned code_) {}
-
-protected:
-   virtual void raiseEvent(Widget* focus_, unsigned code_) final override
-   {
-      switch(code_)
-      {
-      case EVENT_FOCUS:  focus = focus_;          break;
-      case EVENT_REDRAW: Widget::redraw(*this);   break;
-      default:           appEvent(focus_, code_); break;
-      }
-   }
-
 public:
-   Window(const char* title_, unsigned width_, unsigned height_, const Font* font_, uint32_t flags_)
+   Window(const char* title_,
+          unsigned    width_,
+          unsigned    height_,
+          const Font* font_,
+          uint32_t    flags_)
       : Col(0, 8)
       , GUI::Frame(title_, width_, height_, flags_)
       , font(font_)
@@ -68,6 +46,38 @@ public:
 
    //! Set event code for timer events
    void setTimerEvent(unsigned timer_code_) { timer_code = timer_code_; }
+
+   //! External event
+   void handleEvent(const PLT::Event::Message& event)
+   {
+      switch(event.type)
+      {
+      case PLT::Event::RESIZE:       winResize(event.x, event.y); break;
+      case PLT::Event::KEY_DOWN:     keyPress(event.code, true ); break;
+      case PLT::Event::KEY_UP:       keyPress(event.code, false); break;
+      case PLT::Event::POINTER_MOVE: ptrMove(event.x, event.y); break;
+      case PLT::Event::BUTTON_DOWN:  btnPress(event.x, event.y, event.code == 1, true);  break;
+      case PLT::Event::BUTTON_UP:    btnPress(event.x, event.y, event.code == 1, false); break;
+      case PLT::Event::TIMER:        timerEvent(); break;
+
+      case PLT::Event::QUIT:
+      default:
+         break;
+      }
+   }
+
+   virtual const Font* getDefaultFont() const override { return font; }
+
+   void addChild(Window* child)
+   {
+      child->next = next;
+      next        = child;
+   }
+
+   Window* getNext() const { return next; }
+
+protected:
+   Window* next{nullptr};
 
    //! External notification of window resize
    void winResize(unsigned width, unsigned height)
@@ -115,6 +125,30 @@ public:
          focus->eventKeyPress(key, down);
       }
    }
+
+   //! Internal notification of an event
+   virtual void raiseEvent(Widget* focus_, unsigned code_) final override
+   {
+      switch(code_)
+      {
+      case EVENT_FOCUS:  focus = focus_;          break;
+      case EVENT_REDRAW: Widget::redraw(*this);   break;
+      default:           appEvent(focus_, code_); break;
+      }
+   }
+
+private:
+   const Font* const font{nullptr};
+   unsigned          timer_code{0};
+   Widget*           focus{nullptr};
+
+   // Implement Widget
+
+   virtual void eventResize() override { Frame::resize(Widget::size.x, Widget::size.y); }
+
+   virtual void eventDraw(Canvas&) override { Canvas::clear(FACE); }
+
+   virtual void appEvent(Widget* item_, unsigned code_) {}
 };
 
 } // namespace GUI

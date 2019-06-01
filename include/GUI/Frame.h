@@ -48,6 +48,8 @@ public:
 
    PLT::Frame* getFramePtr() { return &frame; }
 
+   uint32_t getId() const { return frame.getId(); }
+
 private:
    PLT::Frame frame;
 

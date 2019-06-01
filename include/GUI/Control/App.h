@@ -31,38 +31,17 @@ namespace GUI {
 
 class App : public Window
 {
-private:
-   void handleEvent(const PLT::Event::Message& event)
-   {
-      switch(event.type)
-      {
-      case PLT::Event::RESIZE:       winResize(event.x, event.y); break;
-      case PLT::Event::KEY_DOWN:     keyPress(event.code, true ); break;
-      case PLT::Event::KEY_UP:       keyPress(event.code, false); break;
-      case PLT::Event::POINTER_MOVE: ptrMove(event.x, event.y); break;
-      case PLT::Event::BUTTON_DOWN:  btnPress(event.x, event.y, event.code == 1, true);  break;
-      case PLT::Event::BUTTON_UP:    btnPress(event.x, event.y, event.code == 1, false); break;
-      case PLT::Event::TIMER:        timerEvent(); break;
-
-      case PLT::Event::QUIT:
-      default:
-         break;
-      }
-   }
-
-   static void eventCallBack(const PLT::Event::Message& event, void* ptr)
-   {
-      App* app = reinterpret_cast<App*>(ptr);
-      app->handleEvent(event);
-   }
-
 public:
    App(const char* title_, const GUI::Font* font_, uint32_t flags_ = 0)
       : GUI::Window(title_, 0, 0, font_, flags_)
    {
    }
 
-   App(const char* title_, const GUI::Font* font_, unsigned width_, unsigned height_, uint32_t flags_ = 0)
+   App(const char*      title_,
+       const GUI::Font* font_,
+       unsigned         width_,
+       unsigned         height_,
+       uint32_t         flags_ = 0)
       : GUI::Window(title_, width_, height_, font_, flags_)
    {
       setSize(width_, height_);
@@ -77,8 +56,29 @@ public:
 
    void setTimer(unsigned code, unsigned period_ms)
    {
+      timer_code = code;
       setTimerEvent(code);
       PLT::Event::setTimer(period_ms);
+   }
+
+private:
+   unsigned timer_code{0};
+
+   //! Callback from PLT::Event
+   static void eventCallBack(const PLT::Event::Message& event, void* ptr)
+   {
+      App* app = reinterpret_cast<App*>(ptr);
+
+      for(Window* win = app->next; win != nullptr; win = win->getNext())
+      {
+         if (win->getId() == event.window)
+         {
+            win->handleEvent(event);
+            return;
+         }
+      }
+
+      app->handleEvent(event);
    }
 };
 
