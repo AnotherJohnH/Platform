@@ -154,6 +154,11 @@ public:
       return surface;
    }
 
+   uint32_t getId() const
+   {
+      return SDL_GetWindowID(window);
+   }
+
    void setTitle(const char* title_)
    {
       title = title_;
@@ -239,6 +244,11 @@ Frame::~Frame() { delete pimpl; }
 void* Frame::getHandle() const
 {
    return pimpl->getHandle();
+}
+
+uint32_t Frame::getId() const
+{
+   return pimpl->getId();
 }
 
 void Frame::setTitle(const char* title_)

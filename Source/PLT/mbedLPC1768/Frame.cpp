@@ -62,14 +62,11 @@ Frame::~Frame()
    // nohing to do here
 }
 
-void* Frame::getHandle() const
-{
-   return nullptr;
-}
+void* Frame::getHandle() const { return nullptr; }
 
-void Frame::setTitle(const char* title_)
-{
-}
+uint32_t Frame::getId() const { return 0; }
+
+void Frame::setTitle(const char* title_) { }
 
 void Frame::resize(unsigned width_, unsigned height_)
 {

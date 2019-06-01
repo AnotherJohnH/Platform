@@ -66,6 +66,9 @@ public:
    //! Get a platform specific handle for the frame
    virtual void* getHandle() const override;
 
+   //! Get a platform specific id for the frame
+   uint32_t getId() const;
+
    //! Change the title, for window based platforms should be the window title
    void setTitle(const char* title);
 

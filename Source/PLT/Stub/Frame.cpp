@@ -41,6 +41,11 @@ void* Frame::getHandle() const
    return nullptr;
 }
 
+uint32_t Frame::getId() const
+{
+   return 0;
+}
+
 void Frame::setTitle(const char* title_)
 {
 }
