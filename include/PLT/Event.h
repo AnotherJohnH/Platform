@@ -47,6 +47,7 @@ enum Type : uint8_t
    BUTTON_UP,    //!< Screen untouched or mouse button released
    POINTER_MOVE, //!< Swipe or mouse move
    TIMER,        //!< Repeating timer event requested by setTimer()
+   SHOW,         //!< Windows has been shown
    RESIZE,       //!< Windows resized
    QUIT          //!< Application quit
 };
@@ -64,6 +65,7 @@ enum class Button : uint8_t
 //! An event record
 struct Message
 {
+   uint32_t window{0};    //!< Unique id for window or display
    Type     type{NONE};   //!< Event type
    uint8_t  code{0};      //!< Identify key or mouse button
    uint16_t x{0};         //!< Mouse pointer or touch x co-ordinate

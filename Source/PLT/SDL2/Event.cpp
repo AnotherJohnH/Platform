@@ -133,16 +133,19 @@ namespace PLT {
 
 static Event::Type getEvent(Event::Message& event, bool wait)
 {
-   event.type = Event::NONE;
-   event.code = 0;
-   event.x    = 0;
-   event.y    = 0;
+   event.window = 0;
+   event.type   = Event::NONE;
+   event.code   = 0;
+   event.x      = 0;
+   event.y      = 0;
 
    SDL_Event sdl_event;
 
    if(wait ? SDL_WaitEvent(&sdl_event)
            : SDL_PollEvent(&sdl_event))
    {
+      event.window = sdl_event.window.windowID;
+
       switch(sdl_event.type)
       {
       case SDL_QUIT:
@@ -150,11 +153,10 @@ static Event::Type getEvent(Event::Message& event, bool wait)
          break;
 
       case SDL_WINDOWEVENT:
-         event.code = sdl_event.window.windowID;
          switch(sdl_event.window.event)
          {
-         case SDL_WINDOWEVENT_CLOSE:
-            event.type = Event::QUIT;
+         case SDL_WINDOWEVENT_SHOWN:
+            event.type = Event::SHOW;
             break;
 
          case SDL_WINDOWEVENT_RESIZED:
@@ -162,6 +164,10 @@ static Event::Type getEvent(Event::Message& event, bool wait)
             event.x    = sdl_event.window.data1;
             event.y    = sdl_event.window.data2;
             PLT::Frame::internal_transEventXyToPixel(event.x, event.y);
+            break;
+
+         case SDL_WINDOWEVENT_CLOSE:
+            event.type = Event::QUIT;
             break;
 
          default:
