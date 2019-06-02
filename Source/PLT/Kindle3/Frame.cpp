@@ -150,6 +150,8 @@ uint32_t Frame::getId() const { return 0; }
 
 void Frame::setTitle(const char* title_) {}
 
+void Frame::setVisible(bool visible_) {}
+
 void Frame::setScanner(Scanner* scanner_) {}
 
 } // namespace PLT

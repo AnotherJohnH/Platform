@@ -72,6 +72,9 @@ public:
    //! Change the title, for window based platforms should be the window title
    void setTitle(const char* title);
 
+   //! Hide or make visible a window
+   void setVisible(bool visible);
+
    //! Resize the frame buffer
    //
    //! \param width frame width (pixels)

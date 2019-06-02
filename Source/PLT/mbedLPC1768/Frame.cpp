@@ -68,6 +68,8 @@ uint32_t Frame::getId() const { return 0; }
 
 void Frame::setTitle(const char* title_) { }
 
+void Frame::setVisible(bool visible_) { }
+
 void Frame::resize(unsigned width_, unsigned height_)
 {
    width  = width_;

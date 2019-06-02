@@ -192,6 +192,18 @@ public:
       SDL_RenderPresent(renderer);
    }
 
+   void setVisible(bool visible)
+   {
+      if (visible)
+      {
+         SDL_ShowWindow(window);
+      }
+      else
+      {
+         SDL_HideWindow(window);
+      }
+   }
+
 private:
    std::string   title;
    uint32_t      flags;
@@ -265,6 +277,11 @@ void Frame::resize(unsigned width_, unsigned height_)
 
    pimpl->resize(width_, height_);
    buffer = pimpl->getStorage(pitch);
+}
+
+void Frame::setVisible(bool visible)
+{
+   pimpl->setVisible(visible);
 }
 
 void Frame::refresh()

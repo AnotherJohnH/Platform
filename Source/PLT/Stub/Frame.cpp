@@ -50,6 +50,10 @@ void Frame::setTitle(const char* title_)
 {
 }
 
+void Frame::setVisible(bool visible_)
+{
+}
+
 void Frame::resize(unsigned width_, unsigned height_)
 {
 }
