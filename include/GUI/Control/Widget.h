@@ -62,7 +62,7 @@ public:
       push_back(child);
    }
 
-   void show()
+   void layout()
    {
       // Find the minimum size for all widgets
       layoutSizeShrink();

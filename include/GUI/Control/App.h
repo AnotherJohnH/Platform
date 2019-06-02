@@ -49,7 +49,7 @@ public:
 
    int eventLoop()
    {
-      show();
+      layout();
 
       return PLT::Event::eventLoop(eventCallBack, this);
    }

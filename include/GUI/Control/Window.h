@@ -76,6 +76,12 @@ public:
 
    Window* getNext() const { return next; }
 
+   void show() override
+   {
+      layout();
+      Frame::show();
+   }
+
 protected:
    Window* next{nullptr};
 
@@ -84,7 +90,7 @@ protected:
    {
       setSize(width, height);
       eventResize();
-      show();
+      layout();
    }
 
    //! External notification of a timer event

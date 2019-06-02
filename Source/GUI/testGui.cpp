@@ -24,33 +24,45 @@
 
 #include "GUI/GUI.h"
 
-
-class PopUp : public GUI::App
+class PopUp : public GUI::PopUpWindow
 {
-private:
-   GUI::Text text;
-
 public:
-   PopUp()
-      : GUI::App("Pop Up", &GUI::font_teletext18)
-      , text(this, "Hello, world!")
+   PopUp(GUI::App* app)
+      : GUI::PopUpWindow(app, "Pop Up")
    {}
-};
 
+private:
+   GUI::TextButton text{this, 6, "Hello, world!"};;
+
+   virtual void appEvent(Widget* widget_, unsigned code_) override
+   {
+      printf("raiseEvent(%u)\n", code_);
+      hide();
+   }
+};
 
 class GuiApp : public GUI::App
 {
-private:
-   PopUp popup;
+public:
+   GuiApp()
+      : GUI::App("GUI test", &GUI::font_teletext18)
+   {
+      setTimer(7, 2000);
+   }
 
-   GUI::Text        text2;
-   GUI::Button      button;
-   GUI::TextButton  txt_btn;
-   GUI::TextButton  btn_a;
-   GUI::TextButton  btn_b;
-   GUI::TickBox     tick;
-   GUI::TextTickBox text_tick;
-   GUI::Field<16>   field;
+private:
+   PopUp popup{this};
+
+   GUI::Text        text2{this, "Hello, world!"};
+   GUI::Button      button{this, 1};
+   GUI::TextButton  txt_btn{this, 2, "0123456789"};
+   GUI::TextButton  btn_a{this, 'A', "Cancel"};
+   GUI::TextButton  btn_b{this, 'B', "OK"};
+   GUI::TickBox     tick{this, 3};
+   GUI::TextTickBox text_tick{this, 3, "Do you agree?"};
+   GUI::Field<16>   field{this, 4, ""};
+   GUI::Slider      slider{this, 5};
+   GUI::ScrollBar   scroll_bar{this, 6};
 
    virtual void appEvent(Widget* widget_, unsigned code_) override
    {
@@ -58,24 +70,9 @@ private:
 
       if(code_ == 'B') popup.show();
    }
-
-public:
-   GuiApp()
-      : GUI::App("GUI test", &GUI::font_teletext18)
-      , text2(this, "Hello, world!")
-      , button(this, 1)
-      , txt_btn(this, 2, "0123456789")
-      , btn_a(this, 'A', "Cancel")
-      , btn_b(this, 'B', "OK")
-      , tick(this, 3)
-      , text_tick(this, 3, "Do you agree?")
-      , field(this, 4, "")
-   {}
 };
-
 
 int main( int argc, char *argv[] )
 {
    GuiApp().eventLoop();
 }
-

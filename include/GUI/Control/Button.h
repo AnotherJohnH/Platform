@@ -60,7 +60,7 @@ private:
             }
          }
 
-         show();
+         layout();
       }
    }
 

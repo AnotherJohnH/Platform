@@ -50,6 +50,10 @@ public:
 
    uint32_t getId() const { return frame.getId(); }
 
+   virtual void show() { frame.setVisible(true); }
+
+   void hide() { frame.setVisible(false); }
+
 private:
    PLT::Frame frame;
 
