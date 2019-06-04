@@ -159,6 +159,14 @@ static Event::Type getEvent(Event::Message& event, bool wait)
             event.type = Event::SHOW;
             break;
 
+         case SDL_WINDOWEVENT_ENTER:
+            event.type = Event::ENTER;
+            break;
+
+         case SDL_WINDOWEVENT_LEAVE:
+            event.type = Event::LEAVE;
+            break;
+
          case SDL_WINDOWEVENT_RESIZED:
             event.type = Event::RESIZE;
             event.x    = sdl_event.window.data1;

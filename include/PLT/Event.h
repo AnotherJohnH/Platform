@@ -48,6 +48,8 @@ enum Type : uint8_t
    POINTER_MOVE, //!< Swipe or mouse move
    TIMER,        //!< Repeating timer event requested by setTimer()
    SHOW,         //!< Windows has been shown
+   ENTER,        //!< Mouse pointer entered window
+   LEAVE,        //!< Mouse pointer left window
    RESIZE,       //!< Windows resized
    QUIT          //!< Application quit
 };
