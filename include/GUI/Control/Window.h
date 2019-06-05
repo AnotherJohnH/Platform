@@ -59,12 +59,16 @@ public:
       case PLT::Event::BUTTON_DOWN:  btnPress(event.x, event.y, event.code == 1, true);  break;
       case PLT::Event::BUTTON_UP:    btnPress(event.x, event.y, event.code == 1, false); break;
       case PLT::Event::TIMER:        timerEvent(); break;
+      case PLT::Event::ENTER:        setHover(nullptr); break;
+      case PLT::Event::LEAVE:        setHover(nullptr); break;
 
       case PLT::Event::QUIT:
       default:
          break;
       }
    }
+
+   virtual bool isHover(const Widget* that) const override { return that == hover; }
 
    virtual const Font* getDefaultFont() const override { return font; }
 
@@ -106,14 +110,29 @@ protected:
    //! External notification of a pointer move
    void ptrMove(unsigned x, unsigned y)
    {
-      Widget* item = focus ? focus : find(x, y);
-      if(item)
+      Widget* item = find(x, y);
+      if (item != nullptr)
       {
-         item->eventPtrMove(x, y);
+         for(Widget* i = item; i != nullptr; i = i->getParent())
+         {
+            if (i->wantsHover())
+            {
+               setHover(i);
+               break;
+            }
+         }
+
+         if (focus != nullptr)
+         {
+            focus->eventPtrMove(x, y);
+         }
+         else
+         {
+            item->eventPtrMove(x, y);
+         }
       }
    }
 
-   //! External notification of a button press
    void btnPress(unsigned x, unsigned y, bool select, bool down)
    {
       Widget* hit = down ? find(x, y) : focus;
@@ -147,6 +166,26 @@ private:
    const Font* const font{nullptr};
    unsigned          timer_code{0};
    Widget*           focus{nullptr};
+   Widget*           hover{nullptr};
+
+   void setHover(Widget* new_hover)
+   {
+      if (new_hover != hover)
+      {
+         Widget* old_hover = hover;
+         hover = new_hover;
+
+         if (old_hover != nullptr)
+         {
+            old_hover->redraw(*this);
+         }
+
+         if (hover != nullptr)
+         {
+            hover->redraw(*this);
+         }
+      }
+   }
 
    // Implement Widget
 

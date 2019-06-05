@@ -31,10 +31,12 @@ class Tree
 {
 public:
    //------------------------------------------------------------------
-   // Capacity
+   // Accessors
 
    //! Returns true if the node has no children
    bool empty() const { return children == nullptr; }
+
+   TYPE* getParent() const { return parent; }
 
    //------------------------------------------------------------------
    // Modifiers

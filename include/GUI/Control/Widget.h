@@ -78,6 +78,32 @@ public:
       raiseEvent(this, EVENT_REDRAW);
    }
 
+   //! 
+   virtual bool wantsHover() const
+   {
+      return false;
+   }
+
+   void redraw(Canvas& canvas)
+   {
+      static signed level = 0;
+
+      eventDraw(canvas);
+
+      level++;
+
+      for(Widget* child = children; child; child = child->next)
+      {
+         child->redraw(canvas);
+      }
+
+      if(--level == 0)
+      {
+         canvas.refresh();
+      }
+   }
+
+
    // Event handlers that may be overriden
 
    //! Widget has been resized
@@ -127,25 +153,6 @@ protected:
 
    virtual ~Widget() = default;
 
-   void redraw(Canvas& canvas)
-   {
-      static signed level = 0;
-
-      eventDraw(canvas);
-
-      level++;
-
-      for(Widget* child = children; child; child = child->next)
-      {
-         child->redraw(canvas);
-      }
-
-      if(--level == 0)
-      {
-         canvas.refresh();
-      }
-   }
-
    Widget* find(unsigned x_, unsigned y_)
    {
       if(!isHit(x_, y_)) return nullptr;
@@ -170,6 +177,12 @@ protected:
       {
          parent->raiseEvent(source_, code_);
       }
+   }
+
+   //! Check if pointer hovering over a Widget
+   virtual bool isHover(const Widget* that) const
+   {
+      return parent ? parent->isHover(that) : false;
    }
 
    //! Get default font from top level
