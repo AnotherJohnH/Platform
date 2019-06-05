@@ -20,30 +20,62 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_H
-#define GUI_H
+#ifndef GUI_CONTROL_MENU_BUTTON_H
+#define GUI_CONTROL_MENU_BUTTON_H
 
-#include "Control/App.h"
-#include "Control/Bar.h"
-#include "Control/Button.h"
-#include "Control/Col.h"
-#include "Control/Colour.h"
-#include "Control/Expand.h"
-#include "Control/Field.h"
-#include "Control/MenuBar.h"
-#include "Control/MenuButton.h"
-#include "Control/Row.h"
-#include "Control/ScrollBar.h"
-#include "Control/Slider.h"
-#include "Control/Text.h"
-#include "Control/TextButton.h"
-#include "Control/TextTickBox.h"
-#include "Control/TickBox.h"
-#include "Control/Window.h"
-#include "Control/PopUpWindow.h"
+#include "Colour.h"
+#include "Row.h"
+#include "Text.h"
 
-#include "Font/LED.h"
-#include "Font/New.h"
-#include "Font/Teletext.h"
+namespace GUI {
+
+//! Button base class
+class MenuButton : public Row 
+{
+public:
+   MenuButton(Widget* parent_, unsigned code_, const char* text_)
+      : Row(parent_)
+      , code(code_)
+      , text(this, text_)
+   {
+      horz_fit = Fit::EXPAND;
+      setBorderAndGap(4);
+   }
+
+protected:
+   virtual void eventDraw(Canvas& canvas) override
+   {
+      STB::Colour fg_colour = isHover(this) ? STB::WHITE : STB::BLACK;
+      STB::Colour bg_colour = isHover(this) ? STB::BLUE  : FACE;
+
+      canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+
+      text.setForegroundColour(fg_colour);
+      text.setBackgroundColour(bg_colour);
+   }
+
+   virtual void eventBtnPress(signed x, signed y, bool select_, bool down_) override
+   {
+      if (down_)
+      {
+         raiseEvent(this, EVENT_FOCUS);
+      }
+      else if((code != 0) && !down_ && isHit(x, y))
+      {
+         raiseEvent(this, code);
+      }
+   }
+
+   virtual bool wantsHover() const override
+   {
+      return code != 0;
+   }
+
+private:
+   uint32_t code{0};
+   Text     text;
+};
+
+} // namespace GUI
 
 #endif
