@@ -29,41 +29,35 @@
 class MidiFile : public STB::MIDI::File
 {
 public:
-   MidiFile() = default;
-
-   ~MidiFile() = default;
-
    void dump()
    {
       printf("format=%04x ntrks=%04x division=%04x\n",
              getFormat(), getNumTracks(), getDivision());
 
-      const STB::MIDI::File::Chunk* chunk = getFirstChunk();
-
-      for(uint16_t i=0; i<getNumTracks(); ++i)
+      for(unsigned i=0; i<getNumTracks(); ++i)
       {
-         chunk = chunk->getNext();
-
-         dumpTrack(i, chunk);
+         dumpTrack(i);
       }
    }
 
 private:
-   void dumpTrack(unsigned i, const STB::MIDI::File::Chunk* chunk)
+   void dumpTrack(unsigned i)
    {
       printf("TRACK %u\n", i);
 
-      const uint8_t* ptr = chunk->data();
+      size_t         size;
+      const uint8_t* raw = getTrackData(i, size);
+      const uint8_t* end = raw + size;
 
-      while(ptr < chunk->end())
+      for(const uint8_t* ptr = raw; ptr < end;)
       {
          uint32_t delta_t;
 
          const uint8_t* start = ptr;
          const uint8_t* event = start + STB::MIDI::Decoder::decodeVarLength(start, delta_t);
 
-         printf("%06X : dt=%05u ", unsigned(start - chunk->data()), delta_t);
-         ptr = event + STB::MIDI::disassemble(event, chunk->end() - event);
+         printf("%06X : dt=%05u ", unsigned(start - raw), delta_t);
+         ptr = event + STB::MIDI::disassemble(event, end - event);
       }
    }
 };

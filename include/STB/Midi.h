@@ -141,43 +141,6 @@ protected:
 class File
 {
 public:
-   //! The header for a MIDI file chunk
-   //  Should only be used to decode a MIDI file that is stored in a single contiguous
-   //  block of memory
-   class Chunk
-   {
-   public:
-      Chunk(bool is_header = true)
-      {
-         type[0] = 'M';
-         type[1] = 'T';
-         type[2] = is_header ? 'h' : 'r';
-         type[3] = is_header ? 'd' : 'k';
-      }
-
-      //! Looks like a valid MIDI chunk
-      bool isValid() const { return (type[0] == 'M') && (type[1] == 'T'); }
-
-      //! Is a MIDI header chunk
-      bool isHeader() const { return isValid() && (type[2] == 'h') && (type[3] == 'd'); }
-
-      //! Is a MIDI track chunk
-      bool isTrack() const { return isValid() && (type[2] == 'r') && (type[3] == 'k'); }
-
-      //! Return a pointer to the data for the chunk
-      const uint8_t* data() const { return (const uint8_t*)this + sizeof(Chunk); }
-
-      //! Return a pointer to the byte after the last data byte in the chunk
-      const uint8_t* end() const { return data() + length; }
-
-      //! Return a pointer to the next chunk
-      const Chunk* getNext() const { return (const Chunk*)end(); }
-
-   private:
-      uint8_t    type[4];
-      STB::Big32 length{0};
-   };
-
    File() = default;
 
    ~File()
@@ -213,15 +176,77 @@ public:
       return true;
    }
 
-   const Chunk* getFirstChunk() const { return &data->chunk; }
+   //! MIDI file format
+   //  0 => single multi-channel track
+   //  1 => one or more simultanious tracks
+   //  2 => one or more independant tracks
+   unsigned     getFormat() const     { return data->format; }
 
-   uint16_t     getFormat() const     { return data->format; }
+   //! Get number of tracks
+   unsigned     getNumTracks() const  { return data->ntrks; }
 
-   uint16_t     getNumTracks() const  { return data->ntrks; }
-
+   //! Get number of tracks
    uint16_t     getDivision() const   { return data->division; }
 
+   const uint8_t* getTrackData(unsigned track_no, size_t& size)
+   {
+      const Chunk* chunk = &data->chunk;
+
+      for(unsigned i=0; i<getNumTracks(); i++)
+      {
+         chunk = chunk->getNext();
+         if (i == track_no)
+         {
+            size = chunk->size();
+            return chunk->data();
+         }
+      }
+
+      size = 0;
+      return nullptr; 
+   }
+
 private:
+   //! The header for a MIDI file chunk
+   //  Should only be used to decode a MIDI file that is stored in a single contiguous
+   //  block of memory
+   class Chunk
+   {
+   public:
+      Chunk(bool is_header = true)
+      {
+         type[0] = 'M';
+         type[1] = 'T';
+         type[2] = is_header ? 'h' : 'r';
+         type[3] = is_header ? 'd' : 'k';
+      }
+
+      //! Looks like a valid MIDI chunk
+      bool isValid() const { return (type[0] == 'M') && (type[1] == 'T'); }
+
+      //! Is a MIDI header chunk
+      bool isHeader() const { return isValid() && (type[2] == 'h') && (type[3] == 'd'); }
+
+      //! Is a MIDI track chunk
+      bool isTrack() const { return isValid() && (type[2] == 'r') && (type[3] == 'k'); }
+
+      //! Get raw size of track (bytes)
+      size_t size() const { return length; }
+
+      //! Return a pointer to the data for the chunk
+      const uint8_t* data() const { return (const uint8_t*)this + sizeof(Chunk); }
+
+      //! Return a pointer to the byte after the last data byte in the chunk
+      const uint8_t* end() const { return data() + size(); }
+
+      //! Return a pointer to the next chunk
+      const Chunk* getNext() const { return (const Chunk*)end(); }
+
+   private:
+      uint8_t    type[4];
+      STB::Big32 length{0};
+   };
+
    //! The header for a MIDI file
    struct Header
    {
