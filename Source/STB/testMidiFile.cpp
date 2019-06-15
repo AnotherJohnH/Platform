@@ -26,69 +26,21 @@
 
 #include "STB/Midi.h"
 
-class MidiFile
+class MidiFile : public STB::MIDI::File
 {
 public:
    MidiFile() = default;
 
-   ~MidiFile()
-   {
-      delete[] file;
-   }
-
-   bool read(const char* filename)
-   {
-      // Open file
-      FILE* fp = fopen(filename, "r");
-      if (fp == NULL)
-      {
-         fprintf(stderr, "ERROR: failed to open %s\n", filename);
-         return false;
-      }
-
-      // Find size
-      if (fseek(fp, 0, SEEK_END) != 0)
-      {
-         fprintf(stderr, "ERROR: failed to fseek\n");
-         return false;
-      }
-      long size = ftell(fp);
-      if (size <= 0)
-      {
-         fprintf(stderr, "ERROR: failed to ftell\n");
-         return false;
-      }
-
-      file = STB::MIDI::FileHeader::construct(size);
-   
-      // Return to start
-      if (fseek(fp, 0, SEEK_SET) != 0)
-      {
-         fprintf(stderr, "ERROR: failed to fseek start\n");
-         return false;
-      }
-
-      printf("length=%ld\n", size);
-   
-      if (fread((void*)file, size, 1, fp) != 1)
-      {
-         fprintf(stderr, "ERROR: failed to fread\n");
-         return false;
-      }
-
-      fclose(fp);
-
-      return true;
-   }
+   ~MidiFile() = default;
 
    void dump()
    {
       printf("format=%04x ntrks=%04x division=%04x\n",
-             uint16_t(file->format), uint16_t(file->ntrks), uint16_t(file->division));
+             getFormat(), getNumTracks(), getDivision());
 
-      const STB::MIDI::FileChunk* chunk = &file->chunk;
+      const STB::MIDI::File::Chunk* chunk = getFirstChunk();
 
-      for(uint16_t i=0; i<file->ntrks; ++i)
+      for(uint16_t i=0; i<getNumTracks(); ++i)
       {
          chunk = chunk->getNext();
 
@@ -97,9 +49,7 @@ public:
    }
 
 private:
-   STB::MIDI::FileHeader* file{nullptr};
-
-   void dumpTrack(unsigned i, const STB::MIDI::FileChunk* chunk)
+   void dumpTrack(unsigned i, const STB::MIDI::File::Chunk* chunk)
    {
       printf("TRACK %u\n", i);
 
@@ -129,7 +79,7 @@ int main(int argc, const char* argv[])
 
    MidiFile midi_file;
 
-   if (midi_file.read(argv[1]))
+   if (midi_file.load(argv[1]))
    {
       midi_file.dump();
    }
