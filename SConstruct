@@ -44,6 +44,7 @@ plt_source = ['PLT/test/testAudioOut.cpp',
               'TRM/testTerminalLauncher.cpp',
               'STB/testHelloWorld.cpp',
               'STB/testConsoleApp.cpp',
+              'STB/testMidiFile.cpp',
               'STB/testEndian.cpp']
 
 mtl_source = ['MTL/testDigital.cpp']
