@@ -77,9 +77,9 @@ public:
    };
 
    // Channel voice messages
-   virtual void noteOn(         uint8_t channel, uint8_t note,  uint8_t velocity) {}
-   virtual void notePressure(   uint8_t channel, uint8_t note,  uint8_t value) {}
-   virtual void noteOff(        uint8_t channel, uint8_t note,  uint8_t velocity) {}
+   virtual void noteOn(         uint8_t channel, uint8_t note, uint8_t velocity) {}
+   virtual void notePressure(   uint8_t channel, uint8_t note, uint8_t value) {}
+   virtual void noteOff(        uint8_t channel, uint8_t note, uint8_t velocity) {}
    virtual void controlChange(  uint8_t channel, uint8_t index, uint8_t value) {}
    virtual void pitchBend(      uint8_t channel, int16_t value) {}
    virtual void channelPressure(uint8_t channel, uint8_t value) {}
@@ -106,17 +106,21 @@ public:
 
    static unsigned decodeVarLength(const uint8_t* first, uint32_t& value)
    {
-      for(const uint8_t* ptr = first; true; )
+      value = 0;
+
+      const uint8_t* ptr = first;
+
+      while(true)
       {
          uint8_t byte = *ptr++;
          value        = (value << 7) | (byte & 0x7F);
-         if((byte & 0b10000000) == 0) return ptr - first;
+         if((byte & 0x80) == 0) return ptr - first;
       }
    }
 
-   const State& getState() const { return state; }
-
    void resetState() { state.command = 0; }
+
+   const State& getState() { return state; }
 
    void setState(const State& state_) { state = state_; }
 

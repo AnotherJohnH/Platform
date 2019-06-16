@@ -160,6 +160,11 @@ private:
    }
 };
 
+
+//! Disassemble MIDI stream
+extern unsigned disassemble(const uint8_t* data, unsigned length);
+
+
 } // namespace MIDI
 
 } // namespace STB
