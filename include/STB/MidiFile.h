@@ -30,6 +30,7 @@
 #include <string>
 
 #include "STB/Endian.h"
+#include "STB/MidiDecoder.h"
 
 namespace STB {
 
@@ -86,7 +87,8 @@ public:
    //! Get time division
    uint16_t getDivision() const { return data->division; }
 
-   const uint8_t* getTrackData(unsigned track_no, size_t& size)
+   //! Get raw data for a track
+   const uint8_t* getTrackData(unsigned track_no, size_t& size) const
    {
       const Chunk* chunk = &data->chunk;
 
@@ -102,6 +104,21 @@ public:
 
       size = 0;
       return nullptr; 
+   }
+
+   void decodeTrack(unsigned track_no, Decoder* decoder) const
+   {
+      decoder->resetState();
+
+      size_t size;
+      const uint8_t* ptr = getTrackData(track_no, size);
+      const uint8_t* end = ptr + size;
+
+      while(ptr < end)
+      {
+         ptr += decoder->decodeDeltaT(ptr);
+         ptr += decoder->decode(ptr, end - ptr);
+      }
    }
 
 private:

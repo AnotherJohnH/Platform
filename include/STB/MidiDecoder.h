@@ -73,7 +73,8 @@ class Decoder
 public:
    struct State
    {
-      uint8_t command{0};
+      uint32_t t{0};
+      uint8_t  command{0};
    };
 
    // Channel voice messages
@@ -102,6 +103,17 @@ public:
    virtual void textEvent(TextEvent event, const char*, unsigned length) {}
    virtual void todo() {}
 
+   //! Get time of current event
+   uint32_t getTime() const { return state.t; }
+
+   unsigned decodeDeltaT(const uint8_t* ptr)
+   {
+      uint32_t delta_t;
+      unsigned n = STB::MIDI::Decoder::decodeVarLength(ptr, delta_t);
+      state.t += delta_t;
+      return n;
+   }
+
    virtual unsigned decode(const uint8_t* data, unsigned length);
 
    static unsigned decodeVarLength(const uint8_t* first, uint32_t& value)
@@ -118,7 +130,11 @@ public:
 
    const State& getState() const { return state; }
 
-   void resetState() { state.command = 0; }
+   void resetState()
+   {
+      state.t       = 0;
+      state.command = 0;
+   }
 
    void setState(const State& state_) { state = state_; }
 
