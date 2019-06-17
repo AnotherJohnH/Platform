@@ -91,9 +91,9 @@ private:
    }
 
    virtual void canvasBlit(const Canvas& source,
-                           uint32_t x, uint32_t y,
-                           uint32_t w, uint32_t h,
-                           uint32_t src_x, uint32_t src_y) override
+                           int32_t  x,     int32_t  y,
+                           uint32_t w,     uint32_t h,
+                           int32_t  src_x, int32_t  src_y) override
    {
       const PLT::Image* image = source.getImage();
 
