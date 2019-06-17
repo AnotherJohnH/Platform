@@ -498,8 +498,8 @@ protected:
                            uint32_t w,     uint32_t h,
                            int32_t  src_x, int32_t  src_y)
    {
-      assert((src_x + w) <= source.getWidth());
-      assert((src_y + h) <= source.getHeight());
+      assert(int32_t(src_x + w) <= source.getWidth());
+      assert(int32_t(src_y + h) <= source.getHeight());
 
       for(uint32_t u = 0; u < w; u++)
       {
