@@ -37,8 +37,30 @@ add_compile_options(-std=c++11)
 
 include_directories(Platform/include)
 
+set(target ${CMAKE_SYSTEM_NAME})
+if(target STREQUAL "Darwin")
+   set(target macOS)
+endif()
+include(Platform/Source/PLT/${target}/config.cmake)
+
 add_library(PLT
-            Platform/Source/STB/Option.cpp)
+            Platform/Source/STB/Option.cpp
+            Platform/Source/STB/Midi.cpp
+            Platform/Source/STB/Oil.cpp
+            Platform/Source/STB/Deflate.cpp
+            Platform/Source/STB/Zlib.cpp
+
+            Platform/Source/GUI/FontLED11.cpp
+            Platform/Source/GUI/FontLED22.cpp
+            Platform/Source/GUI/FontNew8.cpp
+            Platform/Source/GUI/FontTeletext18.cpp
+            Platform/Source/GUI/FontTeletext15.cpp
+            Platform/Source/GUI/FontTeletext12.cpp
+            Platform/Source/GUI/FontTeletext9.cpp
+            Platform/Source/GUI/BitmapPNG.cpp
+
+            ${platform_source})
 
 add_executable(${binary} ${source})
 target_link_libraries(${binary} PLT)
+target_link_libraries(${binary} ${platform_libs})
