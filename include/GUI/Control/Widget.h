@@ -195,8 +195,7 @@ private:
    //! Recursively determine the minimum size of this item and this items children
    void layoutSizeShrink()
    {
-      signed width  = 0;
-      signed height = 0;
+      Vector area{0, 0};
 
       for(Widget* child = children; child != nullptr; child = child->next)
       {
@@ -204,35 +203,29 @@ private:
 
          if(row)
          {
-            width += child->size.x;
-            if(child != children) width += gap;
-
-            if(child->size.y > height)
-            {
-               height = child->size.y;
-            }
+            area.x += child->size.x;
+            area.y =  std::max(child->size.y, area.y);
          }
          else
          {
-            if(child->size.x > width)
-            {
-               width = child->size.x;
-            }
+            area.x =  std::max(child->size.x, area.x);
+            area.y += child->size.y;
+         }
 
-            height += child->size.y;
-            if(child != children) height += gap;
+         if (child != children)
+         {
+            if(row)
+            {
+               area.x += gap;
+            }
+            else
+            {
+               area.y += gap;
+            }
          }
       }
 
-      if(horz_fit != Fit::FIXED)
-      {
-         size.x = width + top_left.x + btm_right.x;
-      }
-
-      if(vert_fit != Fit::FIXED)
-      {
-         size.y = height + top_left.y + btm_right.y;
-      }
+      setChildrenArea(area);
    }
 
    //! Recursively resize this item and this items children
@@ -255,18 +248,20 @@ private:
          }
       }
 
-      unsigned width  = size.x - top_left.x - btm_right.x;
-      unsigned height = size.y - top_left.y - btm_right.y;
+      Vector area;
+      getChildrenArea(area);
+
+      Vector expanding_child_size;
 
       if(n > 0)
       {
          if(row)
          {
-            width  = (size.x - top_left.x - btm_right.x - total) / n;
+            area.x = (area.x - total) / n;
          }
          else
          {
-            height = (size.y - top_left.y - btm_right.y - total) / n;
+            area.y = (area.y - total) / n;
          }
       }
 
@@ -274,12 +269,12 @@ private:
       {
          if(child->horz_fit == Fit::EXPAND)
          {
-            child->size.x = width;
+            child->size.x = area.x;
          }
 
          if(child->vert_fit == Fit::EXPAND)
          {
-            child->size.y = height;
+            child->size.y = area.y;
          }
 
          child->layoutSizeExpand();

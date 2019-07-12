@@ -26,7 +26,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "GUI/Canvas.h"
+#include "GUI/Vector.h"
 
 namespace GUI {
 
@@ -52,32 +52,20 @@ enum class Align : uint8_t
 //! Widget layout
 class Layout
 {
-protected:
-   Vector      pos{0, 0};               //!< Absolute position in root canvas
-   Vector      size{0, 0};              //!< Width and height
-   SmallVector top_left{0, 0};          //!< Top left border for children
-   SmallVector btm_right{0, 0};         //!< Bottom right border for children
-   Fit         horz_fit{Fit::FIXED};    //!< Horizontal fit
-   Fit         vert_fit{Fit::FIXED};    //!< Vertical fit
-   bool        row{false};              //!< Layout children in a row not a column
-   uint8_t     gap{0};                  //!< Gap between children
-   Align       horz_align{Align::LEFT}; //!< Horizontal alignment mode for children
-   Align       vert_align{Align::TOP};  //!< Vertical alignment mode for children
-
 public:
-   signed getX() const { return pos.x; }
-   signed getY() const { return pos.y; }
+   //! Get position within top level rendering canvas
+   const Vector& getPos()  const { return pos; }
 
-   signed getWidth() const { return size.x; }
-   signed getHeight() const { return size.y; }
+   //! Get size
+   const Vector& getSize() const { return size; }
+
+   bool isRow() const { return row; }
 
    bool isHit(signed x_, signed y_) const
    {
       return (x_ >= pos.x) && (x_ < (pos.x + size.x)) &&
              (y_ >= pos.y) && (y_ < (pos.y + size.y));
    }
-
-   bool isRow() const { return row; }
 
    void setRow(bool row_ = true)
    {
@@ -120,6 +108,38 @@ public:
    {
       horz_align = horz_align_;
       vert_align = vert_align_;
+   }
+
+protected:
+   Vector      pos{0, 0};               //!< Absolute position in root canvas
+   Vector      size{0, 0};              //!< Width and height
+   Fit         horz_fit{Fit::FIXED};    //!< Horizontal fit
+   Fit         vert_fit{Fit::FIXED};    //!< Vertical fit
+   SmallVector top_left{0, 0};          //!< Top left border for children
+   SmallVector btm_right{0, 0};         //!< Bottom right border for children
+   bool        row{false};              //!< Layout children in a row not a column
+   uint8_t     gap{0};                  //!< Gap between children
+   Align       horz_align{Align::LEFT}; //!< Horizontal alignment mode for children
+   Align       vert_align{Align::TOP};  //!< Vertical alignment mode for children
+
+   //! Set the width and height of the area occupied by children
+   void setChildrenArea(const Vector& area)
+   {
+      if(horz_fit != Fit::FIXED)
+      {
+         size.x = top_left.x + area.x + btm_right.x;
+      }
+
+      if(vert_fit != Fit::FIXED)
+      {
+         size.y = top_left.y + area.y + btm_right.y;
+      }
+   }
+
+   void getChildrenArea(Vector& area)
+   {
+      area.x = size.x - top_left.x - btm_right.x;
+      area.y = size.y - top_left.y - btm_right.y;
    }
 };
 

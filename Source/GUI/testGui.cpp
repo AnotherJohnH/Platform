@@ -22,21 +22,38 @@
 
 #include <cstdio>
 
+#include "GUI/Control/Layout.h"
 #include "GUI/GUI.h"
 
 class PopUp : public GUI::PopUpWindow
 {
 public:
    PopUp(GUI::App* app)
-      : GUI::PopUpWindow(app, "Pop Up")
-   {}
+      : GUI::PopUpWindow(app, "", 0, 0, GUI::NO_BORDER)
+   {
+      gap = 0;
+   }
 
 private:
-   GUI::TextButton text{this, 6, "Hello, world!"};;
+   GUI::MenuButton one{  this, 1, "One"};
+   GUI::MenuButton two{  this, 2, "Two"};
+   GUI::MenuButton three{this, 3, "Three"};
+
+   virtual void eventDraw(Canvas& canvas) override
+   {
+      signed size_x = getSize().x;
+      signed size_y = getSize().y;
+
+      canvas.fillRect(GUI::FACE, 0, 0, size_x - 1, size_y - 1);
+      canvas.drawLine(GUI::HILIGHT, 0, 0, size_x - 1, 0);
+      canvas.drawLine(GUI::HILIGHT, 0, 0, 0, size_y - 1);
+      canvas.drawLine(GUI::SHADOW,  size_x - 1, size_y - 1, size_x - 1, 0);
+      canvas.drawLine(GUI::SHADOW,  size_x - 1, size_y - 1, 0, size_y - 1);
+   }
 
    virtual void appEvent(Widget* widget_, unsigned code_) override
    {
-      printf("raiseEvent(%u)\n", code_);
+      printf("PopUp raiseEvent(%u)\n", code_);
       hide();
    }
 };
