@@ -9,4 +9,4 @@ add_compile_options(-O3)
 #-------------------------------------------------------------------------------
 
 cmake_minimum_required(`VERSION' 2.6)
-include(Platform/build.cmake NO_POLICY_SCOPE)
+`include'(Platform/build.cmake NO_POLICY_SCOPE)
