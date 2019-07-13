@@ -1,28 +1,27 @@
 
 os:
-  - linux
-  - osx
+   - linux
+   - osx
 
-dist: trusty
+dist: xenial
 sudo: required
 
 addons:
   apt:
     packages:
-    - libsdl2-dev
-    - libsdl2-image-dev
+      - libsdl2-dev
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2_image; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install scons; fi
+   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
 
 language: cpp
 
-script: scons
+script:
+   - mkdir build
+   - cd build
+   - cmake ..
+   - make
 
 compiler:
-    - clang
-    - gcc
-
+   - clang
+   - gcc
