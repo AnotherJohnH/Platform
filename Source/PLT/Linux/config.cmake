@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2019 John D. Haughton
+#  Copyright (c) 2017 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,13 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# cmake configuration for MacOS builds
+# cmake configuration for Linux builds
 
 add_compile_options(-std=c++11)
 
-# TODO
-#if env['CC'] == 'clang':
-#   env.Append(CXXFLAGS = ['-Wdocumentation'])
-
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
-set(platform_libs ${SDL2_LIBRARIES})
-
-# for googletest
-include_directories(/usr/local/include)
-link_directories(/usr/local/lib)
-
-# TODO
-#env.Append(LINKFLAGS = ['-framework', 'CoreMIDI'])
-#env.Append(LINKFLAGS = ['-framework', 'CoreFoundation'])
+set(platform_libs ${SDL2_LIBRARIES} pthread)
 
 set(platform_source
     Platform/Source/PLT/SDL2/Audio.cpp
@@ -46,10 +34,10 @@ set(platform_source
     Platform/Source/PLT/SDL2/Frame.cpp
     Platform/Source/PLT/SDL2/Image.cpp
     Platform/Source/PLT/SDL2/Bitmap.cpp
-    Platform/Source/PLT/Stub/Info.cpp
+    Platform/Source/PLT/Stub/Midi.cpp
     Platform/Source/PLT/Stub/Sounder.cpp
+    Platform/Source/PLT/Stub/Info.cpp
     Platform/Source/PLT/POSIX/Yield.cpp
     Platform/Source/PLT/POSIX/File.cpp
     Platform/Source/PLT/POSIX/Rtc.cpp
-    Platform/Source/PLT/POSIX/Socket.cpp
-    Platform/Source/PLT/macOS/Midi.cpp)
+    Platform/Source/PLT/POSIX/Socket.cpp)

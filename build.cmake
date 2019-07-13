@@ -25,6 +25,13 @@
 
 project(${app})
 
+# Use the host system as the default target
+set(target ${CMAKE_SYSTEM_NAME})
+if(target STREQUAL "Darwin")
+   set(target macOS)
+endif()
+include(Platform/Source/PLT/${target}/config.cmake)
+
 execute_process(COMMAND git log --pretty=format:%H -n 1
                 OUTPUT_VARIABLE commit)
 
@@ -33,15 +40,8 @@ add_compile_options(-DPROJ_VERSION=\"${version}\")
 add_compile_options(-DPROJ_MACHINE=\"?\")
 add_compile_options(-Wall)
 add_compile_options(-Werror)
-add_compile_options(-std=c++11)
 
 include_directories(Platform/include)
-
-set(target ${CMAKE_SYSTEM_NAME})
-if(target STREQUAL "Darwin")
-   set(target macOS)
-endif()
-include(Platform/Source/PLT/${target}/config.cmake)
 
 add_library(PLT
             Platform/Source/STB/Option.cpp
@@ -61,6 +61,4 @@ add_library(PLT
 
             ${platform_source})
 
-add_executable(${binary} ${source})
-target_link_libraries(${binary} PLT)
-target_link_libraries(${binary} ${platform_libs})
+set(platform_libs PLT ${platform_libs})

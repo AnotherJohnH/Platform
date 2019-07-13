@@ -8,3 +8,4 @@ test*
 lib
 bin
 TermConfig.xml
+build
