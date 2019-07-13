@@ -18,7 +18,11 @@ before_install:
 
 language: cpp
 
-script: scons
+script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
 
 compiler:
     - clang

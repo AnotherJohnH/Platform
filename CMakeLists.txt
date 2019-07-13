@@ -36,7 +36,9 @@ target_link_libraries(testAudioOut ${platform_libs})
 add_executable(testGui Source/GUI/testGui.cpp)
 target_link_libraries(testGui ${platform_libs})
 
-add_executable(testPLT Source/test/testMain.cpp)
+add_executable(testPLT
+               Source/STB/testEndian.cpp
+               Source/test/testMain.cpp)
 target_link_libraries(testPLT gtest ${platform_libs})
 
 # TODO can we just iterate over a list of source
@@ -61,4 +63,3 @@ target_link_libraries(testPLT gtest ${platform_libs})
 #              'STB/testHelloWorld.cpp',
 #              'STB/testConsoleApp.cpp',
 #              'STB/testMidiFile.cpp',
-#              'STB/testEndian.cpp']
