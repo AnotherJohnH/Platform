@@ -28,10 +28,7 @@ set(version 0.0.4)
 cmake_minimum_required(VERSION 2.6)
 include(build.cmake NO_POLICY_SCOPE)
 
-#-------------------------------------------------------------------------------
-# GoogleTest
-include_directories(${CMAKE_SOURCE_DIR}/googletest/googletest/include)
-link_directories(${CMAKE_SOURCE_DIR}/googletest/build/lib)
+add_subdirectory(${CMAKE_SOURCE_DIR}/googletest)
 
 #-------------------------------------------------------------------------------
 

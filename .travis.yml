@@ -17,12 +17,8 @@ before_install:
 language: cpp
 
 script:
-    - mkdir googletest/build
     - mkdir build
-    - cd googletest/build
-    - cmake ..
-    - make
-    - cd ../../build
+    - cd build
     - cmake ..
     - make
     - ./testPLT
