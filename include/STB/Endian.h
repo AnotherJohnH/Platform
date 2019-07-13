@@ -23,11 +23,9 @@
 #ifndef STB_ENDIAN_H
 #define STB_ENDIAN_H
 
-#include <cassert>
 #include <cstdint>
 
 namespace STB {
-
 
 //! Endian swap a 16-bit value
 inline uint16_t endianSwap(uint16_t data)
@@ -51,14 +49,15 @@ inline uint64_t endianSwap(uint64_t data)
 
 
 //! Base class helper for endian sensative storage of integers
-template <typename WHOLE, typename HALF, bool BIG> class EndianHelper
+template <typename WHOLE, typename HALF, bool BIG>
+class EndianHelper
 {
 protected:
-   static const unsigned SHIFT = sizeof(HALF) * 8;
-   static const unsigned LS    = BIG ? 0 : 1;
-   static const unsigned MS    = BIG ? 1 : 0;
+   static constexpr unsigned SHIFT = sizeof(HALF) * 8;
+   static constexpr unsigned LS    = BIG ? 0 : 1;
+   static constexpr unsigned MS    = BIG ? 1 : 0;
 
-   EndianHelper() {}
+   EndianHelper() = default;
 
    WHOLE read() const
    {
@@ -147,7 +146,6 @@ public:
 
    const uint64_t operator=(const uint64_t value) { return write(value); }
 };
-
 
 } // namespace STB
 

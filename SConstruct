@@ -42,7 +42,6 @@ plt_source = ['PLT/test/testAudioOut.cpp',
               'TRM/testTerminalConsole.cpp',
               'TRM/testTerminalApp.cpp',
               'TRM/testTerminalLauncher.cpp',
-              'STB/testHelloWorld.cpp',
               'STB/testConsoleApp.cpp',
               'STB/testMidiFile.cpp',
               'STB/testEndian.cpp']
