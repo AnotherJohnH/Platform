@@ -3,18 +3,19 @@ os:
   - linux
   - osx
 
-dist: trusty
+dist: xenial
 sudo: required
 
 addons:
   apt:
     packages:
     - libsdl2-dev
+    - googletest
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install scons; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install googletest; fi
 
 language: cpp
 
@@ -23,8 +24,8 @@ script:
     - cd build
     - cmake ..
     - make
+    - ./testPLT
 
 compiler:
     - clang
     - gcc
-
