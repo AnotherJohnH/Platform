@@ -10,21 +10,23 @@ addons:
   apt:
     packages:
     - libsdl2-dev
-    - googletest
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install googletest; fi
 
 language: cpp
 
 script:
-    - mkdir build
-    - cd build
+    - mkdir googletest/build
+    - cd googletest/build
     - cmake ..
     - make
-    - ./testPLT
+    - cd ../..
+    - mkdir build
+    - cmake ..
+    - make
+    - tstPLT
 
 compiler:
     - clang

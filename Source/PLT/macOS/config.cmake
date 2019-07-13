@@ -32,10 +32,6 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 set(platform_libs ${SDL2_LIBRARIES})
 
-# for googletest
-include_directories(/usr/local/include)
-link_directories(/usr/local/lib)
-
 # TODO
 #env.Append(LINKFLAGS = ['-framework', 'CoreMIDI'])
 #env.Append(LINKFLAGS = ['-framework', 'CoreFoundation'])
