@@ -25,6 +25,7 @@
 add_compile_options(-std=c++11)
 
 find_package(SDL2 REQUIRED)
+string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES) # avoid bug in SDL2 .cmake module
 include_directories(${SDL2_INCLUDE_DIRS})
 set(platform_libs ${SDL2_LIBRARIES} pthread)
 
