@@ -19,11 +19,11 @@ language: cpp
 
 script:
     - mkdir googletest/build
+    - mkdir build
     - cd googletest/build
     - cmake ..
     - make
-    - cd ../..
-    - mkdir build
+    - cd ../../build
     - cmake ..
     - make
     - tstPLT
