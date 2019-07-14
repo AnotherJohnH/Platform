@@ -19,6 +19,6 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
-I
+
 add_executable(testConsoleApp testConsoleApp.cpp)
 add_executable(testMidiFIle   testMidiFile.cpp)
