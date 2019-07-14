@@ -24,7 +24,7 @@
 
 #include "gtest/gtest.h"
 
-TEST(Endian, Big16)
+TEST(STB_Endian, Big16)
 {
    STB::Big16     big16;
    const uint8_t* byte = (const uint8_t*)&big16;
@@ -40,7 +40,7 @@ TEST(Endian, Big16)
    EXPECT_EQ(byte[1], 0x12);
 }
 
-TEST(Endian, Big32)
+TEST(STB_Endian, Big32)
 {
    STB::Big32     big32;
    const uint8_t* byte = (const uint8_t*)&big32;
@@ -60,7 +60,7 @@ TEST(Endian, Big32)
    EXPECT_EQ(byte[3], 0x12);
 }
 
-TEST(Endian, Big64)
+TEST(STB_Endian, Big64)
 {
    STB::Big64     big64;
    const uint8_t* byte = (const uint8_t*)&big64;
@@ -88,7 +88,7 @@ TEST(Endian, Big64)
    EXPECT_EQ(byte[7], 0x01);
 }
 
-TEST(Endian, Ltl16)
+TEST(STB_Endian, Ltl16)
 {
    STB::Ltl16     ltl16;
    const uint8_t* byte = (const uint8_t*)&ltl16;
@@ -104,7 +104,7 @@ TEST(Endian, Ltl16)
    EXPECT_EQ(byte[1], 0x34);
 }
 
-TEST(Endian, Ltl32)
+TEST(STB_Endian, Ltl32)
 {
    STB::Ltl32     ltl32;
    const uint8_t* byte = (const uint8_t*)&ltl32;
@@ -124,7 +124,7 @@ TEST(Endian, Ltl32)
    EXPECT_EQ(byte[3], 0x78);
 }
 
-TEST(Endian, Ltl64)
+TEST(STB_Endian, Ltl64)
 {
    STB::Ltl64     ltl64;
    const uint8_t* byte = (const uint8_t*)&ltl64;

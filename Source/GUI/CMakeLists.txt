@@ -20,31 +20,8 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-set(app     PlatformTest)
-set(version 0.0.4)
-
-#-------------------------------------------------------------------------------
-
-cmake_minimum_required(VERSION 2.6)
-include(build.cmake NO_POLICY_SCOPE)
-
-#-------------------------------------------------------------------------------
-
-add_subdirectory(${CMAKE_SOURCE_DIR}/googletest)
-
-link_libraries(${platform_libs})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-add_subdirectory(${CMAKE_SOURCE_DIR}/Source/PLT/test)
-add_subdirectory(${CMAKE_SOURCE_DIR}/Source/GUI)
-add_subdirectory(${CMAKE_SOURCE_DIR}/Source/SND)
-add_subdirectory(${CMAKE_SOURCE_DIR}/Source/TRM)
-add_subdirectory(${CMAKE_SOURCE_DIR}/Source/STB)
-
-#-------------------------------------------------------------------------------
-
-add_executable(testPLT
-               Source/STB/testEndian.cpp
-               Source/STB/testLicense.cpp
-               Source/test/testMain.cpp)
-target_link_libraries(testPLT gtest)
+add_executable(testGuiFrame       testGuiFrame.cpp)
+add_executable(testGuiFrameBitmap testGuiFrameBitmap.cpp)
+add_executable(testGui            testGui.cpp)
+add_executable(testGuiApp         testGuiApp.cpp)
+add_executable(testGuiHelloWorld  testGuiHelloWorld.cpp)
