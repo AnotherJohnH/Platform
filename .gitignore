@@ -1,11 +1,5 @@
-*.o
-*.a
-*.bc
 *.tgz
 .DS_Store
-.sconsign.dblite
 test*
-lib
-bin
 TermConfig.xml
 build

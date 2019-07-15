@@ -47,7 +47,10 @@ Install template/Source/consoleApp.cpp to <project root directory>/Source/<filen
 cd ..
 git add .
 git commit -m Initial
-scons
+mkdir build
+cd build
+cmake ..
+make
 ```
 
 The following small projects are using Platform...
@@ -69,7 +72,7 @@ Depend on SDL2, so a development install of SDL2 is required.
 Typically the following packages will be required...
 
 ```
-sudo apt-get install scons
+sudo apt-get install cmake
 sudo apt-get install libsdl2-dev
 ```
 
@@ -83,7 +86,7 @@ Typically the following packages will be required...
 
 ```
 brew update
-brew install scons
+brew install cmake
 brew install sdl2
 ```
 
@@ -108,7 +111,7 @@ is used to ensure that libc is compatible with the old kernel on the Kindle.
 Other packages required...
 
 ```
-sudo apt-get install scons
+sudo apt-get install cmake
 sudo apt-get install g++-4.7
 ```
 
