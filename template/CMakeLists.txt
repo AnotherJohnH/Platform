@@ -4,8 +4,6 @@ set(binary  BINARY)
 set(app     APPLICATION)
 set(version VERSION)
 
-add_compile_options(-O3)
-
 #-------------------------------------------------------------------------------
 
 cmake_minimum_required(`VERSION' 3.11.4)
