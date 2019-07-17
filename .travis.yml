@@ -1,7 +1,7 @@
 
 os:
-  - linux
-  - osx
+   - linux
+   - osx
 
 dist: xenial
 sudo: required
@@ -9,20 +9,19 @@ sudo: required
 addons:
   apt:
     packages:
-    - libsdl2-dev
+      - libsdl2-dev
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
+   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
 
 language: cpp
 
 script:
-    - mkdir build
-    - cd build
-    - cmake ..
-    - make
-    - ./testPLT
+   - mkdir build
+   - cd build
+   - cmake ..
+   - make
 
 compiler:
-    - clang
-    - gcc
+   - clang
+   - gcc

@@ -48,3 +48,11 @@ add_executable(testPLT
                Source/STB/testLicense.cpp
                Source/test/testMain.cpp)
 target_link_libraries(testPLT gtest)
+
+#-------------------------------------------------------------------------------
+
+add_custom_command(OUTPUT test.log
+                   COMMAND ./testPLT | tee test.log
+                   DEPENDS testPLT)
+
+add_custom_target(runTest ALL DEPENDS test.log)

@@ -1,5 +1,4 @@
 *.tgz
 .DS_Store
-test*
 TermConfig.xml
 build
