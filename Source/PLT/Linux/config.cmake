@@ -24,6 +24,12 @@
 
 add_compile_options(-std=c++11)
 
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_C_FLAGS_RELEASE "-O3")
+
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+set(CMAKE_C_FLAGS_DEBUG "-g -O0")
+
 find_package(SDL2 REQUIRED)
 string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES) # avoid bug in SDL2 .cmake module
 include_directories(${SDL2_INCLUDE_DIRS})

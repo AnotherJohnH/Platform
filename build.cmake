@@ -25,6 +25,10 @@
 
 project(${app})
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
 # Use the host system as the default target
 set(target ${CMAKE_SYSTEM_NAME})
 if(target STREQUAL "Darwin")
