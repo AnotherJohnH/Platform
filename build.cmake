@@ -21,7 +21,6 @@
 #-------------------------------------------------------------------------------
 
 # Construct a target platform specific build environment
-# TODO this cmake support is under construction
 
 project(${app})
 
@@ -36,12 +35,20 @@ if(target STREQUAL "Darwin")
 endif()
 include(Platform/Source/PLT/${target}/config.cmake)
 
+execute_process(COMMAND uname -m
+                OUTPUT_VARIABLE machine)
+string(STRIP ${machine} machine)
+
 execute_process(COMMAND git log --pretty=format:%H -n 1
                 OUTPUT_VARIABLE commit)
 
+#-------------------------------------------------------------------------------
+# Build support
+
 add_compile_options(-DPROJ_COMMIT=\"${commit}\")
 add_compile_options(-DPROJ_VERSION=\"${version}\")
-add_compile_options(-DPROJ_MACHINE=\"?\")
+add_compile_options(-DPROJ_MACHINE=\"${machine}\")
+
 add_compile_options(-Wall)
 add_compile_options(-Werror)
 
@@ -66,3 +73,16 @@ add_library(PLT
             ${platform_source})
 
 set(platform_libs PLT ${platform_libs})
+
+#-------------------------------------------------------------------------------
+# Package support
+
+if(DEFINED pkg_source)
+   set(pkg_name ${app}_${target}_${machine}_${version}.tgz)
+
+   add_custom_command(OUTPUT  ${pkg_name}
+                      COMMAND tar cvfz ${pkg_name} ${pkg_source}
+                      DEPENDS ${pkg_source})
+
+   add_custom_target(package ALL DEPENDS ${pkg_name})
+endif()
