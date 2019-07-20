@@ -39,7 +39,7 @@ set(platform_source
     Platform/Source/PLT/SDL2/Event.cpp
     Platform/Source/PLT/SDL2/Frame.cpp
     Platform/Source/PLT/SDL2/Image.cpp
-    Platform/Source/PLT/Stub/Bitmap.cpp
+    Platform/Source/PLT/SDL2/Bitmap.cpp
     Platform/Source/PLT/Stub/Midi.cpp
     Platform/Source/PLT/Stub/Sounder.cpp
     Platform/Source/PLT/Stub/Yield.cpp
@@ -53,8 +53,5 @@ set(CMAKE_CXX_COMPILER emcc)
 set(CMAKE_AR           emar)
 set(CMAKE_RANLIB       emranlib)
 
-#env['PROGPREFIX'] = 'docs/'+env['machine']+'/'
-
 set(CMAKE_EXE_LINKER_FLAGS  "-s USE_SDL=2")
 set(CMAKE_EXECUTABLE_SUFFIX .html)
-
