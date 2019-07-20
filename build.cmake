@@ -25,15 +25,19 @@
 project(${app})
 
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
+   set(CMAKE_BUILD_TYPE Release)
+endif()
+
+if(DEFINED ENV{PROJ_TARGET})
+   set(target $ENV{PROJ_TARGET})
+else()
+   set(target ${CMAKE_SYSTEM_NAME})
 endif()
 
 # Use the host system as the default target
-set(target ${CMAKE_SYSTEM_NAME})
 if(target STREQUAL "Darwin")
    set(target macOS)
 endif()
-include(Platform/Source/PLT/${target}/config.cmake)
 
 execute_process(COMMAND uname -m
                 OUTPUT_VARIABLE machine)
@@ -42,12 +46,15 @@ string(STRIP ${machine} machine)
 execute_process(COMMAND git log --pretty=format:%H -n 1
                 OUTPUT_VARIABLE commit)
 
+include(${CMAKE_SOURCE_DIR}/Platform/Source/PLT/${target}/config.cmake)
+
 #-------------------------------------------------------------------------------
 # Build support
 
 add_compile_options(-DPROJ_COMMIT=\"${commit}\")
 add_compile_options(-DPROJ_VERSION=\"${version}\")
 add_compile_options(-DPROJ_MACHINE=\"${machine}\")
+add_compile_options(-DPROJ_TARGET_${target})
 
 add_compile_options(-Wall)
 add_compile_options(-Werror)
@@ -56,7 +63,7 @@ include_directories(Platform/include)
 
 add_library(PLT
             Platform/Source/STB/Option.cpp
-            Platform/Source/STB/Midi.cpp
+            Platform/Source/STB/MidiDecoder.cpp
             Platform/Source/STB/Oil.cpp
             Platform/Source/STB/Deflate.cpp
             Platform/Source/STB/Zlib.cpp
