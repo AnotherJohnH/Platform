@@ -52,6 +52,7 @@ enum { SEEK_SET, SEEK_CUR, SEEK_END };
 
 extern FILE*   fopen(const char* filename, const char* mode);
 extern size_t  fseek(FILE* stream, long offset, int whence);
+extern long    ftell(FILE* stream);
 extern size_t  fread(void*, size_t, size_t, FILE* stream);
 extern size_t  fwrite(const void*, size_t, size_t, FILE* stream);
 extern int     fclose(FILE* stream);

@@ -53,7 +53,7 @@ bool Option<int32_t>::set(const char* arg_)
 
 template <> void Option<int32_t>::showDefault() const
 {
-   printf(" [%i]", value);
+   printf(" [%" PRId32 "]", value);
 }
 
 template <>
@@ -110,7 +110,7 @@ bool Option<uint32_t>::set(const char* arg_)
 
 template <> void Option<uint32_t>::showDefault() const
 {
-   printf(" [%u]", value);
+   printf(" [%" PRIu32 "]", value);
 }
 
 template <>

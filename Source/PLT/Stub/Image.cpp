@@ -64,7 +64,7 @@ void Image::lineBlit(uint8_t pixel_mask, STB::Colour one, STB::Colour zero,
    defaultLineBlit(pixel_mask, one, zero, x, y);
 }
 
-bool Image::save(const char* name)
+bool Image::save(const char* name) const
 {
    return defaultSave(name);
 }

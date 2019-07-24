@@ -28,6 +28,12 @@
 
 #include <stdint.h>
 
+#define PRId32 "li"
+#define PRIu32 "lu"
+#define PRIo32 "lo"
+#define PRIx32 "lx"
+#define PRIX32 "lX"
+
 #define PRId64 "li"
 #define PRIu64 "lu"
 #define PRIo64 "lo"

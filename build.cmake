@@ -62,6 +62,7 @@ add_compile_options(-Werror)
 include_directories(Platform/include)
 
 add_library(PLT
+
             Platform/Source/STB/Option.cpp
             Platform/Source/STB/MidiDecoder.cpp
             Platform/Source/STB/Oil.cpp
@@ -81,6 +82,67 @@ add_library(PLT
 
 set(platform_libs PLT ${platform_libs})
 
+#-------------------------------------------------------------------------------
+#
+
+if(DEFINED tinyc)
+   include_directories(Platform/include/MTL/tinyc)
+
+   add_library(tiny
+               Platform/Source/MTL/tinyc/abort.cpp
+               Platform/Source/MTL/tinyc/abs.cpp
+               Platform/Source/MTL/tinyc/atof.cpp
+               Platform/Source/MTL/tinyc/atoi.cpp
+               Platform/Source/MTL/tinyc/atol.cpp
+               Platform/Source/MTL/tinyc/atoll.cpp
+               Platform/Source/MTL/tinyc/clock.cpp
+               Platform/Source/MTL/tinyc/delete.cpp
+               Platform/Source/MTL/tinyc/exit.cpp
+               Platform/Source/MTL/tinyc/fprintf.cpp
+               Platform/Source/MTL/tinyc/getchar.cpp
+               Platform/Source/MTL/tinyc/global_obj.cpp
+               Platform/Source/MTL/tinyc/guard.cpp
+               Platform/Source/MTL/tinyc/isalpha.cpp
+               Platform/Source/MTL/tinyc/isdigit.cpp
+               Platform/Source/MTL/tinyc/isspace.cpp
+               Platform/Source/MTL/tinyc/malloc.cpp
+               Platform/Source/MTL/tinyc/memcpy.cpp
+               Platform/Source/MTL/tinyc/memmove.cpp
+               Platform/Source/MTL/tinyc/memset.cpp
+               Platform/Source/MTL/tinyc/printf.cpp
+               Platform/Source/MTL/tinyc/pure_virtual.cpp
+               Platform/Source/MTL/tinyc/putchar.cpp
+               Platform/Source/MTL/tinyc/puts.cpp
+               Platform/Source/MTL/tinyc/rand.cpp
+               Platform/Source/MTL/tinyc/scanf.cpp
+               Platform/Source/MTL/tinyc/sprintf.cpp
+               Platform/Source/MTL/tinyc/strcat.cpp
+               Platform/Source/MTL/tinyc/strchr.cpp
+               Platform/Source/MTL/tinyc/strcmp.cpp
+               Platform/Source/MTL/tinyc/strcpy.cpp
+               Platform/Source/MTL/tinyc/strlen.cpp
+               Platform/Source/MTL/tinyc/strncmp.cpp
+               Platform/Source/MTL/tinyc/strncpy.cpp
+               Platform/Source/MTL/tinyc/strrchr.cpp
+               Platform/Source/MTL/tinyc/strtol.cpp
+               Platform/Source/MTL/tinyc/strtoll.cpp
+               Platform/Source/MTL/tinyc/strtoul.cpp
+               Platform/Source/MTL/tinyc/strtoull.cpp
+               Platform/Source/MTL/tinyc/time.cpp
+               Platform/Source/MTL/tinyc/tinyc_init.cpp
+               Platform/Source/MTL/tinyc/vfprintf.cpp
+               Platform/Source/MTL/tinyc/vsprintf.cpp)
+endif()
+
+# TODO
+#   env['startup'] = env.Install('lib/'+env['machine'], env['startup'])
+#   env['script']  = env.Install('lib/'+env['machine'], env['script'])
+#   env.Append(CPPPATH = env.Dir('include/MTL/board/'+target))
+#   env.Append(LINKFLAGS = '-TPlatform/'+str(env['script'][0]))
+#   env.Depends(env['startup'], env['script'])
+#else:
+#   env.Append(CPPPATH = env.Dir('include/MTL/board/stub'))
+#
 #-------------------------------------------------------------------------------
 # Package support
 

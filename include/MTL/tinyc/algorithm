@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2019 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,78 +20,13 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file string
+//! \file algorithm
 //! \brief tiny C library implementation
 
-#ifndef STRING_INCLUDED
-#define STRING_INCLUDED
-
-#include <cstddef>
+#ifndef ALGORITHM_INCLUDED
+#define ALGORITHM_INCLUDED
 
 namespace std {
-
-//! TODO this is just a stub
-class string
-{
-public:
-   static const size_t npos = size_t(-1);
-
-   using iterator = int;
-
-   string() {}
-
-   string(const char* s) {}
-
-   string(const std::string& str) {}
-
-   bool empty() const { return true; }
-
-   size_t size() { return 0; }
-
-   char operator[](size_t index) { return '\0'; }
-
-   char back() const { return '\0'; }
-
-   void pop_back() {}
-
-   void push_back(char ch) {}
-
-   char operator=(char ch)
-   {
-      return ch;
-   }
-
-   void operator+=(char ch)
-   {
-   }
-
-   void operator+=(const char* ch)
-   {
-   }
-
-   const char* c_str() const
-   {
-      return nullptr;
-   }
-
-   size_t find(char ch, size_t pos = 0) const
-   {
-      return npos;
-   }
-
-   iterator end()
-   {
-      return iterator();
-   }
-
-   void erase(iterator) {}
-
-   bool operator==(const char*) { return false; }
-
-   bool operator!=(const char*) { return true; }
-
-   void operator+=(const std::string&) {}
-};
 
 } // namespace std
 

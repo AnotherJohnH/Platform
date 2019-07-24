@@ -30,8 +30,6 @@ include(build.cmake NO_POLICY_SCOPE)
 
 #-------------------------------------------------------------------------------
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/googletest)
-
 link_libraries(${platform_libs})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
@@ -43,16 +41,19 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/Source/STB)
 
 #-------------------------------------------------------------------------------
 
-add_executable(testPLT
-               Source/STB/testEndian.cpp
-               Source/STB/testLicense.cpp
-               Source/test/testMain.cpp)
-target_link_libraries(testPLT gtest)
+if((${target} STREQUAL macOS) OR (${target} STREQUAL Linux))
+   add_subdirectory(${CMAKE_SOURCE_DIR}/googletest)
 
-#-------------------------------------------------------------------------------
+   add_executable(testPLT
+                  Source/STB/testEndian.cpp
+                  Source/STB/testLicense.cpp
+                  Source/test/testMain.cpp)
 
-add_custom_command(OUTPUT test.log
-                   COMMAND ./testPLT | tee test.log
-                   DEPENDS testPLT)
+   target_link_libraries(testPLT gtest)
 
-add_custom_target(runTest ALL DEPENDS test.log)
+   add_custom_command(OUTPUT test.log
+                      COMMAND ./testPLT | tee test.log
+                      DEPENDS testPLT)
+
+   add_custom_target(runTest ALL DEPENDS test.log)
+endif()
