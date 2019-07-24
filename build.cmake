@@ -88,7 +88,7 @@ set(platform_libs PLT ${platform_libs})
 if(DEFINED tinyc)
    include_directories(Platform/include/MTL/tinyc)
 
-   add_library(tiny
+   add_library(tinyc
                Platform/Source/MTL/tinyc/abort.cpp
                Platform/Source/MTL/tinyc/abs.cpp
                Platform/Source/MTL/tinyc/atof.cpp
