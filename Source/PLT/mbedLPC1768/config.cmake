@@ -20,18 +20,18 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# cmake configuration for MBED LPC11U24 builds
+# cmake configuration for MBED LPC1768 builds
 
 set(PLT_prefix  arm-none-eabi-)
-set(PLT_machine armv6m)
-set(PLT_chip    LPC11U24)
+set(PLT_machine armv7m)
+set(PLT_chip    LPC1768)
 
 #-------------------------------------------------------------------------------
 # Special compile flags for this platform
 
-set(PLT_asm_flags "-mcpu=cortex-m0")
+set(PLT_asm_flags "-mcpu=cortex-m3")
 
-set(PLT_c_flags   "-DNCONSOLE -DSMALL_MEMORY -mcpu=cortex-m0 -mthumb -mfloat-abi=soft -fno-common -fno-builtin -fmessage-length=0 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
+set(PLT_c_flags   "-DNCONSOLE -DSMALL_MEMORY -mcpu=cortex-m3 -mthumb -mfloat-abi=soft -fno-common -fno-builtin -fmessage-length=0 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
 
 set(PLT_cxx_flags "-DNO_RTTI -std=c++11 -fno-rtti")
 
@@ -60,11 +60,14 @@ set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 
 set(PLT_source
     Platform/Source/MTL/chip/${PLT_chip}/startup.s
-    Platform/Source/PLT/${PLT_target}/platform.cpp
+    Platform/Source/MTL/chip/${PLT_chip}/PALVideo.cpp
+    Platform/Source/MTL/PS2KeyDecode.cpp
+    Platform/Source/PLT/${PLT_target}/platform_init.cpp
+    Platform/Source/PLT/${PLT_target}/platform_clock.cpp
     Platform/Source/PLT/Stub/Audio.cpp
-    Platform/Source/PLT/Stub/Event.cpp
-    Platform/Source/PLT/Stub/Frame.cpp
-    Platform/Source/PLT/Stub/Image.cpp
+    Platform/Source/PLT/${PLT_target}/Event.cpp
+    Platform/Source/PLT/${PLT_target}/Frame.cpp
+    Platform/Source/PLT/${PLT_target}/Image.cpp
     Platform/Source/PLT/Stub/Bitmap.cpp
     Platform/Source/PLT/Stub/Midi.cpp
     Platform/Source/PLT/Stub/Sounder.cpp
@@ -72,7 +75,7 @@ set(PLT_source
     Platform/Source/PLT/Stub/Info.cpp
     Platform/Source/PLT/Stub/File.cpp)
 
-execute_process(COMMAND ${CMAKE_C_COMPILER} -print-file-name=armv6-m OUTPUT_VARIABLE gcc_lib)
+execute_process(COMMAND ${CMAKE_C_COMPILER} -print-file-name=armv7-m OUTPUT_VARIABLE gcc_lib)
 string(STRIP ${gcc_lib} gcc_lib)
 
 set(PLT_libs tinyc ${gcc_lib}/libgcc.a)
