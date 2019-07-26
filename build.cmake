@@ -22,44 +22,56 @@
 
 # Construct a target platform specific build environment
 
-project(${app})
+project(${app} C CXX ASM)
 
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
 endif()
 
+# Determine target platform type
 if(DEFINED ENV{PROJ_TARGET})
-   set(target $ENV{PROJ_TARGET})
+   # Set via the PROJ_TARGET environment variable
+   set(PLT_target $ENV{PROJ_TARGET})
+
 else()
-   set(target ${CMAKE_SYSTEM_NAME})
+   # Use the host system as the target
+   set(PLT_target ${CMAKE_SYSTEM_NAME})
 endif()
 
-# Use the host system as the default target
-if(target STREQUAL "Darwin")
-   set(target macOS)
+# Translate macOSes confusing self description
+if(PLT_target STREQUAL "Darwin")
+   set(PLT_target macOS)
 endif()
 
-execute_process(COMMAND uname -m
-                OUTPUT_VARIABLE machine)
-string(STRIP ${machine} machine)
+execute_process(COMMAND uname -m OUTPUT_VARIABLE PLT_machine)
+string(STRIP ${PLT_machine} PLT_machine)
 
-execute_process(COMMAND git log --pretty=format:%H -n 1
-                OUTPUT_VARIABLE commit)
+execute_process(COMMAND git log --pretty=format:%H -n 1 OUTPUT_VARIABLE PLT_commit)
 
-include(${CMAKE_SOURCE_DIR}/Platform/Source/PLT/${target}/config.cmake)
+include(${CMAKE_SOURCE_DIR}/Platform/Source/PLT/${PLT_target}/config.cmake)
 
 #-------------------------------------------------------------------------------
-# Build support
+# Compiler flags
 
-add_compile_options(-DPROJ_COMMIT=\"${commit}\")
-add_compile_options(-DPROJ_VERSION=\"${version}\")
-add_compile_options(-DPROJ_MACHINE=\"${machine}\")
-add_compile_options(-DPROJ_TARGET_${target})
+set(PLT_c_flags "${PLT_c_flags} -DPROJ_COMMIT=\\\"${PLT_commit}\\\"")
+set(PLT_c_flags "${PLT_c_flags} -DPROJ_VERSION=\\\"${version}\\\"")
+set(PLT_c_flags "${PLT_c_flags} -DPROJ_MACHINE=\\\"${PLT_machine}\\\"")
+set(PLT_c_flags "${PLT_c_flags} -DPROJ_TARGET_${PLT_target}")
+set(PLT_c_flags "${PLT_c_flags} -Wall")
+set(PLT_c_flags "${PLT_c_flags} -Werror")
 
-add_compile_options(-Wall)
-add_compile_options(-Werror)
+set(CMAKE_ASM_FLAGS_RELEASE  ${PLT_asm_flags})
+set(CMAKE_C_FLAGS_RELEASE    "-DNDEBUG -O3 ${PLT_c_flags}")
+set(CMAKE_CXX_FLAGS_RELEASE  "-DNDEBUG -O3 ${PLT_cxx_flags} ${PLT_c_flags}")
+
+set(CMAKE_ASM_FLAGS_DEBUG    ${PLT_asm_flags})
+set(CMAKE_C_FLAGS_DEBUG      "-g -O0 ${PLT_c_flags}")
+set(CMAKE_CXX_FLAGS_DEBUG    "-g -O0 ${PLT_cxx_flags} ${PLT_c_flags}")
 
 include_directories(Platform/include)
+
+#-------------------------------------------------------------------------------
+# Build the platform library libPLT.a
 
 add_library(PLT
 
@@ -78,14 +90,14 @@ add_library(PLT
             Platform/Source/GUI/FontTeletext9.cpp
             Platform/Source/GUI/BitmapPNG.cpp
 
-            ${platform_source})
+            ${PLT_source})
 
-set(platform_libs PLT ${platform_libs})
+set(PLT_libs PLT ${PLT_libs})
 
 #-------------------------------------------------------------------------------
-#
+# Build the tiny C runtime library libtinyc.a
 
-if(DEFINED tinyc)
+if(DEFINED PLT_tinyc)
    include_directories(Platform/include/MTL/tinyc)
 
    add_library(tinyc
@@ -147,7 +159,7 @@ endif()
 # Package support
 
 if(DEFINED pkg_source)
-   set(pkg_name ${app}_${target}_${machine}_${version}.tgz)
+   set(pkg_name ${app}_${PLT_target}_${PLT_machine}_${version}.tgz)
 
    add_custom_command(OUTPUT  ${pkg_name}
                       COMMAND tar cvfz ${pkg_name} ${pkg_source}

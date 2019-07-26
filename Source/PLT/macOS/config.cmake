@@ -22,27 +22,9 @@
 
 # cmake configuration for MacOS builds
 
-add_compile_options(-std=c++11)
+set(PLT_cxx_flags "-std=c++11")
 
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-set(CMAKE_C_FLAGS_RELEASE "-O3")
-
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
-set(CMAKE_C_FLAGS_DEBUG "-g -O0")
-
-# TODO
-#if env['CC'] == 'clang':
-#   env.Append(CXXFLAGS = ['-Wdocumentation'])
-
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
-set(platform_libs ${SDL2_LIBRARIES})
-
-# TODO
-#env.Append(LINKFLAGS = ['-framework', 'CoreMIDI'])
-#env.Append(LINKFLAGS = ['-framework', 'CoreFoundation'])
-
-set(platform_source
+set(PLT_source
     Platform/Source/PLT/SDL2/Audio.cpp
     Platform/Source/PLT/SDL2/Event.cpp
     Platform/Source/PLT/SDL2/Frame.cpp
@@ -50,8 +32,23 @@ set(platform_source
     Platform/Source/PLT/SDL2/Bitmap.cpp
     Platform/Source/PLT/Stub/Info.cpp
     Platform/Source/PLT/Stub/Sounder.cpp
+    Platform/Source/PLT/macOS/Midi.cpp
     Platform/Source/PLT/POSIX/Yield.cpp
     Platform/Source/PLT/POSIX/File.cpp
     Platform/Source/PLT/POSIX/Rtc.cpp
-    Platform/Source/PLT/POSIX/Socket.cpp
-    Platform/Source/PLT/macOS/Midi.cpp)
+    Platform/Source/PLT/POSIX/Socket.cpp)
+
+# TODO
+#if env['CC'] == 'clang':
+#   env.Append(CXXFLAGS = ['-Wdocumentation'])
+
+find_package(SDL2 REQUIRED)
+
+include_directories(${SDL2_INCLUDE_DIRS})
+
+set(PLT_libs ${SDL2_LIBRARIES})
+
+# TODO
+#env.Append(LINKFLAGS = ['-framework', 'CoreMIDI'])
+#env.Append(LINKFLAGS = ['-framework', 'CoreFoundation'])
+

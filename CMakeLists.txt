@@ -30,11 +30,11 @@ include(build.cmake NO_POLICY_SCOPE)
 
 #-------------------------------------------------------------------------------
 
-if((${target} STREQUAL macOS) OR (${target} STREQUAL Linux))
+if((${PLT_target} STREQUAL macOS) OR (${PLT_target} STREQUAL Linux))
    add_subdirectory(${CMAKE_SOURCE_DIR}/googletest)
 endif()
 
-link_libraries(${platform_libs})
+link_libraries(${PLT_libs})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/PLT/test)
@@ -45,7 +45,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/Source/STB)
 
 #-------------------------------------------------------------------------------
 
-if((${target} STREQUAL macOS) OR (${target} STREQUAL Linux))
+if((${PLT_target} STREQUAL macOS) OR (${PLT_target} STREQUAL Linux))
    add_executable(testPLT
                   Source/STB/testEndian.cpp
                   Source/STB/testLicense.cpp
