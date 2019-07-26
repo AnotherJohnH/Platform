@@ -109,7 +109,7 @@ if(PLT_libs MATCHES ".*tinyc.*")
                Platform/Source/MTL/tinyc/atoll.cpp
                Platform/Source/MTL/tinyc/clock.cpp
                Platform/Source/MTL/tinyc/delete.cpp
-               Platform/Source/MTL/tinyc/exit.cpp
+               Platform/Source/MTL/tinyc/exit.c
                Platform/Source/MTL/tinyc/fprintf.cpp
                Platform/Source/MTL/tinyc/getchar.cpp
                Platform/Source/MTL/tinyc/global_obj.cpp
