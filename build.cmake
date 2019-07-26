@@ -97,7 +97,7 @@ set(PLT_libs PLT ${PLT_libs})
 #-------------------------------------------------------------------------------
 # Build the tiny C runtime library libtinyc.a
 
-if(DEFINED PLT_tinyc)
+if(PLT_libs MATCHES ".*tinyc.*")
    include_directories(Platform/include/MTL/tinyc)
 
    add_library(tinyc
@@ -113,7 +113,7 @@ if(DEFINED PLT_tinyc)
                Platform/Source/MTL/tinyc/fprintf.cpp
                Platform/Source/MTL/tinyc/getchar.cpp
                Platform/Source/MTL/tinyc/global_obj.cpp
-               Platform/Source/MTL/tinyc/guard.cpp
+               Platform/Source/MTL/tinyc/guard.c
                Platform/Source/MTL/tinyc/isalpha.cpp
                Platform/Source/MTL/tinyc/isdigit.cpp
                Platform/Source/MTL/tinyc/isspace.cpp
@@ -126,6 +126,7 @@ if(DEFINED PLT_tinyc)
                Platform/Source/MTL/tinyc/putchar.cpp
                Platform/Source/MTL/tinyc/puts.cpp
                Platform/Source/MTL/tinyc/rand.cpp
+               Platform/Source/MTL/tinyc/sin.c
                Platform/Source/MTL/tinyc/scanf.cpp
                Platform/Source/MTL/tinyc/sprintf.cpp
                Platform/Source/MTL/tinyc/strcat.cpp
@@ -141,7 +142,7 @@ if(DEFINED PLT_tinyc)
                Platform/Source/MTL/tinyc/strtoul.cpp
                Platform/Source/MTL/tinyc/strtoull.cpp
                Platform/Source/MTL/tinyc/time.cpp
-               Platform/Source/MTL/tinyc/tinyc_init.cpp
+               Platform/Source/MTL/tinyc/tinyc_init.c
                Platform/Source/MTL/tinyc/vfprintf.cpp
                Platform/Source/MTL/tinyc/vsprintf.cpp)
 endif()

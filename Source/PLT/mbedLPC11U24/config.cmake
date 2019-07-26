@@ -20,69 +20,45 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# scons configuration for MBED LPC11U24 builds
+# cmake configuration for MBED LPC11U24 builds
 
-set(prefix  arm-none-eabi-)
-set(machine armv6m)
-set(chip    LPC11U24)
-
-#-------------------------------------------------------------------------------
-
-set(CMAKE_ASM_COMPILER      ${prefix}as)
-set(CMAKE_C_COMPILER        ${prefix}gcc)
-set(CMAKE_CXX_COMPILER      ${prefix}g++)
-set(CMAKE_AR                ${prefix}ar)
-set(CMAKE_RANLIB            ${prefix}ranlib)
-set(CMAKE_OBJCOPY           ${prefix}objcopy)
-set(CMAKE_OBJDUMP           ${prefix}objdump)
-set(CMAKE_SIZE              ${prefix}size)
-set(CMAKE_C_LINK_EXECUTABLE ${prefix}ld)
+set(PLT_prefix  arm-none-eabi-)
+set(PLT_machine armv6m)
+set(PLT_chip    LPC11U24)
 
 #-------------------------------------------------------------------------------
+# Special compile flags for this platform
 
-add_compile_options(-std=c++11)
-add_compile_options(-DNDEBUG)
-add_compile_options(-DNCONSOLE)
-add_compile_options(-DSMALL_MEMORY)
-add_compile_options(-DNO_RTTI)
-add_compile_options(-mcpu=cortex-m0)
-add_compile_options(-mthumb)
-add_compile_options(-mfloat-abi=soft)
-add_compile_options(-fno-common)
-add_compile_options(-fno-builtin)
-add_compile_options(-fmessage-length=0)
-add_compile_options(-fno-default-inline)
-add_compile_options(-fno-exceptions)
-add_compile_options(-fno-rtti)
-add_compile_options(-ffunction-sections)
-add_compile_options(-fdata-sections)
+set(PLT_asm_flags "-mcpu=cortex-m0")
+
+set(PLT_c_flags   "-DNCONSOLE -DSMALL_MEMORY -mcpu=cortex-m0 -mthumb -mfloat-abi=soft -fno-common -fno-builtin -fmessage-length=0 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
+
+set(PLT_cxx_flags "-DNO_RTTI -std=c++11 -fno-rtti")
+
+set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/MTL/chip/${PLT_chip}/script.ld")
 
 #-------------------------------------------------------------------------------
+# Configure the cmake tools
 
-set(CMAKE_ASM_COMPILER        ${prefix}as)
-set(CMAKE_C_COMPILER          ${prefix}gcc)
-set(CMAKE_CXX_COMPILER        ${prefix}g++)
-set(CMAKE_AR                  ${prefix}ar)
-set(CMAKE_RANLIB              ${prefix}ranlib)
-set(CMAKE_OBJCOPY             ${prefix}objcopy)
-set(CMAKE_OBJDUMP             ${prefix}objdump)
-set(CMAKE_SIZE                ${prefix}size)
-set(CMAKE_C_LINK_EXECUTABLE   "${prefix}ld <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
+set(CMAKE_ASM_COMPILER        ${PLT_prefix}as)
+set(CMAKE_C_COMPILER          ${PLT_prefix}gcc)
+set(CMAKE_CXX_COMPILER        ${PLT_prefix}g++)
+set(CMAKE_AR                  ${PLT_prefix}ar)
+set(CMAKE_RANLIB              ${PLT_prefix}ranlib)
+set(CMAKE_OBJCOPY             ${PLT_prefix}objcopy)
+set(CMAKE_OBJDUMP             ${PLT_prefix}objdump)
+set(CMAKE_SIZE                ${PLT_prefix}size)
+set(CMAKE_C_LINK_EXECUTABLE   ${PLT_prefix}ld)
+set(CMAKE_C_LINK_EXECUTABLE   "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
+set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 
-set(CMAKE_EXE_LINKER_FLAGS  --static)
-set(CMAKE_EXECUTABLE_SUFFIX .axf)
+#-------------------------------------------------------------------------------
+# Configuration for libPLT.a
 
-set(CMAKE_ASM_FLAGS -mcpu=cortex-m0)
-
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-set(CMAKE_C_FLAGS_RELEASE   "-O3")
-
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
-set(CMAKE_C_FLAGS_DEBUG   "-g -O0")
-
-set(platform_source
-    Source/PLT/${target}/platform.cpp
+set(PLT_source
+    ${CMAKE_SOURCE_DIR}/Platform/Source/MTL/chip/${PLT_chip}/startup.s
+    Source/PLT/${PLT_target}/platform.cpp
     Source/PLT/Stub/Audio.cpp
     Source/PLT/Stub/Event.cpp
     Source/PLT/Stub/Frame.cpp
@@ -94,19 +70,10 @@ set(platform_source
     Source/PLT/Stub/Info.cpp
     Source/PLT/Stub/File.cpp)
 
-set(platform_libs tinyc gcc)
+execute_process(COMMAND ${CMAKE_C_COMPILER} -print-file-name=armv6-m OUTPUT_VARIABLE gcc_lib)
+string(STRIP ${gcc_lib} gcc_lib)
 
-set(tinyc USE)
-
-#-------------------------------------------------------------------------------
-
-execute_process(COMMAND ${CMAKE_C_COMPILER} -print-file-name=armv6-m
-                OUTPUT_VARIABLE gcc_lib)
-
-link_directories(${gcc_lib})
-
-#env['startup'] = env.Object('../../MTL/chip/'+CHIP+'/startup.s')
-#env['script']  = env.File('../../MTL/chip/'+CHIP+'/script.ld')
+set(PLT_libs tinyc ${gcc_lib}/libgcc.a)
 
 #-------------------------------------------------------------------------------
 # Adapt the Program() builder to generate a raw binary and some debug info
