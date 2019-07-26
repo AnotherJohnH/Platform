@@ -12,4 +12,4 @@ cmake_minimum_required(`VERSION' 3.11.4)
 #-------------------------------------------------------------------------------
 
 add_executable(${binary} ${source})
-target_link_libraries(${binary} ${platform_libs})
+target_link_libraries(${binary} ${PLT_libs})
