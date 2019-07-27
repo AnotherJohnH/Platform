@@ -37,7 +37,7 @@ set(PLT_cxx_flags "-DNO_RTTI -std=c++11 -fno-rtti")
 
 set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/MTL/chip/${PLT_chip}/script.ld")
 
-include_directories(${CMAKE_SOURCE_DIR} Platform/include/MTL/board/${PLT_target})
+include_directories(${CMAKE_SOURCE_DIR} Platform/include/MTL/board/${PLT_TARGET})
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
@@ -60,7 +60,7 @@ set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 
 set(PLT_source
     Platform/Source/MTL/chip/${PLT_chip}/startup.s
-    Platform/Source/PLT/${PLT_target}/platform.cpp
+    Platform/Source/PLT/${PLT_TARGET}/platform.cpp
     Platform/Source/PLT/Stub/Audio.cpp
     Platform/Source/PLT/Stub/Event.cpp
     Platform/Source/PLT/Stub/Frame.cpp

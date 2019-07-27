@@ -28,19 +28,22 @@ if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# Determine target platform type
-if(DEFINED ENV{PROJ_TARGET})
-   # Set via the PROJ_TARGET environment variable
-   set(PLT_target $ENV{PROJ_TARGET})
+set(PLT_TARGET "" CACHE STRING "The target platform")
 
-else()
+# Determine target platform type
+if(DEFINED ENV{PLT_TARGET})
+   # Set via the PLT_TARGET environment variable
+   # TODO do we need this now?
+   set(PLT_TARGET $ENV{PLT_TARGET})
+
+elseif(PLT_TARGET STREQUAL "")
    # Use the host system as the target
-   set(PLT_target ${CMAKE_SYSTEM_NAME})
+   set(PLT_TARGET ${CMAKE_SYSTEM_NAME})
 endif()
 
 # Translate macOSes confusing self description
-if(PLT_target STREQUAL "Darwin")
-   set(PLT_target macOS)
+if(PLT_TARGET STREQUAL "Darwin")
+   set(PLT_TARGET macOS)
 endif()
 
 execute_process(COMMAND uname -m OUTPUT_VARIABLE PLT_machine)
@@ -48,7 +51,7 @@ string(STRIP ${PLT_machine} PLT_machine)
 
 execute_process(COMMAND git log --pretty=format:%H -n 1 OUTPUT_VARIABLE PLT_commit)
 
-include(${CMAKE_SOURCE_DIR}/Platform/Source/PLT/${PLT_target}/config.cmake)
+include(${CMAKE_SOURCE_DIR}/Platform/Source/PLT/${PLT_TARGET}/config.cmake)
 
 #-------------------------------------------------------------------------------
 # Compiler flags
@@ -56,7 +59,7 @@ include(${CMAKE_SOURCE_DIR}/Platform/Source/PLT/${PLT_target}/config.cmake)
 set(PLT_c_flags "${PLT_c_flags} -DPROJ_COMMIT=\\\"${PLT_commit}\\\"")
 set(PLT_c_flags "${PLT_c_flags} -DPROJ_VERSION=\\\"${version}\\\"")
 set(PLT_c_flags "${PLT_c_flags} -DPROJ_MACHINE=\\\"${PLT_machine}\\\"")
-set(PLT_c_flags "${PLT_c_flags} -DPROJ_TARGET_${PLT_target}")
+set(PLT_c_flags "${PLT_c_flags} -DPROJ_TARGET_${PLT_TARGET}")
 set(PLT_c_flags "${PLT_c_flags} -Wall")
 set(PLT_c_flags "${PLT_c_flags} -Werror")
 
@@ -160,7 +163,7 @@ endif()
 # Package support
 
 if(DEFINED pkg_source)
-   set(pkg_name ${app}_${PLT_target}_${PLT_machine}_${version}.tgz)
+   set(pkg_name ${app}_${PLT_TARGET}_${PLT_machine}_${version}.tgz)
 
    add_custom_command(OUTPUT  ${pkg_name}
                       COMMAND tar cvfz ${pkg_name} ${pkg_source}
