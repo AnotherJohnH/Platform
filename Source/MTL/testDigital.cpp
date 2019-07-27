@@ -32,7 +32,7 @@ inline void wait(volatile unsigned n)
 
 int main()
 {
-#if defined(PROJ_TARGET_microbit)
+#if defined(PLT_TARGET_microbit)
    MTL::Digital::Out<MTL::PIN_LED_COL1> led_gnd(false);
    MTL::Digital::Out<MTL::PIN_LED_ROW1> led;
 #else

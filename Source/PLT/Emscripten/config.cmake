@@ -34,7 +34,7 @@ add_compile_options(-DCO_OP_MULTI_TASK)
 add_compile_options(-s)
 add_compile_options(USE_SDL=2)
 
-set(platform_source
+set(PLT_source
     Platform/Source/PLT/SDL2/Audio.cpp
     Platform/Source/PLT/SDL2/Event.cpp
     Platform/Source/PLT/SDL2/Frame.cpp

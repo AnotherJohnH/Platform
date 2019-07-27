@@ -43,7 +43,7 @@ private:
       SXGA
    };
 
-#ifdef PROJ_TARGET_Kindle3
+#ifdef PLT_TARGET_Kindle3
    Display display = Display::KINDLE3;
 #else
    Display display = Display::XGA;

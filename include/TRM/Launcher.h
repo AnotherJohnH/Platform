@@ -44,7 +44,7 @@ struct TermConfig : public STB::Oil<TermConfig>
    unsigned line_space{0};
    bool     invert_video{false};
    unsigned sleep{1};
-#ifdef PROJ_TARGET_Kindle3
+#ifdef PLT_TARGET_Kindle3
    uint32_t bg_colour{0xFFFFFF};
    uint32_t fg_colour{0x000000};
 #else

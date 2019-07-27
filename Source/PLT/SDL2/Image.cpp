@@ -44,7 +44,7 @@ void Image::clear(STB::Colour rgb)
 void Image::point(STB::Colour rgb, unsigned x, unsigned y)
 {
    uint32_t* pixels = reinterpret_cast<uint32_t*>(buffer);
-#ifdef PROJ_TARGET_Emscripten
+#ifdef PLT_TARGET_Emscripten
    pixels[x + y * pitch / 4] = 0xFF000000 | rgb;
 #else
    pixels[x + y * pitch / 4] = rgb;

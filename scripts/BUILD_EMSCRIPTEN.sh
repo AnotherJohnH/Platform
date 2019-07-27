@@ -1,8 +1,8 @@
-#!/bin/echo "source this file then type 'scons' to run SConstruct"
+#!/bin/echo "source this file then mkdir build; cd build; cmake ..; make"
 #
 # Setup environment for an Emscripten build
 
-export PROJ_TARGET=Emscripten
+export PLT_TARGET=Emscripten
 
 # XXX edit to the actual location that the EMSDK is installed
 EMSDK_PATH=$HOME/OpenSource/emsdk_portable

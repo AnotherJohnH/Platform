@@ -29,7 +29,7 @@
 #include "PLT/Event.h"
 #include "PLT/Frame.h"
 
-#ifdef PROJ_TARGET_Emscripten
+#ifdef PLT_TARGET_Emscripten
 #include "emscripten.h"
 #endif
 
@@ -121,7 +121,7 @@ static bool eventLoopIter(void* user_data_)
 }
 
 
-#ifdef PROJ_TARGET_Emscripten
+#ifdef PLT_TARGET_Emscripten
 static void wrapLoopIter()
 {
    (void)loopIter();
@@ -236,7 +236,7 @@ Type poll(Message& event)
 
 Type wait(Message& event)
 {
-#ifdef PROJ_TARGET_Emscripten
+#ifdef PLT_TARGET_Emscripten
    return getEvent(event, false);
 #else
    return getEvent(event, true);
@@ -248,7 +248,7 @@ int mainLoop(bool (*callback_)(void*), void* user_data_)
    main_callback = callback_;
    user_data     = user_data_;
 
-#ifdef PROJ_TARGET_Emscripten
+#ifdef PLT_TARGET_Emscripten
    emscripten_set_main_loop(wrapLoopIter, 0, 1);
 #else
    if(main_callback == nullptr)
