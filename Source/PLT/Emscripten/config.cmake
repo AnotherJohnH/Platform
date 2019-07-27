@@ -22,17 +22,30 @@
 
 # cmake configuration for Emscripten builds
 
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-set(CMAKE_C_FLAGS_RELEASE "-O3")
+set(PLT_machine embc)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
-set(CMAKE_C_FLAGS_DEBUG "-g -O0")
+#-------------------------------------------------------------------------------
+# Special compile flags for this platform
 
-add_compile_options(-std=c++11)
-add_compile_options(-Wno-main)
-add_compile_options(-DCO_OP_MULTI_TASK)
-add_compile_options(-s)
-add_compile_options(USE_SDL=2)
+set(PLT_c_flags   "-DCO_OP_MULTI_TASK -Wno-main -s USE_SDL=2")
+
+set(PLT_cxx_flags "-std=c++11")
+
+include_directories(Platform/include/MTL/board/stub)
+
+#-------------------------------------------------------------------------------
+# Configure the cmake tools
+
+set(CMAKE_C_COMPILER   emcc)
+set(CMAKE_CXX_COMPILER emcc)
+set(CMAKE_AR           emar)
+set(CMAKE_RANLIB       emranlib)
+
+set(CMAKE_EXE_LINKER_FLAGS  "-s USE_SDL=2")
+set(CMAKE_EXECUTABLE_SUFFIX .html)
+
+#-------------------------------------------------------------------------------
+# Configuration for libPLT.a
 
 set(PLT_source
     Platform/Source/PLT/SDL2/Audio.cpp
@@ -45,13 +58,3 @@ set(PLT_source
     Platform/Source/PLT/Stub/Yield.cpp
     Platform/Source/PLT/Stub/Info.cpp
     Platform/Source/PLT/POSIX/File.cpp)
-
-set(machine embc)
-
-set(CMAKE_C_COMPILER   emcc)
-set(CMAKE_CXX_COMPILER emcc)
-set(CMAKE_AR           emar)
-set(CMAKE_RANLIB       emranlib)
-
-set(CMAKE_EXE_LINKER_FLAGS  "-s USE_SDL=2")
-set(CMAKE_EXECUTABLE_SUFFIX .html)

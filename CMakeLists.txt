@@ -20,7 +20,7 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-set(app     PlatformTest)
+set(app     Platform)
 set(version 0.0.4)
 
 #-------------------------------------------------------------------------------
@@ -37,6 +37,7 @@ endif()
 link_libraries(${PLT_libs})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
+add_subdirectory(${CMAKE_SOURCE_DIR}/Source/MTL)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/PLT/test)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/GUI)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/SND)

@@ -37,7 +37,7 @@ set(PLT_cxx_flags "-DNO_RTTI -std=c++11 -fno-rtti")
 
 set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/MTL/chip/${PLT_chip}/script.ld")
 
-include_directories(${CMAKE_SOURCE_DIR} Platform/include/MTL/board/${PLT_TARGET})
+include_directories(Platform/include/MTL/board/${PLT_TARGET})
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
@@ -50,7 +50,6 @@ set(CMAKE_RANLIB              ${PLT_prefix}ranlib)
 set(CMAKE_OBJCOPY             ${PLT_prefix}objcopy)
 set(CMAKE_OBJDUMP             ${PLT_prefix}objdump)
 set(CMAKE_SIZE                ${PLT_prefix}size)
-set(CMAKE_C_LINK_EXECUTABLE   ${PLT_prefix}ld)
 set(CMAKE_C_LINK_EXECUTABLE   "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
 set(CMAKE_EXECUTABLE_SUFFIX   .axf)
@@ -76,10 +75,3 @@ execute_process(COMMAND ${CMAKE_C_COMPILER} -print-file-name=armv6-m OUTPUT_VARI
 string(STRIP ${gcc_lib} gcc_lib)
 
 set(PLT_libs tinyc ${gcc_lib}/libgcc.a)
-
-#-------------------------------------------------------------------------------
-# Adapt the Program() builder to generate a raw binary and some debug info
-
-#env['BUILDERS']['Program'].action += '$OBJCOPY -O binary $TARGET ${TARGET}.bin; '+ \
-                                     #'$OBJDUMP -D $SOURCE > ${TARGET}.dbg; '+ \
-                                     #'$SIZE $TARGET'

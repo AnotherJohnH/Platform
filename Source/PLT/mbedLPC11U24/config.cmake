@@ -37,7 +37,7 @@ set(PLT_cxx_flags "-DNO_RTTI -std=c++11 -fno-rtti")
 
 set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/MTL/chip/${PLT_chip}/script.ld")
 
-include_directories(${CMAKE_SOURCE_DIR} Platform/include/MTL/board/${PLT_TARGET})
+include_directories(Platform/include/MTL/board/${PLT_TARGET})
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools

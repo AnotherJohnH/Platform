@@ -22,7 +22,19 @@
 
 # cmake configuration for MacOS builds
 
+#-------------------------------------------------------------------------------
+# Special compile flags for this platform
+
 set(PLT_cxx_flags "-std=c++11")
+
+# TODO
+#if env['CC'] == 'clang':
+#   env.Append(CXXFLAGS = ['-Wdocumentation'])
+
+include_directories(Platform/include/MTL/board/stub)
+
+#-------------------------------------------------------------------------------
+# Configuration for libPLT.a
 
 set(PLT_source
     Platform/Source/PLT/SDL2/Audio.cpp
@@ -37,10 +49,6 @@ set(PLT_source
     Platform/Source/PLT/POSIX/File.cpp
     Platform/Source/PLT/POSIX/Rtc.cpp
     Platform/Source/PLT/POSIX/Socket.cpp)
-
-# TODO
-#if env['CC'] == 'clang':
-#   env.Append(CXXFLAGS = ['-Wdocumentation'])
 
 find_package(SDL2 REQUIRED)
 

@@ -20,15 +20,12 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-
 #include "MTL/Digital.h"
-
 
 inline void wait(volatile unsigned n)
 {
    while(n--);
 }
-
 
 int main()
 {
@@ -46,4 +43,3 @@ int main()
       wait(1000000);
    }
 }
-

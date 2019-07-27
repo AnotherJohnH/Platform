@@ -22,7 +22,15 @@
 
 # cmake configuration for Linux builds
 
+#-------------------------------------------------------------------------------
+# Special compile flags for this platform
+
 set(PLT_cxx_flags "-std=c++11")
+
+include_directories(Platform/include/MTL/board/stub)
+
+#-------------------------------------------------------------------------------
+# Configuration for libPLT.a
 
 set(PLT_source
     Platform/Source/PLT/SDL2/Audio.cpp
