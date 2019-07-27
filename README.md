@@ -36,10 +36,10 @@ Binary [foo] : <filename of application binary>
 Install template/.clang-format to <project root directory>/.clang-format
 Install template/.gitignore to <project root directory>/.gitignore
 Install template/.travis.yml to <project root directory>/.travis.yml
+Install template/CMakeLists.txt to <project root directory>/CMakeLists.txt
 Install template/Doxyfile to <project root directory>/Doxyfile
 Install template/LICENSE to <project root directory>/LICENSE
 Install template/README.md to <project root directory>/README.md
-Install template/SConstruct to <project root directory>/SConstruct
 Install template/Source/consoleApp.cpp to <project root directory>/Source/<filename of application binary>.cpp
 ```
 
