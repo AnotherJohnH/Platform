@@ -59,7 +59,7 @@ set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 
 set(PLT_source
     Platform/Source/MTL/chip/${PLT_chip}/startup.s
-    Platform/Source/PLT/${PLT_TARGET}/platform.cpp
+    Platform/Source/PLT/target/${PLT_TARGET}/platform.cpp
     Platform/Source/PLT/Stub/Audio.cpp
     Platform/Source/PLT/Stub/Event.cpp
     Platform/Source/PLT/Stub/Frame.cpp

@@ -20,11 +20,11 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# cmake configuration for LPC1114 builds
+# cmake configuration for MBED LPC11U24 builds
 
 set(PLT_prefix  arm-none-eabi-)
 set(PLT_machine armv6m)
-set(PLT_chip    LPC810)
+set(PLT_chip    LPC11U24)
 
 #-------------------------------------------------------------------------------
 # Special compile flags for this platform
@@ -50,16 +50,23 @@ set(CMAKE_RANLIB              ${PLT_prefix}ranlib)
 set(CMAKE_OBJCOPY             ${PLT_prefix}objcopy)
 set(CMAKE_OBJDUMP             ${PLT_prefix}objdump)
 set(CMAKE_SIZE                ${PLT_prefix}size)
-set(CMAKE_C_LINK_EXECUTABLE   "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
-set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
+
 set(CMAKE_EXECUTABLE_SUFFIX   .axf)
+
+set(CMAKE_C_LINK_EXECUTABLE
+    "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; ${CMAKE_OBJCOPY} -O binary <TARGET> <TARGET>.bin")
+
+#set(CMAKE_C_LINK_EXECUTABLE
+#    "${CMAKE_C_LINK_EXECUTABLE}; ${CMAKE_OBJDUMP} -D <TARGET>; ${CMAKE_SIZE} <TARGET>")
+
+set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
 
 #-------------------------------------------------------------------------------
 # Configuration for libPLT.a
 
 set(PLT_source
     Platform/Source/MTL/chip/${PLT_chip}/startup.s
-    Platform/Source/PLT/${PLT_TARGET}/platform.cpp
+    Platform/Source/PLT/target/${PLT_TARGET}/platform.cpp
     Platform/Source/PLT/Stub/Audio.cpp
     Platform/Source/PLT/Stub/Event.cpp
     Platform/Source/PLT/Stub/Frame.cpp

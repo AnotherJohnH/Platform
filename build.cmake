@@ -51,7 +51,7 @@ string(STRIP ${PLT_machine} PLT_machine)
 
 execute_process(COMMAND git log --pretty=format:%H -n 1 OUTPUT_VARIABLE PLT_proj_commit)
 
-include(${CMAKE_SOURCE_DIR}/Platform/Source/PLT/${PLT_TARGET}/config.cmake)
+include(${CMAKE_SOURCE_DIR}/Platform/Source/PLT/target/${PLT_TARGET}/config.cmake)
 
 #-------------------------------------------------------------------------------
 # Compiler flags

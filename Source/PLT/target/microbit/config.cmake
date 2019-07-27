@@ -20,11 +20,12 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# cmake configuration for MBED LPC11U24 builds
+# cmake configuration for microbit builds
 
-set(PLT_prefix  arm-none-eabi-)
-set(PLT_machine armv6m)
-set(PLT_chip    LPC11U24)
+set(PLT_prefix   arm-none-eabi-)
+set(PLT_machine  armv6m)
+set(PLT_chip     nRF51)
+set(PLT_ram_size 16k)
 
 #-------------------------------------------------------------------------------
 # Special compile flags for this platform
@@ -35,7 +36,7 @@ set(PLT_c_flags   "-DNCONSOLE -DSMALL_MEMORY -mcpu=cortex-m0 -mthumb -mfloat-abi
 
 set(PLT_cxx_flags "-DNO_RTTI -std=c++11 -fno-rtti")
 
-set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/MTL/chip/${PLT_chip}/script.ld")
+set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/MTL/chip/${PLT_chip}/script_${PLT_ram_size}.ld")
 
 include_directories(Platform/include/MTL/board/${PLT_TARGET})
 
@@ -50,23 +51,15 @@ set(CMAKE_RANLIB              ${PLT_prefix}ranlib)
 set(CMAKE_OBJCOPY             ${PLT_prefix}objcopy)
 set(CMAKE_OBJDUMP             ${PLT_prefix}objdump)
 set(CMAKE_SIZE                ${PLT_prefix}size)
-
-set(CMAKE_EXECUTABLE_SUFFIX   .axf)
-
-set(CMAKE_C_LINK_EXECUTABLE
-    "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; ${CMAKE_OBJCOPY} -O binary <TARGET> <TARGET>.bin")
-
-#set(CMAKE_C_LINK_EXECUTABLE
-#    "${CMAKE_C_LINK_EXECUTABLE}; ${CMAKE_OBJDUMP} -D <TARGET>; ${CMAKE_SIZE} <TARGET>")
-
+set(CMAKE_C_LINK_EXECUTABLE   "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
+set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 
 #-------------------------------------------------------------------------------
 # Configuration for libPLT.a
 
 set(PLT_source
-    Platform/Source/MTL/chip/${PLT_chip}/startup.s
-    Platform/Source/PLT/${PLT_TARGET}/platform.cpp
+    Platform/Source/MTL/chip/${PLT_chip}/startup_${PLT_ram_size}.s
     Platform/Source/PLT/Stub/Audio.cpp
     Platform/Source/PLT/Stub/Event.cpp
     Platform/Source/PLT/Stub/Frame.cpp

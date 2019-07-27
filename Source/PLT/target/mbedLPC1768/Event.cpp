@@ -20,79 +20,77 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \brief mbed LPC1768 Frame implementation
+// \brief Event implementation for mbed LPC1768
 
-#include "PLT/Frame.h"
+#include "PLT/Event.h"
 
-#include "../../MTL/chip/LPC1768/PALVideo.h"
-#include "MTL/chip/LPC1768/RAM.h"
-
-#include <cstring>
-
-
-static MTL::PALVideo  video;
-PAL_VIDEO_ATTACH_IRQ(video);
-
-static PLT::Frame::Scanner* scanner{nullptr};
-
-static void scanCallBack(uint8_t* buffer, uint16_t line)
-{
-   scanner->getRawPixels(buffer, line);
-}
-
+#include "../../../MTL/chip/LPC1768/Keyboard.h"
 
 namespace PLT {
 
-Frame::Frame(const char* title_, unsigned width_, unsigned height_, uint32_t flags_)
-   : Image(width_, height_)
+namespace Event {
+
+
+static MTL::Keyboard  keyboard;
+
+
+Type poll(Message& event)
 {
-   MTL::RAM  ram;
+   uint8_t  ch;
+   bool     up;
 
-   pimpl  = nullptr;
-   buffer = ram.data();
-
-   if (width_ != 0)
+   if (keyboard.recv(ch, up))
    {
-      resize(width_, height_);
+      event.type = up ? PLT::Event::KEY_UP : PLT::Event::KEY_DOWN;
+      event.code = ch;
+   }
+   else
+   {
+      event.type = PLT::Event::NONE;
+   }
+
+   return event.type;
+}
+
+Type wait(Message& event)
+{
+   while(poll(event) == PLT::Event::NONE);
+
+   return event.type;
+}
+
+int mainLoop(bool (*callback)(void*), void* user_data)
+{
+   if (callback == nullptr)
+   {
+      while(true);
+   }
+
+   while((*callback)(user_data));
+
+   return 0;
+}
+
+int eventLoop(void (*callback)(const Message&, void*), void* user_data)
+{
+   while(true)
+   {
+      PLT::Event::Message event;
+      PLT::Event::Type    type = PLT::Event::wait(event);
+
+      if(type != PLT::Event::NONE)
+      {
+         if(callback != nullptr) (*callback)(event, user_data);
+      }
+
+      if (type == PLT::Event::QUIT) return 0;
    }
 }
 
-Frame::~Frame()
+void setTimer(unsigned period_ms)
 {
-   // nohing to do here
 }
 
-void* Frame::getHandle() const { return nullptr; }
-
-uint32_t Frame::getId() const { return 0; }
-
-void Frame::setTitle(const char* title_) { }
-
-void Frame::setVisible(bool visible_) { }
-
-void Frame::resize(unsigned width_, unsigned height_)
-{
-   width  = width_;
-   height = height_;
-   pitch  = ((width_ + 0x1F) & ~0x1F) / 8;
-
-   video.setHorzPos(0);
-   video.resize(pitch * 8, height);
-   video.setFramePtr(buffer);
-
-   memset(buffer, 0, height * pitch);
-}
-
-void Frame::refresh()
-{
-   // nothing to do here
-}
-
-void Frame::setScanner(Scanner* scanner_)
-{
-   scanner = scanner_;
-
-   video.setScanner(scanner != nullptr ? scanCallBack : nullptr);
-}
+} // namespace Event
 
 } // namespace PLT

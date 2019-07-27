@@ -44,7 +44,7 @@ set(PLT_source
     Platform/Source/PLT/SDL2/Bitmap.cpp
     Platform/Source/PLT/Stub/Info.cpp
     Platform/Source/PLT/Stub/Sounder.cpp
-    Platform/Source/PLT/macOS/Midi.cpp
+    Platform/Source/PLT/target/macOS/Midi.cpp
     Platform/Source/PLT/POSIX/Yield.cpp
     Platform/Source/PLT/POSIX/File.cpp
     Platform/Source/PLT/POSIX/Rtc.cpp
