@@ -151,6 +151,25 @@ if(PLT_libs MATCHES ".*tinyc.*")
 endif()
 
 #-------------------------------------------------------------------------------
+# Test support
+
+if(DEFINED test_source)
+   if((${PLT_TARGET} STREQUAL macOS) OR (${PLT_TARGET} STREQUAL Linux))
+      add_subdirectory(${CMAKE_SOURCE_DIR}/Platform/googletest)
+
+      add_executable(test${app} ${test_source})
+
+      target_link_libraries(test${app} gtest ${PLT_libs})
+
+      add_custom_command(OUTPUT test.log
+                         COMMAND ./test${app} | tee test.log
+                         DEPENDS test${app})
+
+      add_custom_target(runTest ALL DEPENDS test.log)
+   endif()
+endif()
+
+#-------------------------------------------------------------------------------
 # Package support
 
 if(DEFINED pkg_source)

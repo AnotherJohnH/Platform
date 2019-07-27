@@ -23,16 +23,16 @@
 set(app     Platform)
 set(version 0.0.4)
 
+set(test_source Source/STB/testEndian.cpp
+                Source/STB/testLicense.cpp
+                Source/test/testMain.cpp)
+
 #-------------------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.11.4)
 include(build.cmake NO_POLICY_SCOPE)
 
 #-------------------------------------------------------------------------------
-
-if((${PLT_TARGET} STREQUAL macOS) OR (${PLT_TARGET} STREQUAL Linux))
-   add_subdirectory(${CMAKE_SOURCE_DIR}/googletest)
-endif()
 
 link_libraries(${PLT_libs})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -43,20 +43,3 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/Source/GUI)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/SND)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/TRM)
 add_subdirectory(${CMAKE_SOURCE_DIR}/Source/STB)
-
-#-------------------------------------------------------------------------------
-
-if((${PLT_TARGET} STREQUAL macOS) OR (${PLT_TARGET} STREQUAL Linux))
-   add_executable(testPLT
-                  Source/STB/testEndian.cpp
-                  Source/STB/testLicense.cpp
-                  Source/test/testMain.cpp)
-
-   target_link_libraries(testPLT gtest)
-
-   add_custom_command(OUTPUT test.log
-                      COMMAND ./testPLT | tee test.log
-                      DEPENDS testPLT)
-
-   add_custom_target(runTest ALL DEPENDS test.log)
-endif()
