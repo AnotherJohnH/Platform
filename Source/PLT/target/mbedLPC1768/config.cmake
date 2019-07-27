@@ -87,3 +87,14 @@ execute_process(COMMAND ${CMAKE_C_COMPILER} -print-file-name=armv7-m OUTPUT_VARI
 string(STRIP ${gcc_lib} gcc_lib)
 
 set(PLT_libs tinyc ${gcc_lib}/libgcc.a)
+
+#-------------------------------------------------------------------------------
+#
+
+set(PLT_test_source
+    MTL/chip/LPC1768/testI2S.cpp
+    MTL/chip/LPC1768/testPWM.cpp
+    MTL/chip/LPC1768/testPixelGen.cpp
+    MTL/chip/LPC1768/testPALVideo.cpp
+    MTL/chip/LPC1768/testKeyboard.cpp
+    MTL/chip/LPC1768/testMouse.cpp)
