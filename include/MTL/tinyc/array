@@ -36,6 +36,9 @@ template <typename TYPE, size_t N>
 class array
 {
 public:
+   using iterator       = TYPE*;
+   using const_iterator = const TYPE*;
+
    // Capacity
    size_t size() const { return N; }
    size_t max_size() const { return N; }
@@ -53,6 +56,19 @@ public:
 
    TYPE*       data()       { return storage; }
    const TYPE* data() const { return storage; }
+
+   // Iterators
+   iterator       begin()        { return storage; }
+   const_iterator cbegin() const { return storage; }
+
+   iterator       end()        { return storage + N; }
+   const_iterator cend() const { return storage + N; }
+
+   iterator       rbegin()        { return storage + N - 1; }
+   const_iterator crbegin() const { return storage + N - 1; }
+
+   iterator       rend()         { return storage - 1; }
+   const_iterator crend() const  { return storage - 1; }
 
 private:
    TYPE storage[N];
