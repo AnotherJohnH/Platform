@@ -34,7 +34,7 @@
 
 #include <stdlib.h>
 
-#define assert(expr) while { if (!(expr)) abort(); } do(0);
+#define assert(expr) do{ if (!(expr)) abort(); } while(1==0);
 
 #endif // NDEBUG_H
 

@@ -55,6 +55,14 @@ set(CMAKE_C_LINK_EXECUTABLE   "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TAR
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
 set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 
+set(CMAKE_C_LINK_EXECUTABLE
+    "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; ${CMAKE_OBJCOPY} -O binary <TARGET> <TARGET>.bin")
+
+#set(CMAKE_C_LINK_EXECUTABLE
+#    "${CMAKE_C_LINK_EXECUTABLE}; ${CMAKE_OBJDUMP} -D <TARGET>; ${CMAKE_SIZE} <TARGET>")
+
+set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
+
 #-------------------------------------------------------------------------------
 # Configuration for libPLT.a
 
@@ -79,10 +87,3 @@ execute_process(COMMAND ${CMAKE_C_COMPILER} -print-file-name=armv7-m OUTPUT_VARI
 string(STRIP ${gcc_lib} gcc_lib)
 
 set(PLT_libs tinyc ${gcc_lib}/libgcc.a)
-
-#-------------------------------------------------------------------------------
-# Adapt the Program() builder to generate a raw binary and some debug info
-
-#env['BUILDERS']['Program'].action += '$OBJCOPY -O binary $TARGET ${TARGET}.bin; '+ \
-                                     #'$OBJDUMP -D $SOURCE > ${TARGET}.dbg; '+ \
-                                     #'$SIZE $TARGET'
