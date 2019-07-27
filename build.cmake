@@ -49,17 +49,17 @@ endif()
 execute_process(COMMAND uname -m OUTPUT_VARIABLE PLT_machine)
 string(STRIP ${PLT_machine} PLT_machine)
 
-execute_process(COMMAND git log --pretty=format:%H -n 1 OUTPUT_VARIABLE PLT_commit)
+execute_process(COMMAND git log --pretty=format:%H -n 1 OUTPUT_VARIABLE PLT_proj_commit)
 
 include(${CMAKE_SOURCE_DIR}/Platform/Source/PLT/${PLT_TARGET}/config.cmake)
 
 #-------------------------------------------------------------------------------
 # Compiler flags
 
-set(PLT_c_flags "${PLT_c_flags} -DPROJ_COMMIT=\\\"${PLT_commit}\\\"")
-set(PLT_c_flags "${PLT_c_flags} -DPROJ_VERSION=\\\"${version}\\\"")
-set(PLT_c_flags "${PLT_c_flags} -DPROJ_MACHINE=\\\"${PLT_machine}\\\"")
-set(PLT_c_flags "${PLT_c_flags} -DPROJ_TARGET_${PLT_TARGET}")
+set(PLT_c_flags "${PLT_c_flags} -DPLT_PROJ_COMMIT=\\\"${PLT_proj_commit}\\\"")
+set(PLT_c_flags "${PLT_c_flags} -DPLT_PROJ_VERSION=\\\"${version}\\\"")
+set(PLT_c_flags "${PLT_c_flags} -DPLT_MACHINE=\\\"${PLT_machine}\\\"")
+set(PLT_c_flags "${PLT_c_flags} -DPLT_TARGET_${PLT_TARGET}")
 set(PLT_c_flags "${PLT_c_flags} -Wall")
 set(PLT_c_flags "${PLT_c_flags} -Werror")
 
@@ -150,15 +150,6 @@ if(PLT_libs MATCHES ".*tinyc.*")
                Platform/Source/MTL/tinyc/vsprintf.cpp)
 endif()
 
-# TODO
-#   env['startup'] = env.Install('lib/'+env['machine'], env['startup'])
-#   env['script']  = env.Install('lib/'+env['machine'], env['script'])
-#   env.Append(CPPPATH = env.Dir('include/MTL/board/'+target))
-#   env.Append(LINKFLAGS = '-TPlatform/'+str(env['script'][0]))
-#   env.Depends(env['startup'], env['script'])
-#else:
-#   env.Append(CPPPATH = env.Dir('include/MTL/board/stub'))
-#
 #-------------------------------------------------------------------------------
 # Package support
 

@@ -43,7 +43,7 @@ private:
 
 public:
    APPLICATION`App'(int argc, const char* argv[])
-      : ConsoleApp(PROGRAM, `DESCRIPTION', `LINK', `AUTHOR', PROJ_VERSION, COPYRIGHT_YEAR)
+      : ConsoleApp(PROGRAM, `DESCRIPTION', `LINK', `AUTHOR', COPYRIGHT_YEAR)
    {
       parseArgsAndStart(argc, argv);
    }

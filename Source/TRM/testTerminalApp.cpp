@@ -52,7 +52,7 @@ private:
 
 public:
    MyApp(int argc, const char* argv[])
-      : TRM::App(PROGRAM, DESCRIPTION, LINK, AUTHOR, PROJ_VERSION, COPYRIGHT_YEAR)
+      : TRM::App(PROGRAM, DESCRIPTION, LINK, AUTHOR, COPYRIGHT_YEAR)
    {
       parseArgsAndStart(argc, argv);
    }

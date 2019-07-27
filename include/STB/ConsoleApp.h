@@ -58,12 +58,12 @@ private:
       printf("Program      : %s\n", program);
       printf("Description  : %s\n", description);
       printf("Author       : %s\n", author);
-      printf("Version      : %s\n", version);
+      printf("Version      : %s\n", PLT_PROJ_VERSION);
       if (link != nullptr)
       {
          printf("Link         : %s\n", link);
       }
-      printf("Commit       : %s\n", PROJ_COMMIT);
+      printf("Commit       : %s\n", PLT_PROJ_COMMIT);
       printf("Built        : %s %s\n", __TIME__, __DATE__);
       printf("Compiler     : %s\n", __VERSION__);
 #if defined(__arm__)
@@ -125,7 +125,6 @@ protected:
    const char* description;
    const char* link;
    const char* author;
-   const char* version;
    const char* copyright_year;
    const char* args_help;
 
@@ -155,7 +154,6 @@ public:
               const char* description_,
               const char* link_,
               const char* author_,
-              const char* version_,
               const char* copyright_year_,
               const char* args_help_ = nullptr)
       : name(program_)
@@ -163,14 +161,13 @@ public:
       , description(description_)
       , link(link_)
       , author(author_)
-      , version(version_)
       , copyright_year(copyright_year_)
       , args_help(args_help_ ? args_help_ : "")
    {}
 
    void parseArgsAndStart(int argc, const char* argv[])
    {
-#if defined(PROJ_TARGET_Emscripten)
+#if defined(PLT_TARGET_Emscripten)
       // TODO this is just a confidence test
       static const char* local_argv[] = {"fred"};
 

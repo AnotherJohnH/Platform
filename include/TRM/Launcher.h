@@ -243,7 +243,7 @@ private:
       curses.mvaddstr(4, 3, "Description : "); curses.addstr(description);
       curses.mvaddstr(5, 3, "Link        : "); if (link != nullptr) curses.addstr(link);
       curses.mvaddstr(6, 3, "Author      : "); curses.addstr(author);
-      curses.mvaddstr(7, 3, "Version     : "); curses.addstr(version);
+      curses.mvaddstr(7, 3, "Version     : "); curses.addstr(PLT_PROJ_VERSION);
 
       curses.mvaddstr(8, 3, "Built       : ");
       curses.addstr(__TIME__); curses.addstr(" "); curses.addstr(__DATE__);
@@ -501,11 +501,10 @@ public:
             const char*  description,
             const char*  link,
             const char*  author,
-            const char*  version,
             const char*  copyright_year,
             const char*  args_help,
             const char*  config_file)
-      : App(program, description, link, author, version, copyright_year, args_help)
+      : App(program, description, link, author, copyright_year, args_help)
       , opt_config('c', "config", "Use alternate config file", config_file)
    {
    }
