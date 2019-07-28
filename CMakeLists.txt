@@ -24,8 +24,7 @@ set(app     Platform)
 set(version 0.0.4)
 
 set(test_source Source/STB/testEndian.cpp
-                Source/STB/testLicense.cpp
-                Source/test/testMain.cpp)
+                Source/STB/testLicense.cpp)
 
 #-------------------------------------------------------------------------------
 

@@ -157,7 +157,7 @@ if(DEFINED test_source)
    if((${PLT_TARGET} STREQUAL macOS) OR (${PLT_TARGET} STREQUAL Linux))
       add_subdirectory(${CMAKE_SOURCE_DIR}/Platform/googletest)
 
-      add_executable(test${app} ${test_source})
+      add_executable(test${app} ${test_source} Platform/Source/test/testMain.cpp)
 
       target_link_libraries(test${app} gtest ${PLT_libs})
 
