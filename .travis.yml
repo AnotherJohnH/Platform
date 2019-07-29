@@ -10,6 +10,7 @@ addons:
   apt:
     packages:
       - libsdl2-dev
+      - cpack
 
 before_install:
    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
