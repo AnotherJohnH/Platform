@@ -21,6 +21,7 @@
 #-------------------------------------------------------------------------------
 
 set(app     Platform)
+set(author  "John D. Haughton")
 set(version 0.0.4)
 
 set(test_source Source/STB/testEndian.cpp
@@ -30,6 +31,10 @@ set(test_source Source/STB/testEndian.cpp
 
 cmake_minimum_required(VERSION 3.11.4)
 include(build.cmake NO_POLICY_SCOPE)
+
+#-------------------------------------------------------------------------------
+
+install(TARGETS PLT ARCHIVE DESTINATION lib)
 
 #-------------------------------------------------------------------------------
 

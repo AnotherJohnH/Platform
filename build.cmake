@@ -173,12 +173,14 @@ endif()
 #-------------------------------------------------------------------------------
 # Package support
 
-if(DEFINED pkg_source)
-   set(pkg_name ${app}_${PLT_TARGET}_${PLT_machine}_${version}.tgz)
+string(REPLACE "." ";" split_version ${version})
 
-   add_custom_command(OUTPUT  ${pkg_name}
-                      COMMAND tar cvfz ${pkg_name} ${pkg_source}
-                      DEPENDS ${pkg_source})
+list(GET split_version 0 CPACK_PACKAGE_VERSION_MAJOR)
+list(GET split_version 1 CPACK_PACKAGE_VERSION_MINOR)
+list(GET split_version 2 CPACK_PACKAGE_VERSION_PATCH)
+set(CPACK_PACKAGE_VENDOR             ${author})
+set(CPACK_PACKAGE_INSTALL_DIRECTORY  "/usr/local")
+set(CPACK_RESOURCE_FILE_LICENSE      ${CMAKE_SOURCE_DIR}/LICENSE)
+set(CPACK_SYSTEM_NAME                ${PLT_TARGET}_${PLT_machine})
 
-   add_custom_target(package ALL DEPENDS ${pkg_name})
-endif()
+include(cpack)
