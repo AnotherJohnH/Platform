@@ -183,4 +183,4 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY  "/usr/local")
 set(CPACK_RESOURCE_FILE_LICENSE      ${CMAKE_SOURCE_DIR}/LICENSE)
 set(CPACK_SYSTEM_NAME                ${PLT_TARGET}_${PLT_machine})
 
-include(cpack)
+include(CPack)
