@@ -1,10 +1,7 @@
 
-os:
-   - linux
-   - osx
-
 dist: xenial
 sudo: required
+language: cpp
 
 addons:
   apt:
@@ -14,7 +11,20 @@ addons:
 before_install:
    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
 
-language: cpp
+os:
+   - linux
+   - osx
+
+compiler:
+   - clang
+   - gcc
+
+matrix:
+   exclude:
+   - os: linux
+     compiler: clang
+   - os: osx
+     compiler: gcc
 
 script:
    - mkdir build
@@ -22,6 +32,3 @@ script:
    - cmake ..
    - make package
 
-compiler:
-   - clang
-   - gcc

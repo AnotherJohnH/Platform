@@ -22,7 +22,7 @@
 
 set(app     Platform)
 set(author  "John D. Haughton")
-set(version 0.0.4)
+set(version 0.0.5)
 
 set(test_source Source/STB/testEndian.cpp
                 Source/STB/testLicense.cpp)
