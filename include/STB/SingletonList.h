@@ -46,6 +46,13 @@ public:
       return list;
    }
 
+   //! Get the next element to this one
+   TYPE* next() { return next_ptr; }
+
+   //! Get the next element to this one
+   const TYPE* next() const { return next_ptr; }
+
+private:
    //! Push this element on the back of the list O(n)
    void push_back()
    {
@@ -64,13 +71,6 @@ public:
       }
    }
 
-   //! Get the next element
-   TYPE* next() { return next_ptr; }
-
-   //! Get the next element
-   const TYPE* next() const { return next_ptr; }
-
-private:
    TYPE* next_ptr{nullptr};
 };
 
