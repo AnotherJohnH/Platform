@@ -69,6 +69,7 @@ public:
    //! Set option value from a string
    virtual bool set(const char* arg) = 0;
 
+private:
    //! Report the default value on the console
    virtual void showDefault() const = 0;
 
@@ -119,7 +120,6 @@ public:
       return (long_opt != nullptr) && (strcmp(arg_ + 2, long_opt) == 0);
    }
 
-private:
    const char* description;
    const char* long_opt;
    char        short_opt;
@@ -145,9 +145,10 @@ public:
 
    const TYPE& operator=(const TYPE& value_) { return value = value_; }
 
-private:
+protected:
    bool set(const char* arg) override;
 
+private:
    void showDefault() const override;
 
    const char* getValueDescription() const override;

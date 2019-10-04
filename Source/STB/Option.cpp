@@ -35,7 +35,9 @@ bool Option<bool>::set(const char* arg_)
    return false;
 }
 
-template <> void Option<bool>::showDefault() const {}
+template <>
+void Option<bool>::showDefault() const
+{}
 
 template <>
 const char* Option<bool>::getValueDescription() const

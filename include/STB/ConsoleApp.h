@@ -181,12 +181,12 @@ public:
 
       for(int i = 1; i < argc; ++i)
       {
-         OptionBase* opt = OptionBase::find(argv[i]);
-         if(opt)
+         OptionBase* option = OptionBase::find(argv[i]);
+         if(option != nullptr)
          {
             const char* next_arg = (i + 1) < argc ? argv[i + 1] : nullptr;
 
-            if(opt->set(next_arg))
+            if(option->set(next_arg))
             {
                if(next_arg)
                {
