@@ -28,41 +28,51 @@
 
 #include <string>
 
+#include "SingletonList.h"
+
 namespace STB {
 
 //! Base class for command line options
-class OptionBase
+class OptionBase : public SingletonList::Element<OptionBase>
 {
-private:
-   OptionBase* next = nullptr;
-   char        short_opt;
-   const char* long_opt;
-   const char* description;
-
-   //! Access to the global list of options
-   static OptionBase*& getSingletonList()
+public:
+   OptionBase(char        short_opt_,
+              const char* long_opt_,
+              const char* description_)
+      : short_opt(short_opt_)
+      , long_opt(long_opt_)
+      , description(description_)
    {
-      static OptionBase* list = nullptr;
-      return list;
    }
 
-   //! Add an option to the end of the global list
-   void addToList()
+   //! Print help for all the options
+   static void printHelpAll()
    {
-      OptionBase* ref = getSingletonList();
-      if(ref == nullptr)
+      for(const OptionBase* opt = front(); opt; opt = opt->next())
       {
-         getSingletonList() = this;
-      }
-      else
-      {
-         while(ref->next)
-         {
-            ref = ref->next;
-         }
-         ref->next = this;
+         opt->printHelp();
       }
    }
+
+   //! Find an option from a command line argument
+   static OptionBase* find(const char* arg_)
+   {
+      for(OptionBase* opt = front(); opt; opt = opt->next())
+      {
+         if(opt->isMatch(arg_)) return opt;
+      }
+
+      return nullptr;
+   }
+
+   //! Set option value from a string
+   virtual bool set(const char* arg) = 0;
+
+   //! Report the default value on the console
+   virtual void showDefault() const = 0;
+
+   //! Return a description of the supplementary option value
+   virtual const char* getValueDescription() const = 0;
 
    //! Print option help
    void printHelp() const
@@ -108,46 +118,10 @@ private:
       return long_opt && (strcmp(arg_ + 2, long_opt) == 0);
    }
 
-public:
-   OptionBase(char short_opt_, const char* long_opt_, const char* description_)
-      : short_opt(short_opt_)
-      , long_opt(long_opt_)
-      , description(description_)
-   {
-      addToList();
-   }
-
-   const char* getLongOpt() const { return long_opt; }
-   char        getShortOpt() const { return short_opt; }
-
-   //! Print help for all the options
-   static void printHelpAll()
-   {
-      for(const OptionBase* opt = getSingletonList(); opt; opt = opt->next)
-      {
-         opt->printHelp();
-      }
-   }
-
-   //! Find an option from a command line argument
-   static OptionBase* find(const char* arg_)
-   {
-      for(OptionBase* opt = getSingletonList(); opt; opt = opt->next)
-      {
-         if(opt->isMatch(arg_)) return opt;
-      }
-
-      return nullptr;
-   }
-
-   //! Set option value from a string
-   virtual bool set(const char* arg) = 0;
-
-   //! Report the default value on the console
-   virtual void showDefault() const = 0;
-
-   //! Return a description of the supplementary option value
-   virtual const char* getValueDescription() const = 0;
+private:
+   char        short_opt;
+   const char* long_opt;
+   const char* description;
 };
 
 
@@ -155,17 +129,10 @@ public:
 template <typename TYPE>
 class Option : public OptionBase
 {
-private:
-   TYPE value;
-
-   virtual bool set(const char* arg) override;
-
-   virtual void showDefault() const override;
-
-   virtual const char* getValueDescription() const override;
-
 public:
-   Option(char short_opt_, const char* long_opt_, const char* description_,
+   Option(char        short_opt_,
+          const char* long_opt_,
+          const char* description_,
           const TYPE& default_value_ = TYPE())
       : OptionBase(short_opt_, long_opt_, description_)
       , value(default_value_)
@@ -173,11 +140,18 @@ public:
 
    const TYPE& get() const { return value; }
 
-   // Pretend option is TYPE
-
    operator const TYPE&() const { return value; }
 
    const TYPE& operator=(const TYPE& value_) { return value = value_; }
+
+private:
+   bool set(const char* arg) override;
+
+   void showDefault() const override;
+
+   const char* getValueDescription() const override;
+
+   TYPE value{};
 };
 
 } // namespace STB
