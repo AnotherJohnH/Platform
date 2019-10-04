@@ -33,33 +33,34 @@
 namespace STB {
 
 //! Base class for command line options
-class OptionBase : public SingletonList::Element<OptionBase>
+class OptionBase : public SingletonList::Element<OptionBase,
+                                                 /* CONSTRUCTION_ORDER */true>
 {
 public:
    OptionBase(char        short_opt_,
               const char* long_opt_,
               const char* description_)
-      : short_opt(short_opt_)
+      : description(description_)
       , long_opt(long_opt_)
-      , description(description_)
+      , short_opt(short_opt_)
    {
    }
 
    //! Print help for all the options
    static void printHelpAll()
    {
-      for(const OptionBase* opt = front(); opt; opt = opt->next())
+      for(const OptionBase* option = front(); option; option = option->next())
       {
-         opt->printHelp();
+         option->printHelp();
       }
    }
 
    //! Find an option from a command line argument
    static OptionBase* find(const char* arg_)
    {
-      for(OptionBase* opt = front(); opt; opt = opt->next())
+      for(OptionBase* option = front(); option; option = option->next())
       {
-         if(opt->isMatch(arg_)) return opt;
+         if(option->isMatch(arg_)) return option;
       }
 
       return nullptr;
@@ -111,17 +112,17 @@ public:
    {
       if(arg_[0] != '-') return false;
 
-      if(short_opt && (arg_[1] == short_opt)) return true;
+      if((short_opt != '\0') && (arg_[1] == short_opt)) return true;
 
       if(arg_[1] != '-') return false;
 
-      return long_opt && (strcmp(arg_ + 2, long_opt) == 0);
+      return (long_opt != nullptr) && (strcmp(arg_ + 2, long_opt) == 0);
    }
 
 private:
-   char        short_opt;
-   const char* long_opt;
    const char* description;
+   const char* long_opt;
+   char        short_opt;
 };
 
 

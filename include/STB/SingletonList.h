@@ -30,13 +30,17 @@ namespace STB {
 namespace SingletonList {
 
 //! List element base class
-template <typename TYPE>
+template <typename TYPE, bool CONSTRUCTION_ORDER = false>
 class Element
 {
 public:
    Element()
    {
-      push_back();
+      // Elements are automatically put into the list on construction
+      if (CONSTRUCTION_ORDER)
+         push_back();
+      else
+         push_front();
    }
 
    //! Access to the front of the list
@@ -53,6 +57,13 @@ public:
    const TYPE* next() const { return next_ptr; }
 
 private:
+   //! Push this element on the front of the list O(1)
+   void push_front()
+   {
+      next_ptr = front();
+      front() = static_cast<TYPE*>(this);
+   }
+
    //! Push this element on the back of the list O(n)
    void push_back()
    {
