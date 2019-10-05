@@ -51,11 +51,14 @@ public:
    {
       for(const OptionBase* option = front(); option; option = option->next())
       {
-         option->printHelp();
+         if (!option->isGlob())
+         {
+            option->printHelp();
+         }
       }
    }
 
-   //! Find an option from a command line argument
+   //! Find an option matching a command line argument
    static OptionBase* find(const char* arg_)
    {
       for(OptionBase* option = front(); option; option = option->next())
@@ -65,6 +68,23 @@ public:
 
       return nullptr;
    }
+
+   //! Get the help suffix used to describe general arguments
+   static const char* getSynopsisSuffix()
+   {
+      for(OptionBase* option = front(); option; option = option->next())
+      {
+         if (option->isGlob())
+         {
+            return option->description;
+         }
+      }
+
+      return "";
+   }
+
+   //! Is glob
+   bool isGlob() const { return short_opt == '*'; }
 
    //! Set option value from a string
    virtual bool set(const char* arg) = 0;
@@ -111,13 +131,26 @@ private:
    //! Check if the given command line argument matches this option
    bool isMatch(const char* arg_) const
    {
-      if(arg_[0] != '-') return false;
+      if(arg_[0] == '-')
+      {
+         if((short_opt != '\0') && (arg_[1] == short_opt))
+         {
+            return true;
+         }
 
-      if((short_opt != '\0') && (arg_[1] == short_opt)) return true;
-
-      if(arg_[1] != '-') return false;
-
-      return (long_opt != nullptr) && (strcmp(arg_ + 2, long_opt) == 0);
+         if(arg_[1] == '-')
+         {
+            return (long_opt != nullptr) && (strcmp(arg_ + 2, long_opt) == 0);
+         }
+         else
+         {
+            return false;
+         }
+      }
+      else
+      {
+         return isGlob();
+      }
    }
 
    const char* description;

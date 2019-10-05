@@ -104,7 +104,7 @@ private:
       bold();
       printf("SYNOPSIS\n");
       normal();
-      printf("     %s [options] %s\n", name, args_help);
+      printf("     %s [options] %s\n", name, OptionBase::getSynopsisSuffix());
       printf("\n");
       bold();
       printf("OPTIONS\n");
@@ -126,7 +126,6 @@ protected:
    const char* link;
    const char* author;
    const char* copyright_year;
-   const char* args_help;
 
    void error(const char* format, ...)
    {
@@ -145,8 +144,6 @@ protected:
 
    virtual void showExtraHelp() {}
 
-   virtual void parseArg(const char* arg) {}
-
    virtual int startConsoleApp() = 0;
 
 public:
@@ -162,7 +159,6 @@ public:
       , link(link_)
       , author(author_)
       , copyright_year(copyright_year_)
-      , args_help(args_help_ ? args_help_ : "")
    {}
 
    void parseArgsAndStart(int argc, const char* argv[])
@@ -184,27 +180,30 @@ public:
          OptionBase* option = OptionBase::find(argv[i]);
          if(option != nullptr)
          {
-            const char* next_arg = (i + 1) < argc ? argv[i + 1] : nullptr;
-
-            if(option->set(next_arg))
+            if (option->isGlob())
             {
-               if(next_arg)
+               (void) option->set(argv[i]);
+            }
+            else
+            {
+               const char* next_arg = (i + 1) < argc ? argv[i + 1] : nullptr;
+
+               if(option->set(next_arg))
                {
-                  ++i;
-               }
-               else
-               {
-                  error("option value for %s is missing", argv[i]);
+                  if(next_arg)
+                  {
+                     ++i;
+                  }
+                  else
+                  {
+                     error("option value for %s is missing", argv[i]);
+                  }
                }
             }
          }
          else if(argv[i][0] == '-')
          {
             error("unknown option %s", argv[i]);
-         }
-         else
-         {
-            parseArg(argv[i]);
          }
       }
 
