@@ -67,14 +67,28 @@ EOIL(TermConfig)
 
 class Launcher : public App
 {
+public:
+   Launcher(const char*  program,
+            const char*  description,
+            const char*  link,
+            const char*  author,
+            const char*  copyright_year,
+            const char*  args_help,
+            const char*  config_file)
+      : App(program, description, link, author, copyright_year)
+      , opt_config('c', "config", "Use alternate config file", config_file)
+      , filename('*', "*", args_help, nullptr)
+   {
+   }
+
 protected:
    Device*     term{nullptr};
    TRM::Curses curses;
 
 private:
-   STB::Option<const char*> opt_config{'c', "config", "Use alternate config file"};
+   STB::Option<const char*> opt_config;
+   STB::Option<const char*> filename;
    TermConfig               config;
-   const char*              filename{nullptr};
    unsigned                 cursor{0};
    unsigned                 cursor_limit{0};
    bool                     quit{false};
@@ -416,8 +430,6 @@ private:
       }
    }
 
-   virtual void parseArg(const char* arg_) override { filename = arg_; }
-
    virtual int startTerminalApp(Device& term_) override
    {
       term = &term_;
@@ -494,19 +506,6 @@ private:
       curses.clear();
 
       return 0;
-   }
-
-public:
-   Launcher(const char*  program,
-            const char*  description,
-            const char*  link,
-            const char*  author,
-            const char*  copyright_year,
-            const char*  args_help,
-            const char*  config_file)
-      : App(program, description, link, author, copyright_year, args_help)
-      , opt_config('c', "config", "Use alternate config file", config_file)
-   {
    }
 };
 
