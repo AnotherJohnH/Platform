@@ -161,7 +161,7 @@ public:
       , copyright_year(copyright_year_)
    {}
 
-   void parseArgsAndStart(int argc, const char* argv[])
+   int parseArgsAndStart(int argc, const char* argv[])
    {
 #if defined(PLT_TARGET_Emscripten)
       // TODO this is just a confidence test
@@ -210,7 +210,7 @@ public:
       if(opt_version) showVersion();
       if(opt_help)    showHelp();
 
-      exit(startConsoleApp());
+      return startConsoleApp();
    }
 };
 
