@@ -23,6 +23,7 @@
 #ifndef STB_IFF_H
 #define STB_IFF_H
 
+#include <cassert>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
@@ -58,6 +59,9 @@ class Ident : public FileIo<Ident>
 {
 private:
    char value[4];
+
+   static_assert(sizeof(value) == 4,
+                 "This class represents a 4-byte field in a binary file.");
 
 public:
    Ident(const std::string& value_ = "    ")
