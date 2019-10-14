@@ -49,6 +49,8 @@ public:
    {
    }
 
+   virtual ~Canvas() = default;
+
    //! Get canvas width (pixels)
    int32_t getWidth() const { return size.x; }
 
