@@ -7,9 +7,10 @@ addons:
   apt:
     packages:
       - libsdl2-dev
-
-before_install:
-   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install sdl2; fi
+  homebrew:
+    packages:
+      - sdl2
+    update: true
 
 os:
    - linux
