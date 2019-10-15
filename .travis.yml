@@ -10,6 +10,7 @@ addons:
   homebrew:
     packages:
       - sdl2
+    update: true
 
 os:
    - linux
