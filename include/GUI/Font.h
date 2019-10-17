@@ -33,30 +33,6 @@ namespace GUI {
 //! Fixed width font
 class Font
 {
-private:
-public: // TODO make these private
-   Vector         size;
-   uint8_t        first;
-   uint8_t        last;
-   uint8_t        bpp;
-   const uint8_t* bitmaps;
-
-   unsigned getPixelsPerByte() const
-   {
-      assert((bpp == 1) || (bpp == 2) || (bpp == 4) || (bpp == 8));
-      return 8 / bpp;
-   }
-
-   //! Get length of alphamap data for each line in a char (bytes)
-   unsigned getBytesPerLine() const
-   {
-      unsigned pixels_per_byte = getPixelsPerByte();
-      return (size.x + pixels_per_byte - 1) / pixels_per_byte;
-   }
-
-   //! Get length of alphamap data for each char (bytes)
-   unsigned getBytesPerChar() const { return size.y * getBytesPerLine(); }
-
 public:
    //! Get default cell width (pixels)
    unsigned getWidth() const { return size.x; }
@@ -121,6 +97,30 @@ public:
       line[index] = line[index] & ~(mask << shift);
       line[index] = line[index] | (value << shift);
    }
+
+private:
+public: // TODO make these private
+   unsigned getPixelsPerByte() const
+   {
+      assert((bpp == 1) || (bpp == 2) || (bpp == 4) || (bpp == 8));
+      return 8 / bpp;
+   }
+
+   //! Get length of alphamap data for each line in a char (bytes)
+   unsigned getBytesPerLine() const
+   {
+      unsigned pixels_per_byte = getPixelsPerByte();
+      return (size.x + pixels_per_byte - 1) / pixels_per_byte;
+   }
+
+   //! Get length of alphamap data for each char (bytes)
+   unsigned getBytesPerChar() const { return size.y * getBytesPerLine(); }
+
+   Vector         size;
+   uint8_t        first;
+   uint8_t        last;
+   uint8_t        bpp;
+   const uint8_t* bitmaps;
 };
 
 } // namespace GUI

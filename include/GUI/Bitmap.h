@@ -34,24 +34,28 @@
 
 namespace GUI {
 
-//!
+//! A two dimensional software frame buffer
 class Bitmap : public Canvas
 {
 public:
+   //! Construct an empty bitmap
    Bitmap() = default;
 
+   //! Construct a bitmap from a file
    Bitmap(const std::string& filename)
    {
-      readFromFile(filename);
+      (void) readFromFile(filename);
    }
 
+   //! Construct a blank bitmap
    Bitmap(unsigned width, unsigned height)
    {
       resize(width, height);
    }
 
-   virtual ~Bitmap() {}
+   virtual ~Bitmap() = default;
 
+   //! Read a bitmap from a file
    bool readFromFile(const std::string& filename)
    {
       if (!readPNG(filename)) return false;
@@ -60,11 +64,10 @@ public:
       return true;
    }
 
+   //! Return reference to the bitmap implementation
    const PLT::Bitmap& getBitmap() const { return bitmap; }
 
 private:
-   PLT::Bitmap bitmap;
-
    // Implement GUI::Canvas
    virtual STB::Colour canvasGetPixel(int32_t x, int32_t y) const override
    {
@@ -108,6 +111,8 @@ private:
    }
 
    bool readPNG(const std::string& filename);
+
+   PLT::Bitmap bitmap;
 };
 
 } // namespace GUI

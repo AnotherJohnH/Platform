@@ -55,9 +55,8 @@ public:
    void hide() { frame.setVisible(false); }
 
 private:
-   PLT::Frame frame;
-
    // Implement GUI::Canvas
+
    virtual STB::Colour canvasGetPixel(int32_t x, int32_t y) const override
    {
       return frame.getPixel(x, y);
@@ -106,6 +105,8 @@ private:
          frame.blit(*image, x, y, w, h, src_x, src_y);
       }
    }
+
+   PLT::Frame frame;
 };
 
 } // namespace GUI

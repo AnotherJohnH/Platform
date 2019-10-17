@@ -57,19 +57,18 @@ public:
    //! Get canvas height (pixels)
    int32_t getHeight() const { return size.y; }
 
-   //! Test pixel co-ordinates are inside the canvass boundaries
+   //! Test pixel co-ordinates are inside the canvas boundary
    bool isVisible(int32_t x, int32_t y) const
    {
       return (x >= 0) && (x < getWidth()) &&
              (y >= 0) && (y < getHeight());
    }
 
-   //! Get colour of single pixel in the frame buffer
+   //! Get colour of single pixel on the canvas
    STB::Colour getPixel(int32_t x, int32_t y) const
    {
       return isVisible(x, y) ? canvasGetPixel(x, y)
                              : HIDDEN;
-
    }
 
    //! Set a single pixel
@@ -84,10 +83,10 @@ public:
    //! Set a horizontal row of pixels
    void drawSpan(STB::Colour colour, int32_t x1, int32_t y, int32_t x2)
    {
-      clipAndSort(x1, x2, size.x);
-
       if((y >= 0) && (y < getHeight()))
       {
+         clipAndSort(x1, x2, size.x);
+
          canvasSpan(colour, x1, y, x2);
       }
    }
@@ -95,7 +94,7 @@ public:
    //! Draw a straight line between two points
    void drawLine(STB::Colour colour, int32_t x1, int32_t y1, int32_t x2, int32_t y2)
    {
-      // TODO clip to frame and then use canvasPoint() directly
+      // TODO clip to boundary and then use canvasPoint() directly
 
       int32_t dx = x2 - x1;
       int32_t dy = y2 - y1;
