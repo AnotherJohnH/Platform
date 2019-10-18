@@ -20,16 +20,20 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-set(app     Platform)
+cmake_minimum_required(VERSION 3.11.4)
+cmake_policy(SET CMP0048 NEW) # Humph! don't like having to do this
+
+project(Platform
+        VERSION   0.0.5
+        LANGUAGES C CXX ASM)
+
 set(author  "John D. Haughton")
-set(version 0.0.5)
 
 set(test_source Source/STB/testEndian.cpp
                 Source/STB/testLicense.cpp)
 
 #-------------------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.11.4)
 include(build.cmake NO_POLICY_SCOPE)
 
 #-------------------------------------------------------------------------------

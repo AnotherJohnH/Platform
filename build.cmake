@@ -22,8 +22,6 @@
 
 # Construct a target platform specific build environment
 
-project(${app} C CXX ASM)
-
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -57,7 +55,7 @@ include(${CMAKE_SOURCE_DIR}/Platform/Source/PLT/target/${PLT_TARGET}/config.cmak
 # Compiler flags
 
 set(PLT_c_flags "${PLT_c_flags} -DPLT_PROJ_COMMIT=\\\"${PLT_proj_commit}\\\"")
-set(PLT_c_flags "${PLT_c_flags} -DPLT_PROJ_VERSION=\\\"${version}\\\"")
+set(PLT_c_flags "${PLT_c_flags} -DPLT_PROJ_VERSION=\\\"${CMAKE_PROJECT_VERSION}\\\"")
 set(PLT_c_flags "${PLT_c_flags} -DPLT_MACHINE=\\\"${PLT_machine}\\\"")
 set(PLT_c_flags "${PLT_c_flags} -DPLT_TARGET_${PLT_TARGET}")
 set(PLT_c_flags "${PLT_c_flags} -Wall")
@@ -158,13 +156,13 @@ if(DEFINED test_source)
       set(INSTALL_GTEST OFF)
       add_subdirectory(${CMAKE_SOURCE_DIR}/Platform/googletest)
 
-      add_executable(test${app} ${test_source} Platform/Source/test/testMain.cpp)
+      add_executable(test${CMAKE_PROJECT_NAME} ${test_source} Platform/Source/test/testMain.cpp)
 
-      target_link_libraries(test${app} gtest ${PLT_libs})
+      target_link_libraries(test${CMAKE_PROJECT_NAME} gtest ${PLT_libs})
 
       add_custom_command(OUTPUT test.log
-                         COMMAND ./test${app} | tee test.log
-                         DEPENDS test${app})
+                         COMMAND ./test${CMAKE_PROJECT_NAME} | tee test.log
+                         DEPENDS test${CMAKE_PROJECT_NAME})
 
       add_custom_target(runTest ALL DEPENDS test.log)
    endif()
@@ -173,11 +171,6 @@ endif()
 #-------------------------------------------------------------------------------
 # Package support
 
-string(REPLACE "." ";" split_version ${version})
-
-list(GET split_version 0 CPACK_PACKAGE_VERSION_MAJOR)
-list(GET split_version 1 CPACK_PACKAGE_VERSION_MINOR)
-list(GET split_version 2 CPACK_PACKAGE_VERSION_PATCH)
 set(CPACK_PACKAGE_VENDOR             ${author})
 set(CPACK_PACKAGE_INSTALL_DIRECTORY  "/usr/local")
 set(CPACK_RESOURCE_FILE_LICENSE      ${CMAKE_SOURCE_DIR}/LICENSE)

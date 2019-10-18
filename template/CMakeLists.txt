@@ -20,16 +20,20 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-set(app     APPLICATION)
+cmake_minimum_required(`VERSION' 3.11.4)
+cmake_policy(SET CMP0048 NEW) # Humph! don't like having to do this
+
+project(APPLICATION
+        `VERSION'   VERSION
+        LANGUAGES C CXX ASM)
+
 set(author  AUTHOR)
-set(version VERSION)
 
 set(source  Source/BINARY.cpp)
 set(binary  BINARY)
 
 #-------------------------------------------------------------------------------
 
-cmake_minimum_required(`VERSION' 3.11.4)
 `include'(Platform/build.cmake NO_POLICY_SCOPE)
 
 #-------------------------------------------------------------------------------
