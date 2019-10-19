@@ -42,15 +42,14 @@ private:
    }
 
 public:
-   APPLICATION`App'(int argc, const char* argv[])
+   APPLICATION`App'()
       : ConsoleApp(PROGRAM, `DESCRIPTION', `LINK', `AUTHOR', COPYRIGHT_YEAR)
    {
-      parseArgsAndStart(argc, argv);
    }
 };
 
 
 int main(int argc, const char* argv[])
 {
-   APPLICATION`App'(argc, argv);
+   return APPLICATION`App'().parseArgsAndStart(argc, argv);
 }
