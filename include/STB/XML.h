@@ -223,14 +223,18 @@ public:
    {
       LEX::File lex(filename.c_str());
 
-      lex.setSpecialIdentChar("_-:");
-      lex.setComment("<!--", "-->");
+      if (lex.isOpen())
+      {
+         lex.setSpecialIdentChar("_-:");
+         lex.setComment("<!--", "-->");
 
-      parseDocument(lex, require_prologue);
+         ok = parseDocument(lex, require_prologue);
+      }
    }
 
    Document()
-      : version("1.1")
+      : ok{true}
+      , version("1.1")
       , encoding("UTF-8")
       , standalone("no")
    {}
@@ -268,7 +272,7 @@ public:
    }
 
 private:
-   void parseXMLDecl(Lex& lex, bool require_prolog)
+   bool parseXMLDecl(Lex& lex, bool require_prolog)
    {
       if (require_prolog)
       {
@@ -276,7 +280,7 @@ private:
       }
       else if (!lex.isMatch("<?xml"))
       {
-         return;
+         return true;
       }
 
       lex.match("version");
@@ -295,10 +299,10 @@ private:
          lex.matchString(standalone);
       }
 
-      lex.match("?>");
+      return lex.match("?>");
    }
 
-   void parseProlog(Lex& lex, bool require_prolog)
+   bool parseProlog(Lex& lex, bool require_prolog)
    {
       parseXMLDecl(lex, require_prolog);
 
@@ -318,17 +322,26 @@ private:
 
          lex.match('>');
       }
+
+      return true;
    }
 
-   void parseDocument(Lex& lex, bool require_prolog)
+   bool parseDocument(Lex& lex, bool require_prolog)
    {
-      parseProlog(lex, require_prolog);
+      if (!parseProlog(lex, require_prolog))
+      {
+         return false;
+      }
 
-      lex.match('<');
+      if (!lex.match('<'))
+      {
+         return false;
+      }
 
-      parse(lex);
+      return parse(lex);
    }
 
+   bool         ok{false};
    std::string  version;
    std::string  encoding;
    std::string  standalone;

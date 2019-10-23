@@ -432,7 +432,7 @@ public:
                std::string filename;
                matchString(filename);
 
-               openInclude(filename.c_str());
+               (void) openInclude(filename.c_str());
             }
             else
             {
@@ -495,7 +495,7 @@ public:
    virtual std::string getSource() const = 0;
    virtual bool        isEof() = 0;
    virtual bool        getChar(char& ch) = 0;
-   virtual void        openInclude(const char* filename) {}
+   virtual bool        openInclude(const char* filename) { return false; }
 
 protected:
    Lex() {}
@@ -521,7 +521,7 @@ class File : public Lex
 public:
    File(const char* filename, const char* ext = nullptr)
    {
-      open(filename, ext);
+      ok = open(filename, ext);
    }
 
    ~File()
@@ -531,6 +531,8 @@ public:
          close();
       }
    }
+
+   bool isOpen() const { return ok; }
 
    // Implement Lex
 
@@ -565,16 +567,13 @@ public:
       return isEof();
    }
 
-   virtual void openInclude(const char* filename) override
+   virtual bool openInclude(const char* filename) override
    {
-      open(filename, nullptr);
+      return open(filename, nullptr);
    }
 
 private:
-   std::vector<PLT::File*> file_stack;
-   std::vector<unsigned>   line_no_stack;
-
-   void open(const char* filename, const char* ext)
+   bool open(const char* filename, const char* ext)
    {
       line_no_stack.push_back(line_no);
 
@@ -586,11 +585,11 @@ private:
       {
          error("Failed to open file '%s'", file->getFilename());
          close();
+         return false;
       }
-      else
-      {
-         line_no = 1;
-      }
+
+      line_no = 1;
+      return true;
    }
 
    void close()
@@ -600,7 +599,13 @@ private:
 
       line_no = line_no_stack.back();
       line_no_stack.pop_back();
+
+      ok = !file_stack.empty();
    }
+
+   bool                    ok{false};
+   std::vector<PLT::File*> file_stack;
+   std::vector<unsigned>   line_no_stack;
 };
 
 
