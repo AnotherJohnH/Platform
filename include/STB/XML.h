@@ -41,10 +41,13 @@ public:
       : name(name_)
    {}
 
+   //! Get name of attribute
    std::string getName() const { return name; }
 
+   //! Get value of attribute
    std::string getValue() const { return value; }
 
+   //! Read an attribute value from a Lex stream
    void parse(Lex& lex)
    {
       lex.match('=');
@@ -61,15 +64,18 @@ private:
 class Element : public std::vector<Element>
 {
 public:
-   Element(const std::string& = "")
-   {}
+   Element() = default;
 
+   //! Get name of element
    std::string getName() const { return name; }
 
+   //! Get value of element
    std::string getValue() const { return value; }
 
-   const std::vector<Attr> getAttrList() const { return attr_list; }
+   //! Get list of attributes for this element
+   const std::vector<Attr>& getAttrList() const { return attr_list; }
 
+   //! Return value of a named attribute or empty string
    std::string operator[](const std::string& attr_name) const
    {
       for(const auto& attr : attr_list)
@@ -83,6 +89,7 @@ public:
       return "";
    }
 
+   //! Check if element has the named attribute
    bool hasAttr(const std::string& attr_name) const
    {
       for(const auto& attr : attr_list)
@@ -96,28 +103,70 @@ public:
       return false;
    }
 
-   template <typename TYPE>
-   void match(const std::string& attr_name, TYPE& value) const
+   //! Extract a single bool value from the named attribute
+   void match(const std::string& attr_name, bool& value) const
    {
        LEX::String(operator[](attr_name)).match(value);
    }
 
-   template <typename TYPE>
-   void matchSigned(const std::string& attr_name, TYPE& value) const
+   //! Extract a single char value from the named attribute
+   void match(const std::string& attr_name, char& value) const
    {
-       LEX::String(operator[](attr_name)).matchSigned(value);
+       value = operator[](attr_name)[0];
    }
 
-   template <typename TYPE>
-   void matchUnsigned(const std::string& attr_name, TYPE& value) const
+   //! Extract a single unsigned integer value from the named attribute
+   void match(const std::string& attr_name, unsigned& value) const
    {
        LEX::String(operator[](attr_name)).matchUnsigned(value);
    }
 
-   template <typename TYPE>
-   void matchFloat(const std::string& attr_name, TYPE& value) const
+   //! Extract a pair of unsigned integer values from the named attribute
+   void match(const std::string& attr_name,
+              unsigned&          value1,
+              unsigned&          value2) const
+   {
+       LEX::String lex(operator[](attr_name));
+       lex.matchUnsigned(value1);
+       lex.matchUnsigned(value2);
+   }
+
+   //! Extract a single signed integer value from the named attribute
+   void match(const std::string& attr_name, signed& value) const
+   {
+       LEX::String(operator[](attr_name)).matchSigned(value);
+   }
+
+   //! Extract a pair of signed integer values from the named attribute
+   void match(const std::string& attr_name,
+              signed&            value1,
+              signed&            value2) const
+   {
+       LEX::String lex(operator[](attr_name));
+       lex.matchSigned(value1);
+       lex.matchSigned(value2);
+   }
+
+   //! Extract a single floating-point value from the named attribute
+   void match(const std::string& attr_name, double& value) const
    {
        LEX::String(operator[](attr_name)).matchFloat(value);
+   }
+
+   //! Extract a pair of floating-point values from the named attribute
+   void match(const std::string& attr_name,
+              double&            value1,
+              double&            value2) const
+   {
+       LEX::String lex(operator[](attr_name));
+       lex.matchFloat(value1);
+       lex.matchFloat(value2);
+   }
+
+   //! Extract a single string value from the named attribute
+   void match(const std::string& attr_name, std::string& value) const
+   {
+       LEX::String(operator[](attr_name)).matchIdent(value);
    }
 
    void write(FILE* fp, unsigned indent=0) const
@@ -219,6 +268,7 @@ private:
 class Document : public Element
 {
 public:
+   //! Construct an XML document from a file
    Document(const std::string& filename, bool require_prologue = false)
    {
       LEX::File lex(filename.c_str());
@@ -232,6 +282,7 @@ public:
       }
    }
 
+   //! Construct an empty XML document
    Document()
       : ok{true}
       , version("1.1")
