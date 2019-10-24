@@ -300,6 +300,22 @@ public:
       return true;
    }
 
+   //! Match a boolean value
+   bool match(bool& value)
+   {
+      if (isMatch("true"))
+      {
+          value = true;
+          return true;
+      }
+      else if (isMatch("false"))
+      {
+          value = false;
+          return true;
+      }
+      return error("boolean expected");
+   }
+
    //! Match a single character
    bool match(char token)
    {
@@ -359,6 +375,10 @@ public:
       if ((line_no != 0) && !isEof())
       {
           fprintf(stderr, " %s:%u", getSource().c_str(), line_no);
+      }
+      else
+      {
+          fprintf(stderr, " \"%s\"", getSource().c_str());
       }
       fprintf(stderr, " - ");
 
@@ -618,7 +638,7 @@ public:
 
    // Implement Lex
 
-   virtual std::string getSource() const override { return ""; }
+   virtual std::string getSource() const override { return string; }
    virtual bool        isEof() override           { return pos >= string.size(); }
 
    virtual bool getChar(char& ch) override
@@ -629,9 +649,10 @@ public:
    }
 
 private:
-   size_t       pos{0};
-   std::string  string{};
+   size_t      pos{0};
+   std::string string{};
 };
+
 
 } // namsepace LEX
 
