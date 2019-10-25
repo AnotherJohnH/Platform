@@ -47,11 +47,19 @@ public:
    //! Get value of attribute
    std::string getValue() const { return value; }
 
+   //! Get reference to the value of the attribute
+   void set(const std::string& value_) { value = value_; }
+
    //! Read an attribute value from a Lex stream
    void parse(Lex& lex)
    {
       lex.match('=');
       lex.matchString(value);
+   }
+
+   void write(FILE* fp) const
+   {
+      fprintf(fp, " %s=\"%s\"", name.c_str(), value.c_str());
    }
 
 private:
@@ -66,8 +74,12 @@ class Element : public std::vector<Element>
 public:
    Element() = default;
 
-   //! Get name of element
-   std::string getName() const { return name; }
+   Element(const std::string& type_)
+      : type(type_)
+   {}
+
+   //! Get type of element
+   std::string getName() const { return type; }
 
    //! Get value of element
    std::string getValue() const { return value; }
@@ -78,29 +90,14 @@ public:
    //! Return value of a named attribute or empty string
    std::string operator[](const std::string& attr_name) const
    {
-      for(const auto& attr : attr_list)
-      {
-         if (attr.getName() == attr_name)
-         {
-            return attr.getValue();
-         }
-      }
-
-      return "";
+      const Attr* attr = findAttr(attr_name);
+      return attr != nullptr ? attr->getValue() : "";
    }
 
    //! Check if element has the named attribute
    bool hasAttr(const std::string& attr_name) const
    {
-      for(const auto& attr : attr_list)
-      {
-         if (attr.getName() == attr_name)
-         {
-            return true;
-         }
-      }
-
-      return false;
+      return findAttr(attr_name) != nullptr;
    }
 
    //! Extract a single bool value from the named attribute
@@ -166,7 +163,71 @@ public:
    //! Extract a single string value from the named attribute
    void match(const std::string& attr_name, std::string& value) const
    {
-       LEX::String(operator[](attr_name)).matchIdent(value);
+       value = operator[](attr_name);
+   }
+
+   void setType(const std::string& type_)
+   {
+      type = type_;
+   }
+
+   void set(const std::string& attr_name, const std::string& value)
+   {
+       Attr* attr = findAttr(attr_name);
+       if (attr == nullptr)
+       {
+          attr_list.emplace_back(attr_name);
+          attr = &attr_list.back();
+       }
+       attr->set(value);
+   }
+
+   void setBool(const std::string& attr_name, bool value_)
+   {
+       set(attr_name, value_ ? "true" : "false");
+   }
+
+   void setChar(const std::string& attr_name, char value_)
+   {
+       std::string value{value_};
+       set(attr_name, value);
+   }
+
+   void setUnsigned(const std::string& attr_name, unsigned value)
+   {
+       set(attr_name, std::to_string(value));
+   }
+
+   void setUnsigned(const std::string& attr_name, unsigned value1, unsigned value2)
+   {
+       std::string value = std::to_string(value1);
+       value += ' ';
+       value += std::to_string(value2);
+       set(attr_name, value);
+   }
+
+   void setSigned(const std::string& attr_name, signed value)
+   {
+       set(attr_name, std::to_string(value));
+   }
+
+   void setDouble(const std::string& attr_name, double value)
+   {
+       set(attr_name, std::to_string(value));
+   }
+
+   void setDouble(const std::string& attr_name, double value1, double value2)
+   {
+       std::string value = std::to_string(value1);
+       value += ' ';
+       value += std::to_string(value2);
+       set(attr_name, value);
+   }
+
+   STB::XML::Element* add(const std::string& name)
+   {
+      emplace_back(name);
+      return &back();
    }
 
    void write(FILE* fp, unsigned indent=0) const
@@ -176,13 +237,11 @@ public:
          fprintf(fp, "   ");
       }
 
-      fprintf(fp, "<%s", name.c_str());
+      fprintf(fp, "<%s", type.c_str());
 
       for(const auto& attr : attr_list)
       {
-         fprintf(fp, " %s=\"%s\"", 
-                 attr.getName().c_str(),
-                 attr.getValue().c_str());
+         attr.write(fp);
       }
 
       if (empty())
@@ -203,7 +262,7 @@ public:
             fprintf(fp, "   ");
          }
 
-         fprintf(fp, "</%s", name.c_str());
+         fprintf(fp, "</%s", type.c_str());
       }
       fprintf(fp, ">\n");
    }
@@ -211,7 +270,7 @@ public:
 protected:
    bool parse(Lex& lex)
    {
-      lex.matchIdent(name);
+      lex.matchIdent(type);
 
       std::string attr_name;
       while(lex.isMatchIdent(attr_name))
@@ -244,9 +303,9 @@ protected:
          }
       }
 
-      if (!lex.isMatch(name.c_str()))
+      if (!lex.isMatch(type.c_str()))
       {
-         lex.error("</%s> expected", name.c_str());
+         lex.error("</%s> expected", type.c_str());
          std::string term;
          lex.matchIdent(term);
          lex.match('>');
@@ -258,9 +317,35 @@ protected:
    }
 
 private:
-   std::string       name{};
-   std::vector<Attr> attr_list{};
+   Attr* findAttr(const std::string& attr_name)
+   {
+      for(auto& attr : attr_list)
+      {
+         if (attr.getName() == attr_name)
+         {
+            return &attr;
+         }
+      }
+
+      return nullptr;
+   }
+
+   const Attr* findAttr(const std::string& attr_name) const
+   {
+      for(const auto& attr : attr_list)
+      {
+         if (attr.getName() == attr_name)
+         {
+            return &attr;
+         }
+      }
+
+      return nullptr;
+   }
+
+   std::string       type{};
    std::string       value{};
+   std::vector<Attr> attr_list{};
 };
 
 
@@ -290,6 +375,8 @@ public:
       , standalone("no")
    {}
 
+   bool isOk() const { return ok; }
+
    //! Write document to an open filestream
    void write(FILE* fp) const
    {
@@ -298,9 +385,9 @@ public:
       if (!standalone.empty()) fprintf(fp, " standalone=\"%s\"", standalone.c_str());
       fprintf(fp, "?>\n");
 
-      if (!type.empty())
+      if (!doctype.empty())
       {
-         fprintf(fp, "<!DOCTYPE %s", type.c_str());
+         fprintf(fp, "<!DOCTYPE %s", doctype.c_str());
 
          if (!system_literal.empty())
          {
@@ -359,7 +446,7 @@ private:
 
       if (lex.isMatch("<!DOCTYPE"))
       {
-         lex.matchIdent(type);
+         lex.matchIdent(doctype);
 
          if (lex.isMatch("SYSTEM"))
          {
@@ -396,7 +483,7 @@ private:
    std::string  version;
    std::string  encoding;
    std::string  standalone;
-   std::string  type;
+   std::string  doctype;
    std::string  system_literal;
    std::string  public_literal;
    Element      root;
