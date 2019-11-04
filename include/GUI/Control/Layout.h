@@ -115,8 +115,8 @@ protected:
    Vector      size{0, 0};              //!< Width and height
    Fit         horz_fit{Fit::FIXED};    //!< Horizontal fit
    Fit         vert_fit{Fit::FIXED};    //!< Vertical fit
-   SmallVector top_left{0, 0};          //!< Top left border for children
-   SmallVector btm_right{0, 0};         //!< Bottom right border for children
+   SmallSize   top_left{0, 0};          //!< Top left border for children
+   SmallSize   btm_right{0, 0};         //!< Bottom right border for children
    bool        row{false};              //!< Layout children in a row not a column
    uint8_t     gap{0};                  //!< Gap between children
    Align       horz_align{Align::LEFT}; //!< Horizontal alignment mode for children
