@@ -128,6 +128,22 @@ public:
        lex.matchUnsigned(value2);
    }
 
+   //! Extract a single unsigned integer value from the named attribute
+   void match(const std::string& attr_name, uint16_t& value) const
+   {
+       LEX::String(operator[](attr_name)).matchSigned(value);
+   }
+
+   //! Extract a pair of unsigned integer values from the named attribute
+   void match(const std::string& attr_name,
+              uint16_t&          value1,
+              uint16_t&          value2) const
+   {
+       LEX::String lex(operator[](attr_name));
+       lex.matchSigned(value1);
+       lex.matchSigned(value2);
+   }
+
    //! Extract a single signed integer value from the named attribute
    void match(const std::string& attr_name, signed& value) const
    {
@@ -138,6 +154,22 @@ public:
    void match(const std::string& attr_name,
               signed&            value1,
               signed&            value2) const
+   {
+       LEX::String lex(operator[](attr_name));
+       lex.matchSigned(value1);
+       lex.matchSigned(value2);
+   }
+
+   //! Extract a single signed integer value from the named attribute
+   void match(const std::string& attr_name, int16_t& value) const
+   {
+       LEX::String(operator[](attr_name)).matchSigned(value);
+   }
+
+   //! Extract a pair of signed integer values from the named attribute
+   void match(const std::string& attr_name,
+              int16_t&           value1,
+              int16_t&           value2) const
    {
        LEX::String lex(operator[](attr_name));
        lex.matchSigned(value1);
