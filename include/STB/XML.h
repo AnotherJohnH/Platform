@@ -243,6 +243,14 @@ public:
        set(attr_name, std::to_string(value));
    }
 
+   void setSigned(const std::string& attr_name, signed value1, signed value2)
+   {
+       std::string value = std::to_string(value1);
+       value += ' ';
+       value += std::to_string(value2);
+       set(attr_name, value);
+   }
+
    void setDouble(const std::string& attr_name, double value)
    {
        set(attr_name, std::to_string(value));
