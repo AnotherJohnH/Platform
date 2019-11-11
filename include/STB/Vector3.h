@@ -120,9 +120,14 @@ public:
       }
    }
 
+   bool operator==(const This& v) const
+   {
+      return (x == v.x) && (y == v.y) && (z == v.z);
+   }
+
    This getNormalised() const
    {
-      assert(getMagnitude() != 0);
+      assert(getMagnitude() != 0.0);
 
       return operator*(1.0 / getMagnitude());
    }
@@ -149,7 +154,7 @@ public:
       return getDotProduct(*this);
    }
 
-   T getMagnitude() const
+   double getMagnitude() const
    {
       return sqrt(getSquare());
    }
