@@ -288,38 +288,128 @@ public:
       }
    }
 
+   class Bezier
+   {
+   public:
+      using Vector = STB::Vector2<int32_t>;
+
+      Bezier(Canvas*      canvas_,
+             STB::Colour  colour_,
+             int32_t x1,  int32_t y1,
+             int32_t x2,  int32_t y2,
+             int32_t cx1, int32_t cy1,
+             int32_t cx2, int32_t cy2)
+         : canvas(canvas_)
+         , colour(colour_)
+      {
+         a.x = -x1 + 3*cx1 - 3*cx2 + x2;
+         a.y = -y1 + 3*cy1 - 3*cy2 + y2;
+
+         b.x = 3*x1 - 6*cx1 + 3*cx2;
+         b.y = 3*y1 - 6*cy1 + 3*cy2;
+
+         c.x = -3*x1 + 3*cx1;
+         c.y = -3*y1 + 3*cy1;
+
+         d.x = x1;
+         d.y = y1;
+      }
+
+      void drawCurve(double t1, const Vector& p1, double t2, const Vector& p2)
+      {
+         double t = (t1 + t2) * 0.5;
+         Vector p = compute(t);
+
+         Vector d1 = p - p1;
+         if (d1.getSquare() > LIMIT_SQUARED)
+         {
+            drawCurve(t1, p1, t, p);
+         }
+         else
+         {
+            canvas->drawLine(colour, p1.x, p1.y, p.x, p.y);
+         }
+
+         Vector d2 = p2 - p;
+         if (d2.getSquare() > LIMIT_SQUARED)
+         {
+            drawCurve(t, p, t2, p2);
+         }
+         else
+         {
+            canvas->drawLine(colour, p.x, p.y, p2.x, p2.y);
+         }
+      }
+
+      void fillCurve(double t1, const Vector& p1, double t2, const Vector& p2)
+      {
+         double t = (t1 + t2) * 0.5;
+         Vector p = compute(t);
+
+         Vector d1 = p - p1;
+         if (d1.getSquare() > LIMIT_SQUARED)
+         {
+            fillCurve(t1, p1, t, p);
+         }
+         else
+         {
+            canvas->fillTriangle(colour, d.x, d.y, p1.x, p1.y, p.x, p.y);
+         }
+
+         Vector d2 = p2 - p;
+         if (d2.getSquare() > LIMIT_SQUARED)
+         {
+            fillCurve(t, p, t2, p2);
+         }
+         else
+         {
+            canvas->fillTriangle(colour, d.x, d.y, p.x, p.y, p2.x, p2.y);
+         }
+      }
+
+   private:
+      const int32_t LIMIT = 4;
+      const int32_t LIMIT_SQUARED = LIMIT * LIMIT;
+
+      Vector compute(double t)
+      {
+         return Vector{a.x * t*t*t + b.x * t*t + c.x * t + d.x,
+                       a.y * t*t*t + b.y * t*t + c.y * t + d.y};
+      }
+
+      Canvas*     canvas;
+      STB::Colour colour;
+      Vector      a, b, c, d;
+   };
+
+   //! Draw a bezier curve
    void drawCurve(STB::Colour colour,
                   int32_t x1,  int32_t y1,
                   int32_t x2,  int32_t y2,
                   int32_t cx1, int32_t cy1,
                   int32_t cx2, int32_t cy2)
    {
-      int32_t ax =   -x1 + 3*cx1 - 3*cx2 + x2;
-      int32_t ay =   -y1 + 3*cy1 - 3*cy2 + y2;
+      Bezier bezier{this, colour, x1, y1, x2, y2, cx1, cy1, cx2, cy2};;
 
-      int32_t bx =  3*x1 - 6*cx1 + 3*cx2;
-      int32_t by =  3*y1 - 6*cy1 + 3*cy2;
+      Bezier::Vector start{x1, y1};
+      Bezier::Vector end{x2, y2};
 
-      int32_t cx = -3*x1 + 3*cx1;
-      int32_t cy = -3*y1 + 3*cy1;
+      bezier.drawCurve(0.0, start, 1.0, end);
+   }
 
-      int32_t dx =    x1;
-      int32_t dy =    y1;
+   //! Fill a bezier curve
+   void fillCurve(STB::Colour colour,
+                  int32_t x1,  int32_t y1,
+                  int32_t x2,  int32_t y2,
+                  int32_t cx1, int32_t cy1,
+                  int32_t cx2, int32_t cy2)
+   {
+      Bezier bezier{this, colour, x1, y1, x2, y2, cx1, cy1, cx2, cy2};;
 
-      int32_t prev_x = x1;
-      int32_t prev_y = y1;
+      Bezier::Vector start{x1, y1};
+      Bezier::Vector end{x2, y2};
 
-      // TODO some kind of recursive sub-division would seem to be in order here
-      for(double t = 0.1; t <= 1.0; t += 0.1)
-      {
-         int32_t x = ax * t*t*t + bx * t*t + cx * t + dx;
-         int32_t y = ay * t*t*t + by * t*t + cy * t + dy;
-
-         drawLine(colour, prev_x, prev_y, x, y);
-
-         prev_x = x;
-         prev_y = y;
-      }
+      bezier.fillCurve(0.0, start, 1.0, end);
    }
 
    //! Draw an alphamap
