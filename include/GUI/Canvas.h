@@ -373,8 +373,8 @@ public:
 
       Vector compute(double t)
       {
-         return Vector{a.x * t*t*t + b.x * t*t + c.x * t + d.x + 0.5,
-                       a.y * t*t*t + b.y * t*t + c.y * t + d.y + 0.5};
+         return Vector{int32_t(a.x * t*t*t + b.x * t*t + c.x * t + d.x + 0.5),
+                       int32_t(a.y * t*t*t + b.y * t*t + c.y * t + d.y + 0.5)};
       }
 
       Canvas*     canvas;
