@@ -586,6 +586,13 @@ public:
       fillCurve(colour, p1.x, p1.y, p2.x, p2.y, cp1.x, cp1.y, cp2.x, cp2.y);
    }
 
+   //! Draw a string of text
+   void drawText(STB::Colour fg, STB::Colour bg, const Position& p,
+                 const Font* font, const char* text)
+   {
+      drawText(fg, bg, p.x, p.y, font, text);
+   }
+
 protected:
    // Overide the following interface with a frame buffer implementation
 
