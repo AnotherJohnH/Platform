@@ -29,9 +29,9 @@
 
 namespace GUI {
 
-using Vector    = STB::Vector2<int16_t>;
+using Vector    = STB::Vector2<int32_t>;
 using Position  = Vector;
-using Size      = STB::Vector2<uint16_t>;
+using Size      = STB::Vector2<uint32_t>;
 using SmallSize = STB::Vector2<uint8_t>;
 
 } // namespace GUI

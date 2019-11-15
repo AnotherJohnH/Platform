@@ -368,13 +368,13 @@ public:
       }
 
    private:
-      const int32_t LIMIT = 4;
+      const int32_t LIMIT = 3;
       const int32_t LIMIT_SQUARED = LIMIT * LIMIT;
 
       Vector compute(double t)
       {
-         return Vector{a.x * t*t*t + b.x * t*t + c.x * t + d.x,
-                       a.y * t*t*t + b.y * t*t + c.y * t + d.y};
+         return Vector{a.x * t*t*t + b.x * t*t + c.x * t + d.x + 0.5,
+                       a.y * t*t*t + b.y * t*t + c.y * t + d.y + 0.5};
       }
 
       Canvas*     canvas;
@@ -544,6 +544,47 @@ public:
 
    //! Get pointer to underlying frame buffer
    const PLT::Image* getImage() const { return canvasGetImage(); }
+
+   //! Draw a point
+   void drawPoint(STB::Colour colour, const Position& p)
+   {
+      drawPoint(colour, p.x, p.y);
+   }
+
+   //! Draw a straight line between two points
+   void drawLine(STB::Colour colour, const Position& p1, const Position& p2)
+   {
+      drawLine(colour, p1.x, p1.y, p2.x, p2.y);
+   }
+
+   //! Draw a bezier curve
+   void drawCurve(STB::Colour colour,
+                  const Position& p1,
+                  const Position& p2,
+                  const Position& cp1,
+                  const Position& cp2)
+   {
+      drawCurve(colour, p1.x, p1.y, p2.x, p2.y, cp1.x, cp1.y, cp2.x, cp2.y);
+   }
+
+   //! Fill a triangle
+   void fillTriangle(STB::Colour colour,
+                     const Position& p1,
+                     const Position& p2,
+                     const Position& p3)
+   {
+      fillTriangle(colour, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+   }
+
+   //! Fill a bezier curve
+   void fillCurve(STB::Colour colour,
+                  const Position& p1,
+                  const Position& p2,
+                  const Position& cp1,
+                  const Position& cp2)
+   {
+      fillCurve(colour, p1.x, p1.y, p2.x, p2.y, cp1.x, cp1.y, cp2.x, cp2.y);
+   }
 
 protected:
    // Overide the following interface with a frame buffer implementation
