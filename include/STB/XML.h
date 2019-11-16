@@ -20,16 +20,13 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef STB_XML_H
-#define STB_XML_H
+#ifndef XML_H
+#define XML_H
 
 #include "STB/Lex.h"
 
 #include <string>
 #include <vector>
-
-
-namespace STB {
 
 namespace XML {
 
@@ -51,7 +48,7 @@ public:
    void set(const std::string& value_) { value = value_; }
 
    //! Read an attribute value from a Lex stream
-   void parse(Lex& lex)
+   void parse(STB::Lex& lex)
    {
       lex.match('=');
       lex.matchString(value);
@@ -103,7 +100,7 @@ public:
    //! Extract a single bool value from the named attribute
    void match(const std::string& attr_name, bool& value) const
    {
-       LEX::String(operator[](attr_name)).match(value);
+       STB::LEX::String(operator[](attr_name)).match(value);
    }
 
    //! Extract a single char value from the named attribute
@@ -115,7 +112,7 @@ public:
    //! Extract a single unsigned integer value from the named attribute
    void match(const std::string& attr_name, unsigned& value) const
    {
-       LEX::String(operator[](attr_name)).matchUnsigned(value);
+       STB::LEX::String(operator[](attr_name)).matchUnsigned(value);
    }
 
    //! Extract a pair of unsigned integer values from the named attribute
@@ -123,7 +120,7 @@ public:
               unsigned&          value1,
               unsigned&          value2) const
    {
-       LEX::String lex(operator[](attr_name));
+       STB::LEX::String lex(operator[](attr_name));
        lex.matchUnsigned(value1);
        lex.matchUnsigned(value2);
    }
@@ -131,7 +128,7 @@ public:
    //! Extract a single unsigned integer value from the named attribute
    void match(const std::string& attr_name, uint16_t& value) const
    {
-       LEX::String(operator[](attr_name)).matchSigned(value);
+       STB::LEX::String(operator[](attr_name)).matchSigned(value);
    }
 
    //! Extract a pair of unsigned integer values from the named attribute
@@ -139,7 +136,7 @@ public:
               uint16_t&          value1,
               uint16_t&          value2) const
    {
-       LEX::String lex(operator[](attr_name));
+       STB::LEX::String lex(operator[](attr_name));
        lex.matchSigned(value1);
        lex.matchSigned(value2);
    }
@@ -147,7 +144,7 @@ public:
    //! Extract a single signed integer value from the named attribute
    void match(const std::string& attr_name, signed& value) const
    {
-       LEX::String(operator[](attr_name)).matchSigned(value);
+       STB::LEX::String(operator[](attr_name)).matchSigned(value);
    }
 
    //! Extract a pair of signed integer values from the named attribute
@@ -155,7 +152,7 @@ public:
               signed&            value1,
               signed&            value2) const
    {
-       LEX::String lex(operator[](attr_name));
+       STB::LEX::String lex(operator[](attr_name));
        lex.matchSigned(value1);
        lex.matchSigned(value2);
    }
@@ -163,7 +160,7 @@ public:
    //! Extract a single signed integer value from the named attribute
    void match(const std::string& attr_name, int16_t& value) const
    {
-       LEX::String(operator[](attr_name)).matchSigned(value);
+       STB::LEX::String(operator[](attr_name)).matchSigned(value);
    }
 
    //! Extract a pair of signed integer values from the named attribute
@@ -171,7 +168,7 @@ public:
               int16_t&           value1,
               int16_t&           value2) const
    {
-       LEX::String lex(operator[](attr_name));
+       STB::LEX::String lex(operator[](attr_name));
        lex.matchSigned(value1);
        lex.matchSigned(value2);
    }
@@ -179,7 +176,7 @@ public:
    //! Extract a single floating-point value from the named attribute
    void match(const std::string& attr_name, double& value) const
    {
-       LEX::String(operator[](attr_name)).matchFloat(value);
+       STB::LEX::String(operator[](attr_name)).matchFloat(value);
    }
 
    //! Extract a pair of floating-point values from the named attribute
@@ -187,7 +184,7 @@ public:
               double&            value1,
               double&            value2) const
    {
-       LEX::String lex(operator[](attr_name));
+       STB::LEX::String lex(operator[](attr_name));
        lex.matchFloat(value1);
        lex.matchFloat(value2);
    }
@@ -264,7 +261,7 @@ public:
        set(attr_name, value);
    }
 
-   STB::XML::Element* add(const std::string& name)
+   Element* add(const std::string& name)
    {
       emplace_back(name);
       return &back();
@@ -308,7 +305,7 @@ public:
    }
 
 protected:
-   bool parse(Lex& lex)
+   bool parse(STB::Lex& lex)
    {
       lex.matchIdent(type);
 
@@ -396,7 +393,7 @@ public:
    //! Construct an XML document from a file
    Document(const std::string& filename, bool require_prologue = false)
    {
-      LEX::File lex(filename.c_str());
+      STB::LEX::File lex(filename.c_str());
 
       if (lex.isOpen())
       {
@@ -450,7 +447,7 @@ public:
    }
 
 private:
-   bool parseXMLDecl(Lex& lex, bool require_prolog)
+   bool parseXMLDecl(STB::Lex& lex, bool require_prolog)
    {
       if (require_prolog)
       {
@@ -480,7 +477,7 @@ private:
       return lex.match("?>");
    }
 
-   bool parseProlog(Lex& lex, bool require_prolog)
+   bool parseProlog(STB::Lex& lex, bool require_prolog)
    {
       parseXMLDecl(lex, require_prolog);
 
@@ -504,7 +501,7 @@ private:
       return true;
    }
 
-   bool parseDocument(Lex& lex, bool require_prolog)
+   bool parseDocument(STB::Lex& lex, bool require_prolog)
    {
       if (!parseProlog(lex, require_prolog))
       {
@@ -530,7 +527,5 @@ private:
 };
 
 } // namespace XML
-
-} // namespace STB
 
 #endif
