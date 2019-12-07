@@ -20,30 +20,24 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file PS2KeyDecode.h
-//! \brief 
+//! \file  PS2KeyDecode.h
+//! \brief Convert PS2 scan codes to ASCII
 
 #ifndef MTL_PS2KEYDECODE_H
 #define MTL_PS2KEYDECODE_H
 
-#include <stdint.h>
+#include <cstdint>
 
 //! Bare metal layer
 namespace MTL {
 
-
+//! Convert PS2 scan codes to ASCII
 class PS2KeyDecode
 {
-private:
-   bool       extend;
-   bool       up;
-   uint8_t    shift;
-
-   static const uint8_t scan_table[256];
-
 public:
-   PS2KeyDecode() : extend(false), up(false), shift(0) {}
+   PS2KeyDecode() = default;
 
+   //! Decode next scan code byte \return true if ASCII code bte available
    bool decode(uint8_t code, uint8_t& ch, bool& is_up)
    {
       switch(code)
@@ -63,6 +57,13 @@ public:
          return true;
       }
    }
+
+private:
+   bool    extend{false};
+   bool    up{false};
+   uint8_t shift{0};
+
+   static const uint8_t scan_table[256];
 };
 
 } // namespace MTL

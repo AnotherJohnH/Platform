@@ -20,7 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Digital.h
+//! \file  Digital.h
 //! \brief Low level digital I/O
 
 #ifndef MTL_DIGITAL_H
@@ -34,7 +34,6 @@ namespace MTL {
 
 //! Low level digital I/O
 namespace Digital {
-
 
 //! Single digital output
 template <unsigned PIN>

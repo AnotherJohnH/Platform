@@ -20,17 +20,15 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Periph.h
+//! \file  Periph.h
 //! \brief Memory mapped peripheral helper
 
 #ifndef MTL_PERIPH_H
 #define MTL_PERIPH_H
 
-
 #include <cstdint>
 
 #include "MTL/Register.h"
-
 
 #define  REG(OFFSET, NAME)  \
     struct { uint8_t pad_##NAME[OFFSET]; Register<uint32_t> NAME; }
@@ -38,17 +36,15 @@
 #define  REG_ARRAY(OFFSET, NAME, SIZE)  \
     struct { uint8_t pad_##NAME[OFFSET]; Register<uint32_t> NAME[SIZE]; }
 
-
 #define  REG_TYPE(OFFSET, TYPE, NAME)  \
     struct { uint8_t pad_##NAME[OFFSET]; TYPE NAME; }
 
 #define  REG_TYPE_ARRAY(OFFSET, TYPE, NAME, SIZE)  \
     struct { uint8_t pad_##NAME[OFFSET]; TYPE NAME[SIZE]; }
 
-
 namespace MTL {
 
-
+//! Base class for memory mapped peripherals
 template <typename REG_TYPE,
           uint32_t BASE_ADDR,
           unsigned INSTANCE=0,
@@ -60,7 +56,6 @@ protected:
 
    volatile REG_TYPE* const reg = (volatile REG_TYPE*)(PERIPH_ADDR);
 };
-
 
 } // namespace MTL
 

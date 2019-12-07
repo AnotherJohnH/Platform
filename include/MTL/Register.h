@@ -20,7 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Register.h
+//! \file  Register.h
 //! \brief Memory mapped register helper
 
 #ifndef MTL_REGISTER_H
@@ -28,7 +28,6 @@
 
 //! Bare metal layer
 namespace MTL {
-
 
 //! Generic register access
 template <typename TYPE>
@@ -61,9 +60,9 @@ public:
    }
 
    //! Set a single bit
-   void setBit(unsigned bit, bool value=true) volatile
+   void setBit(unsigned bit, bool value = true) volatile
    {
-      if (value)
+      if(value)
          state |= mask(bit);
       else
          state &= ~mask(bit);
@@ -82,7 +81,7 @@ public:
    }
 
 private:
-   TYPE  state;
+   TYPE state;
 
    // single bit mask
    static TYPE mask(unsigned bit_num)
@@ -93,11 +92,10 @@ private:
    // field mask
    static TYPE mask(unsigned msb, unsigned lsb)
    {
-      TYPE mask = (1<<(msb - lsb + 1)) - 1;
-      return mask<<lsb;
+      TYPE mask = (1 << (msb - lsb + 1)) - 1;
+      return mask << lsb;
    }
 };
-
 
 } // namespace MTL
 
