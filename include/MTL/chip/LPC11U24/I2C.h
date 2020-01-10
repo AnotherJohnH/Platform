@@ -20,66 +20,63 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file IoCon.h
-// \brief NXP LPC11U24 I/O Controller
+// \file I2C.h
+// \brief NXP LPC11U24 I2C Bus Controller
 //
 // Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
 
-#ifndef LPC11U24_IO_CON_H
-#define LPC11U24_IO_CON_H
+#ifndef LPC11U24_I2C_H
+#define LPC11U24_I2C_H
 
 #include "MTL/Periph.h"
 
+#include "IoCon.h"
+#include "SysCon.h"
 
 namespace MTL {
 
-
-union IoConReg
+union I2CReg
 {
-   REG_ARRAY(0x000, pio, 56);
+   REG(0x000, conset);
+   REG(0x004, stat);
+   REG(0x008, dat);
+   REG(0x00C, adr0);
+   REG(0x010, sclh);
+   REG(0x014, scll);
+   REG(0x018, conclr);
+   REG(0x01C, mmctrl);
+   REG(0x020, adr1);
+   REG(0x024, adr2);
+   REG(0x028, adr3);
+   REG(0x02C, data_buffer);
+   REG(0x030, mask0);
+   REG(0x034, mask1);
+   REG(0x038, mask2);
+   REG(0x03C, mask3);
 };
 
 
-class IoCon : public Periph<IoConReg,0x40044000>
+class I2C : public Periph<I2CReg,0x40000000>
 {
 public:
-   enum Func : unsigned
+   void init()
    {
-      I2C_SCL = 1, // use with PIO0_4
-      I2C_SDA = 1, // use with PIO0_5
-   };
+      IoCon  iocon;
+      SysCon syscon;
 
-   enum Mode
-   {
-      PULL_NONE = 0,
-      PULL_DOWN = 1,
-      PULL_UP   = 2,
-      REPEAT    = 3,
+      // 1. Configure Pins
+      iocon.config(PIN_0_4, IoCon::I2C_SCL, IoCon::STANDARD_I2C);
+      iocon.config(PIN_0_5, IoCon::I2C_SDA, IoCon::STANDARD_I2C);
 
-      STANDARD_I2C = 0
-   };
+      // 2. Enable I2C Power and peripheral clock
+      syscon.enableAHBClkCtrl(5);
 
-   void config(unsigned pin, unsigned func, Mode mode,
-               bool hys = false, bool inv = false, bool od = false)
-   {
-      unsigned port  = pin >> 5;
-      unsigned bit   = pin & 0x1F;
-      unsigned index = port * 24 + bit;
-
-      uint32_t data = reg->pio[index];
-
-      data = (data & 0xFFFFFB80) |
-             (func <<  0) |
-             (mode <<  3) |
-             (hys  <<  5) |
-             (inv  <<  6) |
-             (od   << 10);
-
-      reg->pio[index] = data;
+      // 3. De-assert I2C Reset
+      syscon.enablePresetCtrl(1);
    }
 };
 
 
 } // namespace MTL
 
-#endif // LPC11U24_IO_CON_H
+#endif // LPC11U24_I2C_H

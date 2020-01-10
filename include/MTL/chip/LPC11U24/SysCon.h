@@ -111,6 +111,16 @@ public:
       reg->sysahbclkctrl.setBit(6);
       reg->sysahbclkctrl.setBit(16);
    }
+
+   void enableAHBClkCtrl(unsigned bit)
+   {
+      reg->sysahbclkctrl.setBit(bit);
+   }
+
+   void enablePResetCtrl(unsigned bit)
+   {
+      reg->presetctrl.setBit(bit);
+   }
 };
 
 

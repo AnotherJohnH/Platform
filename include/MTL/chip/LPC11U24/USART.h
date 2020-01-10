@@ -20,66 +20,64 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file IoCon.h
-// \brief NXP LPC11U24 I/O Controller
+// \file USART.h
+// \brief NXP LPC11U24 USART
 //
 // Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
 
-#ifndef LPC11U24_IO_CON_H
-#define LPC11U24_IO_CON_H
+#ifndef LPC11U24_USART_H
+#define LPC11U24_USART_H
 
 #include "MTL/Periph.h"
 
+#include "IoCon.h"
+#include "SysCon.h"
 
 namespace MTL {
 
-
-union IoConReg
+union USARTReg
 {
-   REG_ARRAY(0x000, pio, 56);
+   REG(0x000, rbr_thr_dll);
+   REG(0x004, ier_dlm);
+   REG(0x008, iir_fcr);
+   REG(0x00C, lcr);
+   REG(0x010, mcr);
+   REG(0x014, lsr);
+   REG(0x018, msr);
+   REG(0x01C, scr);
+   REG(0x020, acr);
+   REG(0x024, icr);
+   REG(0x028, fdr);
+   REG(0x02C, osr);
+   REG(0x030, ter);
+   REG(0x040, hden);
+   REG(0x048, scictrl);
+   REG(0x04C, rs485ctrl);
+   REG(0x050, rs485adrmatch);
+   REG(0x054, rs485dly);
+   REG(0x058, syncctrl);
 };
 
 
-class IoCon : public Periph<IoConReg,0x40044000>
+class USART : public Periph<USARTReg,0x40000000>
 {
 public:
-   enum Func : unsigned
+   void init()
    {
-      I2C_SCL = 1, // use with PIO0_4
-      I2C_SDA = 1, // use with PIO0_5
-   };
+      IoCon  iocon;
+      SysCon syscon;
 
-   enum Mode
-   {
-      PULL_NONE = 0,
-      PULL_DOWN = 1,
-      PULL_UP   = 2,
-      REPEAT    = 3,
+      // 1. Configure Pins
 
-      STANDARD_I2C = 0
-   };
+      // 2. Enable USART Power and peripheral clock
+      syscon.enableAHBClkCtrl(12);
 
-   void config(unsigned pin, unsigned func, Mode mode,
-               bool hys = false, bool inv = false, bool od = false)
-   {
-      unsigned port  = pin >> 5;
-      unsigned bit   = pin & 0x1F;
-      unsigned index = port * 24 + bit;
-
-      uint32_t data = reg->pio[index];
-
-      data = (data & 0xFFFFFB80) |
-             (func <<  0) |
-             (mode <<  3) |
-             (hys  <<  5) |
-             (inv  <<  6) |
-             (od   << 10);
-
-      reg->pio[index] = data;
+      // 3. USART clock divider
+      syscon.reg->uartclkdiv = 7;
    }
 };
 
 
 } // namespace MTL
 
-#endif // LPC11U24_IO_CON_H
+#endif // LPC11U24_USART_H
