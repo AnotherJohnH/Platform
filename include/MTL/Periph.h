@@ -54,6 +54,7 @@ class Periph
 protected:
    const uint32_t PERIPH_ADDR = BASE_ADDR + INSTANCE*SIZE;
 
+public:
    volatile REG_TYPE* const reg = (volatile REG_TYPE*)(PERIPH_ADDR);
 };
 
