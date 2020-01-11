@@ -27,27 +27,33 @@ import shutil
 import argparse
 
 #-------------------------------------------------------------------------------
+# Parse command line arguments
 
-parser = argparse.ArgumentParser(description='Build Manager')
+def parseArgs():
+   parser = argparse.ArgumentParser(description='Build Manager')
 
-parser.add_argument(dest='targets', metavar='TARGET', type=str, nargs='+',
-                    help='A target to build')
+   parser.add_argument(dest='targets', metavar='TARGET', type=str, nargs='+',
+                       help='A target to build')
 
-parser.add_argument('-p', '--pull', dest='pull', action='store_true',
-                    help='Pull latest source before build')
+   parser.add_argument('-p', '--pull', dest='pull', action='store_true',
+                       help='Pull latest source before build')
 
-parser.add_argument('-P', '--platform-pull', dest='platform_pull', action='store_true',
-                    help='Pull latest Platform source before build')
+   parser.add_argument('-P', '--platform-pull', dest='platform_pull', action='store_true',
+                       help='Pull latest Platform source before build')
 
-parser.add_argument('-s', '--spotless', dest='spotless', action='store_true',
-                    help='Erase all build state and build again')
+   parser.add_argument('-s', '--spotless', dest='spotless', action='store_true',
+                       help='Erase all build state and build again')
 
-parser.add_argument('-c', '--clean', dest='clean', action='store_true',
-                    help='Erase all build state')
+   parser.add_argument('-c', '--clean', dest='clean', action='store_true',
+                       help='Erase all build state')
 
-args = parser.parse_args()
+   parser.add_argument('-d', '--debug', dest='debug', action='store_true',
+                       help='Debug builds')
+
+   return parser.parse_args()
 
 #-------------------------------------------------------------------------------
+# Removce all build state for the given target
 
 def clean(target):
 
@@ -59,8 +65,9 @@ def clean(target):
       shutil.rmtree(build_dir)
 
 #-------------------------------------------------------------------------------
+# Create a build for the given target
 
-def build(target):
+def build(target, cmake_opts):
 
    print("======================================================================")
    print("Build for '"+target+"'")
@@ -70,7 +77,7 @@ def build(target):
    if not os.path.exists(build_dir):
       os.mkdir(build_dir)
       os.chdir(build_dir)
-      os.system("cmake .. -DPLT_TARGET="+target)
+      os.system("cmake .. "+cmake_opts+ " -DPLT_TARGET="+target)
    else:
       os.chdir(build_dir)
 
@@ -89,6 +96,11 @@ def build(target):
    os.chdir("..")
 
 #-------------------------------------------------------------------------------
+# Entry point
+
+cmake_opts = ""
+
+args = parseArgs()
 
 if args.platform_pull:
    os.chdir("Platform")
@@ -98,12 +110,15 @@ if args.platform_pull:
 if args.pull:
    os.system("git pull --rebase")
 
+if args.debug:
+   cmake_opts += " -DCMAKE_BUILD_TYPE=Debug"
+
 for target in args.targets:
 
    if args.spotless:
       clean(target)
-      build(target)
+      build(target, cmake_opts)
    elif args.clean:
       clean(target)
    else:
-      build(target)
+      build(target, cmake_opts)
