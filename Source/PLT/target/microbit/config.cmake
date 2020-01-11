@@ -32,7 +32,10 @@ set(PLT_ram_size 16k)
 
 set(PLT_asm_flags "-mcpu=cortex-m0")
 
-set(PLT_c_flags   "-DNCONSOLE -DSMALL_MEMORY -mcpu=cortex-m0 -mthumb -mfloat-abi=soft -fno-common -fno-builtin -fmessage-length=0 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
+set(PLT_c_flags   "-DNCONSOLE -DSMALL_MEMORY \
+                   -mcpu=cortex-m0 -mthumb -mfloat-abi=soft \
+                   -fno-common -fno-builtin -fmessage-length=0 \
+                   -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
 
 set(PLT_cxx_flags "-DNO_RTTI -std=c++11 -fno-rtti")
 
@@ -51,9 +54,16 @@ set(CMAKE_RANLIB              ${PLT_prefix}ranlib)
 set(CMAKE_OBJCOPY             ${PLT_prefix}objcopy)
 set(CMAKE_OBJDUMP             ${PLT_prefix}objdump)
 set(CMAKE_SIZE                ${PLT_prefix}size)
-set(CMAKE_C_LINK_EXECUTABLE   "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
-set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
+
 set(CMAKE_EXECUTABLE_SUFFIX   .axf)
+
+set(CMAKE_C_LINK_EXECUTABLE
+    "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
+     ${CMAKE_OBJCOPY} -O binary <TARGET> <TARGET>.bin; \
+     ${CMAKE_OBJDUMP} -d <TARGET>; \
+     ${CMAKE_SIZE} <TARGET>")
+
+set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
 
 #-------------------------------------------------------------------------------
 # Configuration for libPLT.a
