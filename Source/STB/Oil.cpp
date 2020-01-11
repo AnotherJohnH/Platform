@@ -151,7 +151,7 @@ bool Member::read(Lex& lex, void* that) const
          int64_t value = 0;
          if (!lex.matchSigned(value)) return false;
          int64_t unused = value >> (size*8);
-         if ((unused != 0) || (unused != -1))
+         if ((unused != 0) && (unused != -1))
          {
             return lex.error("signed integer value too big");
          }
