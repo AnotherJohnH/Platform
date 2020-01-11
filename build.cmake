@@ -34,7 +34,7 @@ if(DEFINED ENV{PLT_TARGET})
    # TODO do we need this now?
    set(PLT_TARGET $ENV{PLT_TARGET})
 
-elseif(PLT_TARGET STREQUAL "")
+elseif(PLT_TARGET STREQUAL "" OR PLT_TARGET STREQUAL "native")
    # Use the host system as the target
    set(PLT_TARGET ${CMAKE_SYSTEM_NAME})
 endif()
