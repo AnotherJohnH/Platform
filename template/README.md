@@ -8,9 +8,9 @@ DESCRIPTION.
 
 ## How to build
 
-Build using cmake.
+Build using cmake...
 
-mkdir build
-cd build
+mkdir build_native
+cd build_native
 cmake ..
 make

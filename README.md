@@ -47,8 +47,8 @@ Install template/Source/consoleApp.cpp to <project root directory>/Source/<filen
 cd ..
 git add .
 git commit -m Initial
-mkdir build
-cd build
+mkdir build_native
+cd build_native
 cmake ..
 make
 ```
