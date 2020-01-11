@@ -23,16 +23,37 @@
 #-------------------------------------------------------------------------------
 
 import os
+import shutil
 import argparse
 
 #-------------------------------------------------------------------------------
 
 parser = argparse.ArgumentParser(description='Build Manager')
 
-parser.add_argument('targets', metavar='TARGET', type=str, nargs='+',
+parser.add_argument(dest='targets', metavar='TARGET', type=str, nargs='+',
                     help='A target to build')
 
+parser.add_argument('-p', '--pull', dest='pull', action='store_true',
+                    help='Pull latest source before build')
+
+parser.add_argument('-s', '--spotless', dest='spotless', action='store_true',
+                    help='Erase all build state and build again')
+
+parser.add_argument('-c', '--clean', dest='clean', action='store_true',
+                    help='Erase all build state')
+
 args = parser.parse_args()
+
+#-------------------------------------------------------------------------------
+
+def clean(target):
+
+   print("Clean '"+target+"'")
+
+   build_dir="build_"+target
+
+   if os.path.exists(build_dir):
+      shutil.rmtree(build_dir)
 
 #-------------------------------------------------------------------------------
 
@@ -44,13 +65,25 @@ def build(target):
 
    if not os.path.exists(build_dir):
       os.mkdir(build_dir)
+      os.chdir(build_dir)
+      os.system("cmake .. -DPLT_TARGET="+target)
+   else:
+      os.chdir(build_dir)
 
-   os.chdir(build_dir)
-   os.system("cmake .. -DPLT_TARGET="+target)
    os.system("make")
    os.chdir("..")
 
 #-------------------------------------------------------------------------------
 
+if args.pull:
+   os.system("git pull --rebase")
+
 for target in args.targets:
-   build(target)
+
+   if args.spotless:
+      clean(target)
+      build(target)
+   elif args.clean:
+      clean(target)
+   else:
+      build(target)
