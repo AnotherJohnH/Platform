@@ -62,6 +62,7 @@ def clean(target):
 
 def build(target):
 
+   print("======================================================================")
    print("Build for '"+target+"'")
 
    build_dir="build_"+target
@@ -73,7 +74,18 @@ def build(target):
    else:
       os.chdir(build_dir)
 
-   os.system("make")
+   if target == "Emscripten" or target == "WebAsm":
+      #
+      # An Emscripten or Web Assembly build
+      #
+      EMSDK_PATH=os.getenv("HOME")+"/OpenSource/emsdk_portable"
+      print("EMSDK_PATH = "+EMSDK_PATH)
+      print("----------------------------------------------------------------------")
+      os.system("source "+EMSDK_PATH+"/emsdk_env.sh; make")
+   else:
+      print("----------------------------------------------------------------------")
+      os.system("make")
+
    os.chdir("..")
 
 #-------------------------------------------------------------------------------
