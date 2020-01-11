@@ -1,4 +1,4 @@
 *.tgz
 .DS_Store
 TermConfig.xml
-build
+build_*
