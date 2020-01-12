@@ -20,12 +20,14 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file abort.c
+//! \file abort.cpp
 //! \brief tiny C library implementation
 
 #include <stdlib.h>
 
-extern void platform_fault(void);
+extern "C" {
+[[ noreturn ]] extern void platform_fault(void);
+}
 
 void abort(void)
 {

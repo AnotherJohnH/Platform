@@ -74,14 +74,20 @@ include_directories(Platform/include)
 #-------------------------------------------------------------------------------
 # Build the platform library libPLT.a
 
+set(source_using_cpp_containers
+    Platform/Source/STB/Oil.cpp
+    Platform/Source/STB/Deflate.cpp
+    Platform/Source/STB/Zlib.cpp
+    Platform/Source/GUI/BitmapPNG.cpp)
+
+if(PLT_libs MATCHES ".*tinyc.*")
+    set(source_using_cpp_containers)
+endif()
+
 add_library(PLT
 
             Platform/Source/STB/Option.cpp
             Platform/Source/STB/MidiDecoder.cpp
-            Platform/Source/STB/Oil.cpp
-            Platform/Source/STB/Deflate.cpp
-            Platform/Source/STB/Zlib.cpp
-
             Platform/Source/GUI/FontLED11.cpp
             Platform/Source/GUI/FontLED22.cpp
             Platform/Source/GUI/FontNew8.cpp
@@ -89,8 +95,8 @@ add_library(PLT
             Platform/Source/GUI/FontTeletext15.cpp
             Platform/Source/GUI/FontTeletext12.cpp
             Platform/Source/GUI/FontTeletext9.cpp
-            Platform/Source/GUI/BitmapPNG.cpp
 
+            ${source_using_cpp_containers}
             ${PLT_source})
 
 set(PLT_libs PLT ${PLT_libs})
@@ -110,7 +116,7 @@ if(PLT_libs MATCHES ".*tinyc.*")
                Platform/Source/MTL/tinyc/atoll.cpp
                Platform/Source/MTL/tinyc/clock.cpp
                Platform/Source/MTL/tinyc/delete.cpp
-               Platform/Source/MTL/tinyc/exit.c
+               Platform/Source/MTL/tinyc/exit.cpp
                Platform/Source/MTL/tinyc/fprintf.cpp
                Platform/Source/MTL/tinyc/getchar.cpp
                Platform/Source/MTL/tinyc/global_obj.cpp

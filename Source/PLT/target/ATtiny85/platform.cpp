@@ -1,5 +1,5 @@
-/*------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+//------------------------------------------------------------------------------
+// Copyright (c) 2015 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,26 +18,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//----------------------------------------------------------------------------*/
+//------------------------------------------------------------------------------
 
-//! \file inttypes.h
-//! \brief tiny C library implementation
+extern "C" {
+void platform_init();
+}
 
-#ifndef INT_TYPES_H
-#define INT_TYPES_H
-
-#include <stdint.h>
-
-#define PRId32 "li"
-#define PRIu32 "lu"
-#define PRIo32 "lo"
-#define PRIx32 "lx"
-#define PRIX32 "lX"
-
-#define PRId64 "lli"
-#define PRIu64 "llu"
-#define PRIo64 "llo"
-#define PRIx64 "llx"
-#define PRIX64 "llX"
-
-#endif // STDINT_H
+void platform_init()
+{
+}

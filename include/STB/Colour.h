@@ -41,7 +41,10 @@ const unsigned BLU_LSB = 0;
 //! Compute a Colour value from red, green, blu and alpha components
 static constexpr Colour RGBA(uint8_t red, uint8_t grn, uint8_t blu, uint8_t alpha)
 {
-   return (alpha << ALP_LSB) | (red << RED_LSB) | (grn << GRN_LSB) | (blu << BLU_LSB);
+   return (Colour(alpha) << ALP_LSB) |
+          (Colour(red) << RED_LSB) |
+          (Colour(grn) << GRN_LSB) |
+          (Colour(blu) << BLU_LSB);
 }
 
 

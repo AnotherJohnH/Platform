@@ -25,8 +25,8 @@
 
 extern "C" {
 void platform_init();
-void platform_shutdown();
 void platform_fault();
+void platform_shutdown();
 }
 
 void platform_init()

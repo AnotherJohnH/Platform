@@ -40,10 +40,11 @@ public:
       return state;
    }
 
-   //! Read a single bit
-   bool getBit(unsigned bit) const volatile
+   //! Write all the register state
+   TYPE operator=(TYPE value) volatile
    {
-      return (mask(bit) & state) != 0;
+      state = value;
+      return value;
    }
 
    //! Read a bit field
@@ -52,11 +53,16 @@ public:
       return (state & mask(msb, lsb)) >> lsb;
    }
 
-   //! Write all the register state
-   TYPE operator=(TYPE value) volatile
+   //! Write a bit field
+   void setField(unsigned msb, unsigned lsb, TYPE value) volatile
    {
-      state = value;
-      return value;
+      state = (state & ~mask(msb, lsb)) | (value << lsb);
+   }
+
+   //! Read a single bit
+   bool getBit(unsigned bit) const volatile
+   {
+      return (mask(bit) & state) != 0;
    }
 
    //! Set a single bit
@@ -71,13 +77,19 @@ public:
    //! Clear a single bit
    void clrBit(unsigned bit) volatile
    {
-      state &= ~mask(bit);
+      setBit(bit, false);
    }
 
-   //! Write a bit field
-   void setField(unsigned msb, unsigned lsb, TYPE value) volatile
+   //! Set some bits
+   void setBits(unsigned msb, unsigned lsb, TYPE mask_) volatile
    {
-      state = (state & ~mask(msb, lsb)) | (value << lsb);
+      state = state | (mask_ << lsb);
+   }
+
+   //! Clear some bits
+   void clrBits(unsigned msb, unsigned lsb, TYPE mask_) volatile
+   {
+      state = state & ~(mask_ << lsb);
    }
 
 private:

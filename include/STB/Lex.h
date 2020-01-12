@@ -25,7 +25,7 @@
 
 #include <string>
 #include <cstdint>
-#include <cstdarg>
+#include <stdarg.h>
 #include <cstdio>
 #include <cctype>
 #include <cmath>

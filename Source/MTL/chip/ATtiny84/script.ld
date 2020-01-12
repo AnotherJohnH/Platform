@@ -20,24 +20,42 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file inttypes.h
-//! \brief tiny C library implementation
+MEMORY
+{
+   FLASH (rx)  : ORIGIN = 0x00000000, LENGTH = 8K
+   RAM   (rwx) : ORIGIN = 0x10000000, LENGTH = 512
+}
 
-#ifndef INT_TYPES_H
-#define INT_TYPES_H
+ENTRY(vector_table)
 
-#include <stdint.h>
+SECTIONS
+{
+   .text :
+   {
+      KEEP(*(.vectors))
+      *(.text*)
+      __init_array_start = .;
+      KEEP(*(.init_array))
+      __init_array_end = .;
+      *(.rodata*)
 
-#define PRId32 "li"
-#define PRIu32 "lu"
-#define PRIo32 "lo"
-#define PRIx32 "lx"
-#define PRIX32 "lX"
+   } > FLASH
 
-#define PRId64 "lli"
-#define PRIu64 "llu"
-#define PRIo64 "llo"
-#define PRIx64 "llx"
-#define PRIX64 "llX"
+   __etext = .;
 
-#endif // STDINT_H
+   .data : AT (__etext)
+   {
+      __data_start__ = .;
+      *(.data*)
+      __data_end__ = .;
+
+   } > RAM
+
+   .bss :
+   {
+      __bss_start__ = .;
+      *(.bss*)
+      __bss_end__ = .;
+
+   } > RAM
+}

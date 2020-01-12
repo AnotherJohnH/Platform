@@ -27,7 +27,7 @@
 #define PLT_FILE_H
 
 #include <cstddef>
-#include <cstdarg>
+#include <stdarg.h>
 
 namespace PLT {
 

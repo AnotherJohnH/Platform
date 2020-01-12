@@ -20,24 +20,25 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file inttypes.h
+//! \file exit.c
 //! \brief tiny C library implementation
 
-#ifndef INT_TYPES_H
-#define INT_TYPES_H
+#include <stdlib.h>
 
-#include <stdint.h>
+extern "C" {
+[[ noreturn ]] extern void platform_shutdown();
+[[ noreturn ]] extern void platform_fault();
+}
 
-#define PRId32 "li"
-#define PRIu32 "lu"
-#define PRIo32 "lo"
-#define PRIx32 "lx"
-#define PRIX32 "lX"
+void exit(int status)
+{
+   if (status == 0)
+   {
+      platform_shutdown();
+   }
+   else
+   {
+      platform_fault();
+   }
+}
 
-#define PRId64 "lli"
-#define PRIu64 "llu"
-#define PRIo64 "llo"
-#define PRIx64 "llx"
-#define PRIX64 "llX"
-
-#endif // STDINT_H
