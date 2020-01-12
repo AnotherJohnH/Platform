@@ -21,12 +21,12 @@
 //------------------------------------------------------------------------------
 
 // \file Gpio.h
-// \brief NXP LPC11U24 General Purpose I/O
+// \brief NXP LPC1114 General Purpose I/O
 //
-// Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
+// Data source NXP document "LPC111X User Manual UM10398"
 
-#ifndef LPC11U24_GPIO_H
-#define LPC11U24_GPIO_H
+#ifndef LPC1114_GPIO_H
+#define LPC1114_GPIO_H
 
 #include "MTL/Periph.h"
 
@@ -127,4 +127,4 @@ private:
 
 } // namespace MTL
 
-#endif // LPC11U24_GPIO_H
+#endif // LPC1114_GPIO_H
