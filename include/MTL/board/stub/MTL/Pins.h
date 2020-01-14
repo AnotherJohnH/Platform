@@ -28,10 +28,10 @@
 
 namespace MTL {
 
-static const unsigned PIN_LED1 = 1;
-static const unsigned PIN_LED2 = 2;
-static const unsigned PIN_LED3 = 3;
-static const unsigned PIN_LED4 = 4;
+static const unsigned PIN_LED1 = 0;
+static const unsigned PIN_LED2 = 1;
+static const unsigned PIN_LED3 = 2;
+static const unsigned PIN_LED4 = 3;
 
 } // namespace MTL
 

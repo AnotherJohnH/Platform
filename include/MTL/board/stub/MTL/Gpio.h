@@ -26,12 +26,14 @@
 #ifndef MTL_GPIO_H
 #define MTL_GPIO_H
 
+#include <atomic>
 #include <cstdint>
+
+extern std::atomic<uint8_t> gpio;
 
 namespace MTL {
 
 namespace Gpio {
-
 
 template <unsigned WIDTH, unsigned PIN>
 class Out
@@ -39,21 +41,30 @@ class Out
 public:
    operator uint32_t() const
    {
-      return 0;
+      return (gpio >> LSB) & MASK;
    }
 
    uint32_t operator=(uint32_t data)
    {
+      // XXX hazard
+      clr(MASK);
+      set(data);
       return data;
    }
 
    void set(uint32_t data)
    {
+      gpio |= (data & MASK) << LSB;
    }
 
    void clr(uint32_t data)
    {
+      gpio &= ~((data & MASK) << LSB);
    }
+
+private:
+   static const unsigned LSB  = PIN & 0x7;
+   static const uint32_t MASK = (1<<WIDTH) - 1;
 };
 
 
@@ -63,13 +74,16 @@ class In
 public:
    operator uint32_t() const
    {
-      return 0;
+      return (gpio >> LSB) & MASK;
    }
-};
 
+private:
+   static const unsigned LSB  = PIN & 0x7;
+   static const uint32_t MASK = (1<<WIDTH) - 1;
+};
 
 } // namespace GPIO
 
 } // namespace MTL
 
-#endif // STUB_GPIO_H
+#endif // MTL_GPIO_H

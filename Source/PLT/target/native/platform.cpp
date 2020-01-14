@@ -20,22 +20,75 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#include <atomic>
+#include <cstdint>
 #include <thread>
 
+#include "MTL/Metal.h"
 #include "GUI/Frame.h"
 #include "PLT/Event.h"
 
-extern "C" { int mtlMain(); }
+std::atomic<uint8_t> gpio{0};
+
+class VirtualDevice
+{
+public:
+   VirtualDevice()
+   {
+      frame.clear(STB::BLACK);
+      frame.refresh();
+
+      PLT::Event::setTimer(50);
+   }
+
+   int eventLoop()
+   {
+      return PLT::Event::eventLoop(callback, this);
+   }
+
+private:
+   static void callback(const PLT::Event::Message& event, void* ptr)
+   {
+      VirtualDevice* that = (VirtualDevice*)ptr;
+
+      switch(event.type)
+      {
+      case PLT::Event::TIMER:
+         that->redraw();
+         break;
+
+      default:
+         break;
+      }
+   }
+
+   void redraw()
+   {
+      for(size_t i=0; i<8; i++)
+      {
+         bool state = ((gpio >> i) & 1) != 0;
+         if (state)
+         {
+            frame.fillRect(STB::RED,   10 + i * 40, 10, 30 + i * 40, 25);
+         }
+         else
+         {
+            frame.fillRect(STB::GREEN, 10 + i * 40, 10, 30 + i * 40, 25);
+         }
+      }
+
+      frame.refresh();
+   }
+
+   GUI::Frame frame{"Metal", 400, 100};
+};
 
 int main()
 {
-   GUI::Frame frame{"Native", 200, 100};
-
-   frame.clear(STB::BLACK);
-   frame.refresh();
+   VirtualDevice device;
 
    std::thread thread{mtlMain};
    thread.detach();
 
-   return PLT::Event::eventLoop();
+   return device.eventLoop();
 }
