@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2020 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,74 +20,22 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  Digital.h
-//! \brief Low level digital I/O
+#include <thread>
 
-#ifndef MTL_DIGITAL_H
-#define MTL_DIGITAL_H
+#include "GUI/Frame.h"
+#include "PLT/Event.h"
 
-#include "MTL/Metal.h"
-#include "MTL/Pins.h"
-#include "MTL/Gpio.h"
+extern "C" { int mtlMain(); }
 
-//! Bare metal layer
-namespace MTL {
-
-//! Low level digital I/O
-namespace Digital {
-
-//! Single digital output
-template <unsigned PIN>
-class Out
+int main()
 {
-public:
-   Out(bool init = false)
-   {
-      operator=(init);
-   }
+   GUI::Frame frame{"Native", 200, 100};
 
-   //! Set state of digital output
-   //
-   //! \param true => set output high, false => set output low
-   bool operator=(bool state)
-   {
-      if (state)
-         gpio.set(1);
-      else
-         gpio.clr(1);
+   frame.clear(STB::BLACK);
+   frame.refresh();
 
-      return state;
-   }
+   std::thread thread{mtlMain};
+   thread.detach();
 
-   //! Get current state of digital output
-   operator bool() const
-   {
-      return gpio != 0;
-   }
-
-private:
-   Gpio::Out<1,PIN>  gpio;
-};
-
-
-//! Single digital input
-template <unsigned PIN>
-class In
-{
-public:
-   //! Get current state of digital input
-   operator bool() const
-   {
-      return gpio != 0;
-   }
-
-private:
-   Gpio::In<1,PIN>  gpio;
-};
-
-
-} // namespace Digital
-
-} // namespace MTL
-
-#endif // MTL_DIGITAL_H
+   return PLT::Event::eventLoop();
+}

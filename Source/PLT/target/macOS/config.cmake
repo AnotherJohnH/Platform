@@ -37,6 +37,7 @@ include_directories(Platform/include/MTL/board/stub)
 # Configuration for libPLT.a
 
 set(PLT_source
+    Platform/Source/PLT/target/native/platform.cpp
     Platform/Source/PLT/SDL2/Audio.cpp
     Platform/Source/PLT/SDL2/Event.cpp
     Platform/Source/PLT/SDL2/Frame.cpp

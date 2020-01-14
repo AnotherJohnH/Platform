@@ -66,7 +66,7 @@ reset:
 #
 # Call application entry point
 #
-    rcall   main
+    rcall   mtlMain
 
 irq:
 loop:

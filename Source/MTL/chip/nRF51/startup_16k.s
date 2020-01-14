@@ -126,7 +126,7 @@ reset:
 # Call application entry point
 #
     mov     r0, #0   @ ensure argc is zero
-    bl      main
+    bl      mtlMain
 #
 # Fall through to unhandled exception
 #
