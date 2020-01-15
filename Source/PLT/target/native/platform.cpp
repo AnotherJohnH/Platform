@@ -30,15 +30,16 @@
 
 std::atomic<uint8_t> gpio{0};
 
-class VirtualDevice
+//! Virtual Metal platform
+class VirtualMetalPlatform
 {
 public:
-   VirtualDevice()
+   VirtualMetalPlatform()
    {
       frame.clear(STB::BLACK);
       frame.refresh();
 
-      PLT::Event::setTimer(50);
+      PLT::Event::setTimer(1000 / REFRESH_RATE_HZ);
    }
 
    int eventLoop()
@@ -49,12 +50,24 @@ public:
 private:
    static void callback(const PLT::Event::Message& event, void* ptr)
    {
-      VirtualDevice* that = (VirtualDevice*)ptr;
+      VirtualMetalPlatform* that = (VirtualMetalPlatform*)ptr;
+      that->handleEvent(event);
+   }
 
+   void handleEvent(const PLT::Event::Message& event)
+   {
       switch(event.type)
       {
       case PLT::Event::TIMER:
-         that->redraw();
+         if (launch_application)
+         {
+             launch_application = false;
+
+             // Start the metal application
+             std::thread thread{mtlMain};
+             thread.detach();
+         }
+         redraw();
          break;
 
       default:
@@ -62,33 +75,35 @@ private:
       }
    }
 
+   void drawLED(unsigned x, unsigned y, bool state)
+   {
+      STB::Colour colour = state ? STB::RED
+                                 : STB::RGB(0x40, 0, 0);
+
+      frame.fillRect(colour, x, y, x + 20, y + 15);
+   }
+
    void redraw()
    {
       for(size_t i=0; i<8; i++)
       {
-         bool state = ((gpio >> i) & 1) != 0;
-         if (state)
-         {
-            frame.fillRect(STB::RED,   10 + i * 40, 10, 30 + i * 40, 25);
-         }
-         else
-         {
-            frame.fillRect(STB::GREEN, 10 + i * 40, 10, 30 + i * 40, 25);
-         }
+         unsigned x     = 10 + (8 - i) * 40;
+         unsigned y     = 10;
+         bool     state = ((gpio >> i) & 1) != 0;
+
+         drawLED(x, y, state);
       }
 
       frame.refresh();
    }
 
+   static const unsigned REFRESH_RATE_HZ = 20;
+
    GUI::Frame frame{"Metal", 400, 100};
+   bool       launch_application{true};
 };
 
 int main()
 {
-   VirtualDevice device;
-
-   std::thread thread{mtlMain};
-   thread.detach();
-
-   return device.eventLoop();
+   return VirtualMetalPlatform().eventLoop();
 }
