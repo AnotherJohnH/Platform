@@ -35,7 +35,7 @@ set(PLT_c_flags   "-DNCONSOLE -DSMALL_MEMORY -mcpu=cortex-m0 -mthumb -mfloat-abi
 
 set(PLT_cxx_flags "-DNO_RTTI -std=c++11 -fno-rtti")
 
-set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/MTL/chip/${PLT_chip}/script.ld")
+set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/PLT/target/${PLT_TARGET}/script.ld")
 
 include_directories(Platform/include/MTL/board/${PLT_TARGET})
 
@@ -58,7 +58,7 @@ set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 # Configuration for libPLT.a
 
 set(PLT_source
-    Platform/Source/MTL/chip/${PLT_chip}/startup.s
+    Platform/Source/PLT/target/${PLT_TARGET}/startup.s
     Platform/Source/PLT/target/${PLT_TARGET}/platform.cpp
     Platform/Source/PLT/Stub/Audio.cpp
     Platform/Source/PLT/Stub/Event.cpp

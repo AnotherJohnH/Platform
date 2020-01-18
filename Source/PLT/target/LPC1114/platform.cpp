@@ -24,9 +24,14 @@
 
 extern "C" {
 void platform_init();
+void platform_irq();
 }
 
 void platform_init()
 {
    MTL::SysCon().init();
+}
+
+void platform_irq()
+{
 }

@@ -30,17 +30,17 @@
 
 #include "MTL/Register.h"
 
-#define  REG(OFFSET, NAME)  \
-    struct { uint8_t pad_##NAME[OFFSET]; Register<uint32_t> NAME; }
-
-#define  REG_ARRAY(OFFSET, NAME, SIZE)  \
-    struct { uint8_t pad_##NAME[OFFSET]; Register<uint32_t> NAME[SIZE]; }
-
 #define  REG_TYPE(OFFSET, TYPE, NAME)  \
     struct { uint8_t pad_##NAME[OFFSET]; TYPE NAME; }
 
 #define  REG_TYPE_ARRAY(OFFSET, TYPE, NAME, SIZE)  \
     struct { uint8_t pad_##NAME[OFFSET]; TYPE NAME[SIZE]; }
+
+#define  REG(OFFSET, NAME) \
+    REG_TYPE(OFFSET, Register<uint32_t>, NAME)
+
+#define  REG_ARRAY(OFFSET, NAME, SIZE)  \
+    REG_TYPE_ARRAY(OFFSET, Register<uint32_t>, NAME, SIZE)
 
 namespace MTL {
 

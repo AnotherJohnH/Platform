@@ -26,7 +26,7 @@
 
 #include "PLT/Image.h"
 
-#include "../../../MTL/chip/LPC1768/PALVideo.h"
+#include "PALVideo.h"
 
 namespace PLT {
 

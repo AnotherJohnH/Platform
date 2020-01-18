@@ -24,7 +24,7 @@
 
 #include "PLT/Event.h"
 
-#include "../../../MTL/chip/LPC1768/Keyboard.h"
+#include "Keyboard.h"
 
 namespace PLT {
 
