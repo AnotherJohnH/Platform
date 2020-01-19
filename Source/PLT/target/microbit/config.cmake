@@ -59,7 +59,7 @@ set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 
 set(CMAKE_C_LINK_EXECUTABLE
     "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
-     ${CMAKE_OBJCOPY} -O binary <TARGET> <TARGET>.bin; \
+     ${CMAKE_OBJCOPY} -O ihex <TARGET> <TARGET>.hex; \
      ${CMAKE_OBJDUMP} -d <TARGET>; \
      ${CMAKE_SIZE} <TARGET>")
 
