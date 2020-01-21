@@ -23,8 +23,8 @@
 //! \file Nvic.h
 //! \brief Access to Cortex-M0 NVIC
 
-#ifndef CORTEX_M0_NVIC_H
-#define CORTEX_M0_NVIC_H
+#ifndef MTL_CORTEX_M0_NVIC_H
+#define MTL_CORTEX_M0_NVIC_H
 
 #include "MTL/Periph.h"
 

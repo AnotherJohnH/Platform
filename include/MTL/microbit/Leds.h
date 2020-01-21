@@ -20,16 +20,15 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef MICROBIT_LEDS_H
-#define MICROBIT_LEDS_H
+#ifndef MTL_MICROBIT_LEDS_H
+#define MTL_MICROBIT_LEDS_H
 
 #include "MTL/Metal.h"
-#include "MTL/Gpio.h"
-#include "MTL/chip/nrF51/Timer.h"
 #include "MTL/Pins.h"
+#include "MTL/nRF51/Gpio.h"
+#include "MTL/nRF51/Timer.h"
 
 #define  SCAN_TIMER  2
-
 
 #define LEDS_ATTACH_IRQ(LEDS) \
      extern "C" { void Timer_2_IRQ() { LEDS.scan(); } }

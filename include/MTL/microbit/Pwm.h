@@ -20,41 +20,45 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// nRF51
+// BBC microbit
 
-#ifndef MTL_NRF51_IRQ_H
-#define MTL_NRF51_IRQ_H
+#ifndef MTL_MICROBIT_PWM_H
+#define MTL_MICROBIT_PWM_H
+
+#include "MTL/Digital.h"
+#include "MTL/nRF51/Timer.h"
 
 namespace MTL {
 
-enum Irq
+template <unsigned PIN, unsigned TIMER>
+class Pwm
 {
-   IRQ_POWER_CLOCK =  0,
-   IRQ_RADIO       =  1,
-   IRQ_UART        =  2,
-   IRQ_SPI_TWI_0   =  3,
-   IRQ_SPI_TWI_1   =  4,
-   IRQ_5           =  5,
-   IRQ_GPIO_TE     =  6,
-   IRQ_ADC         =  7,
-   IRQ_TIMER_0     =  8,
-   IRQ_TIMER_1     =  9,
-   IRQ_TIMER_2     = 10,
-   IRQ_RTC_0       = 11,
-   IRQ_TEMP        = 12,
-   IRQ_RNG         = 13,
-   IRQ_ECB         = 14,
-   IRQ_CCM_AAR     = 15,
-   IRQ_WDT         = 16,
-   IRQ_RTC         = 17,
-   IRQ_QDEC        = 18,
-   IRQ_LPCOMP      = 19,
-   IRQ_SWI_0       = 20,
-   IRQ_SWI_1       = 21,
-   IRQ_SWI_2       = 22,
-   IRQ_SWI_3       = 23,
-   IRQ_SWI_4       = 24,
-   IRQ_SWI_5       = 25
+private:
+   MTL::Digital::Out<PIN>   pin;
+   MTL::nRF51::Timer<TIMER> timer;
+
+public:
+   Pwm()
+      : timer(MTL::nRF51::TIMER_WIDTH_16_BITS)
+   {
+      timer.setClock(MTL::nRF51::TIMER_16_MHZ);
+      timer.setAction(0, 0x8000, MTL::nRF51::TIMER_IRQ);
+      timer.setAction(1, 0xFFFF, MTL::nRF51::TIMER_CLEAR | MTL::nRF51::TIMER_IRQ);
+
+      timer.start();
+   }
+
+   void operator=(uint16_t value)
+   {
+      timer.setCompare(0, value);
+   }
+
+   void update()
+   {
+      pin = timer.isCompareEvent(0);
+      timer.clrCompareEvent(0);
+      timer.clrCompareEvent(1);
+   }
 };
 
 } // namespace MTL

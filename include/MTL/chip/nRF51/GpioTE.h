@@ -20,52 +20,70 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file Pins.h
-// \brief nRF51 pins
+// \file GpioTE.h
+// \brief General Purpose I/O tasks and events
+//
+// NORDIC Semiconductor
+// nRF51
 //
 // Data source Nordic Semiconductor "nRF51 Series Reference Manual Version 3.0"
 
-#ifndef MTL_NRF51_PINS_H
-#define MTL_NRF51_PINS_H
+#include "MTL/Periph.h"
+
+#ifndef MTL_NRF51_GPIO_TE_H
+#define MTL_NRF51_GPIO_TE_H
+
+#include "MTL/Periph.h"
 
 namespace MTL {
 
 namespace nRF51 {
 
-static const unsigned  PIN_0   = 0x00;
-static const unsigned  PIN_1   = 0x01;
-static const unsigned  PIN_2   = 0x02;
-static const unsigned  PIN_3   = 0x03;
-static const unsigned  PIN_4   = 0x04;
-static const unsigned  PIN_5   = 0x05;
-static const unsigned  PIN_6   = 0x06;
-static const unsigned  PIN_7   = 0x07;
-static const unsigned  PIN_8   = 0x08;
-static const unsigned  PIN_9   = 0x09;
-static const unsigned  PIN_10  = 0x0A;
-static const unsigned  PIN_11  = 0x0B;
-static const unsigned  PIN_12  = 0x0C;
-static const unsigned  PIN_13  = 0x0D;
-static const unsigned  PIN_14  = 0x0E;
-static const unsigned  PIN_15  = 0x0F;
-static const unsigned  PIN_16  = 0x10;
-static const unsigned  PIN_17  = 0x11;
-static const unsigned  PIN_18  = 0x12;
-static const unsigned  PIN_19  = 0x13;
-static const unsigned  PIN_20  = 0x14;
-static const unsigned  PIN_21  = 0x15;
-static const unsigned  PIN_22  = 0x16;
-static const unsigned  PIN_23  = 0x17;
-static const unsigned  PIN_24  = 0x18;
-static const unsigned  PIN_25  = 0x19;
-static const unsigned  PIN_26  = 0x1A;
-static const unsigned  PIN_27  = 0x1B;
-static const unsigned  PIN_28  = 0x1C;
-static const unsigned  PIN_29  = 0x1D;
-static const unsigned  PIN_30  = 0x1E;
+enum
+{
+   GPIO_TE_EVENT  = 1<<0,
+   GPIO_TE_TASK   = 3<<0,
+
+   GPIO_TE_RISE   = 1<<16,
+   GPIO_TE_FALL   = 2<<16,
+   GPIO_TE_TOGGLE = 3<<16,
+
+   GPIO_TE_INIT1  = 3<<20
+};
+
+union GpioTEReg
+{
+   REG_ARRAY(0x000, out, 4);
+   REG_ARRAY(0x100, in,  4);
+   REG(      0x17C, port);
+   REG(      0x300, inten);
+   REG(      0x304, intenset);
+   REG(      0x308, intenclr);
+   REG_ARRAY(0x510, config, 4);
+};
+
+template <unsigned INDEX>
+class GpioTE : public Periph<GpioTEReg,0x40006000>
+{
+public:
+   GpioTE(unsigned pin, uint32_t flags)
+   {
+      reg->config[INDEX] = (pin << 8) | flags;
+   }
+
+   void task()
+   {
+      reg->out[INDEX] = 1;
+   }
+
+   uint32_t getTask()
+   {
+      return uint32_t(&reg->out[INDEX]);
+   }
+};
 
 } // namespace nRF51
 
 } // namespace MTL
 
-#endif // MTL_NRF51_PINS_H
+#endif // MTL_NRF51_GPIO_TE_H

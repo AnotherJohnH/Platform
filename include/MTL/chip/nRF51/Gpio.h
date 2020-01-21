@@ -25,16 +25,14 @@
 //
 // Data source Nordic Semiconductor "nRF51 Series Reference Manual Version 3.0"
 
-#ifndef NRF51_GPIO_H
-#define NRF51_GPIO_H
+#ifndef MTL_NRF51_GPIO_H
+#define MTL_NRF51_GPIO_H
 
 #include "MTL/Periph.h"
-
 
 namespace MTL {
 
 namespace Gpio {
-
 
 union Reg
 {
@@ -49,7 +47,6 @@ union Reg
    REG_ARRAY(0x700, pin_cnf, 32);
 };
 
-
 enum GpioDrive
 {
    GPIO_S0_S1 = 0,
@@ -61,7 +58,6 @@ enum GpioDrive
    GPIO_S0_D1 = 6,
    GPIO_H0_D1 = 7
 };
-
 
 template <unsigned WIDTH, unsigned PIN>
 class Out : public Periph<Reg,0x50000000>
@@ -108,7 +104,6 @@ private:
    static const uint32_t DATA_MASK = (1<<WIDTH) - 1;
 };
 
-
 template <unsigned WIDTH, unsigned PIN>
 class In : public Periph<Reg,0x50000000>
 {
@@ -138,9 +133,8 @@ private:
    static const uint32_t DATA_MASK = (1<<WIDTH) - 1;
 };
 
-
 } // namespace Gpio
 
 } // namespace MTL
 
-#endif // NRF51_GPIO_H
+#endif // MTL_NRF51_GPIO_H

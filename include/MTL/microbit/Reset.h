@@ -26,7 +26,7 @@
 #ifndef MTL_RESET_H
 #define MTL_RESET_H
 
-#include "Digital.h"
+#include "MTL/Digital.h"
 
 namespace MTL {
 

@@ -20,73 +20,69 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  Digital.h
-//! \brief Low level digital I/O
+//! \file ClockOut.h
+//
+//  Platform:    BBC microbit
+//  Class:       ClockOut
+//  Description: Generate a square wave on an external pin
+//               with no overhead for the ARM core
+//
 
-#ifndef MTL_DIGITAL_H
-#define MTL_DIGITAL_H
+#ifndef MTL_MICROBIT_CLOCK_OUT_H
+#define MTL_MICROBIT_CLOCK_OUT_H
 
-#include "MTL/Metal.h"
-#include "MTL/Pins.h"
-#include "MTL/Gpio.h"
+#include "MTL/nRF51/Timer.h"
+#include "MTL/nRF51/GpioTE.h"
+#include "MTL/nRF51/Ppi.h"
 
-//! Bare metal layer
+#include "MTL/Digital.h"
+
 namespace MTL {
 
-//! Low level digital I/O
-namespace Digital {
-
-//! Single digital output
-template <unsigned PIN>
-class Out
+template <unsigned PIN, unsigned TIMER, unsigned GPIOTE, unsigned PPI>
+class ClockOut
 {
-public:
-   Out(bool init = false)
-   {
-      operator=(init);
-   }
-
-   //! Set state of digital output
-   //
-   //! \param true => set output high, false => set output low
-   bool operator=(bool state)
-   {
-      if (state)
-         gpio.set(1);
-      else
-         gpio.clr(1);
-
-      return state;
-   }
-
-   //! Get current state of digital output
-   operator bool() const
-   {
-      return gpio != 0;
-   }
-
 private:
-   Gpio::Out<1,PIN>  gpio;
-};
+   static const unsigned TIMER_CMP = 0;   // Use compare register 0
 
+   nRF51::Timer<TIMER>   timer;
+   nRF51::GpioTE<GPIOTE> toggle;
+   nRF51::Ppi<PPI>       chan;
+   Digital::Out<PIN>     pin;
 
-//! Single digital input
-template <unsigned PIN>
-class In
-{
 public:
-   //! Get current state of digital input
-   operator bool() const
+   ClockOut(unsigned freq, bool start_now=true)
+      : timer(nRF51::TIMER_WIDTH_16_BITS)
+      , toggle(PIN, nRF51::GPIO_TE_TASK | nRF51::GPIO_TE_TOGGLE)
    {
-      return gpio != 0;
+      chan.config(timer.getEvent(TIMER_CMP), toggle.getTask());
+
+      setFreq(freq);
+
+      if (start_now) start();
    }
 
-private:
-   Gpio::In<1,PIN>  gpio;
-};
+   //! Set clock frequency, maximum is 8 MHz
+   //  TODO restart the clock if it was already running
+   void setFreq(unsigned freq)
+   {
+      // double frequency as toggle is in effect a divide by 2
+      timer.setFreqHz(TIMER_CMP, freq * 2);
+   }
 
-} // namespace Digital
+   //! Start the clock
+   void start()
+   {
+      timer.start();
+   }
+
+   //! Stop the clock
+   void stop()
+   {
+      timer.stop();
+   }
+};
 
 } // namespace MTL
 
-#endif // MTL_DIGITAL_H
+#endif
