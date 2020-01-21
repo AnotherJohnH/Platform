@@ -70,6 +70,7 @@ set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
 
 set(PLT_source
     Platform/Source/PLT/target/microbit/startup_${PLT_ram_size}.s
+    Platform/Source/PLT/target/microbit/Leds.cpp
     Platform/Source/PLT/Stub/Audio.cpp
     Platform/Source/PLT/Stub/Event.cpp
     Platform/Source/PLT/Stub/Frame.cpp

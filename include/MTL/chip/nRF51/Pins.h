@@ -25,8 +25,8 @@
 //
 // Data source Nordic Semiconductor "nRF51 Series Reference Manual Version 3.0"
 
-#ifndef NRF51_PINS_H
-#define NRF51_PINS_H
+#ifndef MTL_NRF51_PINS_H
+#define MTL_NRF51_PINS_H
 
 
 namespace MTL {
@@ -65,4 +65,4 @@ static const unsigned  PIN_30  = 0x1E;
 
 } // namespace MTL
 
-#endif // LPC11U24_PINS_H
+#endif // MTL_NRF51_PINS_H

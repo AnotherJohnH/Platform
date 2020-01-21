@@ -23,13 +23,12 @@
 //! \file Reset.h
 //! \brief micro::bit module buttons
 
-#ifndef MICROBIT_RESET_H
-#define MICROBIT_RESET_H
+#ifndef MTL_RESET_H
+#define MTL_RESET_H
 
 #include "Digital.h"
 
 namespace MTL {
-
 
 class Reset
 {
@@ -44,7 +43,6 @@ public:
    }
 };
 
-
 } // namespace MTL
 
-#endif // MICROBIT_RESET_H
+#endif // MTL_RESET_H

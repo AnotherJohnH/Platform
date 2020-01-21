@@ -34,10 +34,10 @@ SECTIONS
    {
       KEEP(*(.vectors))
       *(.text*)
+      *(.rodata*)
       __init_array_start = ALIGN(4);
       KEEP(*(.init_array))
       __init_array_end = .;
-      *(.rodata*)
 
    } > FLASH
 

@@ -37,10 +37,10 @@
     struct { uint8_t pad_##NAME[OFFSET]; TYPE NAME[SIZE]; }
 
 #define  REG(OFFSET, NAME) \
-    REG_TYPE(OFFSET, Register<uint32_t>, NAME)
+    REG_TYPE(OFFSET, MTL::Register<uint32_t>, NAME)
 
 #define  REG_ARRAY(OFFSET, NAME, SIZE)  \
-    REG_TYPE_ARRAY(OFFSET, Register<uint32_t>, NAME, SIZE)
+    REG_TYPE_ARRAY(OFFSET, MTL::Register<uint32_t>, NAME, SIZE)
 
 namespace MTL {
 
