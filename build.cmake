@@ -89,6 +89,7 @@ add_library(PLT
             Platform/Source/STB/Option.cpp
             Platform/Source/STB/MidiDecoder.cpp
             Platform/Source/MTL/PS2KeyDecode.cpp
+            Platform/Source/MTL/PALVideo.cpp
             Platform/Source/GUI/FontLED11.cpp
             Platform/Source/GUI/FontLED22.cpp
             Platform/Source/GUI/FontNew8.cpp
