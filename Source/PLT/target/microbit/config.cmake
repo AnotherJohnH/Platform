@@ -20,12 +20,15 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# cmake configuration for microbit builds
+# cmake configuration for micro::bit builds
 
 set(PLT_prefix   arm-none-eabi-)
 set(PLT_machine  armv6m)
 set(PLT_chip     nRF51)
-set(PLT_ram_size 16k)
+
+if (NOT DEFINED PLT_ram_size)
+   set(PLT_ram_size 16k)
+endif()
 
 #-------------------------------------------------------------------------------
 # Special compile flags for this platform
@@ -41,7 +44,7 @@ set(PLT_cxx_flags "-DNO_RTTI -std=c++11 -fno-rtti")
 
 set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/PLT/target/microbit/script_${PLT_ram_size}.ld")
 
-include_directories(Platform/Source/PLT/target/${PLT_TARGET})
+include_directories(Platform/Source/PLT/target/microbit)
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
