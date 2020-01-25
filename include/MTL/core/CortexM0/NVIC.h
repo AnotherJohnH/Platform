@@ -20,7 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Nvic.h
+//! \file  Nvic.h
 //! \brief Access to Cortex-M0 NVIC
 
 #ifndef MTL_CORTEX_M0_NVIC_H

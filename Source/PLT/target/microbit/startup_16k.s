@@ -30,9 +30,9 @@
 
 vector_table:
    .word  0x20004000        @ stack pointer (16k RAM)
-   .word  reset+1
-   .word  nmi+1
-   .word  fault+1
+   .word  VEC_reset+1
+   .word  VEC_nmi+1
+   .word  VEC_fault+1
    .word  0
    .word  0
    .word  0
@@ -40,11 +40,11 @@ vector_table:
    .word  0
    .word  0
    .word  0
-   .word  svc+1
+   .word  VEC_svc+1
    .word  0
    .word  0
-   .word  pendSv+1
-   .word  sysTick+1
+   .word  VEC_pendSv+1
+   .word  VEC_sysTick+1
 
    .word  PowerClock_IRQ+1  @ IRQ  0
    .word  Radio_IRQ+1       @ IRQ  1
@@ -73,12 +73,11 @@ vector_table:
    .word  Swi_4_IRQ+1       @ IRQ 24
    .word  Swi_5_IRQ+1       @ IRQ 25
 
-   .weak  reset
-   .weak  nmi
-   .weak  fault
-   .weak  svc
-   .weak  pendSv
-   .weak  sysTick
+   .weak  VEC_nmi
+   .weak  VEC_fault
+   .weak  VEC_svc
+   .weak  VEC_pendSv
+   .weak  VEC_sysTick
 
    .weak  PowerClock_IRQ
    .weak  Radio_IRQ
@@ -110,13 +109,12 @@ vector_table:
 .text
 .align	2
 
-reset:
+VEC_reset:
 #
 # Make sure all RAM banks are powered on
 #
-    movs    r1,#3
-#
     ldr     r0,ramon
+    movs    r1,#3
     str     r1,[r0]
 #
 # Initialise C/C++ runtime
@@ -125,18 +123,18 @@ reset:
 #
 # Call application entry point
 #
-    mov     r0, #0   @ ensure argc is zero
     bl      mtlMain
 #
 # Fall through to unhandled exception
 #
 
 unhandled_exception:
-nmi:
-fault:
-svc:
-pendSv:
-sysTick:
+
+VEC_nmi:
+VEC_fault:
+VEC_svc:
+VEC_pendSv:
+VEC_sysTick:
 
 PowerClock_IRQ:
 Radio_IRQ:
