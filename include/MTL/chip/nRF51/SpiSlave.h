@@ -25,8 +25,8 @@
 #ifndef MTL_NRF51_SPI_SLAVE_H
 #define MTL_NRF51_SPI_SLAVE_H
 
-#include "Periph.h"
-#include "Gpio.h"
+#include "MTL/Periph.h"
+#include "MTL/Gpio.h"
 
 namespace MTL {
 
@@ -67,10 +67,10 @@ template <unsigned PSELCSN,
 class SpiSlave : public Periph<SpiSlaveReg,0x40004000>
 {
 private:
-   Gpio<1,PSELCSN>   csn;
-   Gpio<1,PSELMOSI>  mosi;
-   Gpio<1,PSELMISO>  miso;
-   Gpio<1,PSELSCK>   sck;
+   Gpio::In<1,PSELCSN>   csn;
+   Gpio::In<1,PSELMOSI>  mosi;
+   Gpio::Out<1,PSELMISO> miso;
+   Gpio::In<1,PSELSCK>   sck;
 
 public:
    // Tasks
@@ -78,10 +78,6 @@ public:
    void release()  { reg->task_release = 1; }
 
    SpiSlave()
-      : csn(false)
-      , mosi(false)
-      , miso(true)
-      , sck(false)
    {
       reg->shorts   = 1<<2;     // Enable end acquire
 
