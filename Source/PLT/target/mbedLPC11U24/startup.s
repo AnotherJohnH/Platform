@@ -102,7 +102,6 @@ VEC_reset:
 #
 # Fall through to unhandled exception
 #
-
 unhandled_exception:
 
 VEC_nmi:

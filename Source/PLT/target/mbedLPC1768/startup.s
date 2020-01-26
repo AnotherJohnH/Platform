@@ -30,21 +30,21 @@
 
 vector_table:
    .word  0x10008000        @ stack pointer (32k RAM)
-   .word  reset+1
-   .word  nmi+1
-   .word  hard_fault+1
-   .word  mem_fault+1
-   .word  bus_fault+1
-   .word  usage_fault+1
+   .word  VEC_reset+1
+   .word  VEC_nmi+1
+   .word  VEC_hard_fault+1
+   .word  VEC_mem_fault+1
+   .word  VEC_bus_fault+1
+   .word  VEC_usage_fault+1
    .word  0
    .word  0
    .word  0
    .word  0
-   .word  svc+1
+   .word  VEC_svc+1
    .word  0
    .word  0
-   .word  pendSv+1
-   .word  sysTick+1
+   .word  VEC_pendSv+1
+   .word  VEC_sysTick+1
 
    .word  irqWDT+1       @ IRQ 0
    .word  irqTimer0+1    @ IRQ 1
@@ -82,15 +82,14 @@ vector_table:
    .word  irqUSBAct+1    @ IRQ 33
    .word  irqCANAct+1    @ IRQ 34
 
-   .weak  reset
-   .weak  nmi
-   .weak  hard_fault
-   .weak  mem_fault
-   .weak  bus_fault
-   .weak  usage_fault
-   .weak  svc
-   .weak  pendSv
-   .weak  sysTick
+   .weak  VEC_nmi
+   .weak  VEC_hard_fault
+   .weak  VEC_mem_fault
+   .weak  VEC_bus_fault
+   .weak  VEC_usage_fault
+   .weak  VEC_svc
+   .weak  VEC_pendSv
+   .weak  VEC_sysTick
 
    .weak  irqWDT
    .weak  irqTimer0
@@ -131,7 +130,7 @@ vector_table:
 .text
 .align	2
 
-reset:
+VEC_reset:
 #
     bl      platform_init 
 #
@@ -141,22 +140,22 @@ reset:
 #
 # Call application entry point
 #
-    mov     r0, #0   @ ensure argc is zero
     bl      mtlMain
     bl      exit
-
 #
 # unhandled exceptions
 #
 unhandled_exception:
-nmi:
-hard_fault:
-mem_fault:
-bus_fault:
-usage_fault:
-svc:
-pendSv:
-sysTick:
+
+VEC_nmi:
+VEC_hard_fault:
+VEC_mem_fault:
+VEC_bus_fault:
+VEC_usage_fault:
+VEC_svc:
+VEC_pendSv:
+VEC_sysTick:
+
 irqWDT:
 irqTimer0:
 irqTimer1:
