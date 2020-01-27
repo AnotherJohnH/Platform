@@ -31,7 +31,7 @@ set(PLT_cxx_flags "-std=c++11")
 #if env['CC'] == 'clang':
 #   env.Append(CXXFLAGS = ['-Wdocumentation'])
 
-include_directories(Platform/include/MTL/board/stub)
+include_directories(Platform/Source/PLT/target/native)
 
 #-------------------------------------------------------------------------------
 # Configuration for libPLT.a

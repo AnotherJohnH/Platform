@@ -27,7 +27,7 @@
 
 set(PLT_cxx_flags "-std=c++11")
 
-include_directories(Platform/include/MTL/board/stub)
+include_directories(Platform/Source/PLT/target/native)
 
 #-------------------------------------------------------------------------------
 # Configuration for libPLT.a
