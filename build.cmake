@@ -179,9 +179,16 @@ endif()
 #-------------------------------------------------------------------------------
 # Package support
 
-set(CPACK_PACKAGE_VENDOR             ${author})
+if(DEFINED author)
+   set(CPACK_PACKAGE_VENDOR ${author})
+endif()
+
 set(CPACK_PACKAGE_INSTALL_DIRECTORY  "/usr/local")
-set(CPACK_RESOURCE_FILE_LICENSE      ${CMAKE_SOURCE_DIR}/LICENSE)
+if(EXISTS ${CMAKE_SOURCE_DIR}/LICENSE)
+    set(CPACK_RESOURCE_FILE_LICENSE      ${CMAKE_SOURCE_DIR}/LICENSE)
+elseif(EXISTS ${CMAKE_SOURCE_DIR}/UNLICENSE)
+    set(CPACK_RESOURCE_FILE_LICENSE      ${CMAKE_SOURCE_DIR}/UNLICENSE)
+endif()
 set(CPACK_SYSTEM_NAME                ${PLT_TARGET}_${PLT_machine})
 
 include(CPack)
