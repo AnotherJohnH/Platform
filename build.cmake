@@ -74,9 +74,9 @@ include_directories(Platform/include)
 #-------------------------------------------------------------------------------
 # Build the platform library libPLT.a
 
-
 if(PLT_libs MATCHES ".*tinyc.*")
     set(source_using_cpp_containers 
+        Platform/Source/MTL/main.cpp
         Platform/Source/GUI/BitmapStub.cpp)
 else()
     set(source_using_cpp_containers
