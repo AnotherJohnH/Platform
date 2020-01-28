@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2019 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,14 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \brief 
+#include "GUI/Bitmap.h"
 
-#include "GUI/Frame.h"
-#include "GUI/Font/Teletext.h"
-#include "Keyboard.h"
+namespace GUI {
 
-int main()
+//! Read bitmap from .png file
+bool Bitmap::readPNG(const std::string& filename)
 {
-   GUI::Frame     frame("", 400, 300);
-   MTL::Keyboard  keyboard;
+   return false;
+}
 
-   frame.clear(STB::BLACK);
-
-   while(true)
-   {
-      bool    up;
-      uint8_t ch;
-      
-      if (keyboard.recv(ch, up))
-      {
-         char buffer[3];
-
-         buffer[0] = ch;
-         buffer[1] = up ? '^' : 'v';
-         buffer[2] = '\0';
-
-         frame.fillRect(STB::BLACK, 0, 0, 30, 20);
-         frame.drawText(STB::WHITE, 0x000000, 0, 0, &GUI::font_teletext18, buffer);
-      }
-   }
 }

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2016 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,43 +20,33 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \brief 
+// Bitmap implementation that is broken!
 
-#include "PixelGen.h"
+#include "PLT/Bitmap.h"
 
+namespace PLT {
 
-void wait(volatile unsigned n)
+Bitmap::Bitmap(unsigned width_, unsigned height_)
 {
-   while(n--);
+   resize(width_, height_);
 }
 
-
-uint8_t buffer[40];
-
-
-int main()
+Bitmap::~Bitmap()
 {
-   MTL::PixelGen  pixel_gen;
-
-   pixel_gen.resize(320, 256, 2);
-
-   for(unsigned i=0; i<40; i++)
-   {
-      buffer[i] = 0xAA;
-   }
-
-   pixel_gen.setFramePtr(buffer);
-
-   while(true)
-   {
-      pixel_gen.startField(0);
-
-      pixel_gen.startLine(0);
-
-      wait(1000000);
-
-      pixel_gen.endLine();
-
-      wait(1000);
-   }
 }
+
+void Bitmap::resize(unsigned width_, unsigned height_)
+{
+   width  = width_;
+   height = height_;
+   pitch  = (width * Image::getPixelBits() + 7) / 8;
+   buffer = nullptr;
+}
+
+void* Bitmap::getHandle() const
+{
+   // No acceleration possible
+   return nullptr;
+}
+
+} // namespace PLT

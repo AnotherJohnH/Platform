@@ -74,14 +74,16 @@ include_directories(Platform/include)
 #-------------------------------------------------------------------------------
 # Build the platform library libPLT.a
 
-set(source_using_cpp_containers
-    Platform/Source/STB/Oil.cpp
-    Platform/Source/STB/Deflate.cpp
-    Platform/Source/STB/Zlib.cpp
-    Platform/Source/GUI/BitmapPNG.cpp)
 
 if(PLT_libs MATCHES ".*tinyc.*")
-    set(source_using_cpp_containers)
+    set(source_using_cpp_containers 
+        Platform/Source/GUI/BitmapStub.cpp)
+else()
+    set(source_using_cpp_containers
+        Platform/Source/STB/Oil.cpp
+        Platform/Source/STB/Deflate.cpp
+        Platform/Source/STB/Zlib.cpp
+        Platform/Source/GUI/BitmapPNG.cpp)
 endif()
 
 add_library(PLT
