@@ -168,6 +168,8 @@ public:
    void setFlags(uint32_t flags_)
    {
       flags = flags_;
+      scale_x = ((flags >> 4) & 0xF) + 1;
+      scale_y = ((flags >> 8) & 0xF) + 1;
    }
 
    void resize(unsigned width_, unsigned height_)
@@ -276,6 +278,8 @@ void Frame::setTitle(const char* title_)
 void Frame::setFlags(uint32_t flags_)
 {
    pimpl->setFlags(flags_);
+   pimpl->resize(width, height);
+   buffer = pimpl->getStorage(pitch);
 }
 
 void Frame::resize(unsigned width_, unsigned height_)
