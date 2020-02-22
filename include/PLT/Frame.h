@@ -69,6 +69,9 @@ public:
    //! Get a platform specific id for the frame
    uint32_t getId() const;
 
+   //! Set the flags to use when creating the first window
+   void setFlags(uint32_t flags_);
+
    //! Change the title, for window based platforms should be the window title
    void setTitle(const char* title);
 

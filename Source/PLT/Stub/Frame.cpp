@@ -50,6 +50,10 @@ void Frame::setTitle(const char* title_)
 {
 }
 
+void Frame::setFlags(uint32_t flags_)
+{  
+}  
+
 void Frame::setVisible(bool visible_)
 {
 }

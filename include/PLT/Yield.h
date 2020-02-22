@@ -61,8 +61,8 @@ public:
    }
 
 private:
-   uint32_t  period_us;
-   uint32_t  next_event_ticks;
+   uint32_t period_us;
+   uint32_t next_event_ticks;
 
    static uint32_t getTicksUS();
    static void     sleepUS(uint32_t);

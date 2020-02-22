@@ -165,6 +165,11 @@ public:
       SDL_SetWindowTitle(window, title_);
    }
 
+   void setFlags(uint32_t flags_)
+   {
+      flags = flags_;
+   }
+
    void resize(unsigned width_, unsigned height_)
    {
       if(window == nullptr)
@@ -266,6 +271,11 @@ uint32_t Frame::getId() const
 void Frame::setTitle(const char* title_)
 {
    pimpl->setTitle(title_);
+}
+
+void Frame::setFlags(uint32_t flags_)
+{
+   pimpl->setFlags(flags_);
 }
 
 void Frame::resize(unsigned width_, unsigned height_)
