@@ -85,6 +85,25 @@ const char* Option<int64_t>::getValueDescription() const
 
 
 template <>
+bool Option<uint8_t>::set(const char* arg_)
+{
+   if(arg_ != nullptr) value = uint8_t(strtoul(arg_, nullptr, 0));
+   return true;
+}
+
+template <> void Option<uint8_t>::showDefault() const
+{
+   printf(" [0x%x]", value);
+}
+
+template <>
+const char* Option<uint8_t>::getValueDescription() const
+{
+   return "<uint8>";
+}
+
+
+template <>
 bool Option<uint16_t>::set(const char* arg_)
 {
    if(arg_ != nullptr) value = uint16_t(strtoul(arg_, nullptr, 0));
