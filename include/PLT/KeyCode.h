@@ -61,6 +61,7 @@ enum KeyCode : uint8_t
    LSHIFT    = 0x94,  //!< Left shift
    RSHIFT    = 0x95,  //!< Right shift
    LCTRL     = 0x96,  //!< Left ctrl
+   RCTRL     = 0x97,  //!< Right ctrl
    LALT      = 0x98,  //!< Left alt
    RALT      = 0x99,  //!< Right alt
    HOME      = 0x9A,
