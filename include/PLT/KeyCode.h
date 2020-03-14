@@ -28,7 +28,6 @@
 //! Platform abstraction layer
 namespace PLT {
 
-
 //! Event codes for special keys
 enum KeyCode : uint8_t
 {
@@ -78,6 +77,46 @@ enum KeyCode : uint8_t
    QUIT      = 0xF0,
    TIMEOUT   = 0xF1
 };
+
+//! Get key code for key when shift is pressed on a modern keyboard
+inline uint8_t getShiftedKey(uint8_t base_key, bool ansi = true)
+{
+   if ((base_key >= 'a') && (base_key <= 'z'))
+   {
+      return base_key + 'A' - 'a';
+   }
+
+   switch(base_key)
+   {
+   case '`':  return ansi ? '~' : '\0';
+   case '1':  return '!';
+   case '2':  return ansi ? '@' : '"';
+   case '3':  return ansi ? '#' : POUND;
+   case '4':  return '$';
+   case '5':  return '%';
+   case '6':  return '^';
+   case '7':  return '&';
+   case '8':  return '*';
+   case '9':  return '(';
+   case '0':  return ')';
+   case '-':  return '_';
+   case '=':  return '+';
+
+   case '[':  return '{';
+   case ']':  return '}';
+   case '\\': return '|';
+
+   case ';':  return ':';
+   case '\'': return ansi ? '"' : '@';
+   case '#':  return '~';  // ISO only
+
+   case ',':  return '<';
+   case '.':  return '>';
+   case '/':  return '?';
+   }
+
+   return base_key;
+}
 
 } // namespace PLT
 
