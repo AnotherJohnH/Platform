@@ -79,7 +79,7 @@ enum KeyCode : uint8_t
 };
 
 //! Get key code for key when shift is pressed on a modern keyboard
-inline uint8_t getShiftedKey(uint8_t base_key, bool ansi = true)
+inline uint8_t shiftKeyCode(uint8_t base_key, bool ansi = true)
 {
    if ((base_key >= 'a') && (base_key <= 'z'))
    {
