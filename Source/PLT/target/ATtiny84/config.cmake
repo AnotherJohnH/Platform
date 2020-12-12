@@ -44,6 +44,9 @@ include_directories(Platform/Source/PLT/target/${PLT_TARGET})
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
 
+set(CMAKE_SYSTEM_NAME         Generic)
+set(CMAKE_SYSTEM_PROCESSOR    ${PLT_machine})
+
 set(CMAKE_ASM_COMPILER        ${PLT_prefix}as)
 set(CMAKE_C_COMPILER          ${PLT_prefix}gcc)
 set(CMAKE_CXX_COMPILER        ${PLT_prefix}g++)
@@ -62,6 +65,13 @@ set(CMAKE_C_LINK_EXECUTABLE
      ${CMAKE_SIZE} <TARGET>")
 
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
+
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+
+# Prevent compiler sanity check when cross-compiling.
+set(CMAKE_TRY_COMPILE_TARGET_TYPE     STATIC_LIBRARY)
 
 #-------------------------------------------------------------------------------
 # Configuration for libPLT.a
