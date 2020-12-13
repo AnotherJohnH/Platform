@@ -36,7 +36,7 @@ if(DEFINED ENV{PLT_TARGET})
 
 elseif(PLT_TARGET STREQUAL "" OR PLT_TARGET STREQUAL "native")
    # Use the host system as the target
-   set(PLT_TARGET ${CMAKE_SYSTEM_NAME})
+   set(PLT_TARGET ${CMAKE_HOST_SYSTEM_NAME})
 endif()
 
 # Translate macOSes confusing self description
