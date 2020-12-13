@@ -91,7 +91,7 @@ def build(target, cmake_opts):
       os.system("source "+EMSDK_PATH+"/emsdk_env.sh; make")
    else:
       print("----------------------------------------------------------------------")
-      os.system("make")
+      os.system("make -j")
 
    os.chdir("..")
 
