@@ -22,9 +22,9 @@
 
 # cmake configuration for micro::bit builds
 
-set(PLT_prefix   arm-none-eabi-)
-set(PLT_machine  armv6m)
-set(PLT_chip     nRF51)
+set(PLT_prefix  arm-none-eabi-)
+set(PLT_machine armv6m)
+set(PLT_chip    nRF51)
 
 if (NOT DEFINED PLT_ram_size)
    set(PLT_ram_size 16k)
@@ -95,7 +95,7 @@ set(PLT_source
     Platform/Source/PLT/Stub/Info.cpp
     Platform/Source/PLT/Stub/File.cpp)
 
-execute_process(COMMAND ${CMAKE_C_COMPILER} -print-file-name=armv6-m OUTPUT_VARIABLE gcc_lib)
+execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=cortex-m0 -print-file-name=libgcc.a OUTPUT_VARIABLE gcc_lib)
 string(STRIP ${gcc_lib} gcc_lib)
 
-set(PLT_libs tinyc ${gcc_lib}/libgcc.a)
+set(PLT_libs tinyc ${gcc_lib})

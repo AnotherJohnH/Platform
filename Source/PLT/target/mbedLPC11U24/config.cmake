@@ -91,7 +91,7 @@ set(PLT_source
     Platform/Source/PLT/Stub/Info.cpp
     Platform/Source/PLT/Stub/File.cpp)
 
-execute_process(COMMAND ${CMAKE_C_COMPILER} -print-file-name=armv6-m OUTPUT_VARIABLE gcc_lib)
+execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=cortex-m0 -print-file-name=libgcc.a OUTPUT_VARIABLE gcc_lib)
 string(STRIP ${gcc_lib} gcc_lib)
 
 set(PLT_libs tinyc ${gcc_lib}/libgcc.a)
