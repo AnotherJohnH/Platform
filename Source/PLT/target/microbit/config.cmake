@@ -84,6 +84,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE     STATIC_LIBRARY)
 set(PLT_source
     Platform/Source/PLT/target/microbit/startup_${PLT_ram_size}.s
     Platform/Source/PLT/target/microbit/Leds.cpp
+    Platform/Source/PLT/target/microbit/platform_clock.cpp
     Platform/Source/PLT/Stub/Audio.cpp
     Platform/Source/PLT/Stub/Event.cpp
     Platform/Source/PLT/Stub/Frame.cpp

@@ -25,65 +25,57 @@
 
 // NOTE: This private peripheral is optional
 
-
 #ifndef CORTEX_M0_SYS_TIMER_H
 #define CORTEX_M0_SYS_TIMER_H
 
-
 #include "MTL/Periph.h"
-
-
-#define SYS_TIMER_ATTACH_IRQ(OBJ) \
-     extern "C" { void SysTimer_IRQ() { OBJ.tick(); } }
 
 
 namespace MTL {
 
 union SysTimerReg
 {
-   REG(0x10, csr);
-   REG(0x14, rvr);
-   REG(0x18, cvr);
-   REG(0x1C, calib);
+   REG(0x10, csr);    //!< Control and status
+   REG(0x14, rvr);    //!< Reload value
+   REG(0x18, cvr);    //!< Current value
+   REG(0x1C, calib);  //!< Calibrartion
 };
 
 
 class SysTimer : public Periph<SysTimerReg,0xE000E000>
 {
 private:
-   static const uint32_t CSR_ENABLE     = 1<<0;
-   static const uint32_t CSR_EXCEPTION  = 1<<1;
-   static const uint32_t CSR_CORE_CLOCK = 1<<2;
-
-   volatile uint32_t  ticks{0};
+   static const uint32_t CSR_ENABLE     = 0;
+   static const uint32_t CSR_TICKINT    = 1;
+   static const uint32_t CSR_CLKSOURCE  = 2;
+   static const uint32_t CSR_COUNTFLAG  = 16;
 
 public:
-   SysTimer()
+   SysTimer(unsigned period = 0)
    {
-      setPeriod(getPeriod10ms());
-
-      reg->csr |= CSR_EXCEPTION;
-   }
-
-   uint32_t getPeriod10ms() const
-   {
-      uint32_t period = reg->calib & 0xFFFFFF;
-
-      if ((period != 0) && ((reg->calib & (1<<30)) == 0))
+      if (period == 0)
       {
-         return period + 1;
+         period = reg->calib.getField(23, 0) / 10;
+
+         if ((period != 0) && (reg->calib.getBit(30) == 0))
+         {
+            period = period + 1;
+         }
       }
 
-      reg->csr |= CSR_CORE_CLOCK;
+      if (period != 0)
+      {
+         setPeriod(period);
 
-      return CORE_CLOCK_MHZ * 10000;
+         reg->csr.setBit(CSR_CLKSOURCE);
+         reg->csr.setBit(CSR_TICKINT);
+
+         start();
+      }
    }
 
-   //! Check if timer is runnign
-   bool isRunning() const { return (reg->csr & CSR_ENABLE) != 0; }
-
-   //! Get the current tick value
-   operator uint32_t() const { return ticks; }
+   //! Check if timer is running
+   bool isRunning() const { return reg->csr.getBit(CSR_ENABLE); }
 
    //! Set the tick period
    //
@@ -97,21 +89,13 @@ public:
    //! Start timer
    void start()
    {
-      reg->csr |= CSR_ENABLE;
+      reg->csr.setBit(CSR_ENABLE);
    }
 
    //! Stop timer
    void stop()
    {
-      reg->csr &= ~CSR_ENABLE;
-   }
-
-   //! Increment the current tick count
-   //
-   //! This method is called from the SysTimer interrupt vector
-   void tick()
-   {
-      ++ticks;
+      reg->csr.clrBit(CSR_ENABLE);
    }
 };
 

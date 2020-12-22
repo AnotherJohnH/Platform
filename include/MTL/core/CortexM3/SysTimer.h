@@ -72,7 +72,7 @@ public:
       }
    }
 
-   //! Check if timer is runnign
+   //! Check if timer is running
    bool isRunning() const { return reg->csr.getBit(CSR_ENABLE); }
 
    //! Set the tick period

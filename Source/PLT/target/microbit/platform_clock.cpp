@@ -1,4 +1,4 @@
-/*------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,17 +18,19 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//----------------------------------------------------------------------------*/
+//------------------------------------------------------------------------------
 
-//! \file clock.c
-//! \brief tiny C library implementation
+#include "MTL/core/CortexM0/SysTimer.h"
 
-#include <time.h>
-#include <stdint.h>
 
-extern "C" uint32_t platform_ms_ticks(void);
+static MTL::SysTimer     sys_timer;
+static volatile uint32_t ticks{0};
 
-clock_t clock(void)
-{
-   return platform_ms_ticks();
+
+extern "C" {
+
+uint32_t platform_ms_ticks() { return ticks; }
+
+void sysTick() { ++ticks; }
+
 }
