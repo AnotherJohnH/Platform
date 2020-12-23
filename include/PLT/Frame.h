@@ -95,6 +95,10 @@ public:
    //  can support high-DPI (OS X) or pixel scaling
    static void internal_transEventXyToPixel(uint16_t& x, uint16_t& y);
 
+   //! Return a pointer to this object
+   //! Not generaly necessary but helps mapt GUI::Frame API
+   PLT::Frame* getFramePtr() { return this; }
+
 private:
    class Impl;
 
