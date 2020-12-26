@@ -40,12 +40,15 @@ public:
    OptionBase(char        short_opt_,
               const char* long_opt_,
               const char* description_)
+#if !defined(NCONSOLE)
       : description(description_)
       , long_opt(long_opt_)
       , short_opt(short_opt_)
+#endif
    {
    }
 
+#if !defined(NCONSOLE)
    //! Print help for all the options
    static void printHelpAll()
    {
@@ -85,6 +88,7 @@ public:
 
    //! Is glob
    bool isGlob() const { return short_opt == '*'; }
+#endif
 
    //! Set option value from a string
    virtual bool set(const char* arg) = 0;
@@ -96,6 +100,7 @@ private:
    //! Return a description of the supplementary option value
    virtual const char* getValueDescription() const = 0;
 
+#if !defined(NCONSOLE)
    //! Print option help
    void printHelp() const
    {
@@ -156,6 +161,7 @@ private:
    const char* description;
    const char* long_opt;
    char        short_opt;
+#endif
 };
 
 
