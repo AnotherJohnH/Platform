@@ -29,7 +29,8 @@
 .global vector_table
 
 vector_table:
-   .word  0x20020000        @ stack pointer (128k RAM)
+   ;.word  0x20020000        @ stack pointer (128k RAM)
+   .word  0x20000400        @ stack pointer
    .word  VEC_reset+1
    .word  VEC_nmi+1
    .word  VEC_fault+1
@@ -113,9 +114,9 @@ VEC_reset:
 #
 # Make sure all RAM banks are powered on
 #
-    ldr     r0,ramon
-    movs    r1,#3
-    str     r1,[r0]
+##    ldr     r0,ramon
+##    movs    r1,#3
+##    str     r1,[r0]
 #
 # Initialise C/C++ runtime
 #
@@ -164,7 +165,3 @@ Swi_4_IRQ:
 Swi_5_IRQ:
 loop:
     b       loop
-
-.align 2
-ramon:
-   .word 0x40000524

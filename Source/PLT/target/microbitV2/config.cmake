@@ -39,7 +39,7 @@ set(PLT_c_flags   "-DNCONSOLE -DSMALL_MEMORY \
 
 set(PLT_cxx_flags "-DNO_RTTI -std=c++11 -fno-rtti")
 
-set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/PLT/target/microbitV2/script.ld")
+set(PLT_ld_flags  "--static -T${PLT_config_dir}/script.ld")
 
 include_directories(Platform/Source/PLT/target/microbitV2)
 
@@ -63,6 +63,7 @@ set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 set(CMAKE_C_LINK_EXECUTABLE
     "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O ihex <TARGET> <TARGET>.hex; \
+     ${PLT_config_dir}/univihex.py -1 ${PLT_config_dir}/stand-alone-error-v1.hex -2 <TARGET>.hex -o <TARGET>.uhex; \
      ${CMAKE_OBJDUMP} -d <TARGET>; \
      ${CMAKE_SIZE} <TARGET>")
 
