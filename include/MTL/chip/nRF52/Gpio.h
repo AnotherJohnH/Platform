@@ -51,14 +51,14 @@ union Reg
 
 enum GpioDrive
 {
-   GPIO_S0_S1 = 0,
-   GPIO_H0_S1 = 1,
-   GPIO_S0_H1 = 2,
-   GPIO_H0_H1 = 3,
-   GPIO_D0_S1 = 4,
-   GPIO_D0_H1 = 5,
-   GPIO_S0_D1 = 6,
-   GPIO_H0_D1 = 7
+   GPIO_S0_S1 = 0b000, // Standard   0, standard   1
+   GPIO_H0_S1 = 0b001, // High drive 0, standard   1
+   GPIO_S0_H1 = 0b010, // Standard   0, high drive 1
+   GPIO_H0_H1 = 0b011, // high drive 0, high drive 1
+   GPIO_D0_S1 = 0b100, // disconnect 0, standard   1
+   GPIO_D0_H1 = 0b101, // disconnect 0, high drive 1
+   GPIO_S0_D1 = 0b110, // standard   0, disconnect 1
+   GPIO_H0_D1 = 0b111  // high drive 0, disconnect 1
 };
 
 template <unsigned WIDTH, unsigned PIN>
@@ -71,11 +71,11 @@ public:
 
       for(unsigned bit=LSB; bit<=MSB; ++bit)
       {
-         reg->pin_cnf[bit] = (0     <<16) |
-                             (drive << 8) |
-                             (0     << 2) |
-                             (1     << 1) |
-                             (1     << 0);
+         reg->pin_cnf[bit] = (0     <<16) | // Sensing disabled
+                             (drive << 8) | // Drive configuration
+                             (0     << 2) | // No pull
+                             (1     << 1) | // Disconnect input buffer
+                             (1     << 0);  // Output
       }
    }
 
@@ -116,11 +116,11 @@ public:
 
       for(unsigned bit=LSB; bit<=MSB; ++bit)
       {
-         reg->pin_cnf[bit] = (0     <<16) |
-                             (drive << 8) |
-                             (0     << 2) |
-                             (0     << 1) |
-                             (0     << 0);
+         reg->pin_cnf[bit] = (0     <<16) | // Sensing disabled
+                             (drive << 8) | // Drive configuration
+                             (0     << 2) | // No pull
+                             (0     << 1) | // Disconnect input buffer
+                             (0     << 0);  // Input
       }
    }
 
