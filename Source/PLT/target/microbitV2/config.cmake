@@ -63,7 +63,7 @@ set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 set(CMAKE_C_LINK_EXECUTABLE
     "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O ihex <TARGET> <TARGET>.hex; \
-     ${PLT_config_dir}/univihex.py -1 ${PLT_config_dir}/stand-alone-error-v1.hex -2 <TARGET>.hex -o <TARGET>.uhex; \
+     ${PLT_config_dir}/univihex.py -1 ${PLT_config_dir}/stand-alone-error-v1.hex -2 <TARGET>.hex -o <TARGET>-u.hex; \
      ${CMAKE_OBJDUMP} -d <TARGET>; \
      ${CMAKE_SIZE} <TARGET>")
 
