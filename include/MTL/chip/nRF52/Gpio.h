@@ -62,42 +62,42 @@ enum GpioDrive
 };
 
 template <unsigned WIDTH, unsigned PIN>
-class Out : public Periph<Reg, 0x50000000,0,0x300>
+class Out : public Periph<Reg, 0x50000000,PIN/256,0x300>
 {
 public:
    Out(GpioDrive drive=GPIO_S0_S1)
    {
-      reg->dirset.setField(MSB, LSB, DATA_MASK);
+      this->reg->dirset.setField(MSB, LSB, DATA_MASK);
 
       for(unsigned bit=LSB; bit<=MSB; ++bit)
       {
-         reg->pin_cnf[bit] = (0     <<16) | // Sensing disabled
-                             (drive << 8) | // Drive configuration
-                             (0     << 2) | // No pull
-                             (1     << 1) | // Disconnect input buffer
-                             (1     << 0);  // Output
+         this->reg->pin_cnf[bit] = (0     <<16) | // Sensing disabled
+                                   (drive << 8) | // Drive configuration
+                                   (0     << 2) | // No pull
+                                   (1     << 1) | // Disconnect input buffer
+                                   (1     << 0);  // Output
       }
    }
 
    operator uint32_t() const
    {
-      return reg->out.getField(MSB, LSB);
+      return this->reg->out.getField(MSB, LSB);
    }
 
    uint32_t operator=(uint32_t data)
    {
-      reg->out.setField(MSB, LSB, data);
+      this->reg->out.setField(MSB, LSB, data);
       return data;
    }
 
    void set(uint32_t data)
    {
-      reg->outset = data << LSB;
+      this->reg->outset = data << LSB;
    }
 
    void clr(uint32_t data)
    {
-      reg->outclr = data << LSB;
+      this->reg->outclr = data << LSB;
    }
 
 private:
@@ -107,26 +107,26 @@ private:
 };
 
 template <unsigned WIDTH, unsigned PIN>
-class In : public Periph<Reg, 0x50000000,0,0x300>
+class In : public Periph<Reg, 0x50000000,PIN/256,0x300>
 {
 public:
    In(GpioDrive drive=GPIO_S0_S1)
    {
-      reg->dirclr.setField(MSB, LSB, DATA_MASK);
+      this->reg->dirclr.setField(MSB, LSB, DATA_MASK);
 
       for(unsigned bit=LSB; bit<=MSB; ++bit)
       {
-         reg->pin_cnf[bit] = (0     <<16) | // Sensing disabled
-                             (drive << 8) | // Drive configuration
-                             (0     << 2) | // No pull
-                             (0     << 1) | // Disconnect input buffer
-                             (0     << 0);  // Input
+         this->reg->pin_cnf[bit] = (0     <<16) | // Sensing disabled
+                                   (drive << 8) | // Drive configuration
+                                   (0     << 2) | // No pull
+                                   (0     << 1) | // Disconnect input buffer
+                                   (0     << 0);  // Input
       }
    }
 
    operator uint32_t() const
    {
-      return reg->in.getField(MSB, LSB);
+      return this->reg->in.getField(MSB, LSB);
    }
 
 private:

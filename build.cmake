@@ -142,6 +142,7 @@ if(PLT_libs MATCHES ".*tinyc.*")
                Platform/Source/MTL/tinyc/sin.c
                Platform/Source/MTL/tinyc/scanf.cpp
                Platform/Source/MTL/tinyc/sprintf.cpp
+               Platform/Source/MTL/tinyc/srand.cpp
                Platform/Source/MTL/tinyc/strcat.cpp
                Platform/Source/MTL/tinyc/strchr.cpp
                Platform/Source/MTL/tinyc/strcmp.cpp

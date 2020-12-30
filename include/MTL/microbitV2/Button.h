@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2020 John D. Haughton
+// Copyright (c) 2016 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +20,32 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/Leds.h"
+//! \file Button.h
+//! \brief microbit module buttons
 
-const uint8_t MTL::Leds::map[5][5] =
+#ifndef MTL_MICROBIT_BUTTON_H
+#define MTL_MICROBIT_BUTTON_H
+
+#include "MTL/Digital.h"
+
+namespace MTL {
+
+enum ButtonId
 {
-   { 0x00, 0x13, 0x01, 0x14, 0x02 },
-   { 0x23, 0x24, 0x25, 0x26, 0x27 },
-   { 0x11, 0x08, 0x12, 0x28, 0x10 },
-   { 0x07, 0x06, 0x05, 0x04, 0x03 },
-   { 0x22, 0x16, 0x20, 0x15, 0x21 }
+   BTN_A = PIN_BTN_A,
+   BTN_B = PIN_BTN_B
 };
+
+template <ButtonId PIN>
+class Button
+{
+public:
+   operator bool() const { return not pin; }
+
+private:
+   Digital::In<PIN> pin;
+};
+
+} // namespace MTL
+
+#endif // MTL_MICROBIT_BUTTON_H

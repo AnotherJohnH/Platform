@@ -76,8 +76,8 @@ union TimerReg
    REG(0x00C, task_clear);
    REG(0x010, task_shutdown);
 
-   REG_ARRAY(0x040, task_capture,  4);
-   REG_ARRAY(0x140, event_compare, 4);
+   REG_ARRAY(0x040, task_capture,  6);
+   REG_ARRAY(0x140, event_compare, 6);
 
    REG(0x200,  shorts);
    REG(0x304,  intenset);
@@ -86,22 +86,21 @@ union TimerReg
    REG(0x508,  bitmode);
    REG(0x510,  prescaler);
 
-   REG_ARRAY(0x540, cc, 4);
+   REG_ARRAY(0x540, cc, 6);
 };
 
-
-template<unsigned INDEX>
-class Timer : public Periph<TimerReg,0x40008000,INDEX>
+template<uint32_t BASE, unsigned IRQ>
+class TimerInstance : public Periph<TimerReg,BASE>
 {
 private:
    static const unsigned F_CLK = 16000000;
 
-   NVIC<IRQ_TIMER_0+INDEX> irq;
+   NVIC<IRQ> irq;
 
-   using Periph<TimerReg,0x40008000,INDEX>::reg;
+   using Periph<TimerReg,BASE>::reg;
 
 public:
-   Timer(TimerWidth width = TIMER_WIDTH_16_BITS)
+   TimerInstance(TimerWidth width = TIMER_WIDTH_16_BITS)
    {
       stop();
 
@@ -114,7 +113,7 @@ public:
       irq.enable();
    }
 
-   void setModeIsCounter() { reg->mode = 1; }
+   void setModeIsCounter() { reg->mode = 2; }
 
    void setModeIsTimer()   { reg->mode = 0; }
 
@@ -233,11 +232,17 @@ public:
       return reg->cc[index];
    }
 
-   uint32_t getEvent(unsigned index)
+   uint32_t getEvent(unsigned index) const
    {
       return uint32_t(&reg->event_compare[index]);
    }
 };
+
+using Timer0 = TimerInstance<0x40008000,IRQ_TIMER_0>;
+using Timer1 = TimerInstance<0x40009000,IRQ_TIMER_1>;
+using Timer2 = TimerInstance<0x4000A000,IRQ_TIMER_2>;
+using Timer3 = TimerInstance<0x4001A000,IRQ_TIMER_3>;
+using Timer4 = TimerInstance<0x4001B000,IRQ_TIMER_4>;
 
 } // namespace nRF52
 

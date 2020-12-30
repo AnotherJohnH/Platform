@@ -81,7 +81,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE     STATIC_LIBRARY)
 
 set(PLT_source
     Platform/Source/PLT/target/microbitV2/startup.s
-    Platform/Source/PLT/target/microbitV2/Leds.cpp
+    Platform/Source/PLT/target/microbitV2/platform_clock.cpp
     Platform/Source/PLT/Stub/Audio.cpp
     Platform/Source/PLT/Stub/Event.cpp
     Platform/Source/PLT/Stub/Frame.cpp
@@ -96,4 +96,4 @@ set(PLT_source
 execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=cortex-m4 -print-file-name=libgcc.a OUTPUT_VARIABLE gcc_lib)
 string(STRIP ${gcc_lib} gcc_lib)
 
-set(PLT_libs tinyc ${gcc_lib})
+set(PLT_libs tinyc PLT ${gcc_lib})
