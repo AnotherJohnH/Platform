@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2017-2021 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,9 @@
 
 #include "PLT/Yield.h"
 
+const int32_t PLT::Yield::TICKS_PER_SEC = 1000000;
 
-uint32_t PLT::Yield::getTicksUS()
+int32_t PLT::Yield::getTicks()
 {
    struct timeval t;
 
@@ -37,9 +38,8 @@ uint32_t PLT::Yield::getTicksUS()
    return t.tv_sec * 1000000 + t.tv_usec;
 }
 
-
-void PLT::Yield::sleepUS(uint32_t period_us)
+void PLT::Yield::yieldForTicks(int32_t period_ticks)
 {
-   usleep(period_us);
+   usleep(period_ticks);
 }
 

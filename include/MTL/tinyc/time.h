@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (C) 2013-2021 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file time.h
+//! \file  time.h
 //! \brief tiny C library implementation
 
 #ifndef TIME_H
@@ -28,10 +28,10 @@
 
 #include <stdlib.h>
 
-#define  CLOCKS_PER_SEC   1000
+#define  CLOCKS_PER_SEC 1000
 
-typedef unsigned time_t;
-typedef unsigned clock_t;
+typedef signed time_t;
+typedef signed clock_t;
 
 #ifdef __cplusplus
 extern "C" {

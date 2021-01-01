@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016-2017 John D. Haughton
+// Copyright (c) 2016-2021 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Yield.h
+//! \file  Yield.h
 //! \brief Real-time scheduling
 
 #ifndef PLT_YIELD_H
@@ -36,36 +36,34 @@ class Yield
 {
 public:
    Yield(unsigned freq_hz)
-      : period_us(1000000/freq_hz)
+      : period_ticks(TICKS_PER_SEC / freq_hz)
    {
-      next_event_ticks = getTicksUS() + period_us;
-   }
-
-   //! Poll for next tick event
-   bool refresh()
-   {
-      int32_t delta_t = next_event_ticks - getTicksUS();
-      if (delta_t > 0) return false;
-
-      next_event_ticks += period_us;
-      return true;
+      next_event_ticks = getTicks() + period_ticks;
    }
 
    //! Idle until next tick event
    void yield()
    {
-      while(!refresh())
+      while(true)
       {
-         sleepUS(period_us);
+         int32_t delta_ticks = next_event_ticks - getTicks();
+         if (delta_ticks <= 0)
+         {
+            next_event_ticks += period_ticks;
+            break;
+         }
+
+         yieldForTicks(delta_ticks);
       }
    }
 
 private:
-   uint32_t period_us;
-   uint32_t next_event_ticks;
+   static const int32_t TICKS_PER_SEC;
+   int32_t period_ticks;
+   int32_t next_event_ticks;
 
-   static uint32_t getTicksUS();
-   static void     sleepUS(uint32_t);
+   static int32_t getTicks();
+   static void    yieldForTicks(int32_t ticks);
 };
 
 } // namespace PLT

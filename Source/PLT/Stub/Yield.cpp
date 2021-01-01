@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2017-2021 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,20 @@
 
 // \brief Stub PLT::Yield implementation 
 
-#include <time.h>
+#include <ctime>
 
 #include "PLT/Yield.h"
 
+const int32_t PLT::Yield::TICKS_PER_SEC = CLOCKS_PER_SEC;
 
-uint32_t PLT::Yield::getTicksUS()
+int32_t PLT::Yield::getTicks()
 {
-   // This is not likely to be a good solution
-   return clock() * 1000;
+   return clock();
 }
 
-
-void PLT::Yield::sleepUS(uint32_t period_us)
+void PLT::Yield::yieldForTicks(int32_t period_ticks)
 {
+   // No yield. This will lead to CPU hogging which
+   // is likely not a problem for embedded targets.
 }
 
