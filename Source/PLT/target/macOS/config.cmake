@@ -27,6 +27,8 @@
 
 set(PLT_cxx_flags "-std=c++11")
 
+set(PLT_c_flags "-DPLT_FRAME_BUFFERED")
+
 # TODO
 #if env['CC'] == 'clang':
 #   env.Append(CXXFLAGS = ['-Wdocumentation'])

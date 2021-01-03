@@ -33,11 +33,11 @@
 static MTL::PALVideo  video;
 PAL_VIDEO_ATTACH_IRQ(video);
 
-static PLT::Frame::Scanner* scanner{nullptr};
+static PLT::Frame::Generator* generator{nullptr};
 
 static void scanCallBack(uint8_t* buffer, uint16_t line)
 {
-   scanner->getRawPixels(buffer, line);
+   generator->getRawPixels(buffer, line);
 }
 
 
@@ -88,11 +88,11 @@ void Frame::refresh()
    // nothing to do here
 }
 
-void Frame::setScanner(Scanner* scanner_)
+void Frame::setGenerator(Generator* generator_)
 {
-   scanner = scanner_;
+   generator = generator_;
 
-   video.setScanner(scanner != nullptr ? scanCallBack : nullptr);
+   video.setGenerator(generator != nullptr ? scanCallBack : nullptr);
 }
 
 } // namespace PLT

@@ -20,10 +20,10 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-add_executable(testAudioIn      testAudioIn.cpp)
-add_executable(testAudioOut     testAudioOut.cpp)
-add_executable(testEvent        testEvent.cpp)
-add_executable(testFrame        testFrame.cpp)
-add_executable(testFrameScanner testFrameScanner.cpp)
-#add_executable(testMidiIn       testMidiIn.cpp)
-add_executable(testSounder      testSounder.cpp)
+add_executable(testAudioIn        testAudioIn.cpp)
+add_executable(testAudioOut       testAudioOut.cpp)
+add_executable(testEvent          testEvent.cpp)
+add_executable(testFrame          testFrame.cpp)
+add_executable(testFrameGenerator testFrameGenerator.cpp)
+#add_executable(testMidiIn         testMidiIn.cpp)
+add_executable(testSounder        testSounder.cpp)

@@ -30,7 +30,7 @@
 
 
 template <unsigned WIDTH, unsigned HEIGHT>
-class Screen : public PLT::Frame::Scanner
+class Screen : public PLT::Frame::Generator
 {
 private:
    static const unsigned COLS = WIDTH  / 8;
@@ -97,7 +97,7 @@ public:
          }
       }
 
-      frame.setScanner(this);
+      frame.setGenerator(this);
    }
 
    void refresh()

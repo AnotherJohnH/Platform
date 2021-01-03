@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2021 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,9 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// Stub Frame implementation
+// Frame implementation for mictobitV2
 
 #include "PLT/Frame.h"
+
+static PLT::Frame::Generator* generator{};
 
 namespace PLT {
 
@@ -68,6 +70,7 @@ void Frame::refresh()
 
 void Frame::setGenerator(Generator* generator_)
 {
+   generator = generator_;
 }
 
 } // namespace PLT

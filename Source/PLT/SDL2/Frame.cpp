@@ -27,7 +27,7 @@
 #include <string>
 
 
-static PLT::Frame::Scanner*  scanner{nullptr};
+static PLT::Frame::Generator*  generator{nullptr};
 
 #ifdef PLT_TARGET_Emscripten
 static unsigned high_dpi_scale{1};
@@ -300,20 +300,20 @@ void Frame::setVisible(bool visible)
 
 void Frame::refresh()
 {
-   if (scanner != nullptr)
+   if (generator != nullptr)
    {
       for(unsigned y=0; y<height; y++)
       {
-         scanner->getRawPixels(buffer + y*pitch, y);
+         generator->getRawPixels(buffer + y*pitch, y);
       }
    }
 
    pimpl->refresh();
 }
 
-void Frame::setScanner(Scanner* scanner_)
+void Frame::setGenerator(Generator* generator_)
 {
-   scanner = scanner_;
+   generator = generator_;
 }
 
 void Frame::internal_transEventXyToPixel(uint16_t& x, uint16_t& y)

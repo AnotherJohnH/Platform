@@ -26,7 +26,8 @@
 #ifndef PLT_FRAME_H
 #define PLT_FRAME_H
 
-#include <stdint.h>
+#include <cstdint>
+#include <cassert>
 
 #include "Image.h"
 
@@ -47,10 +48,48 @@ public:
    static uint32_t SCALE_X(unsigned n) { return ((n - 1) & 0xF) << 4; }
    static uint32_t SCALE_Y(unsigned n) { return ((n - 1) & 0xF) << 8; }
 
-   class Scanner
+   //! Base class for generators of pixel data
+   class Generator
    {
    public:
-      virtual void getRawPixels(uint8_t* buffer, unsigned line) = 0;
+      //! Get frame size and video interlace config
+      virtual void getConfig(uint16_t& width,
+                             uint16_t& height,
+                             bool&     interlace)
+      {
+         width     = 0;
+         height    = 0;
+         interlace = false;
+      }
+
+      //! Synchronize generator to start of field
+      virtual void startField(unsigned field) {}
+
+      //! Synchronize generator to start of a line
+      virtual void startLine(unsigned line) {}
+
+      //! Get next 32 1BPP pixels for the current line
+      virtual uint32_t getPixelData_1BPP()
+      {
+         uint32_t pixels_1bpp{0};
+
+         for(unsigned i=0; i<4; ++i)
+         {
+            uint32_t pixels_4bpp = getPixelData_4BPP();
+            pixels_1bpp = (pixels_1bpp << 1) | (pixels_4bpp != 0 ? 1 : 0);
+         }
+
+         return pixels_1bpp;
+      }
+
+      //! Get next 8 4BPP pixels for the current line
+      virtual uint32_t getPixelData_4BPP() { return 0; }
+
+      // XXX deprecated
+      virtual void getRawPixels(uint8_t* buffer, unsigned line)
+      {
+         assert(!"deprecated and no implementation");
+      }
    };
 
    //! Construct a new frame
@@ -87,8 +126,8 @@ public:
    //! Ensure any changes to the frame buffer are displayed
    void refresh();
 
-   //! Add a line scanning call-back
-   void setScanner(Scanner* scanner_);
+   //! Add a pixel generator
+   void setGenerator(Generator* generator_);
 
    //! Translate internal event co-ordinates to pixel co-ordinates
    //  For internal use by the PLT implementation when the Frame

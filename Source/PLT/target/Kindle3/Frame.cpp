@@ -152,6 +152,6 @@ void Frame::setTitle(const char* title_) {}
 
 void Frame::setVisible(bool visible_) {}
 
-void Frame::setScanner(Scanner* scanner_) {}
+void Frame::setGenerator(Generator* generator_) {}
 
 } // namespace PLT
