@@ -300,14 +300,6 @@ void Frame::setVisible(bool visible)
 
 void Frame::refresh()
 {
-   if (generator != nullptr)
-   {
-      for(unsigned y=0; y<height; y++)
-      {
-         generator->getRawPixels(buffer + y*pitch, y);
-      }
-   }
-
    pimpl->refresh();
 }
 
