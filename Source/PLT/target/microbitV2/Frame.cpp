@@ -25,7 +25,6 @@
 #include "PLT/Frame.h"
 
 #include "MTL/Button.h"
-#include "MTL/nrF52/Timer.h"
 #include "MTL/Leds.h"
 
 static MTL::Button<MTL::BTN_A> btn_a;
@@ -52,25 +51,38 @@ public:
    {
       if (generator == nullptr) return;
 
-      if (btn_a)
+      if (btn_a && btn_b && not lock)
       {
-         if (win_x != 0) win_x -= 1;
+         scroll_y = !scroll_y;
+         lock = true;
       }
-      else if (btn_b)
+      else
       {
-         win_x += 1;
-      }
+         lock = false;
 
-#if 0
-      else if (dbgctl == 3)
-      {
-         win_y += 2;
+         if (scroll_y)
+         {
+            if (btn_a)
+            {
+               if (win_y != 0) win_y -= 2;
+            }
+            else if (btn_b)
+            {
+               win_y += 2;
+            }
+         }
+         else
+         {
+            if (btn_a)
+            {
+               if (win_x != 0) win_x -= 1;
+            }
+            else if (btn_b)
+            {
+               win_x += 1;
+            }
+         }
       }
-      else if (dbgctl == 4)
-      {
-         if (win_y != 0) win_y -= 2;
-      }
-#endif
 
       unsigned win_x_word   = win_x / 32;
       unsigned win_x_offset = win_x % 32;
@@ -124,6 +136,8 @@ private:
    unsigned               field{0};
    unsigned               win_x{0};
    unsigned               win_y{20};
+   bool                   scroll_y{false};
+   bool                   lock{false};
 };
 
 //----------------------------------------------------------------------
