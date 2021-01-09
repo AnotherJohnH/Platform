@@ -22,12 +22,13 @@
 
 cmake_minimum_required(`VERSION' 3.11.4)
 
+set(CMAKE_PROJECT_VERSION VERSION)
+
 `include'(Platform/build.cmake NO_POLICY_SCOPE)
 
 #-------------------------------------------------------------------------------
 
 project(APPLICATION
-        `VERSION'   VERSION
         LANGUAGES C CXX ASM)
 
 set(author  AUTHOR)
