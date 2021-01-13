@@ -27,8 +27,6 @@
 
 namespace MTL {
 
-// XXX cfollowing data is worng cannot find the data right now
-
 enum Irq
 {
    IRQ_POWER_CLOCK =  0,
@@ -58,7 +56,23 @@ enum Irq
    IRQ_SWI_4       = 24,
    IRQ_SWI_5       = 25,
    IRQ_TIMER_3     = 26,
-   IRQ_TIMER_4     = 27
+   IRQ_TIMER_4     = 27,
+   IRQ_PWM_0       = 28,
+   IRQ_PDM         = 29,
+
+   IRQ_MWU         = 32,
+   IRQ_PWM_1       = 33,
+   IRQ_PWM_2       = 34,
+   IRQ_SPI_2       = 35,
+   IRQ_RTC_2       = 36,
+   IRQ_I2S         = 37,
+   IRQ_FPU         = 38,
+   IRQ_USBD        = 39,
+   IRQ_UARTE1      = 40,
+
+   IRQ_PWM_3       = 45,
+
+   IRQ_SPIM3       = 47
 };
 
 } // namespace MTL

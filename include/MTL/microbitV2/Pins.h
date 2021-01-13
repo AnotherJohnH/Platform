@@ -44,6 +44,9 @@ static const unsigned PIN_LED_ROW5   = nRF52::PIN_0_19;
 
 static const unsigned PIN_BTN_A      = nRF52::PIN_0_14;
 static const unsigned PIN_BTN_B      = nRF52::PIN_0_23;
+static const unsigned PIN_TOUCH      = nRF52::PIN_1_4;
+
+static const unsigned PIN_SPEAKER    = nRF52::PIN_0_0;
 
 static const unsigned PIN_PAD_0      = nRF52::PIN_0_2;
 static const unsigned PIN_PAD_1      = nRF52::PIN_0_3;
