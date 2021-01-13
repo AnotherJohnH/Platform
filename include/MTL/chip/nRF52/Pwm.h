@@ -77,6 +77,8 @@ template<uint32_t BASE, unsigned IRQ, unsigned PIN>
 class PwmInstance : public Periph<PwmReg,BASE>
 {
 public:
+   static unsigned getClock() { return 16000000; }
+
    PwmInstance(unsigned log2_divisor_7 = 0)
    {
       reg->enable        = 1;
