@@ -60,6 +60,7 @@ private:
 
    virtual void getSamples(int16_t* buffer, unsigned n) override
    {
+      // XXX isn't phase going to run out of precision?
       for(unsigned i = 0; i < n; ++i)
       {
          buffer[i] = STB::Waveform::sine(phase) * gain;
