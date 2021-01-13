@@ -37,6 +37,12 @@ public:
    //
    //! \param enable true => enable, false => disable
    void setEnable(bool enable);
+
+   //! Fine control of the sounder
+   //
+   //! \param vol_8 gain 0..255
+   //! \param freq  frequency (Hz)
+   void control(unsigned vol_8, unsigned freq);
 };
 
 } // namespace PLT

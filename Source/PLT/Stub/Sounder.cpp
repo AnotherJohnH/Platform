@@ -29,35 +29,54 @@
 
 class Beep : public PLT::Audio::Out
 {
+public:
+   Beep()
+      : PLT::Audio::Out(SAMPLE_FREQUENCY, FORMAT, CHANNELS)
+   {}
+
+   void control(unsigned gain_8, unsigned freq)
+   {
+      if (gain_8 == 0)
+      {
+         setEnable(false);
+      }
+      else
+      {
+         delta = double(freq) / SAMPLE_FREQUENCY;
+         gain  = gain_8 * 0x80;
+
+         setEnable(true);
+      }
+   }
+
 private:
    static const unsigned           SAMPLE_FREQUENCY = 44100; // 44.1 KHz
    static const PLT::Audio::Format FORMAT           = PLT::Audio::Format::SINT16;
    static const unsigned           CHANNELS         = 1;
-   static const unsigned           FREQUENCY        = 440;   // 440 Hz
 
-   double phase{0.0};
-   double delta;
+   double   phase{0.0};
+   double   delta;
+   unsigned gain{0};
 
    virtual void getSamples(int16_t* buffer, unsigned n) override
    {
       for(unsigned i = 0; i < n; ++i)
       {
-         buffer[i] = STB::Waveform::sine(phase) * 0x7FFF;
+         buffer[i] = STB::Waveform::sine(phase) * gain;
          phase += delta;
       }
    }
-
-public:
-   Beep()
-      : PLT::Audio::Out(SAMPLE_FREQUENCY, FORMAT, CHANNELS)
-      , delta(double(FREQUENCY)/SAMPLE_FREQUENCY)
-   {}
 };
 
 
 void PLT::Sounder::setEnable(bool enable)
 {
+   control(enable ? 0xFF : 0x00, 440);
+}
+
+void PLT::Sounder::control(unsigned gain_8, unsigned freq)
+{
    static Beep beep;
 
-   beep.setEnable(enable);
+   beep.control(gain_8, freq);
 }
