@@ -23,6 +23,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <string>
 
 #include "SDL_headers.h"
 
@@ -133,6 +134,34 @@ namespace PLT {
 
 static Event::Type getEvent(Event::Message& event, bool wait)
 {
+   static bool        cmd  = false;
+   static bool        down;
+   static bool        paste_end;
+   static std::string paste_buffer;
+
+   // Paste buffer spooling
+   if (paste_end)
+   {
+      paste_end  = false;
+      event.type = Event::PASTE_END;
+
+      return event.type;
+   }
+   else if (not paste_buffer.empty())
+   {
+      event.type = down ? Event::KEY_DOWN : Event::KEY_UP;
+      event.code = paste_buffer[0];
+
+      if (not down)
+      {
+         paste_buffer.erase(0, 1);
+         paste_end = paste_buffer.empty();
+      }
+      down = not down;
+
+      return event.type;
+   }
+
    event.window = 0;
    event.type   = Event::NONE;
    event.code   = 0;
@@ -186,11 +215,30 @@ static Event::Type getEvent(Event::Message& event, bool wait)
       case SDL_KEYDOWN:
          event.type = Event::KEY_DOWN;
          event.code = translate_key(sdl_event.key.keysym.sym);
+#ifndef PLT_TARGET_macOS
+         if (event.code == PLT::LCTRL)
+#else
+         if (event.code == PLT::LCMD)
+#endif
+         {
+            cmd = true;
+         }
+         else if (cmd && event.code == 'v')
+         {
+            paste_buffer = SDL_GetClipboardText();
+            down         = true;
+            event.type   = Event::PASTE_START;
+            event.code   = 0;
+         }
          break;
 
       case SDL_KEYUP:
          event.type = Event::KEY_UP;
          event.code = translate_key(sdl_event.key.keysym.sym);
+         if (event.code == PLT::LCMD)
+         {
+            cmd = false;
+         }
          break;
 
       case SDL_MOUSEMOTION:

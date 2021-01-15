@@ -43,6 +43,8 @@ enum Type : uint8_t
    NONE = 0,     //!< No event
    KEY_DOWN,     //!< A key has been pressed
    KEY_UP,       //!< A key has been release
+   PASTE_START,  //!< Start of a block of psuedo key presses from a paste buffer
+   PASTE_END,    //!< End of a block of psuedo key presses from a paste buffer
    BUTTON_DOWN,  //!< Screen touch or mouse button pressed
    BUTTON_UP,    //!< Screen untouched or mouse button released
    POINTER_MOVE, //!< Swipe or mouse move
