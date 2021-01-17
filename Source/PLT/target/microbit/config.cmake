@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2019 John D. Haughton
+#  Copyright (c) 2019-2021 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@ set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 set(CMAKE_C_LINK_EXECUTABLE
     "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O ihex <TARGET> <TARGET>.hex; \
-     ${CMAKE_OBJDUMP} -d <TARGET>; \
+     ${CMAKE_SOURCE_DIR}/Platform/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>; \
      ${CMAKE_SIZE} <TARGET>")
 
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
