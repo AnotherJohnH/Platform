@@ -37,7 +37,7 @@ namespace STB {
 class ConsoleApp
 {
 private:
-#if !defined(NCONSOLE)
+#if !defined(PLT_NCONSOLE)
    Option<bool> opt_version{'v', "version", "Display version information"};
    Option<bool> opt_help{   'h', "help",    "Display this help"};
 
@@ -122,7 +122,7 @@ private:
 #endif
 
 protected:
-#if !defined(NCONSOLE)
+#if !defined(PLT_NCONSOLE)
    const char* name;
    const char* program;
    const char* description;
@@ -133,7 +133,7 @@ protected:
 
    void error(const char* format, ...)
    {
-#if !defined(NCONSOLE)
+#if !defined(PLT_NCONSOLE)
       va_list ap;
 
       fprintf(stderr, "%s: ERROR - ", name);
@@ -159,7 +159,7 @@ public:
               const char* author_,
               const char* copyright_year_,
               const char* args_help_ = nullptr)
-#if !defined(NCONSOLE)
+#if !defined(PLT_NCONSOLE)
       : name(program_)
       , program(program_)
       , description(description_)
@@ -171,7 +171,7 @@ public:
 
    int parseArgsAndStart(int argc, const char* argv[])
    {
-#if !defined(NCONSOLE)
+#if !defined(PLT_NCONSOLE)
 #if defined(PLT_TARGET_Emscripten)
       // TODO this is just a confidence test
       static const char* local_argv[] = {"fred"};

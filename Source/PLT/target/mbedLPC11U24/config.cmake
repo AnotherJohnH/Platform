@@ -31,7 +31,7 @@ set(PLT_chip    LPC11U24)
 
 set(PLT_asm_flags "-mcpu=cortex-m0")
 
-set(PLT_c_flags   "-DNCONSOLE -DSMALL_MEMORY \
+set(PLT_c_flags   "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
                    -mcpu=cortex-m0 -mthumb -mfloat-abi=soft \
                    -fno-common -fno-builtin -fmessage-length=0 \
                    -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")

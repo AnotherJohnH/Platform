@@ -31,7 +31,7 @@ set(PLT_chip    ATtiny85)
 
 set(PLT_asm_flags "-mmcu=attiny85")
 
-set(PLT_c_flags   "-DNCONSOLE -DSMALL_MEMORY \
+set(PLT_c_flags   "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
                    -mmcu=attiny85 \
                    -fno-common -fmessage-length=0 -fno-exceptions -ffunction-sections -fdata-sections")
 
