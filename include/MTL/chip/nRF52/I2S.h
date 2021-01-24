@@ -24,6 +24,9 @@
 // nRF52
 // I2S peripheral
 //
+// XXX - Broken cannot get this peripheral to work
+//       Clock signals working but no data tx
+//
 
 #ifndef MTL_NRF52_I2S_H
 #define MTL_NRF52_I2S_H
@@ -63,49 +66,64 @@ union I2SReg
    REG(0x570, psel_sdout);
 };
 
-template<unsigned PIN_SDOUT>
+template<unsigned PIN_SDOUT, unsigned PIN_MCK>
 class I2S : public Periph<I2SReg,0x40025000>
 {
 public:
    I2S(unsigned freq)
    {
-      reg->enable          = 1;
       reg->config_mode     = 0;          // Master
       reg->config_rxen     = 0;          // No RX
       reg->config_txen     = 1;          // TX enabled
       reg->config_mcken    = 1;          // Enable master clock?
-      reg->config_mckfreq  = 0x20000000; // 4 MHz
+      reg->config_mckfreq  = 0x020C0000; // 4 MHz
       reg->config_ratio    = 0;          // LRCK = MCK / 32
       reg->config_swidth   = 1;          // 16 bit
       reg->config_align    = 0;          // Left aligned
-      reg->config_format   = 1;          // Aligned
+      reg->config_format   = 0;          // Aligned
       reg->config_channels = 0;          // Stereo
 
-      reg->psel_mck   = 1<<31; // Disconnected
-      reg->psel_sck   = 1<<31; // Disconnected
-      reg->psel_lrck  = 1<<31; // Disconnected
-      reg->psel_sdin  = 1<<31; // Disconnected
+      reg->psel_mck   = 1<<31;
+      reg->psel_sck   = PIN_MCK; // Disconnected
+      reg->psel_lrck  = 1<<31;   // Disconnected
+      reg->psel_sdin  = 1<<31;   // Disconnected
       reg->psel_sdout = PIN_SDOUT;
    }
 
-   void setTxLength(unsigned words_14)
+   void setTxLength(uint32_t words_14)
    {
       reg->rxtxd_maxcnt = words_14;
    }
 
-   void setTxData(const uint32_t* buffer)
+   void setTxData(volatile const uint32_t* buffer)
    {
       reg->txd_ptr = uint32_t(buffer);
    }
 
+   void enable()
+   {
+      reg->enable = 1;
+   }
+
    void start()
    {
+      //reg->events_txptrupd = 0;
       reg->task_start = 1;
    }
 
    void stop()
    {
       reg->task_stop = 1;
+   }
+
+   bool isTxPtrUpd() const { return reg->events_txptrupd; }
+
+   void clearTxPtrUpd()
+   {
+      reg->events_txptrupd = 0;
+
+      // XXX no idea what this is about. nRF SDK does it nothing in the erata
+      volatile uint32_t dummy = reg->events_txptrupd; (void) dummy;
    }
 
 private:

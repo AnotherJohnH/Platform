@@ -98,6 +98,8 @@ static const unsigned  PIN_1_29  = 0x11D;
 static const unsigned  PIN_1_30  = 0x11E;
 static const unsigned  PIN_1_31  = 0x11F;
 
+static const unsigned  PIN_NULL  = 0x80000000;
+
 } // namespace nRF52
 
 } // namespace MTL
