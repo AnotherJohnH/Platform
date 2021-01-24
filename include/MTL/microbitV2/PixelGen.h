@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2021 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,14 +29,15 @@
 #include  <cstring>
 
 #include "MTL/Digital.h"
-#include "MTL/nRF52/I2S.h"
+#include "MTL/nRF52/SpiM.h"
 
 namespace MTL {
 
 template <unsigned WIDTH,
           unsigned HEIGHT,
-          unsigned SCAN_REPEAT = 1,
-          unsigned PIN_LUM     = PIN_PAD_16>
+          unsigned SCAN_REPEAT   = 1,
+          uint32_t PIN_LUM       = PIN_PAD_16,
+          uint32_t PIN_PIXEL_CLK = PIN_PAD_19>
 class PixelGen
 {
 private:
@@ -44,17 +45,16 @@ private:
                                       WIDTH >= 128 ? 4000000 :
                                                      2000000;
 
-   // Pixel data from I2S_SDOUT
-   MTL::I2S<PIN_LUM>          i2s{PIXEL_FREQ};
-   MTL::Digital::Out<PIN_LUM> lum;
+   // Emit pixel data from SPI master 0 MOSI
+   MTL::SpiM0<PIN_LUM,nRF52::PIN_NULL,nRF52::PIN_NULL> spim{PIXEL_FREQ};
 
-   const uint8_t*          frame;
-   const uint8_t*          start;
+   const uint8_t*          frame{nullptr};
+   const uint8_t*          start{nullptr};
    unsigned                width;
    uint8_t                 bytes_per_line;
    uint32_t                size;
-   volatile const uint8_t* next;
-   volatile uint8_t        row;
+   volatile const uint8_t* next{nullptr};
+   volatile uint8_t        row{0};
 
 public:
    PixelGen()
@@ -89,13 +89,13 @@ public:
    {
       row  = 0;
       next = start;
-      i2s.setTxLength(width/32);
+      spim.setTxLength(width/8);
    }
 
    //! Start generating pixel data
    void startLine()
    {
-      i2s.start();
+      spim.start();
       if (++row == SCAN_REPEAT)
       {
          row = 0;
@@ -110,8 +110,8 @@ public:
    //! Stop generating pixel data
    void endLine()
    {
-      i2s.stop();
-      i2s.setTxData((const uint32_t*)next);
+      spim.stop();
+      spim.setTxData(next);
    }
 };
 
