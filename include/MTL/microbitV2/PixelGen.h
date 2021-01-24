@@ -35,9 +35,9 @@ namespace MTL {
 
 template <unsigned WIDTH,
           unsigned HEIGHT,
-          unsigned SCAN_REPEAT   = 1,
-          uint32_t PIN_LUM       = PIN_PAD_16,
-          uint32_t PIN_PIXEL_CLK = PIN_PAD_19>
+          unsigned SCAN_REPEAT = 1,
+          uint32_t PIN_LUM     = PIN_PAD_14,
+          uint32_t PIN_CLK     = PIN_PAD_13>
 class PixelGen
 {
 private:
@@ -46,7 +46,7 @@ private:
                                                      2000000;
 
    // Emit pixel data from SPI master 0 MOSI
-   MTL::SpiM0<PIN_LUM,nRF52::PIN_NULL,nRF52::PIN_NULL> spim{PIXEL_FREQ};
+   MTL::SpiM0<PIN_CLK,PIN_LUM,nRF52::PIN_NULL> spim{PIXEL_FREQ};
 
    const uint8_t*          frame{nullptr};
    const uint8_t*          start{nullptr};
