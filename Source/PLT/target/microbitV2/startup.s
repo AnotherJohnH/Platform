@@ -29,7 +29,7 @@
 .global vector_table
 
 vector_table:
-   .word  0x20020000        @ stack pointer
+   .word  0x00820000        @ stack pointer
    .word  VEC_reset+1
    .word  VEC_nmi+1
    .word  VEC_fault+1
@@ -156,6 +156,10 @@ VEC_reset:
 # Initialise C/C++ runtime
 #
     bl      tinyc_init
+#
+# Initialise platform
+#
+    bl      platform_init
 #
 # Call application entry point
 #

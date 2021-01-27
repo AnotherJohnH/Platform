@@ -30,7 +30,7 @@
 
 #include "MTL/Periph.h"
 
-#include "MTL/core/CortexM3/NVIC.h"
+#include "MTL/core/CortexM4/NVIC.h"
 
 #include "Gpio.h"
 #include "Irq.h"
@@ -87,7 +87,7 @@ public:
       reg->prescaler     = log2_divisor_7;
       reg->loop          = 0;
       reg->decoder       = 0;
-      reg->seq0_ptr      = uint32_t(&seq0);
+      reg->seq0_ptr      = uint32_t(&seq0) ^ 0x20800000;
       reg->seq0_cnt      = 1;
       reg->seq0_refresh  = 0;
       reg->seq0_enddelay = 0;

@@ -20,7 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Nvic.h
+//! \file  NVIC.h
 //! \brief Access to Cortex-M3 NVIC
 
 #ifndef CORTEX_M3_NVIC_H
@@ -100,7 +100,6 @@ public:
    //! Clear pending interrupt
    void clrPending() { reg->icpr[INDEX] = BIT_MASK; }
 };
-
 
 } // namespace MTL
 

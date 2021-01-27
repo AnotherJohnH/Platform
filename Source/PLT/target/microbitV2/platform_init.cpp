@@ -1,5 +1,5 @@
-/*------------------------------------------------------------------------------
-// Copyright (c) 2020 John D. Haughton
+//------------------------------------------------------------------------------
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,52 +18,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//----------------------------------------------------------------------------*/
+//------------------------------------------------------------------------------
 
-MEMORY
+#include "MTL/nRF52/Clock.h"
+
+extern "C" {
+
+void platform_init()
 {
-   FLASH (rx)  : ORIGIN = 0x00000000, LENGTH = 512K
-   RAM   (rwx) : ORIGIN = 0x00800000, LENGTH = 128K
+   MTL::nRF52::Clock clock;
+
+   clock.startHFXO();
 }
 
-ENTRY(vector_table)
-
-SECTIONS
-{
-   .text :
-   {
-      KEEP(*(.vectors))
-      *(.text*)
-      *(.rodata*)
-      __init_array_start = ALIGN(4);
-      KEEP(*(.init_array))
-      __init_array_end = .;
-
-   } > FLASH
-
-   .ARM.exidx :
-   {
-      __exidx_start = .;
-      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-      __exidx_end = .;
-
-   } > FLASH
-
-   __etext = .;
-
-   .data : AT (__etext)
-   {
-      __data_start__ = .;
-      *(.data*)
-      __data_end__ = .;
-
-   } > RAM
-
-   .bss :
-   {
-      __bss_start__ = .;
-      *(.bss*)
-      __bss_end__ = .;
-
-   } > RAM
 }

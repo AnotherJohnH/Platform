@@ -74,10 +74,20 @@ template<uint32_t BASE, unsigned PIN_SCK, unsigned PIN_MOSI, unsigned PIN_MISO>
 class SpiMInstance : public Periph<SpiMReg,BASE>
 {
 public:
-   SpiMInstance(unsigned frequency)
+   SpiMInstance(unsigned frequency = 1000000)
    {
       reg->enable = 7;
 
+      setFrequency(frequency);
+
+      reg->psel_sck  = PIN_SCK;
+      reg->psel_mosi = PIN_MOSI;
+      reg->psel_miso = PIN_MISO;
+      reg->psel_csn  = nRF52::PIN_NULL;
+   }
+
+   void setFrequency(unsigned frequency)
+   {
       switch(frequency)
       {
       case   125000: reg->frequency = 0x02000000; break;
@@ -93,11 +103,6 @@ public:
       // Unsupported freq => 1 MHz
       default:       reg->frequency = 0x10000000; break;
       }
-
-      reg->psel_sck  = PIN_SCK;
-      reg->psel_mosi = PIN_MOSI;
-      reg->psel_miso = PIN_MISO;
-      reg->psel_csn  = nRF52::PIN_NULL;
    }
 
    void setTxLength(uint32_t bytes_16)

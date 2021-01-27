@@ -30,7 +30,7 @@
 
 #include "MTL/Periph.h"
 
-#include "MTL/core/CortexM3/NVIC.h"
+#include "MTL/core/CortexM4/NVIC.h"
 
 #include "Irq.h"
 
@@ -156,13 +156,17 @@ public:
       reg->cc[index] = ticks;
    }
 
+   uint32_t getEventCmp(unsigned index)
+   {
+      return uint32_t(&reg->event_compare[index]);
+   }
+
    void setAction(unsigned index, uint32_t ticks,
                   uint32_t action = TIMER_NONE)
    {
       setCompare(index, ticks);
 
       reg->shorts.setBit(index,   (action & TIMER_CLEAR) != 0);
-
       reg->shorts.setBit(index+8, (action & TIMER_STOP)  != 0);
 
       if (action & TIMER_IRQ)
