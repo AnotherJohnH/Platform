@@ -105,6 +105,11 @@ public:
       }
    }
 
+   uint32_t getTaskStart()   const { return uint32_t(&reg->tasks_start);   }
+   uint32_t getTaskStop()    const { return uint32_t(&reg->tasks_stop);    }
+   uint32_t getTaskSuspend() const { return uint32_t(&reg->tasks_suspend); }
+   uint32_t getTaskResume()  const { return uint32_t(&reg->tasks_resume);  }
+
    void setTxLength(uint32_t bytes_16)
    {
       reg->txd_maxcnt = bytes_16;

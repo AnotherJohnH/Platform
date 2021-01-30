@@ -74,9 +74,9 @@ public:
       return index;
    }
 
-   uint32_t getTaskSet(unsigned index) const { return uint32_t(&reg->tasks_out[index]); }
-   uint32_t getTaskClr(unsigned index) const { return uint32_t(&reg->tasks_set[index]); }
-   uint32_t getTaskTgl(unsigned index) const { return uint32_t(&reg->tasks_clr[index]); }
+   uint32_t getTaskSet(unsigned index) const { return uint32_t(&reg->tasks_set[index]); }
+   uint32_t getTaskClr(unsigned index) const { return uint32_t(&reg->tasks_clr[index]); }
+   uint32_t getTaskTgl(unsigned index) const { return uint32_t(&reg->tasks_out[index]); }
 
    static const unsigned BAD_INDEX{0xFFFFffff};
 

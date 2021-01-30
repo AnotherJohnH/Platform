@@ -33,86 +33,108 @@
 
 namespace MTL {
 
-template <unsigned WIDTH,
-          unsigned HEIGHT,
-          unsigned SCAN_REPEAT = 1,
-          uint32_t PIN_LUM     = PIN_PAD_14,
-          uint32_t PIN_CLK     = PIN_PAD_13>
+template <uint32_t PIN_LUM = PIN_PAD_14,
+          uint32_t PIN_CLK = PIN_PAD_13>
 class PixelGen
 {
-private:
-   static const unsigned PIXEL_FREQ = WIDTH >= 256 ? 8000000 :
-                                      WIDTH >= 128 ? 4000000 :
-                                                     2000000;
-
-   // Emit pixel data from SPI master 0 MOSI
-   MTL::SpiM0<PIN_CLK,PIN_LUM,nRF52::PIN_NULL> spim{PIXEL_FREQ};
-
-   const uint8_t*          frame{nullptr};
-   const uint8_t*          start{nullptr};
-   unsigned                width;
-   uint8_t                 bytes_per_line;
-   uint32_t                size;
-   volatile const uint8_t* next{nullptr};
-   volatile uint8_t        row{0};
-
 public:
-   PixelGen()
+   PixelGen() = default;
+
+   PixelGen(unsigned width_, unsigned height_, unsigned repeat_ = 1)
    {
-      setWidth(WIDTH);
+      setSize(width_, height_, repeat_);
    }
+
+   uint32_t getTaskStart() const { return spim.getTaskStart(); }
 
    //! Set pointer to frame buffer
    void setFramePtr(const uint8_t* ptr)
    {
-      frame = start = ptr;
+      frame = ptr;
+      setOffset(0);
+   }
+
+   //! Set frame size (pixels)
+   //  Width must be a multiple of 8
+   //  If repeat is zero scanning will be interlaced
+   void setSize(unsigned width_, unsigned height_, unsigned repeat_ = 1)
+   {
+      repeat          = repeat_;
+      bytes_per_line  = width_ / 8;
+      bytes_per_frame = bytes_per_line * height_;
+      interlace       = (repeat == 0);
+
+      spim.setTxLength(bytes_per_line);
+
+      unsigned pixel_freq = width_ >= 408 ? 16000000 :
+                            width_ >= 208 ?  8000000 :
+                            width_ >= 112 ?  4000000 :
+                                             2000000;
+
+      spim.setFrequency(pixel_freq);
+
+      if (interlace)
+      {
+         repeat         = 1;
+         bytes_per_line = bytes_per_line * 2;
+      }
    }
 
    //! Set offset for top-left pixel from start of frame buffer (bytes)
    void setOffset(uintptr_t offset)
    {
-      start = frame + offset;
-   }
-
-   //! Set frame width (pixels)
-   //  Must be less than or equal to WIDTH
-   //  Must be a multiple of 8
-   void setWidth(unsigned width_)
-   {
-      width          = width_;
-      bytes_per_line = width/8;
-      size           = bytes_per_line * HEIGHT;
+      first_line = frame + offset;
    }
 
    //! Get ready for next field of image
-   void startField()
+   void startField(unsigned field)
    {
-      row  = 0;
-      next = start;
-      spim.setTxLength(width/8);
+      repeat_counter = 0;
+      line           = first_line;
+
+      if (interlace && (field == 1))
+      {
+         line += bytes_per_line / 2;
+      }
    }
 
    //! Start generating pixel data
    void startLine()
    {
-      spim.start();
-      if (++row == SCAN_REPEAT)
+      if (repeat_counter == 0)
       {
-         row = 0;
-         next += bytes_per_line;
-         if (next >= (frame + size))
+         repeat_counter = repeat - 1;
+
+         line += bytes_per_line;
+         if (line >= (frame + bytes_per_frame))
          {
-            next -= size;
+            line -= bytes_per_frame;
          }
+      }
+      else
+      {
+         --repeat_counter;
       }
    }
 
    //! Stop generating pixel data
    void endLine()
    {
-      spim.stop();
-      spim.setTxData(next);
+      spim.setTxData(line);
    }
+
+private:
+   // Emit pixel data from SPI master 3 MOSI
+   MTL::SpiM3<PIN_CLK,PIN_LUM,nRF52::PIN_NULL> spim{};
+
+   uint8_t                 repeat;
+   uint8_t                 bytes_per_line;
+   bool                    interlace;
+   uint32_t                bytes_per_frame;
+   const uint8_t*          frame{nullptr};
+   const uint8_t*          first_line{nullptr};
+   volatile const uint8_t* line{nullptr};
+   volatile uint8_t        repeat_counter{0};
 };
 
 } // namespace MTL
