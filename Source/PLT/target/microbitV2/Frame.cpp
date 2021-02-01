@@ -24,14 +24,19 @@
 
 #include "PLT/Frame.h"
 
-#include "MTL/Button.h"
-#include "MTL/Leds.h"
+#include "MTL/PALVideo.h"
 
-static MTL::Button<MTL::BTN_A> btn_a;
-static MTL::Button<MTL::BTN_B> btn_b;
-static MTL::Leds               leds;
+static const unsigned VIDEO_SYNC = MTL::PIN_PAD_15;
+static const unsigned VIDEO_LUM  = MTL::PIN_PAD_14;
 
-LEDS_ATTACH_IRQ(leds)
+// Teletext 40x25 cells of 12x20 pixel chars
+static const unsigned WIDTH  = 480;
+static const unsigned HEIGHT = 500;
+
+static MTL::PALVideo<VIDEO_SYNC,VIDEO_LUM> video(WIDTH, HEIGHT);
+static uint8_t                             frame[WIDTH * HEIGHT / 8];
+
+PAL_VIDEO_ATTACH_IRQ(video);
 
 namespace PLT {
 
@@ -45,99 +50,78 @@ public:
       generator = generator_;
 
       generator->getConfig(width, height, interlace);
+
+      words_per_line = width / 32;
+
+      video.setSize(width, height);
+      video.setFramePtr(frame);
+   }
+
+   void resize(unsigned width_, unsigned height_)
+   {
+      width     = width_;
+      height    = height_;
+      interlace = height > 256;
+
+      words_per_line = width / 32;
+
+      video.setSize(width, height);
    }
 
    void refresh()
    {
       if (generator == nullptr) return;
 
-      if (btn_a && btn_b && not lock)
+      generator->startField(field);
+
+      uint8_t* raw = frame;
+
+      if (interlace)
       {
-         scroll_y = !scroll_y;
-         lock = true;
+         if (field)
+         {
+            raw += words_per_line * 4;
+         }
+
+         for(unsigned line = field; line < height; line += 2)
+         {
+            renderLine(line, raw);
+
+            raw += words_per_line * 4;
+         }
+
+         field ^= 1;
       }
       else
       {
-         lock = false;
-
-         if (scroll_y)
+         for(unsigned line = 0; line < height; line++)
          {
-            if (btn_a)
-            {
-               if (win_y != 0) win_y -= 2;
-            }
-            else if (btn_b)
-            {
-               win_y += 2;
-            }
-         }
-         else
-         {
-            if (btn_a)
-            {
-               if (win_x != 0) win_x -= 1;
-            }
-            else if (btn_b)
-            {
-               win_x += 1;
-            }
+            renderLine(line, raw);
          }
       }
-
-      unsigned win_x_word   = win_x / 32;
-      unsigned win_x_offset = win_x % 32;
-
-      uint8_t  frame[5] = {0};
-
-      unsigned words_per_line = width / 32;
-
-      generator->startField(field);
-
-      for(unsigned line = field; line < height; line += 2)
-      {
-         generator->startLine(line);
-
-         for(unsigned word = 0; word < words_per_line; ++word)
-         {
-            uint32_t pixels = generator->getPixelData_1BPP();
-
-            if ((line >= win_y) && (line < (win_y + 10)))
-            {
-               unsigned y = (line - win_y) / 2;
-
-               if (word == win_x_word)
-               {
-                  if (win_x_offset <= 27)
-                  {
-                     frame[y] = (pixels >> (27 - win_x_offset)) & 0x1F;
-                  }
-                  else
-                  {
-                     frame[y] = (pixels << (win_x_offset - 27)) & 0x1F;
-                  }
-               }
-               else if ((win_x_offset > 27) && (word == (win_x_word + 1)))
-               {
-                  frame[y] |= pixels >> (32 + 27 - win_x_offset);
-               }
-            }
-         }
-      }
-
-      field ^= 1;
-
-      leds.write(frame[0], frame[1], frame[2], frame[3], frame[4]);
    }
 
 private:
    PLT::Frame::Generator* generator{};
    uint16_t               width, height;
+   uint16_t               words_per_line;
    bool                   interlace;
-   unsigned               field{0};
-   unsigned               win_x{0};
-   unsigned               win_y{20};
-   bool                   scroll_y{false};
-   bool                   lock{false};
+   uint8_t                field{0};
+
+   void renderLine(unsigned line, uint8_t*& raw)
+   {
+      generator->startLine(line);
+
+      for(unsigned word = 0; word < words_per_line; ++word)
+      {
+         uint32_t pixels = generator->getPixelData_1BPP();
+
+         *raw++ = uint8_t(pixels >> 24);
+         *raw++ = uint8_t(pixels >> 16);
+         *raw++ = uint8_t(pixels >> 8);
+         *raw++ = uint8_t(pixels);
+      }
+   }
 };
 
 //----------------------------------------------------------------------
@@ -150,34 +134,21 @@ Frame::Frame(const char* title_, unsigned width_, unsigned height_, uint32_t fla
    pimpl = &impl;
 }
 
-Frame::~Frame()
-{
-}
+Frame::~Frame() { }
 
-void* Frame::getHandle() const
-{
-   return nullptr;
-}
+void* Frame::getHandle() const { return nullptr; }
 
-uint32_t Frame::getId() const
-{
-   return 0;
-}
+uint32_t Frame::getId() const { return 0; }
 
-void Frame::setTitle(const char* title_)
-{
-}
+void Frame::setTitle(const char* title_) {}
 
-void Frame::setFlags(uint32_t flags_)
-{  
-}  
+void Frame::setFlags(uint32_t flags_) {}
 
-void Frame::setVisible(bool visible_)
-{
-}
+void Frame::setVisible(bool visible_) {}
 
 void Frame::resize(unsigned width_, unsigned height_)
 {
+   pimpl->resize(width_, height_);
 }
 
 void Frame::refresh()
