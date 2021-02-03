@@ -84,9 +84,9 @@ set(PLT_source
     Platform/Source/PLT/target/microbitV2/platform_clock.cpp
     Platform/Source/PLT/target/microbitV2/platform_init.cpp
     Platform/Source/PLT/target/microbitV2/Frame.cpp
+    Platform/Source/PLT/target/microbitV2/Event.cpp
     Platform/Source/PLT/target/microbitV2/Sounder.cpp
     Platform/Source/PLT/Stub/Audio.cpp
-    Platform/Source/PLT/Stub/Event.cpp
     Platform/Source/PLT/Stub/Image.cpp
     Platform/Source/PLT/Stub/Bitmap.cpp
     Platform/Source/PLT/Stub/Midi.cpp

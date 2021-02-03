@@ -67,7 +67,7 @@ public:
       timer.setAction(3, H_SYNC_PERIOD, MTL::nRF52::TIMER_IRQ | MTL::nRF52::TIMER_CLEAR);
 
       // Link compare events to sync pin set and clear
-      unsigned index = gpio_te.alloc(PIN_SYNC);
+      unsigned index = gpio_te.allocTask(PIN_SYNC);
       ppi.link(timer.getEventCmp(0), gpio_te.getTaskSet(index), true);
       ppi.link(timer.getEventCmp(3), gpio_te.getTaskClr(index), true);
 
@@ -196,7 +196,6 @@ private:
 
          case LINE_BOTTOM_BORDER:
             startBorder(v_bottom);
-            scope = !scope;
             break;
 
          case LINE_SECOND_SHORT_SYNC:
@@ -291,7 +290,6 @@ private:
 
    MTL::nRF52::Timer3            timer;
    MTL::Digital::Out<PIN_SYNC>   sync;
-   MTL::Digital::Out<PIN_PAD_12> scope;
    MTL::nRF52::Ppi               ppi;
    MTL::nRF52::GpioTE            gpio_te;
    MTL::PixelGen<PIN_LUM>        pixel_gen{};
