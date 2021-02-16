@@ -153,20 +153,17 @@ vector_table:
 
 VEC_reset:
 #
-# Initialise C/C++ runtime
+# Initialise C/C++ runtime and platform
 #
     bl      tinyc_init
-#
-# Initialise platform
-#
     bl      platform_init
 #
 # Call application entry point
 #
     bl      mtlMain
 #
-# Fall through to unhandled exception
-#
+    bl      platform_shutdown
+
 
 unhandled_exception:
 
@@ -225,4 +222,4 @@ UARTE1_IRQ:
 PWM3_IRQ:
 SPIM3_IRQ:
 loop:
-    b       loop
+    bl      platform_fault

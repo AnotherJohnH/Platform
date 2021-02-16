@@ -20,16 +20,24 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/nRF52/Clock.h"
-#include "MTL/nRF52/Nvmc.h"
+#include "MTL/Digital.h"
 
 extern "C" {
 
-void platform_init()
+void platform_shutdown()
 {
-   MTL::nRF52::Clock().startHFXO();
+   MTL::Digital::Out<MTL::PIN_LED_COL1> led_gnd(false);
+   MTL::Digital::Out<MTL::PIN_LED_ROW1> led{true};
 
-   MTL::nRF52::Nvmc().enableICache();
+   while(true);
+}
+
+void platform_fault()
+{
+   MTL::Digital::Out<MTL::PIN_LED_COL1> led_gnd(false);
+   MTL::Digital::Out<MTL::PIN_LED_ROW4> led{true};
+
+   while(true);
 }
 
 }

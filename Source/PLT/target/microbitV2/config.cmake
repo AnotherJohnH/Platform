@@ -83,6 +83,7 @@ set(PLT_source
     Platform/Source/PLT/target/microbitV2/startup.s
     Platform/Source/PLT/target/microbitV2/platform_clock.cpp
     Platform/Source/PLT/target/microbitV2/platform_init.cpp
+    Platform/Source/PLT/target/microbitV2/platform_shutdown.cpp
     Platform/Source/PLT/target/microbitV2/Frame.cpp
     Platform/Source/PLT/target/microbitV2/Event.cpp
     Platform/Source/PLT/target/microbitV2/Sounder.cpp

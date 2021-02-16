@@ -129,8 +129,7 @@ VEC_reset:
 #
     bl      mtlMain
 #
-# Fall through to unhandled exception
-#
+    bl      platform_shutdown
 
 unhandled_exception:
 
@@ -166,8 +165,7 @@ Swi_2_IRQ:
 Swi_3_IRQ:
 Swi_4_IRQ:
 Swi_5_IRQ:
-loop:
-    b       loop
+    bl      platform_fault
 
 .align 2
 ramon:
