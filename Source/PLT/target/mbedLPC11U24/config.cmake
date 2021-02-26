@@ -60,10 +60,10 @@ set(CMAKE_SIZE                ${PLT_prefix}size)
 set(CMAKE_EXECUTABLE_SUFFIX   .axf)
 
 set(CMAKE_C_LINK_EXECUTABLE
-    "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
-     ${CMAKE_OBJCOPY} -O binary <TARGET> <TARGET>.bin; \
-     ${CMAKE_OBJDUMP} -d <TARGET>; \
-     ${CMAKE_SIZE} <TARGET>")
+    "${PLT_prefix}ld ${PLT_ld_flags} <OBJECTS> -o <TARGET>.elf <LINK_LIBRARIES>; \
+     ${CMAKE_OBJCOPY} -O binary <TARGET>.elf <TARGET>.bin; \
+     ${CMAKE_SOURCE_DIR}/Platform/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>.elf; \
+     ${CMAKE_SIZE} <TARGET>.elf")
 
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
 
