@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # This scripts exists because I/O re-direction under cmake seems problamatic
 # and objdump has no write to file command line option
