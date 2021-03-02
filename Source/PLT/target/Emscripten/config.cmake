@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2019 John D. Haughton
+#  Copyright (c) 2019-2021 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -36,13 +36,18 @@ include_directories(Platform/include/MTL/board/stub)
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
 
+set(CMAKE_SYSTEM_NAME Generic)
+
 set(CMAKE_C_COMPILER   emcc)
 set(CMAKE_CXX_COMPILER emcc)
 set(CMAKE_AR           emar)
 set(CMAKE_RANLIB       emranlib)
 
-set(CMAKE_EXE_LINKER_FLAGS  "-s USE_SDL=2")
-set(CMAKE_EXECUTABLE_SUFFIX .html)
+set(CMAKE_EXE_LINKER_FLAGS      "-s USE_SDL=2")
+set(CMAKE_EXECUTABLE_SUFFIX_CXX .html)
+
+# Prevent compiler sanity check when cross-compiling.
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 #-------------------------------------------------------------------------------
 # Configuration for libPLT.a

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 #-------------------------------------------------------------------------------
 #  Copyright (c) 2020 John D. Haughton
@@ -69,29 +69,36 @@ def clean(target):
 
 def build(target, cmake_opts):
 
-   print("======================================================================")
-   print("Build for '"+target+"'")
+   print('='*80)
+   print(f"Build for '{target}'")
 
-   build_dir="build_"+target
+   build_dir="build_" + target
+
+   if target == "Emscripten":
+      # An Emscripten or Web Assembly build
+      EMSDK_ENV = os.environ["HOME"] + "/OpenSource/emsdk/emsdk_env.sh"
+      print(f"EMSDK_ENV = {EMSDK_ENV}")
+      print('-'*80)
 
    if not os.path.exists(build_dir):
       os.mkdir(build_dir)
       os.chdir(build_dir)
-      os.system("cmake .. "+cmake_opts+ " -DPLT_TARGET="+target)
+
+      cmd = "cmake .. " + cmake_opts + " -DPLT_TARGET=" + target
+      if target == "Emscripten":
+         cmd = 'source ' + EMSDK_ENV + '; ' + cmd
+
+      os.system(cmd)
+
    else:
       os.chdir(build_dir)
 
-   if target == "Emscripten" or target == "WebAsm":
-      #
-      # An Emscripten or Web Assembly build
-      #
-      EMSDK_PATH=os.getenv("HOME")+"/OpenSource/emsdk_portable"
-      print("EMSDK_PATH = "+EMSDK_PATH)
-      print("----------------------------------------------------------------------")
-      os.system("source "+EMSDK_PATH+"/emsdk_env.sh; make")
-   else:
-      print("----------------------------------------------------------------------")
-      os.system("make -j")
+   cmd = "make -j"
+   if target == "Emscripten":
+      cmd = 'source ' + EMSDK_ENV + '; ' + cmd
+
+   print('-'*80)
+   os.system(cmd)
 
    os.chdir("..")
 

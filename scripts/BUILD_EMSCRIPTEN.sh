@@ -5,7 +5,7 @@
 export PLT_TARGET=Emscripten
 
 # XXX edit to the actual location that the EMSDK is installed
-EMSDK_PATH=$HOME/OpenSource/emsdk_portable
+EMSDK_PATH=$HOME/OpenSource/emsdk
 
 echo
 echo "EMSDK path    : ${EMSDK_PATH}"
