@@ -68,6 +68,14 @@ do
 done
 
 #-----------------------------------------------------------
+# Install a github action
+
+mkdir -p ${project_dir}/.github/workflows
+installFile template/.github/workflows/build_on_push.yml \
+            ${project_dir}/.github/workflows \
+            build_on_push.yml
+
+#-----------------------------------------------------------
 # install a main source file
 
 mkdir -p ${project_dir}/Source
