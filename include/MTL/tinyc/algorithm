@@ -28,6 +28,18 @@
 
 namespace std {
 
+template <typename TYPE>
+const TYPE& min(const TYPE& a, const TYPE& b)
+{
+   return b < a ? b : a;
+}
+
+template <typename TYPE>
+const TYPE& max(const TYPE& a, const TYPE& b)
+{
+   return b > a ? b : a;
+}
+
 } // namespace std
 
 #endif

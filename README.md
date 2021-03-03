@@ -35,7 +35,6 @@ Binary [foo] : <filename of application binary>
 
 Install template/.clang-format to <project root directory>/.clang-format
 Install template/.gitignore to <project root directory>/.gitignore
-Install template/.travis.yml to <project root directory>/.travis.yml
 Install template/CMakeLists.txt to <project root directory>/CMakeLists.txt
 Install template/Doxyfile to <project root directory>/Doxyfile
 Install template/LICENSE to <project root directory>/LICENSE
@@ -60,7 +59,7 @@ The following small projects are using Platform...
 
 ## Status
 
-[![Build Status](https://travis-ci.org/AnotherJohnH/Platform.svg?branch=master)](https://travis-ci.org/AnotherJohnH/Platform)
+[![Build Status](https://github.com/AnotherJohnH/Platform/actions/workflows/build_on_push.yml/badge.svg)](https://github.com/AnotherJohnH/Platform/actions/workflows/build_on_push.yml)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13938/badge.svg)](https://scan.coverity.com/projects/anotherjohnh-platform)
 
 ### Linux

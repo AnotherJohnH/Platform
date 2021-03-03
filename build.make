@@ -20,28 +20,41 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
+.PHONY: clean
 clean:
 	rm -rf build_*
 
+.PHONY: debug
 debug:
-	Platform/BUILD.py native -s -d
+	Platform/BUILD.py -s -d native
+
+.PHONY: spotless
+spotless:
+	Platform/BUILD.py -s $(targets)
 
 #-------------------------------------------------------------------------------
+# Build rules for specific targets
 
+.PHONY: native
 native:
 	Platform/BUILD.py native
 
+.PHONY: Emscripten
 Emscripten:
 	Platform/BUILD.py Emscripten
 
+.PHONY: microbit_32k
 microbit_32k:
 	Platform/BUILD.py microbit_32k
 
+.PHONY: microbit_V2
 microbitV2:
 	Platform/BUILD.py microbitV2
 
+.PHONY: mbedLPC11U24
 mbedLPC11U24:
 	Platform/BUILD.py mbedLPC11U24
 
+.PHONY: mbedLPC1768
 mbedLPC1768:
 	Platform/BUILD.py mbedLPC1768

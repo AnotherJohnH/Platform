@@ -24,7 +24,6 @@
 #define GUI_LAYOUT_H
 
 #include <cstdint>
-#include <vector>
 
 #include "GUI/Vector.h"
 

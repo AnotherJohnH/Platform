@@ -53,6 +53,8 @@ set(PLT_config_dir ${CMAKE_SOURCE_DIR}/Platform/Source/PLT/target/${PLT_TARGET})
 
 include(${PLT_config_dir}/config.cmake)
 
+message(STATUS "PLT_TARGET=${PLT_TARGET}")
+
 #-------------------------------------------------------------------------------
 # Compiler flags
 
@@ -164,12 +166,12 @@ endif()
 #-------------------------------------------------------------------------------
 # Test support
 
-if(DEFINED test_source)
+function(addGTest)
    if((${PLT_TARGET} STREQUAL macOS) OR (${PLT_TARGET} STREQUAL Linux))
       set(INSTALL_GTEST OFF)
       add_subdirectory(${CMAKE_SOURCE_DIR}/Platform/googletest)
 
-      add_executable(test${CMAKE_PROJECT_NAME} ${test_source} Platform/Source/test/testMain.cpp)
+      add_executable(test${CMAKE_PROJECT_NAME} ${ARGV} Platform/Source/test/testMain.cpp)
 
       target_link_libraries(test${CMAKE_PROJECT_NAME} gtest ${PLT_libs})
 
@@ -179,7 +181,7 @@ if(DEFINED test_source)
 
       add_custom_target(runTest ALL DEPENDS test.log)
    endif()
-endif()
+endfunction()
 
 #-------------------------------------------------------------------------------
 # Package support

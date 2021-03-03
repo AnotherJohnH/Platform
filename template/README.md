@@ -4,7 +4,7 @@ DESCRIPTION.
 
 ## Status
 
-[![Build Status](https://travis-ci.org/USERNAME/APPLICATION.svg?branch=master)](https://travis-ci.org/USERNAME/APPLICATION)
+[![Build Status](https://github.com/USERNAME/APPLICATION/actions/workflows/build_on_push.yml/badge.svg)](https://github.com/USERNAME/APPLICATION/actions/workflows/build_on_push.yml)
 
 ## How to build
 

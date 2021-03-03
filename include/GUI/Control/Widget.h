@@ -23,6 +23,7 @@
 #ifndef GUI_WIDGET_H
 #define GUI_WIDGET_H
 
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
 
