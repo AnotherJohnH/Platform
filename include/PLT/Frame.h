@@ -55,18 +55,26 @@ public:
       //! Get frame size and video interlace config
       virtual void getConfig(uint16_t& width,
                              uint16_t& height,
-                             bool&     interlace)
+                             bool&     interlace,
+                             uint8_t&  char_height)
       {
-         width     = 0;
-         height    = 0;
-         interlace = false;
+         width       = 0;
+         height      = 0;
+         interlace   = false;
+         char_height = 1;
+      }
+
+      //! Get frame width
+      virtual uint16_t getWidth()
+      {
+         return 0;
       }
 
       //! Synchronize generator to start of field
       virtual void startField(unsigned field) {}
 
       //! Synchronize generator to start of a line
-      virtual void startLine(unsigned line) {}
+      virtual void startLine(unsigned char_row, unsigned char_line) {}
 
       //! Get next 32 1BPP pixels for the current line
       virtual uint32_t getPixelData_1BPP()
