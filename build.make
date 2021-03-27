@@ -58,3 +58,7 @@ mbedLPC11U24:
 .PHONY: mbedLPC1768
 mbedLPC1768:
 	Platform/BUILD.py mbedLPC1768
+
+.PHONY: rpipico
+rpipico:
+	Platform/BUILD.py rpipico
