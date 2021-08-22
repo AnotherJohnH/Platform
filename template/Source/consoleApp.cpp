@@ -28,23 +28,23 @@
 `#'define  PROGRAM         "APPLICATION"
 `#'define  `DESCRIPTION'     "DESCRIPTION"
 `#'define  `LINK'            "LINK"
-`#'define  COPYRIGHT_YEAR  "YEAR"
 `#'define  `AUTHOR'          "AUTHOR"
+`#'define  COPYRIGHT_YEAR  "YEAR"
 
 
 class APPLICATION`App' : public STB::ConsoleApp
 {
+public:
+   APPLICATION`App'()
+      : ConsoleApp(PROGRAM, `DESCRIPTION', `LINK', `AUTHOR', COPYRIGHT_YEAR)
+   {
+   }
+
 private:
    virtual int startConsoleApp() override
    {
       printf("Hello, world!\n");
       return 0;
-   }
-
-public:
-   APPLICATION`App'()
-      : ConsoleApp(PROGRAM, `DESCRIPTION', `LINK', `AUTHOR', COPYRIGHT_YEAR)
-   {
    }
 };
 
