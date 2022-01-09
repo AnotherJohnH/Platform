@@ -188,6 +188,15 @@ public:
       }
    }
 
+   //! Pad to the given position in the string
+   void pad(unsigned col, char ch = ' ')
+   {
+      while(size() < col)
+      {
+         push_back(ch);
+      }
+   }
+
 private:
    //! Append a hexadecimal number to a C string
    template <typename TYPE>
