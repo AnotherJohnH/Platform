@@ -22,13 +22,13 @@
 
 cmake_minimum_required(VERSION 3.11.4)
 
-include(build.cmake NO_POLICY_SCOPE)
-
-#-------------------------------------------------------------------------------
-
 project(Platform
         VERSION   0.0.5
         LANGUAGES C CXX ASM)
+
+include(build.cmake NO_POLICY_SCOPE)
+
+#-------------------------------------------------------------------------------
 
 set(author  "John D. Haughton")
 
