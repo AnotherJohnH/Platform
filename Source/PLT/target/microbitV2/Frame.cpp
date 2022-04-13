@@ -49,7 +49,7 @@ public:
    {
       generator = generator_;
 
-      generator->getConfig(width, height, interlace);
+      generator->getConfig(width, height, interlace, char_height);
 
       words_per_line = width / 32;
 
@@ -106,11 +106,15 @@ private:
    uint16_t               width, height;
    uint16_t               words_per_line;
    bool                   interlace;
+   uint8_t                char_height;
    uint8_t                field{0};
 
    void renderLine(unsigned line, uint8_t*& raw)
    {
-      generator->startLine(line);
+      unsigned char_row  = line / char_height;
+      unsigned char_line = line % char_height;
+
+      generator->startLine(char_row, char_line);
 
       for(unsigned word = 0; word < words_per_line; ++word)
       {

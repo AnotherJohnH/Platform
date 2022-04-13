@@ -64,9 +64,12 @@ private:
                  "This class represents a 4-byte field in a binary file.");
 
 public:
-   Ident(const std::string& value_ = "    ")
+   Ident(const std::string& id = "    ")
    {
-      strncpy(value, value_.c_str(), sizeof(value));
+      for(size_t i = 0; i < sizeof(value); ++i)
+      {
+         value[i] = i < id.size() ? id[i] : ' ';
+      }
    }
 
    void get(std::string& v) const

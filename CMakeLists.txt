@@ -32,8 +32,8 @@ project(Platform
 
 set(author  "John D. Haughton")
 
-set(test_source Source/STB/testEndian.cpp
-                Source/STB/testLicense.cpp)
+addGTest(Source/STB/testEndian.cpp
+         Source/STB/testLicense.cpp)
 
 #-------------------------------------------------------------------------------
 
