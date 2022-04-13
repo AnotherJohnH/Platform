@@ -143,6 +143,7 @@ if(PLT_libs MATCHES ".*tinyc.*")
                Platform/Source/MTL/tinyc/rand.cpp
                Platform/Source/MTL/tinyc/sin.c
                Platform/Source/MTL/tinyc/scanf.cpp
+               Platform/Source/MTL/tinyc/snprintf.cpp
                Platform/Source/MTL/tinyc/sprintf.cpp
                Platform/Source/MTL/tinyc/srand.cpp
                Platform/Source/MTL/tinyc/strcat.cpp
@@ -160,6 +161,7 @@ if(PLT_libs MATCHES ".*tinyc.*")
                Platform/Source/MTL/tinyc/time.cpp
                Platform/Source/MTL/tinyc/tinyc_init.c
                Platform/Source/MTL/tinyc/vfprintf.cpp
+               Platform/Source/MTL/tinyc/vsnprintf.cpp
                Platform/Source/MTL/tinyc/vsprintf.cpp)
 endif()
 
