@@ -126,8 +126,9 @@ public:
 
    void setValue(const char* value_)
    {
-      strncpy(value, value_, COLS);
-    }
+      strncpy(value, value_, COLS + 1);
+      value[COLS] = '\0';
+   }
 };
 
 } // namespace GUI
