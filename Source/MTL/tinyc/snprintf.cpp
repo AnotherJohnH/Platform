@@ -20,7 +20,6 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \file snprintf.c
 //! \brief tiny C library implementation
 
 #include <stdio.h>
@@ -28,9 +27,8 @@
 int snprintf(char* buffer, size_t n, const char* format, ...)
 {
    va_list ap;
-   int n;
    va_start(ap, format);
-   n = vsnprintf(buffer, n, format, ap);
+   int retval = vsnprintf(buffer, n, format, ap);
    va_end(ap);
-   return n;
+   return retval;
 }
