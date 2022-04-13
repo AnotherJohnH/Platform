@@ -1,0 +1,62 @@
+name: build_on_push
+
+on: [push]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+
+  #---------------------------------------------------------------------
+  # MacOS CI
+
+  build_MacOS:
+    runs-on: macOS-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+       submodules: 'recursive'
+
+    - name: Install dependencies
+      run:  brew install SDL2
+
+    - name: Prepare build
+      run: cmake -E make_directory ${{github.workspace}}/build_mac
+
+    - name: Configure build
+      working-directory: ${{github.workspace}}/build_mac
+      shell: bash
+      run: cmake ..
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build_mac
+      shell: bash
+      run: make
+
+  #---------------------------------------------------------------------
+  # Linux CI
+
+  build_Linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+       submodules: 'recursive'
+
+    - name: Install dependencies
+      run: sudo apt-get install libsdl2-dev
+
+    - name: Prepare build
+      run: cmake -E make_directory ${{github.workspace}}/build_linux
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/build_linux
+      run: export SDL2_DIR=${{github.workspace}}/.github/workflows; cmake ..
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build_linux
+      shell: bash
+      run: make
