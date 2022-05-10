@@ -43,6 +43,8 @@ public:
       , tick_period(sample_freq / tick_freq)
    {}
 
+   Freq getSampleFreq() const { return sink.sample_freq; }
+
    void play()
    {
       in.init(&sink);
