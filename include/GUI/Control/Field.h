@@ -35,10 +35,34 @@ namespace GUI {
 template <unsigned COLS>
 class Field : public Widget, public ColourPair
 {
-private:
-   const Font*  font{nullptr};
-   // unsigned      code;
-   char value[COLS + 1];
+public:
+   Field() = default;
+
+   Field(Widget* parent_, unsigned code_ = 0, const char* initial_ = "")
+   {
+      init(parent_, code_, initial_);
+   }
+ 
+   void init(Widget* parent_, unsigned code_, const char* initial_)
+   {
+      setParent(parent_);
+
+      // code = code_;
+
+      value[COLS] = '\0';
+      setValue(initial_);
+
+      setBackgroundColour(BACKGROUND);
+      setForegroundColour(FOREGROUND);
+
+      eventSize();
+   }
+
+   void setValue(const char* value_)
+   {
+      strncpy(value, value_, COLS + 1);
+      value[COLS] = '\0';
+   }
 
 protected:
    // Implement Widget events
@@ -101,34 +125,10 @@ protected:
       }
    }
 
-public:
-   Field() = default;
-
-   Field(Widget* parent_, unsigned code_, const char* initial_)
-   {
-      init(parent_, code_, initial_);
-   }
- 
-   void init(Widget* parent_, unsigned code_, const char* initial_)
-   {
-      setParent(parent_);
-
-      // code = code_;
-
-      value[COLS] = '\0';
-      setValue(initial_);
-
-      setBackgroundColour(BACKGROUND);
-      setForegroundColour(FOREGROUND);
-
-      eventSize();
-   }
-
-   void setValue(const char* value_)
-   {
-      strncpy(value, value_, COLS + 1);
-      value[COLS] = '\0';
-   }
+private:
+   const Font* font{nullptr};
+   // unsigned      code;
+   char        value[COLS + 1];
 };
 
 } // namespace GUI
