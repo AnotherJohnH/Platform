@@ -31,9 +31,16 @@ namespace GUI {
 class Row : public Widget
 {
 public:
-   Row(Widget* parent = nullptr, unsigned space = 0)
-      : Widget(parent)
+   Row() = default;
+
+   Row(Widget* parent_, unsigned space = 0)
    {
+      init(parent_, space);
+   }
+
+   void init(Widget* parent_, unsigned space = 0)
+   {
+      setParent(parent_);
       row = true;
       setBorderAndGap(space);
       setShrink();

@@ -105,9 +105,15 @@ public:
    }
 
    Button(Widget* parent, unsigned code_)
-      : Row(parent, 4)
-      , code(code_)
-   {}
+   {
+      init(parent, code_);
+   }
+
+   void init(Widget* parent, unsigned code_)
+   {
+      Row::init(parent, 4);
+      code = code_;
+   }
 
    void setCode(unsigned code_) { code = code_; }
 
