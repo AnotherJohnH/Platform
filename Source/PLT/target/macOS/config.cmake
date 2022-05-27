@@ -25,7 +25,7 @@
 #-------------------------------------------------------------------------------
 # Special compile flags for this platform
 
-set(PLT_cxx_flags "-std=c++11")
+set(PLT_cxx_flags "-std=c++14")
 
 set(PLT_c_flags "-DPLT_FRAME_BUFFERED")
 
@@ -59,7 +59,8 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 set(PLT_libs ${SDL2_LIBRARIES})
 
-# TODO
-#env.Append(LINKFLAGS = ['-framework', 'CoreMIDI'])
-#env.Append(LINKFLAGS = ['-framework', 'CoreFoundation'])
+# Use of bizar "SHELL: <option>" syntax to get round cmakes de-duplication of
+# -framework
+add_link_options("SHELL: -framework CoreMIDI")
+add_link_options("SHELL: -framework CoreFoundation")
 
