@@ -59,7 +59,7 @@ message(STATUS "PLT_TARGET=${PLT_TARGET}")
 # Compiler flags
 
 set(PLT_c_flags "${PLT_c_flags} -DPLT_PROJ_COMMIT=\\\"${PLT_proj_commit}\\\"")
-set(PLT_c_flags "${PLT_c_flags} -DPLT_PROJ_VERSION=\\\"${CMAKE_PROJECT_VERSION}\\\"")
+set(PLT_c_flags "${PLT_c_flags} -DPLT_PROJ_VERSION=\\\"${PROJECT_VERSION}\\\"")
 set(PLT_c_flags "${PLT_c_flags} -DPLT_MACHINE=\\\"${PLT_machine}\\\"")
 set(PLT_c_flags "${PLT_c_flags} -DPLT_TARGET_${PLT_TARGET}")
 set(PLT_c_flags "${PLT_c_flags} -Wall")

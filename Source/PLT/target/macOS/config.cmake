@@ -25,7 +25,8 @@
 #-------------------------------------------------------------------------------
 # Special compile flags for this platform
 
-set(PLT_cxx_flags "-std=c++14")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(PLT_c_flags "-DPLT_FRAME_BUFFERED")
 
