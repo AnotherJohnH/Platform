@@ -84,7 +84,7 @@ def build(target, cmake_opts):
       os.mkdir(build_dir)
       os.chdir(build_dir)
 
-      cmd = "cmake .. " + cmake_opts + " -DPLT_TARGET=" + target
+      cmd = "cmake -G Ninja .. " + cmake_opts + " -DPLT_TARGET=" + target
       if target == "Emscripten":
          cmd = 'source ' + EMSDK_ENV + '; ' + cmd
 
@@ -93,7 +93,7 @@ def build(target, cmake_opts):
    else:
       os.chdir(build_dir)
 
-   cmd = "make -j"
+   cmd = "ninja"
    if target == "Emscripten":
       cmd = 'source ' + EMSDK_ENV + '; ' + cmd
 
