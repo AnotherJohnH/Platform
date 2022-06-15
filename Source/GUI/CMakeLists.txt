@@ -20,8 +20,17 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-add_executable(testGuiFrame       testGuiFrame.cpp)
+add_executable(testGuiFrame testGuiFrame.cpp)
+target_link_libraries(testGuiFrame PLT)
+
 add_executable(testGuiFrameBitmap testGuiFrameBitmap.cpp)
-add_executable(testGui            testGui.cpp)
-add_executable(testGuiApp         testGuiApp.cpp)
-add_executable(testGuiHelloWorld  testGuiHelloWorld.cpp)
+target_link_libraries(testGuiFrameBitmap PLT)
+
+add_executable(testGui testGui.cpp)
+target_link_libraries(testGui PLT)
+
+add_executable(testGuiApp testGuiApp.cpp)
+target_link_libraries(testGuiApp PLT)
+
+add_executable(testGuiHelloWorld testGuiHelloWorld.cpp)
+target_link_libraries(testGuiHelloWorld PLT)

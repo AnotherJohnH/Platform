@@ -21,4 +21,15 @@
 #-------------------------------------------------------------------------------
 
 add_executable(testConsoleApp testConsoleApp.cpp)
-add_executable(testMidiFIle   testMidiFile.cpp)
+target_link_libraries(testConsoleApp PLT)
+
+add_executable(testMidiFile testMidiFile.cpp)
+target_link_libraries(testMidiFile PLT)
+
+add_executable(test_stb
+               ${CMAKE_SOURCE_DIR}/Source/test/testMain.cpp
+               testEndian.cpp
+               testLicense.cpp)
+
+target_link_libraries(test_stb PLT gtest)
+

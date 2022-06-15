@@ -20,10 +20,24 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-add_executable(testAudioIn        testAudioIn.cpp)
-add_executable(testAudioOut       testAudioOut.cpp)
-add_executable(testEvent          testEvent.cpp)
-add_executable(testFrame          testFrame.cpp)
+add_executable(testAudioIn testAudioIn.cpp)
+target_link_libraries(testAudioIn PLT)
+
+add_executable(testAudioOut testAudioOut.cpp)
+target_link_libraries(testAudioOut PLT)
+
+add_executable(testEvent testEvent.cpp)
+target_link_libraries(testEvent PLT)
+
+add_executable(testFrame testFrame.cpp)
+target_link_libraries(testFrame PLT)
+
 add_executable(testFrameGenerator testFrameGenerator.cpp)
-#add_executable(testMidiIn         testMidiIn.cpp)
-add_executable(testSounder        testSounder.cpp)
+target_link_libraries(testFrameGenerator PLT)
+
+#add_executable(testMidiIn testMidiIn.cpp)
+#target_link_libraries(testMidiIn PLT)
+
+add_executable(testSounder testSounder.cpp)
+target_link_libraries(testSounder PLT)
+

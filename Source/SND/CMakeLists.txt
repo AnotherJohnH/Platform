@@ -21,4 +21,7 @@
 #-------------------------------------------------------------------------------
 
 add_executable(testSND_Expr testSND_Expr.cpp)
+target_link_libraries(testSND_Expr PLT)
+
 add_executable(testSND_Sine testSND_Sine.cpp)
+target_link_libraries(testSND_Sine PLT)

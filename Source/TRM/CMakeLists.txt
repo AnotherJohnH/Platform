@@ -20,8 +20,17 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-add_executable(testTerminal         testTerminal.cpp)
-add_executable(testTerminalFrame    testTerminalFrame.cpp)
-add_executable(testTerminalConsole  testTerminalConsole.cpp)
-add_executable(testTerminalApp      testTerminalApp.cpp)
+add_executable(testTerminal testTerminal.cpp)
+target_link_libraries(testTerminal PLT)
+
+add_executable(testTerminalFrame testTerminalFrame.cpp)
+target_link_libraries(testTerminalFrame PLT)
+
+add_executable(testTerminalConsole testTerminalConsole.cpp)
+target_link_libraries(testTerminalConsole PLT)
+
+add_executable(testTerminalApp testTerminalApp.cpp)
+target_link_libraries(testTerminalApp PLT)
+
 add_executable(testTerminalLauncher testTerminalLauncher.cpp)
+target_link_libraries(testTerminalLauncher PLT)

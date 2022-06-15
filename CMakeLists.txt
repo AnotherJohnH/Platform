@@ -31,6 +31,7 @@ include(config.cmake)
 add_subdirectory(Source)
 
 #-------------------------------------------------------------------------------
+# Build PLT library
 
 add_library(PLT STATIC
             $<TARGET_OBJECTS:plt_obj>
@@ -52,22 +53,24 @@ target_link_libraries(PLT PUBLIC ${target_link_libraries})
 target_link_options(PLT PUBLIC ${target_link_options})
 
 #-------------------------------------------------------------------------------
+# Testing
 
-#addGTest(Source/STB/testEndian.cpp
-#         Source/STB/testLicense.cpp)
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+
+   add_subdirectory(googletest)
+
+   add_subdirectory(Source/STB)
+   add_subdirectory(Source/GUI)
+   add_subdirectory(Source/SND)
+   add_subdirectory(Source/TRM)
+   add_subdirectory(Source/PLT/test)
+
+   # TODO fix this build regression
+   #add_subdirectory(Source/MTL)
+
+endif()
 
 #-------------------------------------------------------------------------------
+# Installation
 
-#install(TARGETS PLT ARCHIVE DESTINATION lib)
-
-#-------------------------------------------------------------------------------
-
-#link_libraries(${PLT_libs})
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/MTL)
-#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/PLT/test)
-#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/GUI)
-#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/SND)
-#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/TRM)
-#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/STB)
+install(TARGETS PLT ARCHIVE DESTINATION lib)
