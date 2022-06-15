@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2019 John D. Haughton
+#  Copyright (c) 2022 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -20,39 +20,27 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# cmake configuration for Linux builds
+add_library(plt_obj OBJECT
+            STB/Option.cpp
+            STB/MidiDecoder.cpp
+            MTL/PS2KeyDecode.cpp
+            MTL/PALVideo.cpp
+            GUI/FontLED11.cpp
+            GUI/FontLED22.cpp
+            GUI/FontNew8.cpp
+            GUI/FontTeletext18.cpp
+            GUI/FontTeletext15.cpp
+            GUI/FontTeletext12.cpp
+            GUI/FontTeletext9.cpp)
 
-#-------------------------------------------------------------------------------
-# Special compile flags for this platform
+target_include_directories(plt_obj PUBLIC ../include)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+add_library(plt_obj_cpp_containers OBJECT
+            STB/Oil.cpp
+            STB/Deflate.cpp
+            STB/Zlib.cpp
+            GUI/BitmapPNG.cpp)
 
-set(PLT_c_flags "-DPLT_FRAME_BUFFERED")
+target_include_directories(plt_obj_cpp_containers PUBLIC ../include)
 
-include_directories(Platform/Source/PLT/target/native)
-
-#-------------------------------------------------------------------------------
-# Configuration for libPLT.a
-
-set(PLT_source
-    Platform/Source/PLT/target/native/platform.cpp
-    Platform/Source/PLT/SDL2/Audio.cpp
-    Platform/Source/PLT/SDL2/Event.cpp
-    Platform/Source/PLT/SDL2/Frame.cpp
-    Platform/Source/PLT/SDL2/Image.cpp
-    Platform/Source/PLT/SDL2/Bitmap.cpp
-    Platform/Source/PLT/Stub/Info.cpp
-    Platform/Source/PLT/Stub/Sounder.cpp
-    Platform/Source/PLT/Stub/Midi.cpp
-    Platform/Source/PLT/POSIX/Yield.cpp
-    Platform/Source/PLT/POSIX/File.cpp
-    Platform/Source/PLT/POSIX/Rtc.cpp
-    Platform/Source/PLT/POSIX/Socket.cpp)
-
-find_package(SDL2 REQUIRED)
-string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES) # avoid bug in SDL2 .cmake module
-
-include_directories(${SDL2_INCLUDE_DIRS})
-
-set(PLT_libs ${SDL2_LIBRARIES} pthread)
+add_subdirectory(PLT/target/${PLT_TARGET})

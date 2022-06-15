@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2019 John D. Haughton
+#  Copyright (c) 2022 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -19,49 +19,40 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
-
 # cmake configuration for MacOS builds
 
-#-------------------------------------------------------------------------------
-# Special compile flags for this platform
+find_package(SDL2 REQUIRED)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-
-set(PLT_c_flags "-DPLT_FRAME_BUFFERED")
+add_library(plt_target_obj OBJECT 
+            Midi.cpp
+            ../native/platform.cpp
+            ../../SDL2/Audio.cpp
+            ../../SDL2/Event.cpp
+            ../../SDL2/Frame.cpp
+            ../../SDL2/Image.cpp
+            ../../SDL2/Bitmap.cpp
+            ../../Stub/Info.cpp
+            ../../Stub/Sounder.cpp
+            ../../POSIX/Yield.cpp
+            ../../POSIX/File.cpp
+            ../../POSIX/Rtc.cpp
+            ../../POSIX/Socket.cpp)
 
 # TODO
 #if env['CC'] == 'clang':
 #   env.Append(CXXFLAGS = ['-Wdocumentation'])
 
-include_directories(Platform/Source/PLT/target/native)
+target_compile_definitions(plt_target_obj PUBLIC PLT_FRAME_BUFFERED)
 
-#-------------------------------------------------------------------------------
-# Configuration for libPLT.a
+target_include_directories(plt_target_obj
+                           PUBLIC  ../native
+                           PUBLIC  ../../../../include
+                           PRIVATE ${SDL2_INCLUDE_DIRS})
 
-set(PLT_source
-    Platform/Source/PLT/target/native/platform.cpp
-    Platform/Source/PLT/SDL2/Audio.cpp
-    Platform/Source/PLT/SDL2/Event.cpp
-    Platform/Source/PLT/SDL2/Frame.cpp
-    Platform/Source/PLT/SDL2/Image.cpp
-    Platform/Source/PLT/SDL2/Bitmap.cpp
-    Platform/Source/PLT/Stub/Info.cpp
-    Platform/Source/PLT/Stub/Sounder.cpp
-    Platform/Source/PLT/target/macOS/Midi.cpp
-    Platform/Source/PLT/POSIX/Yield.cpp
-    Platform/Source/PLT/POSIX/File.cpp
-    Platform/Source/PLT/POSIX/Rtc.cpp
-    Platform/Source/PLT/POSIX/Socket.cpp)
+target_link_libraries(plt_target_obj
+                      PUBLIC ${SDL2_LIBRARIES}
+                      PUBLIC "-framework CoreMIDI"
+                      PUBLIC "-framework CoreFoundation")
 
-find_package(SDL2 REQUIRED)
-
-include_directories(${SDL2_INCLUDE_DIRS})
-
-set(PLT_libs ${SDL2_LIBRARIES})
-
-# Use of bizar "SHELL: <option>" syntax to get round cmakes de-duplication of
-# -framework
-add_link_options("SHELL: -framework CoreMIDI")
-add_link_options("SHELL: -framework CoreFoundation")
+target_link_options(plt_target_obj PUBLIC "")
 

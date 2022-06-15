@@ -84,7 +84,11 @@ def build(target, cmake_opts):
       os.mkdir(build_dir)
       os.chdir(build_dir)
 
-      cmd = "cmake -G Ninja .. " + cmake_opts + " -DPLT_TARGET=" + target
+      if target == 'native':
+         cmd = "cmake -G Ninja .. " + cmake_opts
+      else:
+         cmd = "cmake -G Ninja .. " + cmake_opts + " -DPLT_TARGET=" + target
+
       if target == "Emscripten":
          cmd = 'source ' + EMSDK_ENV + '; ' + cmd
 

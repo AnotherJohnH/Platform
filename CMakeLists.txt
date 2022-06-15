@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2019 John D. Haughton
+#  Copyright (c) 2022 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -22,31 +22,52 @@
 
 cmake_minimum_required(VERSION 3.11.4)
 
-project(Platform
-        VERSION   0.0.5
-        LANGUAGES C CXX ASM)
+project(PLT
+        LANGUAGES C CXX ASM
+        VERSION 0.0.6)
 
-include(build.cmake NO_POLICY_SCOPE)
+include(config.cmake)
 
-#-------------------------------------------------------------------------------
-
-set(author  "John D. Haughton")
-
-addGTest(Source/STB/testEndian.cpp
-         Source/STB/testLicense.cpp)
+add_subdirectory(Source)
 
 #-------------------------------------------------------------------------------
 
-install(TARGETS PLT ARCHIVE DESTINATION lib)
+add_library(PLT STATIC
+            $<TARGET_OBJECTS:plt_obj>
+            $<TARGET_OBJECTS:plt_obj_cpp_containers>
+            $<TARGET_OBJECTS:plt_target_obj>)
+
+target_compile_options(PLT PUBLIC ${PLT_C_FLAGS})
+
+target_include_directories(PLT PUBLIC include)
+
+get_target_property(target_compile_definitions plt_target_obj COMPILE_DEFINITIONS)
+get_target_property(target_link_libraries      plt_target_obj LINK_LIBRARIES)
+get_target_property(target_link_options        plt_target_obj LINK_OPTIONS)
+
+target_compile_definitions(PLT PUBLIC ${target_compile_definitions})
+
+target_link_libraries(PLT PUBLIC ${target_link_libraries})
+
+target_link_options(PLT PUBLIC ${target_link_options})
 
 #-------------------------------------------------------------------------------
 
-link_libraries(${PLT_libs})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+#addGTest(Source/STB/testEndian.cpp
+#         Source/STB/testLicense.cpp)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/Source/MTL)
-add_subdirectory(${CMAKE_SOURCE_DIR}/Source/PLT/test)
-add_subdirectory(${CMAKE_SOURCE_DIR}/Source/GUI)
-add_subdirectory(${CMAKE_SOURCE_DIR}/Source/SND)
-add_subdirectory(${CMAKE_SOURCE_DIR}/Source/TRM)
-add_subdirectory(${CMAKE_SOURCE_DIR}/Source/STB)
+#-------------------------------------------------------------------------------
+
+#install(TARGETS PLT ARCHIVE DESTINATION lib)
+
+#-------------------------------------------------------------------------------
+
+#link_libraries(${PLT_libs})
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
+#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/MTL)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/PLT/test)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/GUI)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/SND)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/TRM)
+#add_subdirectory(${CMAKE_SOURCE_DIR}/Source/STB)
