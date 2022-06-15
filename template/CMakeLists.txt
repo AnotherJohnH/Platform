@@ -20,25 +20,18 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-cmake_minimum_required(`VERSION' 3.11.4)
+cmake_minimum_required(`VERSION' 3.19.1)
 
-set(CMAKE_PROJECT_VERSION VERSION)
-
-`include'(Platform/build.cmake NO_POLICY_SCOPE)
-
-#-------------------------------------------------------------------------------
+`include'(Platform/config.cmake)
 
 project(APPLICATION
-        LANGUAGES C CXX ASM)
-
-set(author  AUTHOR)
-
-set(source  Source/BINARY.cpp)
-set(binary  BINARY)
+        LANGUAGES CXX
+        `VERSION' VERSION)
 
 #-------------------------------------------------------------------------------
 
-add_executable(${binary} ${source})
-target_link_libraries(${binary} ${PLT_libs})
+add_executable(BINARY Source/BINARY.cpp)
+target_link_libraries(BINARY PLT)
 
-install(TARGETS ${binary} RUNTIME DESTINATION bin)
+install(TARGETS BINARY RUNTIME DESTINATION bin)
+
