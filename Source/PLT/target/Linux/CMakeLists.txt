@@ -19,7 +19,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
-# cmake configuration for Linuc builds
+# cmake configuration for Linux builds
 
 find_package(SDL2 REQUIRED)
 
@@ -45,8 +45,5 @@ target_include_directories(plt_target_obj
                            PUBLIC  ../../../../include
                            PRIVATE ${SDL2_INCLUDE_DIRS})
 
-target_link_libraries(plt_target_obj
-                      PUBLIC ${SDL2_LIBRARIES})
-
-target_link_options(plt_target_obj PUBLIC "")
+target_link_libraries(plt_target_obj PUBLIC SDL2 pthread)
 

@@ -41,20 +41,24 @@ if(NOT PLT_TARGET)
    endif()
 
    if("${plt_target}" STREQUAL "" OR "${plt_target}" STREQUAL native)
-      set(plt_target ${CMAKE_HOST_SYSTEM_NAME})
-   endif()
 
-   if(${plt_target} STREQUAL Darwin)
-      set(plt_target macOS)
+      set(plt_target ${CMAKE_HOST_SYSTEM_NAME})
+
+      if(${plt_target} STREQUAL Darwin)
+          set(plt_target macOS)
+      endif()
+
+   else()
+
+      set(CMAKE_CROSSCOMPILING TRUE)
+
+      include(Platform/Source/PLT/target/${plt_target}/config.cmake)
+
    endif()
 
    set(PLT_TARGET ${plt_target} CACHE STRING "Choose the target type")
 
 endif()
-
-# Determine the machine type
-execute_process(COMMAND uname -m OUTPUT_VARIABLE PLT_MACHINE)
-string(STRIP ${PLT_MACHINE} PLT_MACHINE)
 
 # Determine current git commit
 execute_process(COMMAND git log --pretty=format:%H -n 1
@@ -63,16 +67,16 @@ execute_process(COMMAND git log --pretty=format:%H -n 1
 
 message("--------------------------------------------------------------------------------")
 message("PLT_TARGET  = ${PLT_TARGET}")
-message("PLT_MACHINE = ${PLT_MACHINE}")
+message("PLT_MACHINE = ${CMAKE_SYSTEM_PROCESSOR}")
 message("PLT_COMMIT  = ${PLT_COMMIT}")
 message("--------------------------------------------------------------------------------")
 
 #-------------------------------------------------------------------------------
-# Compiler flags
+# Toolchain setup
 
 set(PLT_C_FLAGS)
 list(APPEND PLT_C_FLAGS "-DPLT_TARGET_${PLT_TARGET}")
-list(APPEND PLT_C_FLAGS "-DPLT_MACHINE=\"${PLT_MACHINE}\"")
+list(APPEND PLT_C_FLAGS "-DPLT_MACHINE=\"${CMAKE_SYSTEM_PROCESSOR}\"")
 list(APPEND PLT_C_FLAGS "-DPLT_PROJ_COMMIT=\"${PLT_COMMIT}\"")
 list(APPEND PLT_C_FLAGS "-DPLT_PROJ_VERSION=\"${PROJECT_VERSION}\"")
 list(APPEND PLT_C_FLAGS "-Wall")

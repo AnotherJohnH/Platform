@@ -50,9 +50,8 @@ target_include_directories(plt_target_obj
                            PRIVATE ${SDL2_INCLUDE_DIRS})
 
 target_link_libraries(plt_target_obj
-                      PUBLIC ${SDL2_LIBRARIES}
-                      PUBLIC "-framework CoreMIDI"
-                      PUBLIC "-framework CoreFoundation")
+                      INTERFACE SDL2
+                      INTERFACE "-framework CoreMIDI" "-framework CoreFoundation")
 
-target_link_options(plt_target_obj PUBLIC "")
+target_link_options(plt_target_obj INTERFACE -L/usr/local/lib)
 

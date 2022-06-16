@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2019-2021 John D. Haughton
+#  Copyright (c) 2022 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -19,26 +19,31 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
+# cmake configuration for Linux builds
 
-# cmake configuration for Emscripten builds
+add_library(plt_target_obj OBJECT 
+            ../../SDL2/Audio.cpp
+            ../../SDL2/Event.cpp
+            ../../SDL2/Frame.cpp
+            ../../SDL2/Image.cpp
+            ../../SDL2/Bitmap.cpp
+            ../../Stub/Midi.cpp
+            ../../Stub/Sounder.cpp
+            ../../Stub/Info.cpp
+            ../../Stub/Yield.cpp
+            ../../POSIX/Yield.cpp
+            ../../POSIX/File.cpp)
 
-set(PLT_MACHINE embc)
+target_compile_definitions(plt_target_obj
+                           PUBLIC CO_OP_MULTI_TASK USE_SDL=2)
 
-#-------------------------------------------------------------------------------
-# Special compile flags for this platform
+target_include_directories(plt_target_obj
+                           PUBLIC  ../native
+                           PUBLIC  ../../../../include
+                           PUBLIC  ../../../../include/MTL/board/stub
+                           PRIVATE ${SDL2_INCLUDE_DIRS})
 
-set(PLT_c_flags   "-DCO_OP_MULTI_TASK -Wno-main -s USE_SDL=2")
+target_link_libraries(plt_target_obj PUBLIC SDL2)
 
-#-------------------------------------------------------------------------------
-# Configure the cmake toolchain
-
-set(CMAKE_SYSTEM_NAME    Emscripten)
-
-set(CMAKE_C_COMPILER     emcc)
-set(CMAKE_CXX_COMPILER   emcc)
-set(CMAKE_AR             emar)
-set(CMAKE_RANLIB         emranlib)
-
-set(CMAKE_EXE_LINKER_FLAGS      "-s USE_SDL=2")
-set(CMAKE_EXECUTABLE_SUFFIX_CXX ".html")
+target_link_options(plt_target_obj PUBLIC "-s" "USE_SDL=2")
 

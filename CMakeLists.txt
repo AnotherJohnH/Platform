@@ -31,7 +31,7 @@ include(config.cmake)
 add_subdirectory(Source)
 
 #-------------------------------------------------------------------------------
-# Build PLT library
+# Build
 
 add_library(PLT STATIC
             $<TARGET_OBJECTS:plt_obj>
@@ -40,20 +40,10 @@ add_library(PLT STATIC
 
 target_compile_options(PLT PUBLIC ${PLT_C_FLAGS})
 
-target_include_directories(PLT PUBLIC include)
-
-get_target_property(target_compile_definitions plt_target_obj COMPILE_DEFINITIONS)
-get_target_property(target_link_libraries      plt_target_obj LINK_LIBRARIES)
-get_target_property(target_link_options        plt_target_obj LINK_OPTIONS)
-
-target_compile_definitions(PLT PUBLIC ${target_compile_definitions})
-
-target_link_libraries(PLT PUBLIC ${target_link_libraries})
-
-target_link_options(PLT PUBLIC ${target_link_options})
+target_link_libraries(PLT PUBLIC plt_target_obj)
 
 #-------------------------------------------------------------------------------
-# Testing
+# Build tests 
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -64,9 +54,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
    add_subdirectory(Source/SND)
    add_subdirectory(Source/TRM)
    add_subdirectory(Source/PLT/test)
-
-   # TODO fix this build regression
-   #add_subdirectory(Source/MTL)
+   add_subdirectory(Source/MTL)
 
 endif()
 
