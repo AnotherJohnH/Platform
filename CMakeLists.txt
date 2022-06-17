@@ -43,11 +43,16 @@ target_compile_options(PLT PUBLIC ${PLT_C_FLAGS})
 target_link_libraries(PLT PUBLIC plt_target_obj)
 
 #-------------------------------------------------------------------------------
-# Build tests 
+# Unit testing
+
+include(GoogleTest)
+
+set(BUILD_GMOCK   OFF)
+set(INSTALL_GTEST OFF)
+
+add_subdirectory(googletest)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
-
-   add_subdirectory(googletest)
 
    add_subdirectory(Source/STB)
    add_subdirectory(Source/GUI)
@@ -56,9 +61,17 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
    add_subdirectory(Source/PLT/test)
    add_subdirectory(Source/MTL)
 
-endif()
-
 #-------------------------------------------------------------------------------
 # Installation
 
-install(TARGETS PLT ARCHIVE DESTINATION lib)
+   install(TARGETS PLT ARCHIVE DESTINATION lib)
+   install(DIRECTORY include DESTINATION include)
+
+#-------------------------------------------------------------------------------
+# Packaging
+
+   set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+   set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+   include(CPack)
+
+endif()
