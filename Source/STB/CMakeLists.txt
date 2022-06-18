@@ -33,3 +33,5 @@ add_executable(test_stb
 
 target_link_libraries(test_stb PLT gtest)
 
+add_test(NAME test_stb COMMAND test_stb)
+

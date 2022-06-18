@@ -47,14 +47,13 @@ target_link_libraries(PLT PUBLIC plt_target_obj)
 #-------------------------------------------------------------------------------
 # Unit testing
 
-include(GoogleTest)
-
 set(BUILD_GMOCK   OFF)
 set(INSTALL_GTEST OFF)
-
 add_subdirectory(googletest)
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+
+   include(CTest)
 
    add_subdirectory(Source/STB)
    add_subdirectory(Source/GUI)
