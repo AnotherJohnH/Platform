@@ -87,7 +87,7 @@ def build(target, cmake_opts):
       if target == 'native':
          cmd = "cmake -G Ninja .. " + cmake_opts
       else:
-         cmd = "cmake -G Ninja .. " + cmake_opts + " -DPLT_TARGET=" + target
+         cmd = f"cmake -G Ninja .. {cmake_opts} -DPLT_TARGET={target} -DCMAKE_TOOLCHAIN_FILE=Platform/Source/PLT/target/{target}/toolchain.cmake"
 
       if target == "Emscripten":
          cmd = 'source ' + EMSDK_ENV + '; ' + cmd

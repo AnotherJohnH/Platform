@@ -19,7 +19,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
-# cmake configuration for Linux builds
+# cmake configuration for Emscripten builds
 
 add_library(plt_target_obj OBJECT 
             ../../SDL2/Audio.cpp
@@ -35,7 +35,10 @@ add_library(plt_target_obj OBJECT
             ../../POSIX/File.cpp)
 
 target_compile_definitions(plt_target_obj
-                           PUBLIC CO_OP_MULTI_TASK USE_SDL=2)
+                           PUBLIC CO_OP_MULTI_TASK)
+
+target_compile_options(plt_target_obj
+                           PUBLIC -Wno-main -s USE_SDL=2)
 
 target_include_directories(plt_target_obj
                            PUBLIC  ../native
@@ -45,5 +48,5 @@ target_include_directories(plt_target_obj
 
 target_link_libraries(plt_target_obj PUBLIC SDL2)
 
-target_link_options(plt_target_obj PUBLIC "-s" "USE_SDL=2")
+target_link_options(plt_target_obj PUBLIC -s USE_SDL=2)
 

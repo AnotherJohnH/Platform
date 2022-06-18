@@ -19,18 +19,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
-
-# cmake configuration for Emscripten builds
-
-set(PLT_MACHINE embc)
-
-#-------------------------------------------------------------------------------
-# Special compile flags for this platform
-
-set(PLT_c_flags   "-DCO_OP_MULTI_TASK -Wno-main -s USE_SDL=2")
-
-#-------------------------------------------------------------------------------
-# Configure the cmake toolchain
+# cmake toolchain configuration for Emscripten builds
 
 set(CMAKE_SYSTEM_NAME    Generic)
 
@@ -39,8 +28,6 @@ set(CMAKE_CXX_COMPILER   emcc)
 set(CMAKE_AR             emar)
 set(CMAKE_RANLIB         emranlib)
 
-set(CMAKE_EXE_LINKER_FLAGS      "-s USE_SDL=2")
 set(CMAKE_EXECUTABLE_SUFFIX_CXX ".html")
 
-# Prevent compiler sanity check when cross-compiling.
-set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(PLT_MACHINE embc)

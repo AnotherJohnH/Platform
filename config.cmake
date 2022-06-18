@@ -55,8 +55,6 @@ if(${plt_target} STREQUAL native)
 
    set(PLT_MACHINE ${CMAKE_HOST_SYSTEM_PROCESSOR})
 
-else()
-   include(Platform/Source/PLT/target/${plt_target}/config.cmake)
 endif()
 
 if(NOT ${plt_target} STREQUAL ${PLT_TARGET})
