@@ -24,6 +24,10 @@ include_guard(GLOBAL)
 
 #-------------------------------------------------------------------------------
 
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE Release)
+endif()
+
 set(CMAKE_CXX_STANDARD          14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -33,32 +37,33 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 #    PLT_MACHINE
 #    PLT_COMMIT
 
-# Determine the target platform type
-if(NOT PLT_TARGET)
+set(PLT_TARGET native CACHE STRING "Build target type")
+set(plt_target ${PLT_TARGET})
 
-   if(DEFINED ENV{PLT_TARGET})
-      set(plt_target $ENV{PLT_TARGET})
-   endif()
-
-   if("${plt_target}" STREQUAL "" OR "${plt_target}" STREQUAL native)
-
-      set(plt_target ${CMAKE_HOST_SYSTEM_NAME})
-
-      if(${plt_target} STREQUAL Darwin)
-          set(plt_target macOS)
-      endif()
-
-   else()
-
-      set(CMAKE_CROSSCOMPILING TRUE)
-
-      include(Platform/Source/PLT/target/${plt_target}/config.cmake)
-
-   endif()
-
-   set(PLT_TARGET ${plt_target} CACHE STRING "Choose the target type")
-
+# Check for env var override
+if(DEFINED ENV{PLT_TARGET})
+   set(plt_target ${ENV{PLAT_TARGET})
 endif()
+
+# Special case native builds
+if(${plt_target} STREQUAL native)
+
+   set(plt_target  ${CMAKE_HOST_SYSTEM_NAME})
+   if(${plt_target} STREQUAL Darwin)
+      set(plt_target macOS)
+   endif()
+
+   set(PLT_MACHINE ${CMAKE_HOST_SYSTEM_PROCESSOR})
+
+else()
+   include(Platform/Source/PLT/target/${plt_target}/config.cmake)
+endif()
+
+if(NOT ${plt_target} STREQUAL ${PLT_TARGET})
+   set(PLT_TARGET ${plt_target} CACHE STRING "Build target type" FORCE)
+endif()
+
+#-------------------------------------------------------------------------------
 
 # Determine current git commit
 execute_process(COMMAND git log --pretty=format:%H -n 1
@@ -67,7 +72,7 @@ execute_process(COMMAND git log --pretty=format:%H -n 1
 
 message("--------------------------------------------------------------------------------")
 message("PLT_TARGET  = ${PLT_TARGET}")
-message("PLT_MACHINE = ${CMAKE_SYSTEM_PROCESSOR}")
+message("PLT_MACHINE = ${PLT_MACHINE}")
 message("PLT_COMMIT  = ${PLT_COMMIT}")
 message("--------------------------------------------------------------------------------")
 
@@ -76,20 +81,22 @@ message("-----------------------------------------------------------------------
 
 set(PLT_C_FLAGS)
 list(APPEND PLT_C_FLAGS "-DPLT_TARGET_${PLT_TARGET}")
-list(APPEND PLT_C_FLAGS "-DPLT_MACHINE=\"${CMAKE_SYSTEM_PROCESSOR}\"")
+list(APPEND PLT_C_FLAGS "-DPLT_MACHINE=\"${PLT_MACHINE}\"")
 list(APPEND PLT_C_FLAGS "-DPLT_PROJ_COMMIT=\"${PLT_COMMIT}\"")
 list(APPEND PLT_C_FLAGS "-DPLT_PROJ_VERSION=\"${PROJECT_VERSION}\"")
 list(APPEND PLT_C_FLAGS "-Wall")
 list(APPEND PLT_C_FLAGS "-Werror")
 
-# TODO for bare metal targets
-#set(CMAKE_ASM_FLAGS_RELEASE  ${PLT_asm_flags})
-#set(CMAKE_C_FLAGS_RELEASE    "-DNDEBUG -O3 ${PLT_c_flags}")
-#set(CMAKE_CXX_FLAGS_RELEASE  "-DNDEBUG -O3 ${PLT_cxx_flags} ${PLT_c_flags}")
+set(CMAKE_CXX_FLAGS_INIT     "")
 
-#set(CMAKE_ASM_FLAGS_DEBUG    ${PLT_asm_flags})
-#set(CMAKE_C_FLAGS_DEBUG      "-g -O0 ${PLT_c_flags}")
-#set(CMAKE_CXX_FLAGS_DEBUG    "-g -O0 ${PLT_cxx_flags} ${PLT_c_flags}")
+# TODO for bare metal targets
+set(CMAKE_ASM_FLAGS_RELEASE  ${PLT_asm_flags})
+set(CMAKE_C_FLAGS_RELEASE    "-DNDEBUG -O3 ${PLT_c_flags}")
+set(CMAKE_CXX_FLAGS_RELEASE  "-DNDEBUG -O3 ${PLT_cxx_flags} ${PLT_c_flags}")
+
+set(CMAKE_ASM_FLAGS_DEBUG    ${PLT_asm_flags})
+set(CMAKE_C_FLAGS_DEBUG      "-g -O0 ${PLT_c_flags}")
+set(CMAKE_CXX_FLAGS_DEBUG    "-g -O0 ${PLT_cxx_flags} ${PLT_c_flags}")
 
 #-------------------------------------------------------------------------------
 

@@ -32,7 +32,7 @@ set(PLT_c_flags   "-DCO_OP_MULTI_TASK -Wno-main -s USE_SDL=2")
 #-------------------------------------------------------------------------------
 # Configure the cmake toolchain
 
-set(CMAKE_SYSTEM_NAME    Emscripten)
+set(CMAKE_SYSTEM_NAME    Generic)
 
 set(CMAKE_C_COMPILER     emcc)
 set(CMAKE_CXX_COMPILER   emcc)
@@ -42,3 +42,5 @@ set(CMAKE_RANLIB         emranlib)
 set(CMAKE_EXE_LINKER_FLAGS      "-s USE_SDL=2")
 set(CMAKE_EXECUTABLE_SUFFIX_CXX ".html")
 
+# Prevent compiler sanity check when cross-compiling.
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
