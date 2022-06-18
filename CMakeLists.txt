@@ -23,10 +23,12 @@
 cmake_minimum_required(VERSION 3.11.4)
 
 project(PLT
-        LANGUAGES C CXX ASM
+        LANGUAGES C CXX
         VERSION 0.0.6)
 
 include(config.cmake)
+
+add_subdirectory(include)
 
 add_subdirectory(Source)
 
@@ -65,7 +67,6 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
 # Installation
 
    install(TARGETS PLT ARCHIVE DESTINATION lib)
-   install(DIRECTORY include DESTINATION include)
 
 #-------------------------------------------------------------------------------
 # Packaging
