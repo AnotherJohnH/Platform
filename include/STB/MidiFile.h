@@ -28,6 +28,7 @@
 #include <cstdio>
 
 #include <string>
+#include <vector>
 
 #include "STB/Endian.h"
 #include "STB/MidiDecoder.h"
@@ -68,11 +69,6 @@ class File
 public:
    File() = default;
 
-   ~File()
-   {
-      delete[] data;
-   }
-
    bool load(const std::string& filename)
    {
       // Open file
@@ -85,18 +81,15 @@ public:
       if (size <= 0)                   return error("Failed to ftell");
       if (fseek(fp, 0, SEEK_SET) != 0) return error("Failed to fseek");
 
-      if (data != nullptr)
-      {
-         delete[] data;
-      }
-
-      data = (Header*) new uint8_t[size];
+      image.resize(size);
 
       // Read file
-      if (fread((void*)data, size, 1, fp) != 1) return error("Failed to fread");
+      if (fread(image.data(), size, 1, fp) != 1) return error("Failed to fread");
 
       fclose(fp);
       fp = nullptr;
+
+      header = (Header*)image.data();
 
       return true;
    }
@@ -105,18 +98,18 @@ public:
    //  0 => single multi-channel track
    //  1 => one or more simultanious tracks
    //  2 => one or more independant tracks
-   unsigned getFormat() const { return data->format; }
+   unsigned getFormat() const { return header->format; }
 
    //! Get number of tracks
-   unsigned getNumTracks() const { return data->ntrks; }
+   unsigned getNumTracks() const { return header->ntrks; }
 
    //! Get time division
-   uint16_t getDivision() const { return data->division; }
+   uint16_t getDivision() const { return header->division; }
 
    //! Get raw data for a track
-   void getTrackData(unsigned track_no, TrackPtr* tp) const
+   bool getTrackData(unsigned track_no, TrackPtr* tp) const
    {
-      const Chunk* chunk = &data->chunk;
+      const Chunk* chunk = &header->chunk;
 
       for(unsigned i = 0; i < getNumTracks(); i++)
       {
@@ -125,11 +118,12 @@ public:
          if (i == track_no)
          {
             tp->init(chunk->data(), chunk->size());
-            return;
+            return true;
          }
       }
 
       tp->clear();
+      return false;
    }
 
    void decodeTrack(unsigned track_no, Decoder* decoder) const
@@ -215,9 +209,9 @@ private:
       STB::Big16 division{0};
    };
 
-   bool error(const std::string& message)
+   bool error(const char* message)
    {
-      fprintf(stderr, "ERR: MIDI %s\n", message.c_str());
+      fprintf(stderr, "ERR: MIDI %s\n", message);
       if (fp != nullptr)
       {
          fclose(fp);
@@ -226,8 +220,9 @@ private:
       return false;
    }
 
-   FILE*   fp{nullptr};
-   Header* data{nullptr};
+   FILE*                fp{nullptr};
+   std::vector<uint8_t> image{};
+   Header*              header{nullptr};
 };
 
 } // namespace MIDI
