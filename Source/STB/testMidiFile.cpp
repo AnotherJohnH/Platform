@@ -45,19 +45,21 @@ private:
    {
       printf("TRACK %u\n", i);
 
-      size_t         size;
-      const uint8_t* raw = getTrackData(i, size);
-      const uint8_t* end = raw + size;
+      STB::MIDI::TrackPtr tp;
 
-      for(const uint8_t* ptr = raw; ptr < end;)
+      getTrackData(i, &tp);
+
+      const uint8_t* raw = tp.ptr;
+
+      while(tp.isPlaying())
       {
          uint32_t delta_t;
 
-         const uint8_t* start = ptr;
+         const uint8_t* start = tp.ptr;
          const uint8_t* event = start + STB::MIDI::Decoder::decodeVarLength(start, delta_t);
 
          printf("%06X : dt=%05u ", unsigned(start - raw), delta_t);
-         ptr = event + STB::MIDI::disassemble(event, end - event);
+         tp.ptr = event + STB::MIDI::disassemble(event, tp.end - event);
       }
    }
 };

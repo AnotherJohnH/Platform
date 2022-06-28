@@ -36,6 +36,32 @@ namespace STB {
 
 namespace MIDI {
 
+struct TrackPtr
+{
+   TrackPtr() = default;
+
+   bool isPlaying() const { return ptr < end; }
+
+   size_t getSizeLeft() const { return end - ptr; }
+
+   void clear()
+   {
+      ptr = end = nullptr;
+      t = 0;
+   }
+
+   void init(const uint8_t* start, size_t bytes)
+   {
+      ptr = start;
+      end = start + bytes;
+      t   = 0;
+   }
+
+   const uint8_t* ptr{};
+   const uint8_t* end{};
+   unsigned       t{0};
+};
+
 //! A MIDI File
 class File
 {
@@ -88,37 +114,64 @@ public:
    uint16_t getDivision() const { return data->division; }
 
    //! Get raw data for a track
-   const uint8_t* getTrackData(unsigned track_no, size_t& size) const
+   void getTrackData(unsigned track_no, TrackPtr* tp) const
    {
       const Chunk* chunk = &data->chunk;
 
-      for(unsigned i=0; i<getNumTracks(); i++)
+      for(unsigned i = 0; i < getNumTracks(); i++)
       {
          chunk = chunk->getNext();
+
          if (i == track_no)
          {
-            size = chunk->size();
-            return chunk->data();
+            tp->init(chunk->data(), chunk->size());
+            return;
          }
       }
 
-      size = 0;
-      return nullptr; 
+      tp->clear();
    }
 
    void decodeTrack(unsigned track_no, Decoder* decoder) const
    {
+      TrackPtr tp;
+
+      getTrackData(track_no, &tp);
+
       decoder->resetState();
 
-      size_t size;
-      const uint8_t* ptr = getTrackData(track_no, size);
-      const uint8_t* end = ptr + size;
-
-      while(ptr < end)
+      while(tp.isPlaying())
       {
-         ptr += decoder->decodeDeltaT(ptr);
-         ptr += decoder->decode(ptr, end - ptr);
+         tp.ptr += decoder->decodeDeltaT(tp.ptr);
+         tp.ptr += decoder->decode(tp.ptr, tp.getSizeLeft());
       }
+   }
+
+   bool playTrack(unsigned track_no, Decoder* decoder, TrackPtr* tp)
+   {
+      if (tp->isPlaying())
+      {
+         tp->t++;
+      }
+      else
+      {
+         getTrackData(track_no, tp);
+
+         decoder->resetState();
+      }
+
+      while(tp->t >= decoder->getTime())
+      {
+         if (not tp->isPlaying())
+         {
+            return false;;
+         }
+
+         tp->ptr += decoder->decodeDeltaT(tp->ptr);
+         tp->ptr += decoder->decode(tp->ptr, tp->getSizeLeft());
+      }
+
+      return true;
    }
 
 private:
@@ -162,9 +215,6 @@ private:
       STB::Big16 division{0};
    };
 
-   FILE*   fp{nullptr};
-   Header* data{nullptr};
-
    bool error(const std::string& message)
    {
       fprintf(stderr, "ERR: MIDI %s\n", message.c_str());
@@ -175,6 +225,9 @@ private:
       }
       return false;
    }
+
+   FILE*   fp{nullptr};
+   Header* data{nullptr};
 };
 
 } // namespace MIDI
