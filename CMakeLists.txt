@@ -40,8 +40,6 @@ add_library(PLT STATIC
             $<TARGET_OBJECTS:plt_obj_cpp_containers>
             $<TARGET_OBJECTS:plt_target_obj>)
 
-target_compile_options(PLT PUBLIC ${PLT_C_FLAGS})
-
 target_link_libraries(PLT PUBLIC plt_target_obj)
 
 #-------------------------------------------------------------------------------

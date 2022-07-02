@@ -116,15 +116,18 @@ public:
 
    virtual unsigned decode(const uint8_t* data, unsigned length);
 
-   static unsigned decodeVarLength(const uint8_t* first, uint32_t& value)
+   static unsigned decodeVarLength(const uint8_t* ptr, uint32_t& value)
    {
       value = 0;
 
-      for(const uint8_t* ptr = first; true; )
+      for(unsigned n = 0; true;)
       {
-         uint8_t byte = *ptr++;
-         value        = (value << 7) | (byte & 0b01111111);
-         if((byte & 0b10000000) == 0) return ptr - first;
+         uint8_t byte = ptr[n++];
+
+         value = (value << 7) | (byte & 0b01111111);
+
+         if ((byte & 0b10000000) == 0)
+            return n;
       }
    }
 

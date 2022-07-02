@@ -37,31 +37,24 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 #    PLT_MACHINE
 #    PLT_COMMIT
 
-set(PLT_TARGET native CACHE STRING "Build target type")
-set(plt_target ${PLT_TARGET})
-
-# Check for env var override
-if(DEFINED ENV{PLT_TARGET})
-   set(plt_target ${ENV{PLAT_TARGET})
+if(NOT PLT_TARGET)
+   if(DEFINED ENV{PLT_TARGET})
+      set(PLT_TARGET ${ENV{PLAT_TARGET})
+   else()
+      set(PLT_TARGET native)
+   endif()
 endif()
 
-# Special case native builds
-if(${plt_target} STREQUAL native)
+if(${PLT_TARGET} STREQUAL native)
 
-   set(plt_target  ${CMAKE_HOST_SYSTEM_NAME})
-   if(${plt_target} STREQUAL Darwin)
-      set(plt_target macOS)
-   endif()
-
+   set(PLT_TARGET  ${CMAKE_HOST_SYSTEM_NAME})
    set(PLT_MACHINE ${CMAKE_HOST_SYSTEM_PROCESSOR})
 
-endif()
+   if(${PLT_TARGET} STREQUAL Darwin)
+      set(PLT_TARGET macOS)
+   endif()
 
-if(NOT ${plt_target} STREQUAL ${PLT_TARGET})
-   set(PLT_TARGET ${plt_target} CACHE STRING "Build target type" FORCE)
 endif()
-
-#-------------------------------------------------------------------------------
 
 # Determine current git commit
 execute_process(COMMAND git log --pretty=format:%H -n 1
@@ -75,26 +68,22 @@ message("PLT_COMMIT  = ${PLT_COMMIT}")
 message("--------------------------------------------------------------------------------")
 
 #-------------------------------------------------------------------------------
-# Toolchain setup
+# Compile flag initialisation
 
-set(PLT_C_FLAGS)
-list(APPEND PLT_C_FLAGS "-DPLT_TARGET_${PLT_TARGET}")
-list(APPEND PLT_C_FLAGS "-DPLT_MACHINE=\"${PLT_MACHINE}\"")
-list(APPEND PLT_C_FLAGS "-DPLT_PROJ_COMMIT=\"${PLT_COMMIT}\"")
-list(APPEND PLT_C_FLAGS "-DPLT_PROJ_VERSION=\"${PROJECT_VERSION}\"")
-list(APPEND PLT_C_FLAGS "-Wall")
-list(APPEND PLT_C_FLAGS "-Werror")
-
-set(CMAKE_CXX_FLAGS_INIT     "")
+set(PLT_C_FLAGS "-DPLT_TARGET_${PLT_TARGET}")
+set(PLT_C_FLAGS "${PLT_C_FLAGS} -DPLT_MACHINE=\\\"${PLT_MACHINE}\\\"")
+set(PLT_C_FLAGS "${PLT_C_FLAGS} -DPLT_PROJ_COMMIT=\\\"${PLT_COMMIT}\\\"")
+set(PLT_C_FLAGS "${PLT_C_FLAGS} -DPLT_PROJ_VERSION=\\\"${PROJECT_VERSION}\\\"")
+set(PLT_C_FLAGS "${PLT_C_FLAGS} -Wall -Werror")
 
 # TODO for bare metal targets
-set(CMAKE_ASM_FLAGS_RELEASE  ${PLT_asm_flags})
-set(CMAKE_C_FLAGS_RELEASE    "-DNDEBUG -O3 ${PLT_c_flags}")
-set(CMAKE_CXX_FLAGS_RELEASE  "-DNDEBUG -O3 ${PLT_cxx_flags} ${PLT_c_flags}")
+set(CMAKE_ASM_FLAGS_RELEASE  ${PLT_ASM_FLAGS})
+set(CMAKE_C_FLAGS_RELEASE    "-DNDEBUG -O3 ${PLT_C_FLAGS}")
+set(CMAKE_CXX_FLAGS_RELEASE  "${CMAKE_C_FLAGS_RELEASE} ${PLT_CXX_FLAGS}")
 
-set(CMAKE_ASM_FLAGS_DEBUG    ${PLT_asm_flags})
-set(CMAKE_C_FLAGS_DEBUG      "-g -O0 ${PLT_c_flags}")
-set(CMAKE_CXX_FLAGS_DEBUG    "-g -O0 ${PLT_cxx_flags} ${PLT_c_flags}")
+set(CMAKE_ASM_FLAGS_DEBUG    ${PLT_ASM_FLAGS})
+set(CMAKE_C_FLAGS_DEBUG      "-g -O0 ${PLT_C_FLAGS}")
+set(CMAKE_CXX_FLAGS_DEBUG    "${CMAKE_C_FLAGS_DEBUG} ${PLT_CXX_FLAGS}")
 
 #-------------------------------------------------------------------------------
 
