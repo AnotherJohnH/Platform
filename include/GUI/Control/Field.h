@@ -60,7 +60,14 @@ public:
 
    void setValue(const char* value_)
    {
-      strncpy(value, value_, COLS + 1);
+      // XXX Avoid a gcc warning with...
+      // strncpy(value, value_, COLS); 
+      for(unsigned i = 0; i < COLS; ++i)
+      {
+         value[i] = value_[i];
+         if (value[i] == '\0')
+             break;
+      }
       value[COLS] = '\0';
    }
 
