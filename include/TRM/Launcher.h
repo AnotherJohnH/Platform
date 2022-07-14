@@ -20,11 +20,15 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+// XXX time to drop the zero dynamic allocation restriction from this code
+
 #ifndef TRM_LAUNCHER_H
 #define TRM_LAUNCHER_H
 
 #include <cctype>
 #include <cstring>
+
+#include <string>
 #include <utility>
 
 #include "PLT/File.h"
@@ -68,13 +72,13 @@ EOIL(TermConfig)
 class Launcher : public App
 {
 public:
-   Launcher(const char*  program,
-            const char*  description,
-            const char*  link,
-            const char*  author,
-            const char*  copyright_year,
-            const char*  args_help,
-            const char*  config_file)
+   Launcher(const char* program,
+            const char* description,
+            const char* link,
+            const char* author,
+            const char* copyright_year,
+            const char* args_help,
+            const char* config_file)
       : App(program, description, link, author, copyright_year)
       , opt_config('c', "config", "Use alternate config file", config_file)
       , filename('*', "*", args_help, nullptr)
@@ -92,7 +96,7 @@ private:
    unsigned                 cursor{0};
    unsigned                 cursor_limit{0};
    bool                     quit{false};
-   char                     path[FILENAME_MAX]      = {};
+   std::string              path {};
    char                     selection[FILENAME_MAX] = {};
    bool                     selection_is_dir{false};
 
@@ -129,7 +133,7 @@ private:
       curses.mvaddstr(1, 3, program);
       curses.attroff(A_BOLD);
 
-      curses.mvaddstr(1, 3 + strlen(program) + 2, path);
+      curses.mvaddstr(1, 3 + strlen(program) + 2, path.c_str());
 
       curses.attroff(A_REVERSE);
    }
@@ -157,7 +161,7 @@ private:
 
       for(unsigned index = 0; (first_row + index) < curses.lines;)
       {
-         // Read one line from the config gile
+         // Read one line from the config file
          char line[FILENAME_MAX];
          if(!getLine(file, line, sizeof(line)))
          {
@@ -166,9 +170,9 @@ private:
          }
 
          // Does the start of the line match the current path
-         if(strncmp(line, path, strlen(path)) == 0)
+         if(strncmp(line, path.c_str(), path.size()) == 0)
          {
-            char* entry = line + strlen(path);
+            char* entry = line + path.size();
 
             // Extract entry and check if it is a directory
             bool  is_dir = false;
@@ -367,27 +371,27 @@ private:
    //! Open a config directory (not a real directory)
    void openDir(const char* sub_directory)
    {
-      strcat(path, sub_directory);
-      strcat(path, "/");
+      path += sub_directory;
+      path += '/';
       cursor = 0;
    }
 
    //! Close a config directory (not a real directory)
    void closeDir()
    {
-      char* s = strrchr(path, '/');
-      if(s)
+      size_t pos = path.rfind('/');
+      if (pos != std::string::npos)
       {
-         *s = '\0';
+         path.resize(pos);
 
-         s = strrchr(path, '/');
-         if(s)
+         pos = path.rfind('/');
+         if (pos != std::string::npos)
          {
-            s[1] = '\0';
+            path.resize(pos + 1);
          }
          else
          {
-            path[0] = '\0';
+            path = "";
          }
 
          cursor = 0;
@@ -419,7 +423,7 @@ private:
 
          char story[FILENAME_MAX];
 
-         strcpy(story, path);
+         strcpy(story, path.c_str());
          strcat(story, selection);
 
          term->ioctl(Device::IOCTL_TERM_CURSOR, 1);
