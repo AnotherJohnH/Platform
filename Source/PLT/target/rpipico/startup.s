@@ -29,7 +29,7 @@
 .global vector_table
 
 vector_table:
-   .word  0x20010000        @ stack pointer (64k RAM)
+   .word  0x20040000        @ stack pointer (256k RAM)
    .word  VEC_reset+1
    .word  VEC_nmi+1
    .word  VEC_fault+1

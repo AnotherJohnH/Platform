@@ -20,8 +20,6 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/chip/LPC1114/SysCon.h"
-
 extern "C" {
 void platform_init();
 void platform_irq();
@@ -29,7 +27,6 @@ void platform_irq();
 
 void platform_init()
 {
-   MTL::SysCon().init();
 }
 
 void platform_irq()

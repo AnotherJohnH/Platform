@@ -33,7 +33,7 @@ set(PLT_asm_flags "-mcpu=cortex-m0")
 
 set(PLT_c_flags   "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY -mcpu=cortex-m0 -mthumb -mfloat-abi=soft -fno-common -fno-builtin -fmessage-length=0 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
 
-set(PLT_cxx_flags "-DNO_RTTI -std=c++11 -fno-rtti")
+set(PLT_cxx_flags "-DNO_RTTI -std=c++14 -fno-rtti")
 
 set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/PLT/target/${PLT_TARGET}/script.ld")
 
