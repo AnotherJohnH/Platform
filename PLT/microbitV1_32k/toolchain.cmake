@@ -1,16 +1,16 @@
 #-------------------------------------------------------------------------------
-`#'  Copyright (c) YEAR AUTHOR
-#
+#  Copyright (c) 2020 John D. Haughton
+# 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
 #  in the Software without restriction, including without limitation the rights
 #  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 #  copies of the Software, and to permit persons to whom the Software is
 #  furnished to do so, subject to the following conditions:
-#
+# 
 #  The above copyright notice and this permission notice shall be included in
 #  all copies or substantial portions of the Software.
-#
+# 
 #  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 #  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 #  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,16 +20,6 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-cmake_minimum_required(`VERSION' 3.19.1)
+set(PLT_RAM_SIZE 32k)
 
-project(APPLICATION
-        LANGUAGES CXX
-        `VERSION' VERSION)
-
-add_subdirectory(Platform)
-
-add_executable(BINARY Source/BINARY.cpp)
-
-target_link_libraries(BINARY PLT)
-
-install(TARGETS BINARY RUNTIME DESTINATION bin)
+include(${CMAKE_SOURCE_DIR}/Platform/PLT/microbit/toolchain.cmake)

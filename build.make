@@ -43,11 +43,19 @@ native:
 Emscripten:
 	Platform/BUILD.py Emscripten
 
-.PHONY: microbit_32k
-microbit_32k:
-	Platform/BUILD.py microbit_32k
+.PHONY: microbit
+microbit:
+	Platform/BUILD.py microbit
 
-.PHONY: microbit_V2
+.PHONY: microbitV1
+microbitV1:
+	Platform/BUILD.py microbitV1
+
+.PHONY: microbitV1_32k
+microbitV1_32k:
+	Platform/BUILD.py microbitV1_32k
+
+.PHONY: microbitV2
 microbitV2:
 	Platform/BUILD.py microbitV2
 
@@ -58,6 +66,14 @@ mbedLPC11U24:
 .PHONY: mbedLPC1768
 mbedLPC1768:
 	Platform/BUILD.py mbedLPC1768
+
+.PHONY: LPC810
+LPC810:
+	Platform/BUILD.py LPC810
+
+.PHONY: LPC1114
+LPC1114:
+	Platform/BUILD.py LPC1114
 
 .PHONY: rpipico
 rpipico:

@@ -20,58 +20,55 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.11.4)
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE Release)
+endif()
 
-project(PLT
-        LANGUAGES C CXX
-        VERSION 0.0.6)
-
-include(config.cmake)
-
-add_subdirectory(include)
-
-add_subdirectory(Source)
+set(CMAKE_CXX_STANDARD          14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 #-------------------------------------------------------------------------------
-# Build
+# Introspect to determine Platform project variables...
+#    PLT_TARGET
+#    PLT_MACHINE
+#    PLT_COMMIT
 
-add_library(PLT STATIC
-            $<TARGET_OBJECTS:plt_obj>
-            $<TARGET_OBJECTS:plt_obj_cpp_containers>
-            $<TARGET_OBJECTS:plt_target_obj>)
+if(NOT PLT_TARGET)
+   if(DEFINED ENV{PLT_TARGET})
+      set(PLT_TARGET ${ENV{PLAT_TARGET})
+   else()
+      set(PLT_TARGET native)
+   endif()
+endif()
 
-target_link_libraries(PLT PUBLIC plt_target_obj)
+if(${PLT_TARGET} STREQUAL native)
 
-#-------------------------------------------------------------------------------
-# Unit testing
+   set(PLT_TARGET  ${CMAKE_HOST_SYSTEM_NAME})
+   set(PLT_MACHINE ${CMAKE_HOST_SYSTEM_PROCESSOR})
 
-set(BUILD_GMOCK   OFF)
-set(INSTALL_GTEST OFF)
-add_subdirectory(googletest)
-
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
-
-   include(CTest)
-
-   add_subdirectory(Source/STB)
-   add_subdirectory(Source/GUI)
-   add_subdirectory(Source/SND)
-   add_subdirectory(Source/TRM)
-   add_subdirectory(Source/PLT/test)
-   add_subdirectory(Source/MTL)
-
-#-------------------------------------------------------------------------------
-# Installation
-
-   install(TARGETS PLT ARCHIVE DESTINATION lib)
-
-#-------------------------------------------------------------------------------
-# Packaging
-
-   set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
-   set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
-   set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
-
-   include(CPack)
+   if(${PLT_TARGET} STREQUAL Darwin)
+      set(PLT_TARGET macOS)
+   endif()
 
 endif()
+
+# Determine current git commit
+execute_process(COMMAND git log --pretty=format:%H -n 1
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                OUTPUT_VARIABLE PLT_COMMIT)
+
+message("--------------------------------------------------------------------------------")
+message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
+message("PLT_COMMIT       = ${PLT_COMMIT}")
+message("PLT_TARGET       = ${PLT_TARGET}")
+message("PLT_MACHINE      = ${PLT_MACHINE}")
+message("--------------------------------------------------------------------------------")
+
+#-------------------------------------------------------------------------------
+
+set(CMAKE_ASM_FLAGS_DEBUG   "")
+set(CMAKE_ASM_FLAGS_RELEASE "")
+
+#-------------------------------------------------------------------------------
+
+add_subdirectory(PLT)
