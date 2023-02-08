@@ -51,6 +51,7 @@ if(${PLT_TARGET} STREQUAL native)
    endif()
 
    add_subdirectory(STB)
+   add_subdirectory(GUI)
 
 else()
 
