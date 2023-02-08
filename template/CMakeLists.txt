@@ -30,6 +30,6 @@ add_subdirectory(Platform)
 
 add_executable(BINARY Source/BINARY.cpp)
 
-target_link_libraries(BINARY PLT)
+target_link_libraries(BINARY STB PLT)
 
 install(TARGETS BINARY RUNTIME DESTINATION bin)

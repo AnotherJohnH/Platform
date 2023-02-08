@@ -163,7 +163,7 @@ private:
    void returnInt(signed value)
    {
       char temp[32];
-      sprintf(temp, "%d", value);
+      snprintf(temp, sizeof(temp), "%d", value);
       returnString(temp);
    }
 
