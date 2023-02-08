@@ -20,9 +20,11 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-add_subdirectory(${PLT_TARGET})
+add_library(STB STATIC
+            Deflate.cpp
+            MidiDecoder.cpp
+            Oil.cpp
+            Option.cpp
+            Zlib.cpp)
 
-target_compile_definitions(PLT PUBLIC PLT_VERSION="${PROJECT_VERSION}")
-target_compile_definitions(PLT PUBLIC PLT_COMMIT="${PLT_COMMIT}")
-
-target_include_directories(PLT PUBLIC ${PLT_TARGET} ..)
+target_include_directories(STB PUBLIC ..)

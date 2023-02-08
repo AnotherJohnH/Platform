@@ -50,6 +50,12 @@ if(${PLT_TARGET} STREQUAL native)
       set(PLT_TARGET macOS)
    endif()
 
+   add_subdirectory(STB)
+
+else()
+
+   add_subdirectory(tinyc)
+
 endif()
 
 # Determine current git commit

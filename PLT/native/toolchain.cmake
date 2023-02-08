@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2023 John D. Haughton
+#  Copyright (c) 2019 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -20,9 +20,7 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-add_subdirectory(${PLT_TARGET})
+# cmake configuration for macOS
 
-target_compile_definitions(PLT PUBLIC PLT_VERSION="${PROJECT_VERSION}")
-target_compile_definitions(PLT PUBLIC PLT_COMMIT="${PLT_COMMIT}")
-
-target_include_directories(PLT PUBLIC ${PLT_TARGET} ..)
+set(CMAKE_CXX_STANDARD          14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
