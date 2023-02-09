@@ -57,7 +57,7 @@ set(CMAKE_SIZE                ${PLT_PREFIX}size)
 set(CMAKE_C_LINK_EXECUTABLE
     "${PLT_PREFIX}ld ${PLT_LD_FLAGS} <OBJECTS> -o <TARGET>.elf <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O binary <TARGET>.elf <TARGET>.bin; \
-     ${CMAKE_SOURCE_DIR}/Platform/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>.elf; \
+     ${CMAKE_SOURCE_DIR}/Platform/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>.elf; \
      ${CMAKE_SIZE} <TARGET>.elf")
 
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
