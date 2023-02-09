@@ -22,7 +22,7 @@ cd MyProject
 git init .
 git submodule add https://github.com/AnotherJohnH/Platform.git
 cd Platform
-./INSTALL_TEMPLATE
+make template
 
 Project dir [/Users/fred/MyProjects/Foo] : <project root directory>
 Copyright owner [John D. Haughton] : <copyright owner>
