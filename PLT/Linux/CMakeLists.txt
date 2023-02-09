@@ -45,4 +45,3 @@ target_include_directories(PLT
                            PRIVATE ${SDL2_INCLUDE_DIRS})
 
 target_link_libraries(PLT PUBLIC SDL2 pthread)
-

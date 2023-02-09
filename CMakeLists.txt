@@ -55,7 +55,7 @@ if(${PLT_TARGET} STREQUAL native)
 
 else()
 
-   add_subdirectory(tinyc)
+   add_subdirectory(TNY)
 
 endif()
 

@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2023 John D. Haughton
+#  Copyright (c) 2022 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -20,23 +20,53 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-add_library(PLT STATIC
-    startup_${PLT_RAM_SIZE}.s
-    Leds.cpp
-    platform_clock.cpp
-    platform_shutdown.cpp
-    ../Stub/Audio.cpp
-    ../Stub/Event.cpp
-    ../Stub/Frame.cpp
-    ../Stub/Image.cpp
-    ../Stub/Bitmap.cpp
-    ../Stub/Midi.cpp
-    ../Stub/Sounder.cpp
-    ../Stub/Yield.cpp
-    ../Stub/Info.cpp
-    ../Stub/File.cpp)
+add_library(TNY STATIC
+            abort.cpp
+            abs.cpp
+            atof.cpp
+            atoi.cpp
+            atol.cpp
+            atoll.cpp
+            clock.cpp
+            delete.cpp
+            exit.cpp
+            fprintf.cpp
+            getchar.cpp
+            global_obj.cpp
+            guard.c
+            isalpha.cpp
+            isdigit.cpp
+            isspace.cpp
+            malloc.cpp
+            memcpy.cpp
+            memmove.cpp
+            memset.cpp
+            printf.cpp
+            pure_virtual.cpp
+            putchar.cpp
+            puts.cpp
+            rand.cpp
+            sin.c
+            scanf.cpp
+            snprintf.cpp
+            sprintf.cpp
+            srand.cpp
+            strcat.cpp
+            strchr.cpp
+            strcmp.cpp
+            strcpy.cpp
+            strlen.cpp
+            strncmp.cpp
+            strncpy.cpp
+            strrchr.cpp
+            strtol.cpp
+            strtoll.cpp
+            strtoul.cpp
+            strtoull.cpp
+            time.cpp
+            tinyc_init.c
+            vfprintf.cpp
+            vsnprintf.cpp
+            vsprintf.cpp)
 
-execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=cortex-m3 -print-file-name=libgcc.a OUTPUT_VARIABLE gcc_lib)
-string(STRIP ${gcc_lib} gcc_lib)
-
-target_link_libraries(PLT PUBLIC ${gcc_lib} TNY)
+target_include_directories(TNY PUBLIC include)
