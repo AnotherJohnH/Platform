@@ -59,11 +59,11 @@ echo
 # install top-level files
 
 mkdir -p ${project_dir}
-for name  in `ls -A template`
+for name  in `ls -A scripts/template`
 do
    if [ ! -d $name  ]
    then
-      installFile template/$name  $project_dir $name
+      installFile scripts/template/$name  $project_dir $name
    fi
 done
 
@@ -71,7 +71,7 @@ done
 # Install a github action
 
 mkdir -p ${project_dir}/.github/workflows
-installFile template/.github/workflows/build_on_push.yml \
+installFile scripts/template/.github/workflows/build_on_push.yml \
             ${project_dir}/.github/workflows \
             build_on_push.yml
 
@@ -79,5 +79,5 @@ installFile template/.github/workflows/build_on_push.yml \
 # install a main source file
 
 mkdir -p ${project_dir}/Source
-installFile template/Source/${source} ${project_dir}/Source ${binary}.cpp
+installFile scripts/template/Source/${source} ${project_dir}/Source ${binary}.cpp
 echo

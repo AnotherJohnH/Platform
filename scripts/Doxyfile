@@ -111,7 +111,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = include
+INPUT                  = GUI MTL PHY PLT SND STB TNY TRM
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c *.cpp *.h
 RECURSIVE              = YES
