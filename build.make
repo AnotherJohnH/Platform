@@ -26,55 +26,55 @@ clean:
 
 .PHONY: debug
 debug:
-	Platform/BUILD.py -s -d native
+	Platform/scripts/build.py -s -d native
 
 .PHONY: spotless
 spotless:
-	Platform/BUILD.py -s $(targets)
+	Platform/scripts/build.py -s $(targets)
 
 #-------------------------------------------------------------------------------
 # Build rules for specific targets
 
 .PHONY: native
 native:
-	Platform/BUILD.py native
+	Platform/scripts/build.py native
 
 .PHONY: Emscripten
 Emscripten:
-	Platform/BUILD.py Emscripten
+	Platform/scripts/build.py Emscripten
 
 .PHONY: microbit
 microbit:
-	Platform/BUILD.py microbit
+	Platform/scripts/build.py microbit
 
 .PHONY: microbitV1
 microbitV1:
-	Platform/BUILD.py microbitV1
+	Platform/scripts/build.py microbitV1
 
 .PHONY: microbitV1_32k
 microbitV1_32k:
-	Platform/BUILD.py microbitV1_32k
+	Platform/scripts/build.py microbitV1_32k
 
 .PHONY: microbitV2
 microbitV2:
-	Platform/BUILD.py microbitV2
+	Platform/scripts/build.py microbitV2
 
 .PHONY: mbedLPC11U24
 mbedLPC11U24:
-	Platform/BUILD.py mbedLPC11U24
+	Platform/scripts/build.py mbedLPC11U24
 
 .PHONY: mbedLPC1768
 mbedLPC1768:
-	Platform/BUILD.py mbedLPC1768
+	Platform/scripts/build.py mbedLPC1768
 
 .PHONY: LPC810
 LPC810:
-	Platform/BUILD.py LPC810
+	Platform/scripts/build.py LPC810
 
 .PHONY: LPC1114
 LPC1114:
-	Platform/BUILD.py LPC1114
+	Platform/scripts/build.py LPC1114
 
 .PHONY: rpipico
 rpipico:
-	Platform/BUILD.py rpipico
+	Platform/scripts/build.py rpipico
