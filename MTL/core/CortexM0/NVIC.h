@@ -20,16 +20,13 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  Nvic.h
 //! \brief Access to Cortex-M0 NVIC
 
-#ifndef MTL_CORTEX_M0_NVIC_H
-#define MTL_CORTEX_M0_NVIC_H
+#pragma once
 
 #include "MTL/Periph.h"
 
 namespace MTL {
-
 
 union NvicReg
 {
@@ -40,18 +37,9 @@ union NvicReg
    REG_ARRAY(0x400, ipri, 8);
 };
 
-
 template <unsigned IRQ>
 class NVIC : public Periph<NvicReg,0xE000E000>
 {
-private:
-   static const unsigned BIT       = IRQ & 0x1F;
-   static const uint32_t BIT_MASK  = 1<<BIT;
-   static const unsigned INDEX     = IRQ / 32;
-   static const unsigned PRI_INDEX = IRQ / 4;
-   static const unsigned PRI_LSB   = (IRQ & 3) * 8;
-   static const unsigned PRI_MSB   = PRI_LSB + 7;
-
 public:
    //! Check if interrupt is enabled
    bool isEnabled() const
@@ -80,19 +68,24 @@ public:
    }
 
    //! Enable interrupt
-   void enable()     { reg->iser[INDEX] = BIT_MASK; }
+   void enable() { reg->iser[INDEX] = BIT_MASK; }
 
    //! Disable interrupt
-   void disable()    { reg->icer[INDEX] = BIT_MASK; }
+   void disable() { reg->icer[INDEX] = BIT_MASK; }
 
    //! Set interrupt pending
    void setPending() { reg->ispr[INDEX] = BIT_MASK; }
 
    //! Clear pending interrupt
    void clrPending() { reg->icpr[INDEX] = BIT_MASK; }
+
+private:
+   static const unsigned BIT       = IRQ & 0x1F;
+   static const uint32_t BIT_MASK  = 1<<BIT;
+   static const unsigned INDEX     = IRQ / 32;
+   static const unsigned PRI_INDEX = IRQ / 4;
+   static const unsigned PRI_LSB   = (IRQ & 3) * 8;
+   static const unsigned PRI_MSB   = PRI_LSB + 7;
 };
 
-
 } // namespace MTL
-
-#endif // CORTEX_M0_NVIC_H

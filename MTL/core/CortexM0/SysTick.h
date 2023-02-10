@@ -20,62 +20,62 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file SysTimer.h
-//! \brief Access to Cortex-M0 System Timer
+//! \brief Access Cortex-M0 system timer
 
 // NOTE: This private peripheral is optional
 
-#ifndef CORTEX_M0_SYS_TIMER_H
-#define CORTEX_M0_SYS_TIMER_H
+#pragma once
 
 #include "MTL/Periph.h"
 
-
 namespace MTL {
 
-union SysTimerReg
+//! Cortex-M0 system timer registers
+union SysTickReg
 {
-   REG(0x10, csr);    //!< Control and status
-   REG(0x14, rvr);    //!< Reload value
-   REG(0x18, cvr);    //!< Current value
-   REG(0x1C, calib);  //!< Calibrartion
+   REG(0x10, csr);   //!< Control and status
+   REG(0x14, rvr);   //!< Reload value
+   REG(0x18, cvr);   //!< Current value
+   REG(0x1C, calib); //!< Calibrartion
 };
 
-
-class SysTimer : public Periph<SysTimerReg,0xE000E000>
+//! Access Cortex-M0 system timer
+class SysTick : public Periph<SysTickReg,0xE000E000>
 {
-private:
-   static const uint32_t CSR_ENABLE     = 0;
-   static const uint32_t CSR_TICKINT    = 1;
-   static const uint32_t CSR_CLKSOURCE  = 2;
-   static const uint32_t CSR_COUNTFLAG  = 16;
-
 public:
-   SysTimer(unsigned period = 0)
+   //! Start the SysTick timer
+   //
+   //! \param period24 24-bit clock tick period 0 => 10 ms
+   SysTick(unsigned period = 0)
    {
+      // Select the core clock, not external reference, as clock source
+      reg->csr.setBit(CSR_CLKSOURCE);
+
+      // Enable SysTick interrupt
+      reg->csr.setBit(CSR_TICKINT);
+
       if (period == 0)
       {
-         period = reg->calib.getField(23, 0) / 10;
-
-         if ((period != 0) && (reg->calib.getBit(30) == 0))
-         {
-            period = period + 1;
-         }
+         // Read the TENMS calibration field
+         period = reg->calib.getField(23, 0) + 1;
       }
 
       if (period != 0)
       {
          setPeriod(period);
 
-         reg->csr.setBit(CSR_CLKSOURCE);
-         reg->csr.setBit(CSR_TICKINT);
-
          start();
       }
    }
 
+   //! Read current value
+   uint32_t() const { return reg->cvr; }
+
    //! Check if timer is running
    bool isRunning() const { return reg->csr.getBit(CSR_ENABLE); }
+
+   //! Check if timer had reached zero and has restarted
+   bool isReset() const { return reg->csr.getBit(CSR_COUNTFLAG); }
 
    //! Set the tick period
    //
@@ -87,19 +87,17 @@ public:
    }
 
    //! Start timer
-   void start()
-   {
-      reg->csr.setBit(CSR_ENABLE);
-   }
+   void start() { reg->csr.setBit(CSR_ENABLE); }
 
    //! Stop timer
-   void stop()
-   {
-      reg->csr.clrBit(CSR_ENABLE);
-   }
+   void stop() { reg->csr.clrBit(CSR_ENABLE); }
+
+private:
+   // CSR bit positions
+   static const unsigned CSR_ENABLE    = 0;
+   static const unsigned CSR_TICKINT   = 1;
+   static const unsigned CSR_CLKSOURCE = 2;
+   static const unsigned CSR_COUNTFLAG = 16;
 };
 
-
 } // namespace MTL
-
-#endif // CORTEX_M0_SYS_TIMER_H

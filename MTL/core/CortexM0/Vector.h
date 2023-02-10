@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  Vector.h
 //! \brief Declare Cortex-M0 vector entry points
 
-#ifndef MTL_CORTEX_M0_VECTOR_H
-#define MTL_CORTEX_M0_VECTOR_H
+#pragma once
 
 extern "C"
 {
@@ -34,5 +32,3 @@ extern "C"
    void VEC_pendSv();
    void VEC_sysTick();
 }
-
-#endif // MTL_CORTEX_M0_VECTOR_H
