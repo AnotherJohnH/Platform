@@ -69,7 +69,7 @@ public:
    }
 
    //! Read current value
-   uint32_t() const { return reg->cvr; }
+   operator uint32_t() const { return reg->cvr; }
 
    //! Check if timer is running
    bool isRunning() const { return reg->csr.getBit(CSR_ENABLE); }
