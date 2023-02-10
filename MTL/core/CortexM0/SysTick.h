@@ -22,7 +22,7 @@
 
 //! \brief Access Cortex-M0 system timer
 
-// NOTE: This private peripheral is optional
+// XXX: This private peripheral is optional
 
 #pragma once
 
@@ -36,36 +36,31 @@ union SysTickReg
    REG(0x10, csr);   //!< Control and status
    REG(0x14, rvr);   //!< Reload value
    REG(0x18, cvr);   //!< Current value
-   REG(0x1C, calib); //!< Calibrartion
+   REG(0x1C, calib); //!< Calibrartion (XXX optional)
 };
 
 //! Access Cortex-M0 system timer
 class SysTick : public Periph<SysTickReg,0xE000E000>
 {
 public:
-   //! Start the SysTick timer
-   //
-   //! \param period24 24-bit clock tick period 0 => 10 ms
-   SysTick(unsigned period = 0)
+   //! Initialize, vut not start, the SysTick timer
+   SysTick()
    {
       // Select the core clock, not external reference, as clock source
       reg->csr.setBit(CSR_CLKSOURCE);
 
       // Enable SysTick interrupt
       reg->csr.setBit(CSR_TICKINT);
+   }
 
-      if (period == 0)
-      {
-         // Read the TENMS calibration field
-         period = reg->calib.getField(23, 0) + 1;
-      }
-
-      if (period != 0)
-      {
-         setPeriod(period);
-
-         start();
-      }
+   //! Start the SysTick timer
+   //
+   //! \param period24 24-bit clock tick
+   SysTick(unsigned period)
+      : SysTick()
+   {
+      setPeriod(period);
+      start();
    }
 
    //! Read current value
@@ -83,14 +78,20 @@ public:
    void setPeriod(uint32_t ticks24)
    {
       reg->rvr = ticks24 - 1;
-      reg->cvr = 0;
    }
 
-   //! Start timer
-   void start() { reg->csr.setBit(CSR_ENABLE); }
+   //! Start tick timer
+   void start()
+   {
+      reg->cvr = 0;
+      reg->csr.setBit(CSR_ENABLE);
+   }
 
-   //! Stop timer
-   void stop() { reg->csr.clrBit(CSR_ENABLE); }
+   //! Stop tick timer
+   void stop()
+   {
+      reg->csr.clrBit(CSR_ENABLE);
+   }
 
 private:
    // CSR bit positions
