@@ -20,10 +20,10 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/core/CortexM0/SysTimer.h"
+#include "MTL/core/CortexM0/SysTick.h"
 
 
-static MTL::SysTimer     sys_timer;
+static MTL::SysTick      sys_tick;
 static volatile uint32_t ticks{0};
 
 
