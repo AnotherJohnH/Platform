@@ -54,6 +54,8 @@ if(${PLT_TARGET} STREQUAL native)
    add_subdirectory(GUI)
 
 else()
+   set(CMAKE_ASM_FLAGS_DEBUG   "")
+   set(CMAKE_ASM_FLAGS_RELEASE "")
 
    add_subdirectory(TNY)
    add_subdirectory(MTL)
@@ -71,11 +73,6 @@ message("PLT_COMMIT       = ${PLT_COMMIT}")
 message("PLT_TARGET       = ${PLT_TARGET}")
 message("PLT_MACHINE      = ${PLT_MACHINE}")
 message("--------------------------------------------------------------------------------")
-
-#-------------------------------------------------------------------------------
-
-set(CMAKE_ASM_FLAGS_DEBUG   "")
-set(CMAKE_ASM_FLAGS_RELEASE "")
 
 #-------------------------------------------------------------------------------
 

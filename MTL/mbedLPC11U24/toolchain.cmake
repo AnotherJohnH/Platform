@@ -37,7 +37,7 @@ set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
 
 set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS}")
 
-set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/Platform/PLT/${PLT_TARGET}/script.ld")
+set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/Platform/MTL/${PLT_TARGET}/script.ld")
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
@@ -68,3 +68,9 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
 # Prevent compiler sanity check when cross-compiling.
 set(CMAKE_TRY_COMPILE_TARGET_TYPE     STATIC_LIBRARY)
+
+#-------------------------------------------------------------------------------
+# Search for gcc intrinsics library
+
+execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=cortex-m0 -print-file-name=libgcc.a OUTPUT_VARIABLE MTL_GCC_LIB)
+string(STRIP ${MTL_GCC_LIB} MTL_GCC_LIB)

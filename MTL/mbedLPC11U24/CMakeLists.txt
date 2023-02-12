@@ -20,16 +20,13 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-add_library(MTL STATIC
-            MTL_init.cpp
-            MTL_main.cpp
-            MTL_halt.cpp
-            MTL_clock.cpp
-            MTL_putch.cpp
-            MTL_getch.cpp
-            MTL_PS2KeyDecode.cpp
-            PALVideo.cpp)
+target_sources(MTL PRIVATE
+               vector_table.s
+               metal.cpp)
 
-add_subdirectory(${PLT_TARGET})
+execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=cortex-m0 -print-file-name=libgcc.a OUTPUT_VARIABLE gcc_lib)
+string(STRIP ${gcc_lib} gcc_lib)
 
-target_include_directories(MTL PUBLIC ..)
+target_include_directories(MTL PUBLIC .)
+
+target_link_libraries(MTL PUBLIC ${gcc_lib} TNY)

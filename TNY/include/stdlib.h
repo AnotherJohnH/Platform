@@ -32,6 +32,9 @@ extern "C" {
 
 #define RAND_MAX 0xFFFFFF
 
+#define EXIT_SUCCESS 0
+#define EXIT_FAILURE 1
+
 extern void* malloc(size_t);
 extern void  free(void*);
 extern int   rand(void);
