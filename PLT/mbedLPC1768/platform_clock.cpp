@@ -29,7 +29,7 @@ static volatile uint32_t  ticks{0};
 
 extern "C" {
 
-uint32_t platform_ms_ticks() { return ticks; }
+uint32_t MTL_ms_ticks() { return ticks; }
 
 void sysTick() { ++ticks; }
 

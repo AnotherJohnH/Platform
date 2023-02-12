@@ -23,11 +23,7 @@
 //! \brief tiny C library implementation
 
 #include <time.h>
-#include <stdint.h>
 
-extern "C" uint32_t platform_ms_ticks(void);
+#include "MTL/MTL.h"
 
-clock_t clock(void)
-{
-   return platform_ms_ticks();
-}
+clock_t clock(void) { return MTL_ms_ticks(); }

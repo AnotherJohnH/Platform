@@ -20,19 +20,15 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+#include "MTL/MTL.h"
 #include "MTL/chip/LPC11U24/SysCon.h"
-
-extern "C" {
-void MTL_init();
-void MTL_halt();
-}
 
 void MTL_init()
 {
    MTL::SysCon().init();
 }
 
-void MTL_halt(unsigned status)
+void MTL_halt(uint32_t status)
 {
    while(true);
 }

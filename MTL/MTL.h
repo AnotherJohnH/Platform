@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2023 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,20 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/core/CortexM0/SysTick.h"
+//! \brief C API
 
+#pragma once
 
-static MTL::SysTick      sys_tick;
-static volatile uint32_t ticks{0};
+#include <stdint.h>
 
+extern "C"
+{
+   //! Intialise the platform
+   void MTL_init();
 
-extern "C" {
+   //! Halt platform
+   [[ noreturn ]] extern void MTL_halt(uint32_t status);
 
-uint32_t MTL_ms_ticks() { return ticks; }
-
-void sysTick() { ++ticks; }
-
+   //! Get current millisecond tick count
+   uint32_t MTL_ms_ticks();
 }

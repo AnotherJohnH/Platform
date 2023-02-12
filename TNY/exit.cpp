@@ -24,9 +24,7 @@
 
 #include <stdlib.h>
 
-extern "C" {
-[[ noreturn ]] extern void MTL_halt(unsigned);
-}
+#include "MTL/MTL.h"
 
 void exit(int status)
 {

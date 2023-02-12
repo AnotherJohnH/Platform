@@ -27,7 +27,6 @@ add_library(PLT STATIC
             ../Stub/Audio.cpp
             Event.cpp
             Frame.cpp
-            ../../MTL/PS2KeyDecode.cpp
             Image.cpp
             ../Stub/NullBitmap.cpp
             PALVideo.cpp
@@ -37,7 +36,6 @@ add_library(PLT STATIC
             ../Stub/Info.cpp
             ../Stub/File.cpp)
 
-    #Patform/Source/MTL/PS2KeyDecode.cpp
     #Platform/Source/PLT/Stub/NullBitmap.cpp
 
 

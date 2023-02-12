@@ -56,6 +56,7 @@ if(${PLT_TARGET} STREQUAL native)
 else()
 
    add_subdirectory(TNY)
+   add_subdirectory(MTL)
 
 endif()
 

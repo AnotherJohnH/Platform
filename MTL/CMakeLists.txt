@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2022 John D. Haughton
+#  Copyright (c) 2023 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -20,55 +20,8 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-add_library(TNY STATIC
-            abort.cpp
-            abs.cpp
-            atof.cpp
-            atoi.cpp
-            atol.cpp
-            atoll.cpp
-            clock.cpp
-            delete.cpp
-            exit.cpp
-            fprintf.cpp
-            getchar.cpp
-            global_obj.cpp
-            guard.c
-            isalpha.cpp
-            isdigit.cpp
-            isspace.cpp
-            malloc.cpp
-            memcpy.cpp
-            memmove.cpp
-            memset.cpp
-            printf.cpp
-            pure_virtual.cpp
-            putchar.cpp
-            puts.cpp
-            rand.cpp
-            sin.c
-            scanf.cpp
-            snprintf.cpp
-            sprintf.cpp
-            srand.cpp
-            strcat.cpp
-            strchr.cpp
-            strcmp.cpp
-            strcpy.cpp
-            strlen.cpp
-            strncmp.cpp
-            strncpy.cpp
-            strrchr.cpp
-            strtol.cpp
-            strtoll.cpp
-            strtoul.cpp
-            strtoull.cpp
-            time.cpp
-            tinyc_init.c
-            vfprintf.cpp
-            vsnprintf.cpp
-            vsprintf.cpp)
+add_library(MTL STATIC
+           PALVideo.cpp
+           PS2KeyDecode.cpp)
 
-target_include_directories(TNY PUBLIC include)
-
-target_link_libraries(TNY PRIVATE MTL)
+target_include_directories(MTL PUBLIC ..)
