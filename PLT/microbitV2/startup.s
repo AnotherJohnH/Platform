@@ -222,4 +222,4 @@ UARTE1_IRQ:
 PWM3_IRQ:
 SPIM3_IRQ:
 loop:
-    bl      MTL_fault
+    bl      MTL_halt

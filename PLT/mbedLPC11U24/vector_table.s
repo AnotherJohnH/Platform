@@ -132,7 +132,7 @@ VEC_reset:
 # Fall through to unhandled exception
 #
 VEC_fault:
-    bl   MTL_fault
+    bl   MTL_halt
 
 # Empty handlers
 VEC_nmi:

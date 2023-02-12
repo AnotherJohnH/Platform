@@ -24,7 +24,7 @@
 
 extern "C" {
 void MTL_init();
-void MTL_fault();
+void MTL_halt();
 }
 
 void MTL_init()
@@ -32,7 +32,7 @@ void MTL_init()
    MTL::SysCon().init();
 }
 
-void MTL_fault()
+void MTL_halt(unsigned status)
 {
    while(true);
 }

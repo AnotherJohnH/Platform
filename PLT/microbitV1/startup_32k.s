@@ -165,7 +165,7 @@ Swi_2_IRQ:
 Swi_3_IRQ:
 Swi_4_IRQ:
 Swi_5_IRQ:
-    bl      MTL_fault
+    bl      MTL_halt
 
 .align 2
 ramon:

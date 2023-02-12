@@ -25,19 +25,10 @@
 #include <stdlib.h>
 
 extern "C" {
-[[ noreturn ]] extern void platform_shutdown();
-[[ noreturn ]] extern void MTL_fault();
+[[ noreturn ]] extern void MTL_halt(unsigned);
 }
 
 void exit(int status)
 {
-   if (status == 0)
-   {
-      platform_shutdown();
-   }
-   else
-   {
-      MTL_fault();
-   }
+   MTL_halt(status);
 }
-

@@ -25,7 +25,7 @@
 
 extern "C" {
 void MTL_init();
-void MTL_fault();
+void MTL_halt();
 void platform_shutdown();
 }
 
@@ -41,7 +41,7 @@ void platform_shutdown()
    while(true);
 }
 
-void MTL_fault()
+void MTL_halt()
 {
    MTL::Digital::Out<MTL::PIN_LED4> led{true};
 

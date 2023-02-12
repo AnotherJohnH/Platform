@@ -191,5 +191,5 @@ irqQuadEnc:
 irqPLL1:
 irqUSBAct:
 irqCANAct:
-    ldr     r0,=MTL_fault
+    ldr     r0,=MTL_halt
     bx      r0
