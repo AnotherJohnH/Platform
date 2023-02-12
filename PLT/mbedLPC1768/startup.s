@@ -132,15 +132,15 @@ vector_table:
 
 VEC_reset:
 #
-    bl      platform_init 
+    bl      MTL_init 
 #
 # Initialise C/C++ runtime
 #
-    bl      tinyc_init
+    bl      TNY_init
 #
 # Call application entry point
 #
-    bl      mtlMain
+    bl      MTL_main
     bl      exit
 #
 # unhandled exceptions
@@ -191,5 +191,5 @@ irqQuadEnc:
 irqPLL1:
 irqUSBAct:
 irqCANAct:
-    ldr     r0,=platform_fault
+    ldr     r0,=MTL_fault
     bx      r0

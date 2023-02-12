@@ -21,9 +21,9 @@
 //------------------------------------------------------------------------------
 
 extern "C" {
-void platform_init();
+void MTL_init();
 }
 
-void platform_init()
+void MTL_init()
 {
 }

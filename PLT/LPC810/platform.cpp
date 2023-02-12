@@ -23,10 +23,10 @@
 #include "MTL/chip/LPC810/SysCon.h"
 
 extern "C" {
-void platform_init();
+void MTL_init();
 }
 
-void platform_init()
+void MTL_init()
 {
    MTL::SysCon().init();
 }

@@ -25,7 +25,7 @@
 #include <stdint.h>
 #include <string.h>
 
-void tinyc_init()
+void TNY_init()
 {
    // Initialise data section
    extern uint8_t __etext;

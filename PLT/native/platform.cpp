@@ -64,7 +64,7 @@ private:
              launch_application = false;
 
              // Start the metal application
-             std::thread thread{mtlMain};
+             std::thread thread{MTL_main};
              thread.detach();
          }
          redraw();

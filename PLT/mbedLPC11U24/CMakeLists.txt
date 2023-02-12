@@ -21,8 +21,8 @@
 #-------------------------------------------------------------------------------
 
 add_library(PLT STATIC
-            startup.s
-            platform.cpp
+            vector_table.s
+            metal.cpp
             ../Stub/Audio.cpp
             ../Stub/Event.cpp
             ../Stub/Frame.cpp

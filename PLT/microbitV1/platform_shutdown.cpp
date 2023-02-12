@@ -32,7 +32,7 @@ void platform_shutdown()
    while(true);
 }
 
-void platform_fault()
+void MTL_fault()
 {
    MTL::Digital::Out<MTL::PIN_LED_COL1> led_gnd(false);
    MTL::Digital::Out<MTL::PIN_LED_ROW3> led{true};

@@ -74,15 +74,15 @@ vector_table:
 
 VEC_reset:
 #
-    bl      platform_init
+    bl      MTL_init
 #
 # Initialise C/C++ runtime
 #
-    bl      tinyc_init
+    bl      TNY_init
 #
 # Call application entry point
 #
-    bl      mtlMain
+    bl      MTL_main
 #
 # Fall through to unhandled exception
 #

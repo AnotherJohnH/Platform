@@ -62,11 +62,11 @@ reset:
 #
 # Initialise C/C++ runtime
 #
-    rcall   tinyc_init
+    rcall   TNY_init
 #
 # Call application entry point
 #
-    rcall   mtlMain
+    rcall   MTL_main
 
 irq:
 loop:

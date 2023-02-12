@@ -20,13 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file USART.h
 // \brief NXP LPC11U24 USART
 //
 // Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
 
-#ifndef LPC11U24_USART_H
-#define LPC11U24_USART_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -77,7 +75,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // LPC11U24_USART_H

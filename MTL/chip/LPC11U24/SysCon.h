@@ -20,18 +20,13 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file SysCon.h
 // \brief NXP LPC11U24 System Controller
 //
 // Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
 
-
-#ifndef LPC11U24_SYS_CON_H
-#define LPC11U24_SYS_CON_H
-
+#pragma once
 
 #include "MTL/Periph.h"
-
 
 namespace MTL {
 
@@ -67,7 +62,6 @@ union SysConReg
 
    REG(0x238, pdruncfg);
 };
-
 
 class SysCon : public Periph<SysConReg,0x40048000>
 {
@@ -123,7 +117,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // LPC11U24_SYS_CON_H

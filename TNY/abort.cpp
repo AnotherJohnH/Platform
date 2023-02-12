@@ -25,10 +25,10 @@
 #include <stdlib.h>
 
 extern "C" {
-[[ noreturn ]] extern void platform_fault(void);
+[[ noreturn ]] extern void MTL_fault(void);
 }
 
 void abort(void)
 {
-   platform_fault();
+   MTL_fault();
 }

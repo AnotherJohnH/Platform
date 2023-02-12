@@ -20,9 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-extern "C" { int mtlMain() __attribute__((weak)); }
+extern "C" { int MTL_main() __attribute__((weak)); }
 
-int mtlMain()
+int MTL_main()
 {
    extern int main(int, const char*[]);
 

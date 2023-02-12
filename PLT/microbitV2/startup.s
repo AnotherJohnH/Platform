@@ -155,12 +155,12 @@ VEC_reset:
 #
 # Initialise C/C++ runtime and platform
 #
-    bl      tinyc_init
-    bl      platform_init
+    bl      TNY_init
+    bl      MTL_init
 #
 # Call application entry point
 #
-    bl      mtlMain
+    bl      MTL_main
 #
     bl      platform_shutdown
 
@@ -222,4 +222,4 @@ UARTE1_IRQ:
 PWM3_IRQ:
 SPIM3_IRQ:
 loop:
-    bl      platform_fault
+    bl      MTL_fault

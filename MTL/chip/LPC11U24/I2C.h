@@ -20,13 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file I2C.h
 // \brief NXP LPC11U24 I2C Bus Controller
 //
 // Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
 
-#ifndef LPC11U24_I2C_H
-#define LPC11U24_I2C_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -55,7 +53,6 @@ union I2CReg
    REG(0x03C, mask3);
 };
 
-
 class I2C : public Periph<I2CReg,0x40000000>
 {
 public:
@@ -76,7 +73,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // LPC11U24_I2C_H

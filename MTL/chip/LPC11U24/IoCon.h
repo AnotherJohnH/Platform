@@ -20,25 +20,20 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file IoCon.h
 // \brief NXP LPC11U24 I/O Controller
 //
 // Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
 
-#ifndef LPC11U24_IO_CON_H
-#define LPC11U24_IO_CON_H
+#pragma once
 
 #include "MTL/Periph.h"
 
-
 namespace MTL {
-
 
 union IoConReg
 {
    REG_ARRAY(0x000, pio, 56);
 };
-
 
 class IoCon : public Periph<IoConReg,0x40044000>
 {
@@ -79,7 +74,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // LPC11U24_IO_CON_H

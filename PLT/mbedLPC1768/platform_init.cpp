@@ -24,12 +24,12 @@
 #include "MTL/Digital.h"
 
 extern "C" {
-void platform_init();
-void platform_fault();
+void MTL_init();
+void MTL_fault();
 void platform_shutdown();
 }
 
-void platform_init()
+void MTL_init()
 {
    MTL::SysCon().init();
 }
@@ -41,7 +41,7 @@ void platform_shutdown()
    while(true);
 }
 
-void platform_fault()
+void MTL_fault()
 {
    MTL::Digital::Out<MTL::PIN_LED4> led{true};
 

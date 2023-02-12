@@ -119,11 +119,11 @@ VEC_reset:
 #
 # Initialise C/C++ runtime
 #
-    bl      tinyc_init
+    bl      TNY_init
 #
 # Call application entry point
 #
-    bl      mtlMain
+    bl      MTL_main
 #
     bl      platform_shutdown
 
@@ -161,7 +161,7 @@ Swi_2_IRQ:
 Swi_3_IRQ:
 Swi_4_IRQ:
 Swi_5_IRQ:
-    bl      platform_fault
+    bl      MTL_fault
 
 .align 2
 ramon:

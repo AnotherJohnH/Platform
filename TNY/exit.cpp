@@ -26,7 +26,7 @@
 
 extern "C" {
 [[ noreturn ]] extern void platform_shutdown();
-[[ noreturn ]] extern void platform_fault();
+[[ noreturn ]] extern void MTL_fault();
 }
 
 void exit(int status)
@@ -37,7 +37,7 @@ void exit(int status)
    }
    else
    {
-      platform_fault();
+      MTL_fault();
    }
 }
 

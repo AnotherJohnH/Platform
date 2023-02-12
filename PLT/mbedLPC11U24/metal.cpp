@@ -23,16 +23,16 @@
 #include "MTL/chip/LPC11U24/SysCon.h"
 
 extern "C" {
-void platform_init();
-void platform_fault();
+void MTL_init();
+void MTL_fault();
 }
 
-void platform_init()
+void MTL_init()
 {
    MTL::SysCon().init();
 }
 
-void platform_fault()
+void MTL_fault()
 {
    while(true);
 }

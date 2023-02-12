@@ -20,16 +20,13 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Pins.h
 //! \brief mbed LP11U24 module pins
 //
 //! Data source mbed.org
 
-#ifndef MBED_LPC11U24_PINS_H
-#define MBED_LPC11U24_PINS_H
+#pragma once
 
 #include "MTL/chip/LPC11U24/Pins.h"
-
 
 namespace MTL {
 
@@ -71,5 +68,3 @@ static const unsigned  PIN_LED3  = PIN_1_10;
 static const unsigned  PIN_LED4  = PIN_1_11;
 
 } // namespace MTL
-
-#endif // MBED_LPC11U24_PINS_H

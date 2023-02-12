@@ -25,7 +25,7 @@
 
 extern "C" {
 
-void platform_init()
+void MTL_init()
 {
    MTL::nRF52::Clock().startHFXO();
 

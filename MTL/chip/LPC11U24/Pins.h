@@ -20,14 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file Pins.h
 // \brief NXP LPC11U24 pins
 //
 // Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
 
-#ifndef LPC11U24_PINS_H
-#define LPC11U24_PINS_H
-
+#pragma once
 
 namespace MTL {
 
@@ -91,5 +88,3 @@ static const unsigned  PIN_1_28  = 0x3C;
 static const unsigned  PIN_1_29  = 0x3D;
 
 } // namespace MTL
-
-#endif // LPC11U24_PINS_H

@@ -26,6 +26,6 @@
 #ifndef MTL_METAL_H
 #define MTL_METAL_H
 
-extern "C" { int mtlMain(); }
+extern "C" { int MTL_main(); }
 
 #endif // MTL_METAL_H
