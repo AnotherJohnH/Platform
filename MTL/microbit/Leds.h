@@ -20,10 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef MTL_MICROBIT_LEDS_H
-#define MTL_MICROBIT_LEDS_H
+#pragma once
 
-#include "MTL/Metal.h"
+#include "MTL/MTL.h"
 #include "MTL/Pins.h"
 #include "MTL/nRF51/Gpio.h"
 #include "MTL/nRF51/Timer.h"
@@ -114,5 +113,3 @@ public:
 };
 
 } // namespace MTL
-
-#endif

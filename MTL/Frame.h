@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  Frame.h
 //! \brief
 
-#ifndef MTL_FRAME_H
-#define MTL_FRAME_H
+#pragma once
 
 #include <stdint.h>
 #include <cstdlib>
@@ -311,5 +309,3 @@ class Frame4BPP : public Frame<WIDTH,HEIGHT,4,uint8_t,BYTE_SWAP>
 };
 
 } // namespace MTL
-
-#endif // MTL_FRAME_H

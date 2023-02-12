@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2020 John D. Haughton
+// Copyright (c) 2023 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-extern "C" { int MTL_main() __attribute__((weak)); }
+#include "MTL/MTL.h"
 
-int MTL_main()
+__attribute__((weak))
+void MTL_putch(uint8_t ch)
 {
-   extern int main(int, const char*[]);
-
-   const char* argv[1] = {"metal"};
-
-   return main(1, argv);
 }

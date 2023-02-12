@@ -20,12 +20,14 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  Metal.h
-//! \brief 
+#include "MTL/MTL.h"
 
-#ifndef MTL_METAL_H
-#define MTL_METAL_H
+__attribute__((weak))
+int MTL_main()
+{
+   extern int main(int, const char*[]);
 
-extern "C" { int MTL_main(); }
+   const char* argv[1] = {"metal"};
 
-#endif // MTL_METAL_H
+   return main(1, argv);
+}

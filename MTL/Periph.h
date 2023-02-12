@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  Periph.h
 //! \brief Memory mapped peripheral helper
 
-#ifndef MTL_PERIPH_H
-#define MTL_PERIPH_H
+#pragma once
 
 #include <cstdint>
 
@@ -59,5 +57,3 @@ public:
 };
 
 } // namespace MTL
-
-#endif // MTL_PERIPH_H

@@ -31,9 +31,18 @@ extern "C"
    //! Intialise the platform
    void MTL_init();
 
+   //! Application entry point
+   int MTL_main();
+
    //! Halt platform
-   [[ noreturn ]] extern void MTL_halt(uint32_t status);
+   [[ noreturn ]] extern void MTL_halt(int status);
 
    //! Get current millisecond tick count
-   uint32_t MTL_ms_ticks();
+   uint32_t MTL_clock();
+
+   //! Send character to console
+   void MTL_putch(uint8_t ch);
+
+   //! Get character from the console
+   int MTL_getch();
 }

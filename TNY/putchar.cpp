@@ -24,7 +24,10 @@
 
 #include <stdio.h>
 
+#include "MTL/MTL.h"
+
 int putchar(int ch)
 {
+   MTL_putch(uint8_t(ch));
    return 0;
 }

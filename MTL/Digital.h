@@ -20,13 +20,10 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  Digital.h
 //! \brief Low level digital I/O
 
-#ifndef MTL_DIGITAL_H
-#define MTL_DIGITAL_H
+#pragma once
 
-#include "MTL/Metal.h"
 #include "MTL/Pins.h"
 #include "MTL/Gpio.h"
 
@@ -88,5 +85,3 @@ private:
 } // namespace Digital
 
 } // namespace MTL
-
-#endif // MTL_DIGITAL_H

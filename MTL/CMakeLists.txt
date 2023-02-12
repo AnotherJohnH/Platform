@@ -21,7 +21,13 @@
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
-           PALVideo.cpp
-           PS2KeyDecode.cpp)
+            MTL_init.cpp
+            MTL_main.cpp
+            MTL_halt.cpp
+            MTL_clock.cpp
+            MTL_putch.cpp
+            MTL_getch.cpp
+            MTL_PS2KeyDecode.cpp
+            PALVideo.cpp)
 
 target_include_directories(MTL PUBLIC ..)

@@ -21,9 +21,8 @@
 //------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
-#include "MTL/chip/LPC11U24/SysCon.h"
 
+__attribute__((weak))
 void MTL_init()
 {
-   MTL::SysCon().init();
 }

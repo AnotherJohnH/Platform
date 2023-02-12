@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  Register.h
 //! \brief Memory mapped register helper
 
-#ifndef MTL_REGISTER_H
-#define MTL_REGISTER_H
+#pragma once
 
 //! Bare metal layer
 namespace MTL {
@@ -110,5 +108,3 @@ private:
 };
 
 } // namespace MTL
-
-#endif

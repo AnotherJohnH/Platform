@@ -21,9 +21,9 @@
 //------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
-#include "MTL/chip/LPC11U24/SysCon.h"
 
-void MTL_init()
+__attribute__((weak))
+uint32_t MTL_clock()
 {
-   MTL::SysCon().init();
+   return 0;
 }

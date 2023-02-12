@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef MTL_PS2_KEYBOARD_H
-#define MTL_PS2_KEYBOARD_H
+#pragma once
 
 #include "MTL/PS2KeyDecode.h"
 
@@ -54,5 +53,3 @@ public:
 };
 
 } // namespace MTL
-
-#endif

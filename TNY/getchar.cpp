@@ -24,7 +24,9 @@
 
 #include <stdio.h>
 
+#include "MTL/MTL.h"
+
 int getchar()
 {
-   return -1;
+   return MTL_getch();;
 }

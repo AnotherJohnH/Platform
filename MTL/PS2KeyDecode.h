@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  PS2KeyDecode.h
 //! \brief Convert PS2 scan codes to ASCII
 
-#ifndef MTL_PS2KEYDECODE_H
-#define MTL_PS2KEYDECODE_H
+#pragma once
 
 #include <cstdint>
 
@@ -67,5 +65,3 @@ private:
 };
 
 } // namespace MTL
-
-#endif // MTL_PS2KEYDECODE_H

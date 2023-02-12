@@ -26,4 +26,4 @@
 
 #include "MTL/MTL.h"
 
-clock_t clock(void) { return MTL_ms_ticks(); }
+clock_t clock(void) { return MTL_clock(); }
