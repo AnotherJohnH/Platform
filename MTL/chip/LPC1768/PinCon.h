@@ -20,20 +20,16 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file PinCon.h
 // \brief NXP LPC1768 pin connection peripheral
 //
 // Data source NXP document "LPC17xx User Manual UM10360"
 
-#ifndef LPC1768_PIN_CON_H
-#define LPC1768_PIN_CON_H
+#pragma once
 
 #include "MTL/Periph.h"
 #include "MTL/Pins.h"
 
-
 namespace MTL {
-
 
 union PinConReg
 {
@@ -42,7 +38,6 @@ union PinConReg
    REG_ARRAY(0x068, pinmode_od,  5);
    REG(      0x07C, i2cpadcfg);
 };
-
 
 class PinCon : public Periph<PinConReg,0x4002C000>
 {
@@ -65,7 +60,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // LPC1768_PIN_CON_H

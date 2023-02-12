@@ -20,13 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file PWM.h
 // \brief NXP LPC1768 Pulse Width Modulator
 //
 // Data source NXP document "LPC17xx User Manual UM10360"
 
-#ifndef LPC1768_PWM_H
-#define LPC1768_PWM_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -36,7 +34,6 @@
 #include "PinCon.h"
 
 namespace MTL {
-
 
 union PWMReg
 {
@@ -62,7 +59,6 @@ union PWMReg
    REG(0x50, ler);
    REG(0x70, ctcr);
 };
-
 
 class PWM : public Periph<PWMReg,0x40018000>
 {
@@ -160,7 +156,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // LPC1768_PWM_H

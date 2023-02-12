@@ -20,13 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file I2S.h
 // \brief NXP LPC1768 I2S
 //
 // Data source NXP document "LPC17xx User Manual UM10360"
 
-#ifndef LPC1768_I2S_H
-#define LPC1768_I2S_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -35,9 +33,7 @@
 
 #include <cassert>
 
-
 namespace MTL {
-
 
 union I2SReg
 {
@@ -55,7 +51,6 @@ union I2SReg
    REG(0x030, i2stxmode);
    REG(0x034, i2srxmode);
 };
-
 
 class I2S : public Periph<I2SReg,0x400A8000>
 {
@@ -177,7 +172,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // LPC1768_I2S_H

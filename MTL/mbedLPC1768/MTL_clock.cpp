@@ -1,5 +1,5 @@
-/*------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+//------------------------------------------------------------------------------
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,37 +18,18 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//----------------------------------------------------------------------------*/
-
-#include <cstdint>
+//------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
 
-extern uint8_t __etext[];
-extern uint8_t __data_start__[];
-extern uint8_t __data_end__;
-extern uint8_t __bss_start__[];
-extern uint8_t __bss_end__;
-extern void    (*__init_array_start)();
-extern void    (*__init_array_end)();
+#include "MTL/CortexM3/SysTimer.h"
 
-void MTL_load()
+static MTL::SysTimer     sys_timer;
+static volatile uint32_t ticks{0};
+
+uint32_t MTL_clock() { return ticks; }
+
+void VEC_sysTick()
 {
-   // Initialise data section
-   for(signed i = 0; i < &__data_end__ - &__data_start__[0]; ++i)
-   {
-      __data_start__[i] = __etext[i];
-   }
-
-   // Clear BSS
-   for(signed i = 0; i < &__bss_end__ - &__bss_start__[0]; ++i)
-   {
-      __bss_start__[i] = 0;
-   }
-
-   // Call global constructors
-   for(void (**func)() = &__init_array_start; func < &__init_array_end; ++func)
-   {
-      (**func)();
-   }
+   ++ticks;
 }

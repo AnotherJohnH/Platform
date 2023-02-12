@@ -20,23 +20,19 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file Gpio.h
 // \brief NXP LPC1768 General Purpose I/O
 //
 // Data source NXP document "LPC17xx User Manual UM10360"
 
-#ifndef LPC1768_GPIO_H
-#define LPC1768_GPIO_H
+#pragma once
 
 #include "MTL/Periph.h"
 
 #include "PinCon.h"
 
-
 namespace MTL {
 
 namespace Gpio {
-
 
 struct Reg
 {
@@ -51,7 +47,6 @@ struct Reg
 
    } fio[5];
 };
-
 
 template <unsigned WIDTH, unsigned PIN>
 class Out : public Periph<Reg,0x2009C000>
@@ -95,7 +90,6 @@ private:
    static const uint32_t DATA_MASK = (1<<WIDTH) - 1;
 };
 
-
 template <unsigned WIDTH, unsigned PIN>
 class In : public Periph<Reg,0x2009C000>
 {
@@ -121,9 +115,6 @@ private:
    static const unsigned MSB       = LSB + WIDTH - 1;
 };
 
-
 } // namespace Gpio
 
 } // namespace MTL
-
-#endif // LPC1768_GPIO_H

@@ -20,18 +20,15 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file RAM.h
 // \brief NXP LPC1768 Additional RAM
 //
 // Data source NXP document "LPC17xx User Manual UM10360"
 
-#ifndef LPC1768_RAM_H
-#define LPC1768_RAM_H
+#pragma once
 
 #include <cstddef>
 
 #include "MTL/Periph.h"
-
 
 namespace MTL {
 
@@ -39,11 +36,7 @@ class RAM : public Periph<uint8_t,0x2007C000>
 {
 public:
    uint8_t* data() const { return (uint8_t*)reg; }
-
-   size_t size() const { return 32 * 1024; }
+   size_t   size() const { return 32 * 1024; }
 };
 
-
 } // namespace MTL
-
-#endif // LPC1768_RAM_H

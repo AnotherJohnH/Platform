@@ -20,14 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file Pins.h
 // \brief NXP LPC1768 pins
 //
 // Data source NXP document "LPC17xx User Manual UM10360"
 
-#ifndef LPC1768_PINS_H
-#define LPC1768_PINS_H
-
+#pragma once
 
 namespace MTL {
 
@@ -131,5 +128,3 @@ static const unsigned  PIN_2_30  = 0x5E;
 static const unsigned  PIN_2_31  = 0x5F;
 
 } // namespace MTL
-
-#endif // LPC1768_PINS_H

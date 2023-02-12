@@ -20,14 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file SysTimer.h
 //! \brief Access to Cortex-M3 System Timer
 
-#ifndef CORTEX_M3_SYS_TIMER_H
-#define CORTEX_M3_SYS_TIMER_H
+#pragma once
 
 #include "MTL/Periph.h"
-
 
 namespace MTL {
 
@@ -38,7 +35,6 @@ union SysTimerReg
    REG(0x18, cvr);    //!< Current value
    REG(0x1C, calib);  //!< Calibrartion
 };
-
 
 class SysTimer : public Periph<SysTimerReg,0xE000E000>
 {
@@ -97,7 +93,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // CORTEX_M3_SYS_TIMER_H

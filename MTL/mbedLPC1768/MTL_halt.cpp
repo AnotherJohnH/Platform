@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2013 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,18 +20,12 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/core/CortexM3/SysTimer.h"
+#include "MTL/MTL.h"
+#include "MTL/Digital.h"
 
+void MTL_halt(uint32_t status)
+{
+   MTL::Digital::Out<MTL::PIN_LED4> led{true};
 
-static MTL::SysTimer sys_timer;
-static volatile uint32_t  ticks{0};
-
-
-extern "C" {
-
-uint32_t MTL_ms_ticks() { return ticks; }
-
-void sysTick() { ++ticks; }
-
+   while(true);
 }
-

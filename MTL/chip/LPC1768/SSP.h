@@ -20,13 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file SSP.h
 // \brief NXP LPC1768 Synchronous Serial Port
 //
 // Data source NXP document "LPC17xx User Manual UM10360"
 
-#ifndef LPC1768_SSP_H
-#define LPC1768_SSP_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -34,7 +32,6 @@
 #include "PinCon.h"
 
 namespace MTL {
-
 
 union SSPReg
 {
@@ -49,7 +46,6 @@ union SSPReg
    REG(0x020, icr);   //!< SSPICR interrupt clear
    REG(0x024, dmacr); //!< DMA control register
 };
-
 
 template <unsigned INDEX>
 class SSP : public Periph<SSPReg,INDEX == 0 ? 0x40088000
@@ -161,7 +157,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // LPC1768_SSP_H

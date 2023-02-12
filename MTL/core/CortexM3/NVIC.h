@@ -20,16 +20,13 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  NVIC.h
 //! \brief Access to Cortex-M3 NVIC
 
-#ifndef CORTEX_M3_NVIC_H
-#define CORTEX_M3_NVIC_H
+#pragma once
 
 #include "MTL/Periph.h"
 
 namespace MTL {
-
 
 union NvicReg
 {
@@ -42,7 +39,6 @@ union NvicReg
    REG_ARRAY(0x400, ipri, 8);
    REG(0xf00,       stir);
 };
-
 
 template <unsigned IRQ>
 class NVIC : public Periph<NvicReg,0xE000E000>
@@ -102,5 +98,3 @@ public:
 };
 
 } // namespace MTL
-
-#endif // CORTEX_M3_NVIC_H

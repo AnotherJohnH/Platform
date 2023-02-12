@@ -20,21 +20,16 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file GPDMA.h
 // \brief NXP LPC1768 General Purpose DMA
 //
 // Data source NXP document "LPC17xx User Manual UM10360"
 
-#ifndef LPC1768_GPDMA_H
-#define LPC1768_GPDMA_H
+#pragma once
 
 #include "MTL/Periph.h"
-
 #include "MTL/chip/LPC1768/SysCon.h"
 
-
 namespace MTL {
-
 
 class DMA
 {
@@ -99,7 +94,6 @@ public:
    }
 };
    
-
 union GPDMAReg
 {
    REG(0x000, int_stat);
@@ -126,7 +120,6 @@ union GPDMAReg
  
    REG_TYPE_ARRAY(0x100, Channel, chan, 8);
 };
-
 
 class GPDMA : public Periph<GPDMAReg,0x50004000>
 {
@@ -194,5 +187,3 @@ public:
 
 
 } // namespace MTL
-
-#endif // LPC1768_GPDMA_H

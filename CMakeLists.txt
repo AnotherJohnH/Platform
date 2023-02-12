@@ -51,7 +51,6 @@ if(${PLT_TARGET} STREQUAL native)
    endif()
 
    add_subdirectory(STB)
-   add_subdirectory(GUI)
 
 else()
    set(CMAKE_ASM_FLAGS_DEBUG   "")
@@ -76,4 +75,5 @@ message("-----------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 
+add_subdirectory(GUI)
 add_subdirectory(PLT)
