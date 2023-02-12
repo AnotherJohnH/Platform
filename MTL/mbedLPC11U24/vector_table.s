@@ -123,7 +123,7 @@ VEC_reset:
 #
 # Initialise C/C++ runtime
 #
-    bl   TNY_init
+    bl   MTL_load
 #
 # Call application entry point
 #

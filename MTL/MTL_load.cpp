@@ -20,29 +20,34 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-//! \brief tiny C library implementation
+#include <cstdint>
 
-#include <stdint.h>
-#include <string.h>
+#include "MTL/MTL.h"
 
-void TNY_init()
+extern uint8_t __etext[];
+extern uint8_t __data_start__[];
+extern uint8_t __data_end__;
+extern uint8_t __bss_start__[];
+extern uint8_t __bss_end__;
+extern void    (*__init_array_start)();
+extern void    (*__init_array_end)();
+
+void MTL_load()
 {
    // Initialise data section
-   extern uint8_t __etext;
-   extern uint8_t __data_start__;
-   extern uint8_t __data_end__;
-   memcpy(&__data_start__, &__etext, &__data_end__ - &__data_start__);
+   for(unsigned i = 0; i < &__data_end__ - &__data_start__[0]; ++i)
+   {
+      __data_start__[i] = __etext[i];
+   }
 
    // Clear BSS
-   extern uint8_t __bss_start__;
-   extern uint8_t __bss_end__;
-   memset(&__bss_start__, 0, &__bss_end__ - &__bss_start__);
+   for(unsigned i = 0; i < &__bss_end__ - &__bss_start__[0]; ++i)
+   {
+      __bss_start__[i] = 0;
+   }
 
    // Call global constructors
-   extern void(*__init_array_start)();
-   extern void(*__init_array_end)();
-   void (**func)();
-   for(func = &__init_array_start; func < &__init_array_end; ++func)
+   for(void (**func)() = &__init_array_start; func < &__init_array_end; ++func)
    {
       (**func)();
    }

@@ -22,6 +22,7 @@
 
 add_library(MTL STATIC
             MTL_init.cpp
+            MTL_load.cpp
             MTL_main.cpp
             MTL_halt.cpp
             MTL_clock.cpp

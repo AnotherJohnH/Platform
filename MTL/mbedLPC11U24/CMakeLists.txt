@@ -29,4 +29,4 @@ string(STRIP ${gcc_lib} gcc_lib)
 
 target_include_directories(MTL PUBLIC .)
 
-target_link_libraries(MTL PUBLIC ${gcc_lib} TNY)
+target_link_libraries(MTL PUBLIC ${gcc_lib})

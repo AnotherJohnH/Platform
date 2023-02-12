@@ -31,6 +31,9 @@ extern "C"
    //! Intialise the platform
    void MTL_init();
 
+   //! Intialise the application
+   void MTL_load();
+
    //! Application entry point
    int MTL_main();
 

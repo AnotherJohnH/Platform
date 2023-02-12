@@ -64,7 +64,6 @@ add_library(TNY STATIC
             strtoul.cpp
             strtoull.cpp
             time.cpp
-            tinyc_init.c
             vfprintf.cpp
             vsnprintf.cpp
             vsprintf.cpp)
