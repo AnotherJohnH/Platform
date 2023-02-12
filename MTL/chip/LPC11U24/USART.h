@@ -56,7 +56,6 @@ union USARTReg
    REG(0x058, syncctrl);
 };
 
-
 class USART : public Periph<USARTReg,0x40000000>
 {
 public:

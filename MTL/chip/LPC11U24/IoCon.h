@@ -54,8 +54,12 @@ public:
       STANDARD_I2C = 0
    };
 
-   void config(unsigned pin, unsigned func, Mode mode,
-               bool hys = false, bool inv = false, bool od = false)
+   void config(unsigned pin,
+               unsigned func,
+               Mode     mode,
+               bool     hys = false,
+               bool     inv = false,
+               bool od = false)
    {
       unsigned port  = pin >> 5;
       unsigned bit   = pin & 0x1F;
