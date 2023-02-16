@@ -24,7 +24,6 @@
 find_package(SDL2 REQUIRED)
 
 add_library(PLT OBJECT 
-            ../native/platform.cpp
             ../SDL2/Audio.cpp
             ../SDL2/Event.cpp
             ../SDL2/Frame.cpp
@@ -40,8 +39,6 @@ add_library(PLT OBJECT
 
 target_compile_definitions(PLT PUBLIC PLT_FRAME_BUFFERED)
 
-target_include_directories(PLT
-                           PUBLIC  ../native
-                           PRIVATE ${SDL2_INCLUDE_DIRS})
+target_include_directories(PLT PRIVATE ${SDL2_INCLUDE_DIRS})
 
 target_link_libraries(PLT PUBLIC SDL2 pthread)

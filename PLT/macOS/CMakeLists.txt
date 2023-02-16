@@ -25,7 +25,6 @@ find_package(SDL2 REQUIRED)
 
 add_library(PLT STATIC
             Midi.cpp
-            ../native/platform.cpp
             ../SDL2/Audio.cpp
             ../SDL2/Event.cpp
             ../SDL2/Frame.cpp
@@ -40,9 +39,7 @@ add_library(PLT STATIC
 
 target_compile_definitions(PLT PUBLIC PLT_FRAME_BUFFERED)
 
-target_include_directories(PLT
-                           PUBLIC  ../native
-                           PRIVATE ${SDL2_INCLUDE_DIRS})
+target_include_directories(PLT PRIVATE ${SDL2_INCLUDE_DIRS})
 
 target_link_libraries(PLT
                       INTERFACE SDL2
