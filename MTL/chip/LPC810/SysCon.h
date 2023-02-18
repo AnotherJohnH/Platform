@@ -20,18 +20,15 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file SysCon.h
 // \brief NXP LPC810 System Controller
 //
 // Data source NXP document "LPC81X User Manual UM10601"
 
-#ifndef LPC810_SYS_CON_H
-#define LPC810_SYS_CON_H
+#pragma once
 
 #include "MTL/Periph.h"
 
 #include "SwitchMatrix.h"
-
 
 namespace MTL {
 
@@ -85,7 +82,6 @@ union SysConReg
    REG(0x3F8, device_id);
 };
 
-
 class SysCon : public Periph<SysConReg,0x40048000>
 {
 public:
@@ -114,7 +110,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // LPC810_SYS_CON_H

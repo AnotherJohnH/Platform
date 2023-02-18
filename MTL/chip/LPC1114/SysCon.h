@@ -20,13 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file SysCon.h
 // \brief NXP LPC1114 System Configuration
 //
 // Data source NXP document "LPC111x User Manual UM10398"
 
-#ifndef LPC1114_SYS_CON_H
-#define LPC1114_SYS_CON_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -113,5 +111,3 @@ public:
 };
 
 } // namespace MTL
-
-#endif // LPC1114_SYS_CON_H

@@ -20,16 +20,13 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file SysCon.h
 // \brief NXP LPC810 Switch Matrix
 //
 // Data source NXP document "LPC81X User Manual UM10601"
 
-#ifndef LPC810_SWITCH_MATRIX_H
-#define LPC810_SWITCH_MATRIX_H
+#pragma once
 
 #include "MTL/Periph.h"
-
 
 namespace MTL {
 
@@ -38,7 +35,6 @@ union SwitchMatrixReg
    REG_ARRAY(0x000, pinassign, 9);
    REG(0x1C0, pinenable);
 };
-
 
 class SwitchMatrix : public Periph<SwitchMatrixReg,0x4000C000>
 {
@@ -50,7 +46,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // LPC810_SWITCH_MATRIX_H

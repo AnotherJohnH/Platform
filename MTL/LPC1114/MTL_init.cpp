@@ -1,5 +1,5 @@
-/*------------------------------------------------------------------------------
-// Copyright (c) 2015 John D. Haughton
+//------------------------------------------------------------------------------
+// Copyright (c) 2014 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,44 +18,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//----------------------------------------------------------------------------*/
+//------------------------------------------------------------------------------
 
-MEMORY
+#include "MTL/MTL.h"
+#include "MTL/chip/LPC11U24/SysCon.h"
+
+void MTL_init()
 {
-   FLASH (rx)  : ORIGIN = 0x00000000, LENGTH = 4K
-   RAM   (rwx) : ORIGIN = 0x10000000, LENGTH = 1K
-}
-
-ENTRY(vector_table)
-
-SECTIONS
-{
-   .text :
-   {
-      KEEP(*(.vectors))
-      *(.text*)
-      __init_array_start = ALIGN(4);
-      KEEP(*(.init_array))
-      __init_array_end = .;
-      *(.rodata*)
-
-   } > FLASH
-
-   __etext = .;
-
-   .data : AT (__etext)
-   {
-      __data_start__ = .;
-      *(.data*)
-      __data_end__ = .;
-
-   } > RAM
-
-   .bss :
-   {
-      __bss_start__ = .;
-      *(.bss*)
-      __bss_end__ = .;
-
-   } > RAM
+   MTL::SysCon().init();
 }

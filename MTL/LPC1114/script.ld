@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------------
-// Copyright (c) 2015 John D. Haughton
+/*------------------------------------------------------------------------------
+// Copyright (c) 2013 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,26 +18,44 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//------------------------------------------------------------------------------
+//----------------------------------------------------------------------------*/
 
-// \brief NXP LPC810 pins
-//
-// Data source NXP document "LPC81X User Manual UM10601"
+MEMORY
+{
+   FLASH (rx)  : ORIGIN = 0x00000000, LENGTH = 32K
+   RAM   (rwx) : ORIGIN = 0x10000000, LENGTH = 4K
+}
 
-#pragma once
+ENTRY(vector_table)
 
-namespace MTL {
+SECTIONS
+{
+   .text :
+   {
+      KEEP(*(.vectors))
+      *(.text*)
+      __init_array_start = ALIGN(4);
+      KEEP(*(.init_array))
+      __init_array_end = .;
+      *(.rodata*)
 
-static const unsigned  PIN_1 = 0x5;
-static const unsigned  PIN_2 = 0x4;
-static const unsigned  PIN_3 = 0x3;
-static const unsigned  PIN_4 = 0x2;
-static const unsigned  PIN_5 = 0x1;
-//                     PIN_6 VDD
-//                     PIN_7 VSS
-static const unsigned  PIN_8 = 0x0;
+   } > FLASH
 
+   __etext = .;
 
-static const unsigned  PIN_LED1 = PIN_1;
+   .data : AT (__etext)
+   {
+      __data_start__ = .;
+      *(.data*)
+      __data_end__ = .;
 
-} // namespace MTL
+   } > RAM
+
+   .bss :
+   {
+      __bss_start__ = .;
+      *(.bss*)
+      __bss_end__ = .;
+
+   } > RAM
+}

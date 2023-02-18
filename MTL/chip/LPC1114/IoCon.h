@@ -20,13 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file IoCon.h
 // \brief NXP LPC1114 I/O Configuration
 //
 // Data source NXP document "LPC111x-User Manual UM10398"
 
-#ifndef LPC1114_IO_CON_H
-#define LPC1114_IO_CON_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -48,8 +46,12 @@ public:
       REPEAT    = 3,
    };
 
-   void config(unsigned pin, unsigned func, Mode mode,
-               bool hys = false, bool inv = false, bool od = false)
+   void config(unsigned pin,
+               unsigned func,
+               Mode     mode,
+               bool     hys = false,
+               bool     inv = false,
+               bool     od  = false)
    {
       unsigned port  = pin >> 5;
       unsigned bit   = pin & 0x1F;
@@ -69,5 +71,3 @@ public:
 };
 
 } // namespace MTL
-
-#endif // LPC1114_IO_CON_H

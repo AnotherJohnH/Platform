@@ -20,14 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file Pins.h
 // \brief NXP LPC1114FN28 pins
 //
 // Data source NXP document "LPC111x User Manual UM10398"
 
-#ifndef LPC1114_PINS_H
-#define LPC1114_PINS_H
-
+#pragma once
 
 namespace MTL {
 
@@ -64,5 +61,3 @@ static const unsigned  PIN_28 = 0x007;
 static const unsigned  PIN_LED1 = PIN_1;
 
 } // namespace MTL
-
-#endif // LPC1114_PINS_H

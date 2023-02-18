@@ -102,8 +102,8 @@ public:
       reg->sysahbclkdiv = 1;
 
       // Enable clock for GPIO and IOCON
-      reg->sysahbclkctrl.setBit(6);
-      reg->sysahbclkctrl.setBit(16);
+      enableAHBClkCtrl(6);
+      enableAHBClkCtrl(16);
    }
 
    void enableAHBClkCtrl(unsigned bit)

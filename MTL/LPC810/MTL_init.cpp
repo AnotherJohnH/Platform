@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2015 John D. Haughton
+// Copyright (c) 2014 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/chip/LPC810/SysCon.h"
-
-extern "C" {
-void MTL_init();
-}
+#include "MTL/MTL.h"
+#include "MTL/chip/LPC11U24/SysCon.h"
 
 void MTL_init()
 {

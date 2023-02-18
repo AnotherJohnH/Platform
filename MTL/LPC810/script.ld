@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-// Copyright (c) 2015 John D. Haughton
+// Copyright (c) 2013 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 MEMORY
 {
    FLASH (rx)  : ORIGIN = 0x00000000, LENGTH = 32K
-   RAM   (rwx) : ORIGIN = 0x10000000, LENGTH = 4K
+   RAM   (rwx) : ORIGIN = 0x10000000, LENGTH = 1K
 }
 
 ENTRY(vector_table)

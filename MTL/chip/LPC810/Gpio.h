@@ -20,23 +20,19 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file Gpio.h
 // \brief NXP LPC810 General Purpose I/O
 //
 // Data source NXP document "LPC81X User Manual UM10601"
 
-#ifndef LPC810_GPIO_H
-#define LPC810_GPIO_H
+#pragma once
 
 #include "MTL/Periph.h"
 
 #include "IoCon.h"
 
-
 namespace MTL {
 
 namespace Gpio {
-
 
 union Reg
 {
@@ -50,7 +46,6 @@ union Reg
    REG(0x2280, clr);                           //!< Bit clear register
    REG(0x2300, tgl);                           //!< Bit toggle register
 };
-
 
 template <unsigned WIDTH, unsigned PIN>
 class Out : public Periph<Reg,0xA0000000>
@@ -114,13 +109,11 @@ public:
    }
 
 private:
-   static const unsigned LSB       = PIN & 0x1F;
-   static const unsigned MSB       = LSB + WIDTH - 1;
+   static const unsigned LSB = PIN & 0x1F;
+   static const unsigned MSB = LSB + WIDTH - 1;
 };
 
 
 } // namespace Gpio
 
 } // namespace MTL
-
-#endif // LPC810_GPIO_H

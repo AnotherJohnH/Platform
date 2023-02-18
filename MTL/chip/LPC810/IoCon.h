@@ -20,25 +20,20 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file IoCon.h
 // \brief NXP LPC810 I/O Controller
 //
 // Data source NXP document "LPC81X User Manual UM10601"
 
-#ifndef LPC810_IO_CON_H
-#define LPC810_IO_CON_H
+#pragma once
 
 #include "MTL/Periph.h"
 
-
 namespace MTL {
-
 
 union IoConReg
 {
    REG_ARRAY(0x000, pio, 18);
 };
-
 
 class IoCon : public Periph<IoConReg,0x40044000>
 {
@@ -72,7 +67,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-
-#endif // LPC810_IO_CON_H
