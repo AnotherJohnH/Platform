@@ -68,9 +68,3 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
 # Prevent compiler sanity check when cross-compiling.
 set(CMAKE_TRY_COMPILE_TARGET_TYPE     STATIC_LIBRARY)
-
-#-------------------------------------------------------------------------------
-# Search for gcc intrinsics library
-
-execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=cortex-m0 -print-file-name=libgcc.a OUTPUT_VARIABLE MTL_GCC_LIB)
-string(STRIP ${MTL_GCC_LIB} MTL_GCC_LIB)

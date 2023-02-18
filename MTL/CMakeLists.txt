@@ -20,17 +20,17 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-add_library(MTL STATIC
-            MTL_init.cpp
-            MTL_load.cpp
-            MTL_main.cpp
-            MTL_halt.cpp
-            MTL_clock.cpp
-            MTL_putch.cpp
-            MTL_getch.cpp
-            MTL_PS2KeyDecode.cpp
-            PALVideo.cpp)
-
 add_subdirectory(${PLT_TARGET})
+
+target_sources(MTL PRIVATE
+               MTL_init.cpp
+               MTL_load.cpp
+               MTL_main.cpp
+               MTL_halt.cpp
+               MTL_clock.cpp
+               MTL_putch.cpp
+               MTL_getch.cpp
+               MTL_PS2KeyDecode.cpp
+               PALVideo.cpp)
 
 target_include_directories(MTL PUBLIC ..)

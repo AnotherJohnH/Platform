@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2023 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,62 +20,17 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \brief NXP LPC11U24 I/O Controller
-//
-// Data source NXP document "LPC11U3X-2X-1X User Manual UM10462"
+#include "MTL/MTL.h"
+#include "MTL/LPC11U24/USART.h"
 
-#pragma once
+static MTL::USART uart(MTL::USART::BAUD_9600);
 
-#include "MTL/Periph.h"
-
-namespace MTL {
-
-union IoConReg
+void MTL_putch(uint8_t ch)
 {
-   REG_ARRAY(0x000, pio, 56);
-};
+   uart.tx(ch);
+}
 
-class IoCon : public Periph<IoConReg,0x40044000>
+int MTL_getch()
 {
-public:
-   enum Func : unsigned
-   {
-      I2C_SCL   = 1, // use with PIO0_4
-      I2C_SDA   = 1, // use with PIO0_5
-   };
-
-   enum Mode
-   {
-      PULL_NONE = 0,
-      PULL_DOWN = 1,
-      PULL_UP   = 2,
-      REPEAT    = 3,
-
-      STANDARD_I2C = 0
-   };
-
-   void config(unsigned pin,
-               unsigned func,
-               Mode     mode,
-               bool     hys = false,
-               bool     inv = false,
-               bool     od  = false)
-   {
-      unsigned port  = pin >> 5;
-      unsigned bit   = pin & 0x1F;
-      unsigned index = port * 24 + bit;
-
-      uint32_t data = reg->pio[index];
-
-      data = (data & 0xFFFFFB80) |
-             (func <<  0) |
-             (mode <<  3) |
-             (hys  <<  5) |
-             (inv  <<  6) |
-             (od   << 10);
-
-      reg->pio[index] = data;
-   }
-};
-
-} // namespace MTL
+   return -1;
+}
