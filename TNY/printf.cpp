@@ -161,7 +161,8 @@ void vprintf(const char* format, va_list ap)
             break;
 
          case 's':
-            puts(va_arg(ap, const char*));
+            for(const char* s = va_arg(ap, const char*); *s; s++)
+               putchar(*s);
             break;
 
          case 'c':

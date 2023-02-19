@@ -26,7 +26,7 @@
 #ifndef TINYC_STRTO_H
 #define TINYC_STRTO_H
 
-namespace tinyc {
+namespace TNY {
 
 template <typename TYPE>
 TYPE strto(const char* s, const char** endptr, unsigned base)
@@ -102,6 +102,6 @@ TYPE strto(const char* s, const char** endptr, unsigned base)
    return value * sign;
 }
 
-} // namespace tinyc
+} // namespace TNY
 
 #endif

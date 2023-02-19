@@ -27,5 +27,5 @@
 
 long long strtoll(const char* s, const char** endptr, int base)
 {
-   return tinyc::strto<long long>(s, endptr, base);
+   return TNY::strto<long long>(s, endptr, base);
 }

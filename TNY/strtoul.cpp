@@ -27,5 +27,5 @@
 
 unsigned long strtoul(const char* s, const char** endptr, int base)
 {
-   return tinyc::strto<unsigned long>(s, endptr, base);
+   return TNY::strto<unsigned long>(s, endptr, base);
 }

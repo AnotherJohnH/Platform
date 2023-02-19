@@ -27,5 +27,5 @@
 
 int atoi(const char* s)
 {
-   return tinyc::strto<int>(s, nullptr, 10);
+   return TNY::strto<int>(s, nullptr, 10);
 }

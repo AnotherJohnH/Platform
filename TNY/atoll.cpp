@@ -27,5 +27,5 @@
 
 long long atoll(const char* s)
 {
-   return tinyc::strto<long long>(s, nullptr, 10);
+   return TNY::strto<long long>(s, nullptr, 10);
 }

@@ -27,5 +27,5 @@
 
 long atol(const char* s)
 {
-   return tinyc::strto<long>(s, nullptr, 10);
+   return TNY::strto<long>(s, nullptr, 10);
 }
