@@ -32,5 +32,5 @@ void MTL_putch(uint8_t ch)
 
 int MTL_getch()
 {
-   return -1;
+   return uart.rx();
 }

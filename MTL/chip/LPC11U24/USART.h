@@ -70,7 +70,17 @@ public:
       BAUD_115200
    };
 
-   USART(Baud baud)
+   enum Parity
+   {
+      NONE,
+      ODD,
+      EVEN
+   };
+
+   USART(Baud     baud,
+         unsigned data_bits = 8,
+         Parity   parity    = NONE,
+         unsigned stop_bits = 1)
    {
       IoCon  iocon;
       SysCon syscon;
@@ -79,8 +89,8 @@ public:
       iocon.config(PIN_0_18, IoCon::Func(1), IoCon::PULL_NONE); // RXD
       iocon.config(PIN_0_19, IoCon::Func(1), IoCon::PULL_NONE); // TXD
 
-      iocon.config(PIN_1_26, IoCon::Func(2), IoCon::PULL_NONE); // RXD
-      iocon.config(PIN_1_27, IoCon::Func(2), IoCon::PULL_NONE); // TXD
+      //iocon.config(PIN_1_26, IoCon::Func(2), IoCon::PULL_NONE); // RXD
+      //iocon.config(PIN_1_27, IoCon::Func(2), IoCon::PULL_NONE); // TXD
 
       // 2. Enable USART Power and peripheral clock
       syscon.enableAHBClkCtrl(12);
@@ -114,16 +124,43 @@ public:
       reg->ier_dlm     = divisor >> 8;
       reg->lcr.clrBit(7); // DLAB - Disable access to divisor register
 
-      // 8-bit data, 1 stop bit, no parity
-      reg->lcr = 0b0011;
+      // 5. Configure protocol
+      uint32_t lcr;
+      switch (data_bits)
+      {
+      case 5: lcr = 0; break;
+      case 6: lcr = 1; break;
+      case 7: lcr = 2; break;
+      default: case 8: lcr = 3; break;
+      }
 
-      // Enable FIFOs
+      if (stop_bits == 2)
+         lcr |= 1<<2;
+
+      switch (parity)
+      {
+      case NONE: break;
+      case ODD:  lcr |= (0<<4) | (1<<3); break;
+      case EVEN: lcr |= (1<<4) | (1<<3); break;
+      }
+      reg->lcr = lcr;
+
+      // 6. Enable FIFOs
       reg->iir_fcr.setBit(0);
    }
 
-   void tx(uint8_t ch)
+   void tx(uint8_t data)
    {
-      reg->rbr_thr_dll = ch;
+      while(reg->lsr & (1<<5) == 0);
+
+      reg->rbr_thr_dll = data;
+   }
+
+   uint8_t rx()
+   {
+      while((reg->lsr & (1<<0)) == 0);
+
+      return reg->rbr_thr_dll;
    }
 };
 
