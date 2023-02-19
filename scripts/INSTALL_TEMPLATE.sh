@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Install template project files into a new project directory
 
@@ -61,7 +61,7 @@ echo
 mkdir -p ${project_dir}
 for name  in `ls -A scripts/template`
 do
-   if [ ! -d $name  ]
+   if [ ! -d $name ]
    then
       installFile scripts/template/$name  $project_dir $name
    fi
