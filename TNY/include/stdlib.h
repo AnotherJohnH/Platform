@@ -43,6 +43,7 @@ extern int   abs(int);
 extern int   atexit(void (*)(void));
 extern void  exit(int);
 extern void  abort(void);
+extern int   system(const char*);
 
 extern long               strtol(const char* str, const char** endptr, int base);
 extern unsigned long      strtoul(const char* str, const char** endptr, int base);

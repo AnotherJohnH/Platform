@@ -31,6 +31,7 @@ add_library(TNY STATIC
             delete.cpp
             exit.cpp
             fprintf.cpp
+            feof.cpp
             getchar.cpp
             global_obj.cpp
             guard.c
@@ -63,6 +64,7 @@ add_library(TNY STATIC
             strtoll.cpp
             strtoul.cpp
             strtoull.cpp
+            system.cpp
             time.cpp
             vfprintf.cpp
             vsnprintf.cpp
