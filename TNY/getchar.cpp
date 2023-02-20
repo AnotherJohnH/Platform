@@ -28,5 +28,5 @@
 
 int getchar()
 {
-   return MTL_getch();;
+   return MTL_getch();
 }

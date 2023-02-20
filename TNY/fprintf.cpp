@@ -24,9 +24,6 @@
 
 #include <stdio.h>
 
-FILE* stdout = (FILE*)1;
-FILE* stderr = (FILE*)2;
-
 int fprintf(FILE* stream, const char* format, ...)
 {
    va_list  ap;

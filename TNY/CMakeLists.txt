@@ -32,6 +32,10 @@ add_library(TNY STATIC
             exit.cpp
             fprintf.cpp
             feof.cpp
+            fgetc.cpp
+            fputc.cpp
+            feof.cpp
+            fstreams.cpp
             getchar.cpp
             global_obj.cpp
             guard.c
