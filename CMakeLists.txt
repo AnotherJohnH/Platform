@@ -50,8 +50,6 @@ if(${PLT_TARGET} STREQUAL native)
       set(PLT_TARGET macOS)
    endif()
 
-   add_subdirectory(STB)
-
 else()
    set(CMAKE_ASM_FLAGS_DEBUG   "")
    set(CMAKE_ASM_FLAGS_RELEASE "")
@@ -76,4 +74,5 @@ message("-----------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 
 add_subdirectory(GUI)
+add_subdirectory(STB)
 add_subdirectory(PLT)
