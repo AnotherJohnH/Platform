@@ -39,7 +39,6 @@ union SysTickReg
    REG(0x1C, calib); //!< Calibrartion (XXX optional)
 };
 
-//! Access Cortex-M0 system timer
 class SysTick : public Periph<SysTickReg,0xE000E000>
 {
 public:
@@ -95,10 +94,10 @@ public:
 
 private:
    // CSR bit positions
-   static const unsigned CSR_ENABLE    = 0;
-   static const unsigned CSR_TICKINT   = 1;
-   static const unsigned CSR_CLKSOURCE = 2;
-   static const unsigned CSR_COUNTFLAG = 16;
+   static const uint32_t CSR_ENABLE     = 0;
+   static const uint32_t CSR_TICKINT    = 1;
+   static const uint32_t CSR_CLKSOURCE  = 2;
+   static const uint32_t CSR_COUNTFLAG  = 16;
 };
 
 } // namespace MTL

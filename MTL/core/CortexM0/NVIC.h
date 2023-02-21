@@ -53,6 +53,12 @@ public:
       return reg->ispr[INDEX].getBit(BIT);
    }
 
+   //! Check if interrupt is active
+   bool isActive() const
+   {
+      return reg->iabr[INDEX].getBit(BIT);
+   }
+
    //! Get priority
    uint8_t getPriority() const
    {

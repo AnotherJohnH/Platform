@@ -20,7 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \brief Access to Cortex-M3 System Timer
+//! \brief Access to Cortex-M3 system timer
 
 #pragma once
 
@@ -28,48 +28,46 @@
 
 namespace MTL {
 
-union SysTimerReg
+//! Cortex-M3 system timer registers
+union SysTickReg
 {
-   REG(0x10, csr);    //!< Control and status
-   REG(0x14, rvr);    //!< Reload value
-   REG(0x18, cvr);    //!< Current value
-   REG(0x1C, calib);  //!< Calibrartion
+   REG(0x10, csr);   //!< Control and status
+   REG(0x14, rvr);   //!< Reload value
+   REG(0x18, cvr);   //!< Current value
+   REG(0x1C, calib); //!< Calibrartion 
 };
 
-class SysTimer : public Periph<SysTimerReg,0xE000E000>
+class SysTick : public Periph<SysTickReg,0xE000E000>
 {
-private:
-   static const uint32_t CSR_ENABLE     = 0;
-   static const uint32_t CSR_TICKINT    = 1;
-   static const uint32_t CSR_CLKSOURCE  = 2;
-   static const uint32_t CSR_COUNTFLAG  = 16;
-
 public:
-   SysTimer(unsigned period = 0)
+   //! Initialize, vut not start, the SysTick timer
+   SysTick()
    {
-      if (period == 0)
-      {
-         period = reg->calib.getField(23, 0) / 10;
+      // Select the core clock, not external reference, as clock source
+      reg->csr.setBit(CSR_CLKSOURCE);
 
-         if ((period != 0) && (reg->calib.getBit(30) == 0))
-         {
-            period = period + 1;
-         }
-      }
-
-      if (period != 0)
-      {
-         setPeriod(period);
-
-         reg->csr.setBit(CSR_CLKSOURCE);
-         reg->csr.setBit(CSR_TICKINT);
-
-         start();
-      }
+      // Enable SysTick interrupt
+      reg->csr.setBit(CSR_TICKINT);
    }
+
+   //! Start the SysTick timer
+   //
+   //! \param period24 24-bit clock tick
+   SysTick(unsigned period)
+      : SysTick()
+   {
+      setPeriod(period);
+      start();
+   }
+
+   //! Read current value
+   operator uint32_t() const { return reg->cvr; }
 
    //! Check if timer is running
    bool isRunning() const { return reg->csr.getBit(CSR_ENABLE); }
+
+   //! Check if timer had reached zero and has restarted
+   bool isReset() const { return reg->csr.getBit(CSR_COUNTFLAG); }
 
    //! Set the tick period
    //
@@ -77,20 +75,27 @@ public:
    void setPeriod(uint32_t ticks24)
    {
       reg->rvr = ticks24 - 1;
-      reg->cvr = 0;
    }
 
-   //! Start timer
+   //! Start tick timer
    void start()
    {
+      reg->cvr = 0;
       reg->csr.setBit(CSR_ENABLE);
    }
 
-   //! Stop timer
+   //! Stop tick timer
    void stop()
    {
       reg->csr.clrBit(CSR_ENABLE);
    }
+
+private:
+   // CSR bit positions
+   static const uint32_t CSR_ENABLE     = 0;
+   static const uint32_t CSR_TICKINT    = 1;
+   static const uint32_t CSR_CLKSOURCE  = 2;
+   static const uint32_t CSR_COUNTFLAG  = 16;
 };
 
 } // namespace MTL
