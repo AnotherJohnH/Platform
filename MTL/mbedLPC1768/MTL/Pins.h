@@ -20,14 +20,11 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Pins.h
 //! \brief mbed LP1768 module pins
 
-#ifndef MBED_LPC1768_PINS_H
-#define MBED_LPC1768_PINS_H
+#pragma once
 
 #include "MTL/chip/LPC1768/Pins.h"
-
 
 namespace MTL {
 
@@ -64,5 +61,3 @@ static const unsigned  PIN_LED3  = PIN_1_21;
 static const unsigned  PIN_LED4  = PIN_1_23;
 
 } // namespace MTL
-
-#endif // MBED_LPC1768_PINS_H

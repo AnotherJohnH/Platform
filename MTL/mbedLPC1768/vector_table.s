@@ -193,5 +193,4 @@ IRQ_QuadEnc:
 IRQ_PLL1:
 IRQ_USBAct:
 IRQ_CANAct:
-    ldr     r0,=MTL_halt
-    bx      r0
+    bx   lr

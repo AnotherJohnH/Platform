@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2023 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,15 +21,16 @@
 //------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
+#include "MTL/LPC1768/UART.h"
 
-#include "MTL/CortexM3/SysTick.h"
+static MTL::UART0 uart(MTL::UART::BAUD_9600);
 
-static MTL::SysTick      sys_timer;
-static volatile uint32_t ticks{0};
-
-uint32_t MTL_clock() { return ticks; }
-
-void VEC_sysTick()
+void MTL_putch(uint8_t ch)
 {
-   ++ticks;
+   uart.tx(ch);
+}
+
+int MTL_getch()
+{
+   return uart.rx();
 }
