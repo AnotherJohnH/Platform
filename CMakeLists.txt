@@ -76,3 +76,11 @@ message("-----------------------------------------------------------------------
 add_subdirectory(GUI)
 add_subdirectory(STB)
 add_subdirectory(PLT)
+
+#-------------------------------------------------------------------------------
+
+function(arcxx name)
+   add_custom_command(OUTPUT  arcxx_${name}.cpp
+                      COMMAND ${CMAKE_SOURCE_DIR}/Platform/scripts/arcxx.py -o ${CMAKE_CURRENT_BINARY_DIR}/arcxx_${name}.cpp -r media/${name} ${CMAKE_SOURCE_DIR}/media/${name}
+                      DEPENDS ${CMAKE_SOURCE_DIR}/media/${name})
+endfunction()
