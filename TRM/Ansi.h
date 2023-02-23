@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TRM_ANSI_H
-#define TRM_ANSI_H
+#pragma once
 
 #include <cctype>
 #include <cstdint>
@@ -31,89 +30,9 @@ namespace TRM {
 //! State machine to help interpret ANSI/VT100 character streams
 class Ansi
 {
-private:
-   static const size_t MAX_STRING_SIZE = 16;
-
-   static const uint8_t ESC = 0x1B;
-   static const uint8_t DCS = 0x90;
-   static const uint8_t SOS = 0x98;
-   static const uint8_t CSI = 0x9B;
-   static const uint8_t ST  = 0x9C;
-   static const uint8_t OSC = 0x9D;
-   static const uint8_t PM  = 0x9E;
-   static const uint8_t APC = 0x9F;
-
-   enum class State
-   {
-      BASE,
-      CONTROL_SEQUENCE_INTRODUCER,
-      DEVICE_CONTROL_STRING,
-      OPERATING_SYSTEM_CONTROL,
-      START_OF_STRING,
-      PRIVACY_MESSAGE,
-      APPLICATION_PROGRAM_COMMAND
-   };
-
-   bool   escape{false};
-   State  state{State::BASE};
-   size_t string_size{0};
-   char   string[MAX_STRING_SIZE + 1]{'\0'};
-
-   //! Handle char in a CSI
-   void csiChar(uint8_t ch)
-   {
-      if((ch >= 0x40) && (ch <= 0x7E))
-      {
-         string[string_size] = '\0';
-
-         ansiCsi(ch, string);
-
-         state       = State::BASE;
-         string_size = 0;
-      }
-      else if(string_size < MAX_STRING_SIZE)
-      {
-         string[string_size++] = ch;
-      }
-   }
-
-   //! Handle char in a string
-   void stringChar(uint8_t ch)
-   {
-      if(ch == ST)
-      {
-         string[string_size] = '\0';
-
-         switch(state)
-         {
-         case State::DEVICE_CONTROL_STRING:
-            ansiDcs(string);
-            break;
-
-         case State::OPERATING_SYSTEM_CONTROL:
-            ansiOsc(string);
-            break;
-
-         case State::START_OF_STRING:
-         case State::PRIVACY_MESSAGE:
-         case State::APPLICATION_PROGRAM_COMMAND:
-            // Ignore
-            break;
-
-         default:
-            break;
-         }
-
-         state       = State::BASE;
-         string_size = 0;
-      }
-      else if(string_size < MAX_STRING_SIZE)
-      {
-         string[string_size++] = ch;
-      }
-   }
-
 public:
+   Ansi() = default;
+
    //! Supply next character to the state machine
    void ansiWrite(uint8_t ch)
    {
@@ -199,6 +118,7 @@ public:
       return true;
    }
 
+protected:
    // Interface to be implemented by derived classes
    virtual void ansiReset() {}
    virtual void ansiControl(uint8_t ch) {}
@@ -206,8 +126,88 @@ public:
    virtual void ansiCsi(uint8_t cmd, const char* seq) {}
    virtual void ansiDcs(const char* str) {}
    virtual void ansiOsc(const char* str) {}
+
+private:
+   //! Handle char in a CSI
+   void csiChar(uint8_t ch)
+   {
+      if((ch >= 0x40) && (ch <= 0x7E))
+      {
+         string[string_size] = '\0';
+
+         ansiCsi(ch, string);
+
+         state       = State::BASE;
+         string_size = 0;
+      }
+      else if(string_size < MAX_STRING_SIZE)
+      {
+         string[string_size++] = ch;
+      }
+   }
+
+   //! Handle char in a string
+   void stringChar(uint8_t ch)
+   {
+      if(ch == ST)
+      {
+         string[string_size] = '\0';
+
+         switch(state)
+         {
+         case State::DEVICE_CONTROL_STRING:
+            ansiDcs(string);
+            break;
+
+         case State::OPERATING_SYSTEM_CONTROL:
+            ansiOsc(string);
+            break;
+
+         case State::START_OF_STRING:
+         case State::PRIVACY_MESSAGE:
+         case State::APPLICATION_PROGRAM_COMMAND:
+            // Ignore
+            break;
+
+         default:
+            break;
+         }
+
+         state       = State::BASE;
+         string_size = 0;
+      }
+      else if(string_size < MAX_STRING_SIZE)
+      {
+         string[string_size++] = ch;
+      }
+   }
+
+   static const size_t MAX_STRING_SIZE = 16;
+
+   static const uint8_t ESC = 0x1B;
+   static const uint8_t DCS = 0x90;
+   static const uint8_t SOS = 0x98;
+   static const uint8_t CSI = 0x9B;
+   static const uint8_t ST  = 0x9C;
+   static const uint8_t OSC = 0x9D;
+   static const uint8_t PM  = 0x9E;
+   static const uint8_t APC = 0x9F;
+
+   enum class State
+   {
+      BASE,
+      CONTROL_SEQUENCE_INTRODUCER,
+      DEVICE_CONTROL_STRING,
+      OPERATING_SYSTEM_CONTROL,
+      START_OF_STRING,
+      PRIVACY_MESSAGE,
+      APPLICATION_PROGRAM_COMMAND
+   };
+
+   bool   escape{false};
+   State  state{State::BASE};
+   size_t string_size{0};
+   char   string[MAX_STRING_SIZE + 1]{'\0'};
 };
 
-} // namespace PLT
-
-#endif // TRM_ANSI_H
+} // namespace TRM

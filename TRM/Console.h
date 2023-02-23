@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TRM_CONSOLE_H
-#define TRM_CONSOLE_H
+#pragma once
 
 #include <cstdarg>
 #include <cstdlib>
@@ -38,13 +37,103 @@
 
 namespace TRM {
 
-//! Terminal device using the console as the back-end
+//! Terminal device implementation using stdio
 class Console : public Device
 {
-private:
-   STB::Fifo<int, 2> input;
-   unsigned timeout_ms{0};
+public:
+   Console(const char* title_) { saveTio(); }
 
+   ~Console() { restoreTio(); }
+
+protected:
+   // Implement TRM::Device
+
+   int ioctl(unsigned request, ...) override
+   {
+      int     status = -1;
+      va_list ap;
+
+      va_start(ap, request);
+
+      switch(request)
+      {
+      case IOCTL_TERM_ICANON:
+         modifyTioFlag(ICANON, va_arg(ap, int) != 0);
+         status = 0;
+         break;
+
+      case IOCTL_TERM_ECHO:
+         modifyTioFlag(ECHO, va_arg(ap, int) != 0);
+         status = 0;
+         break;
+
+      case IOCTL_TERM_TIMEOUT_MS:
+         timeout_ms = va_arg(ap, unsigned);
+         status     = 0;
+         break;
+
+      case IOCTL_TERM_COLOURS:
+         // Assume ANSI 256 colours are available by the host terminal
+         status = 256;
+         break;
+
+      case IOCTL_TERM_FONTS:
+         status = 1;
+         break;
+
+      case IOCTL_TERM_CURSOR:
+         if (va_arg(ap, int) != 0)
+         {
+            ::puts("\e[?25h");
+         }
+         else
+         {
+            ::puts("\e[?25l");
+         }
+         status = 0;
+         break;
+
+      default:
+         break;
+      }
+
+      va_end(ap);
+
+      return status;
+   }
+
+   int write(const void* buffer, size_t n) override
+   {
+      const uint8_t* ptr = static_cast<const uint8_t*>(buffer);
+
+      size_t i;
+
+      for(i = 0; i < n; i++)
+      {
+         ::putchar(*ptr++);
+      }
+
+      return i;
+   }
+
+   int read(void* buffer, size_t n) override
+   {
+      uint8_t* ptr = static_cast<uint8_t*>(buffer);
+
+      size_t i;
+
+      for(i = 0; i < n; i++)
+      {
+         int ch = getNextChar();
+         if(ch <= 0) return ch;
+
+         *ptr++ = ch;
+      }
+
+      return i;
+   }
+
+private:
    static termios* getTio()
    {
       static termios tio;
@@ -140,99 +229,8 @@ private:
       return ch;
    }
 
-public:
-   Console(const char* title_) { saveTio(); }
-
-   ~Console() { restoreTio(); }
-
-   // Implement TRM::Device
-
-   virtual int ioctl(unsigned request, ...) override
-   {
-      int     status = -1;
-      va_list ap;
-
-      va_start(ap, request);
-
-      switch(request)
-      {
-      case IOCTL_TERM_ICANON:
-         modifyTioFlag(ICANON, va_arg(ap, int) != 0);
-         status = 0;
-         break;
-
-      case IOCTL_TERM_ECHO:
-         modifyTioFlag(ECHO, va_arg(ap, int) != 0);
-         status = 0;
-         break;
-
-      case IOCTL_TERM_TIMEOUT_MS:
-         timeout_ms = va_arg(ap, unsigned);
-         status     = 0;
-         break;
-
-      case IOCTL_TERM_COLOURS:
-         // Assume ANSI 256 colours are available by the host terminal
-         status = 256;
-         break;
-
-      case IOCTL_TERM_FONTS:
-         status = 1;
-         break;
-
-      case IOCTL_TERM_CURSOR:
-         if (va_arg(ap, int) != 0)
-         {
-            ::puts("\e[?25h");
-         }
-         else
-         {
-            ::puts("\e[?25l");
-         }
-         status = 0;
-         break;
-
-      default:
-         break;
-      }
-
-      va_end(ap);
-
-      return status;
-   }
-
-   virtual int write(const void* buffer, size_t n) override
-   {
-      const uint8_t* ptr = static_cast<const uint8_t*>(buffer);
-
-      size_t i;
-
-      for(i = 0; i < n; i++)
-      {
-         ::putchar(*ptr++);
-      }
-
-      return i;
-   }
-
-   virtual int read(void* buffer, size_t n) override
-   {
-      uint8_t* ptr = static_cast<uint8_t*>(buffer);
-
-      size_t i;
-
-      for(i = 0; i < n; i++)
-      {
-         int ch = getNextChar();
-         if(ch <= 0) return ch;
-
-         *ptr++ = ch;
-      }
-
-      return i;
-   }
+   STB::Fifo<int, 2> input;
+   unsigned          timeout_ms{0};
 };
 
 } // namesapce TRM
-
-#endif // TRM_CONSOLE_H

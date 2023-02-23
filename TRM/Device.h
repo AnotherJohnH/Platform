@@ -20,14 +20,14 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TRM_DEVICE_H
-#define TRM_DEVICE_H
+#pragma once
 
 #include <cstdlib>
 #include <cstring>
 
 namespace TRM {
 
+//! Terminal device API
 class Device
 {
 public:
@@ -70,5 +70,3 @@ public:
 };
 
 } // namesapce TRM
-
-#endif // TRM_DEVICE_H

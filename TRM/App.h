@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TRM_APP_H
-#define TRM_APP_H
+#pragma once
 
 #include "STB/ConsoleApp.h"
 
@@ -32,6 +31,20 @@ namespace TRM {
 
 class App : public STB::ConsoleApp
 {
+public:
+    App(const char* program_,
+        const char* description_,
+        const char* link_,
+        const char* author_,
+        const char* copyright_year_,
+        const char* args_help_ = nullptr)
+      : ConsoleApp(program_, description_, link_, author_, copyright_year_, args_help_)
+   {}
+
+protected:
+   //! App entry point with constructed terminal
+   virtual int startTerminalApp(Device& term) = 0;
+
 private:
 #ifndef NO_TERMINAL_EMULATOR
    enum class Display
@@ -100,22 +113,6 @@ private:
       Frame<WIDTH,HEIGHT> term(program);
       return startTerminalApp(term);
    }
-
-protected:
-   //! App entry point with constructed terminal
-   virtual int startTerminalApp(Device& term) = 0;
-
-public:
-    App(const char* program_,
-        const char* description_,
-        const char* link_,
-        const char* author_,
-        const char* copyright_year_,
-        const char* args_help_ = nullptr)
-      : ConsoleApp(program_, description_, link_, author_, copyright_year_, args_help_)
-   {}
 };
 
 } // namespace TRM
-
-#endif // TRM_APP_H

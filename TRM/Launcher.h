@@ -22,8 +22,7 @@
 
 // XXX time to drop the zero dynamic allocation restriction from this code
 
-#ifndef TRM_LAUNCHER_H
-#define TRM_LAUNCHER_H
+#pragma once
 
 #include <cctype>
 #include <cstring>
@@ -514,5 +513,3 @@ private:
 };
 
 } // namespace TRM
-
-#endif // TRM_LAUNCHER_H

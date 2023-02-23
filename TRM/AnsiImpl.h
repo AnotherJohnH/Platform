@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TRM_ANSI_IMPL_H
-#define TRM_ANSI_IMPL_H
+#pragma once
 
 #include <cassert>
 #include <cstdio>
@@ -587,7 +586,4 @@ private:
    unsigned tab_size{8};
 };
 
-
 } // namespace TRM
-
-#endif // TRM_ANSI_IMPL_H

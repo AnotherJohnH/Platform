@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TRM_CURSES_H
-#define TRM_CURSES_H
+#pragma once
 
 #include <cstdint>
 #include <cstdlib>
@@ -320,5 +319,3 @@ private:
 };
 
 } // namespace TRM
-
-#endif // TRM_CURSES_H

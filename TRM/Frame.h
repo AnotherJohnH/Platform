@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef TRM_FRAME_H
-#define TRM_FRAME_H
+#pragma once
 
 #include <cassert>
 #include <cstdarg>
@@ -39,10 +38,8 @@
 
 namespace TRM {
 
-
 static const unsigned MIN_FONT_WIDTH  = 6;
 static const unsigned MIN_FONT_HEIGHT = 8;
-
 
 //! Terminal device using GUI::Frame back-end
 template <unsigned WIDTH, unsigned HEIGHT>
@@ -50,27 +47,175 @@ class Frame
    : public Device
    , private AnsiImpl<WIDTH/MIN_FONT_WIDTH, HEIGHT/MIN_FONT_HEIGHT>
 {
+public:
+   Frame(const char* title_)
+      : frame(title_, WIDTH, HEIGHT)
+      , font(&GUI::font_teletext15)
+      , border(0)
+      , line_space(0)
+   {
+      initLayout();
+   }
+
+   ~Frame() { frame.refresh(); }
+
+   void setFont(const GUI::Font& font_)
+   {
+      font = &font_;
+      initLayout();
+   }
+
+
+protected:
+   // implement PLT::Device
+
+   int ioctl(unsigned request, ...) override
+   {
+      int     status = -1;
+      va_list ap;
+
+      va_start(ap, request);
+
+      switch(request)
+      {
+      case IOCTL_TERM_ICANON:
+         (void)va_arg(ap, int);
+         status = 0;
+         break;
+
+      case IOCTL_TERM_ECHO:
+         this->setEcho(va_arg(ap, int) != 0);
+         status = 0;
+         break;
+
+      case IOCTL_TERM_PALETTE:
+      {
+         unsigned    col = va_arg(ap, unsigned);
+         STB::Colour rgb = va_arg(ap, unsigned);
+              if (col == DEFAULT_BG_COL) { default_bg_col = rgb; }
+         else if (col == DEFAULT_FG_COL) { default_fg_col = rgb; }
+         initLayout();
+         status = 0;
+      }
+      break;
+
+      case IOCTL_TERM_BORDER:
+         border = va_arg(ap, unsigned);
+         initLayout();
+         status = 0;
+         break;
+
+      case IOCTL_TERM_LINE_SPACE:
+         line_space = va_arg(ap, unsigned);
+         initLayout();
+         status = 0;
+         break;
+
+      case IOCTL_TERM_FONT_SIZE:
+      {
+         unsigned font_size = va_arg(ap, unsigned);
+
+              if (font_size >= 18)  { setFont(GUI::font_teletext18); }
+         else if (font_size >= 15)  { setFont(GUI::font_teletext15); }
+         else if (font_size >= 12)  { setFont(GUI::font_teletext12); }
+         else                       { setFont(GUI::font_teletext9);  }
+
+         initLayout();
+         status = 0;
+      }
+      break;
+
+      case IOCTL_TERM_TIMEOUT_MS:
+         timeout_ms = va_arg(ap, unsigned);
+         status     = 0;
+         break;
+
+      case IOCTL_TERM_COLOURS:
+         status = 256;
+         break;
+
+      case IOCTL_TERM_FONTS:
+         status = 1;
+         break;
+
+      case IOCTL_TERM_CURSOR:
+         draw_cursor = va_arg(ap, int) != 0;
+         status = 0;
+         break;
+
+      case IOCTL_TERM_SLEEP:
+         sleep_ms = va_arg(ap, unsigned) * 1000;
+         status = 0;
+         break;
+
+      case IOCTL_TERM_SLEEP_IMAGE:
+         if (sleep_image.readFromFile(va_arg(ap, const char*)))
+         {
+            status = 0;
+         }
+         break;
+
+      default:
+         break;
+      }
+
+      va_end(ap);
+
+      return status;
+   }
+
+   int write(const void* buffer, size_t n) override
+   {
+      const uint8_t* ptr = static_cast<const uint8_t*>(buffer);
+
+      while(n--)
+      {
+         uint8_t ch = *ptr++;
+         this->ansiWrite(ch);
+      }
+
+      return n;
+   }
+
+   int read(void* buffer_, size_t n) override
+   {
+      uint8_t* buffer = static_cast<uint8_t*>(buffer_);
+
+      size_t i;
+
+      for(i = 0; i < n; i++)
+      {
+         if (draw_cursor) this->drawCursor(Impl::Cursor::BLOCK);
+         frame.refresh();
+
+         uint8_t ch = getInput();
+
+         switch(ch)
+         {
+         case PLT::QUIT:
+            this->drawCursor(Impl::Cursor::OFF);
+            return -1;
+
+         case PLT::TIMEOUT:
+            this->drawCursor(Impl::Cursor::OFF);
+            return 0;
+
+         default:
+            break;
+         }
+
+         buffer[i] = ch;
+         if (draw_cursor) this->drawCursor(Impl::Cursor::OFF);
+      }
+
+      return i;
+   }
+
 private:
+   using Device::read;
+   using Device::write;
+
    using Impl = AnsiImpl<WIDTH / MIN_FONT_WIDTH, HEIGHT / MIN_FONT_HEIGHT>;
-
-   static const unsigned DEFAULT_BG_COL = 0;
-   static const unsigned DEFAULT_FG_COL = 1;
-   static const uint8_t  RGB_NRM        = 0xC0;
-
-   GUI::Frame            frame;
-   const GUI::Font*      font{};
-   unsigned              border{0};
-   unsigned              line_space{0};
-   GUI::Vector           org;
-   STB::Colour           default_bg_col{STB::BLACK};
-   STB::Colour           default_fg_col{STB::WHITE};
-   bool                  draw_cursor{true};
-   unsigned              timeout_ms{0};
-   unsigned              sleep_ms{0};
-   GUI::Bitmap           sleep_image{};
-   STB::Fifo<uint8_t, 6> response;
-   bool                  shift{false};
-   bool                  caps_lock{false};
 
    STB::Colour convertCol256ToRGB(uint8_t col, bool bg)
    {
@@ -330,172 +475,24 @@ private:
       frame.clear(default_bg_col);
    }
 
-public:
-   Frame(const char* title_)
-      : frame(title_, WIDTH, HEIGHT)
-      , font(&GUI::font_teletext15)
-      , border(0)
-      , line_space(0)
-   {
-      initLayout();
-   }
+   static const unsigned DEFAULT_BG_COL = 0;
+   static const unsigned DEFAULT_FG_COL = 1;
+   static const uint8_t  RGB_NRM        = 0xC0;
 
-   ~Frame() { frame.refresh(); }
-
-   void setFont(const GUI::Font& font_)
-   {
-      font = &font_;
-      initLayout();
-   }
-
-   // implement PLT::Device
-
-   virtual int ioctl(unsigned request, ...) override
-   {
-      int     status = -1;
-      va_list ap;
-
-      va_start(ap, request);
-
-      switch(request)
-      {
-      case IOCTL_TERM_ICANON:
-         (void)va_arg(ap, int);
-         status = 0;
-         break;
-
-      case IOCTL_TERM_ECHO:
-         this->setEcho(va_arg(ap, int) != 0);
-         status = 0;
-         break;
-
-      case IOCTL_TERM_PALETTE:
-      {
-         unsigned    col = va_arg(ap, unsigned);
-         STB::Colour rgb = va_arg(ap, unsigned);
-              if (col == DEFAULT_BG_COL) { default_bg_col = rgb; }
-         else if (col == DEFAULT_FG_COL) { default_fg_col = rgb; }
-         initLayout();
-         status = 0;
-      }
-      break;
-
-      case IOCTL_TERM_BORDER:
-         border = va_arg(ap, unsigned);
-         initLayout();
-         status = 0;
-         break;
-
-      case IOCTL_TERM_LINE_SPACE:
-         line_space = va_arg(ap, unsigned);
-         initLayout();
-         status = 0;
-         break;
-
-      case IOCTL_TERM_FONT_SIZE:
-      {
-         unsigned font_size = va_arg(ap, unsigned);
-
-              if (font_size >= 18)  { setFont(GUI::font_teletext18); }
-         else if (font_size >= 15)  { setFont(GUI::font_teletext15); }
-         else if (font_size >= 12)  { setFont(GUI::font_teletext12); }
-         else                       { setFont(GUI::font_teletext9);  }
-
-         initLayout();
-         status = 0;
-      }
-      break;
-
-      case IOCTL_TERM_TIMEOUT_MS:
-         timeout_ms = va_arg(ap, unsigned);
-         status     = 0;
-         break;
-
-      case IOCTL_TERM_COLOURS:
-         status = 256;
-         break;
-
-      case IOCTL_TERM_FONTS:
-         status = 1;
-         break;
-
-      case IOCTL_TERM_CURSOR:
-         draw_cursor = va_arg(ap, int) != 0;
-         status = 0;
-         break;
-
-      case IOCTL_TERM_SLEEP:
-         sleep_ms = va_arg(ap, unsigned) * 1000;
-         status = 0;
-         break;
-
-      case IOCTL_TERM_SLEEP_IMAGE:
-         if (sleep_image.readFromFile(va_arg(ap, const char*)))
-         {
-            status = 0;
-         }
-         break;
-
-      default:
-         break;
-      }
-
-      va_end(ap);
-
-      return status;
-   }
-
-   virtual int write(const void* buffer, size_t n) override
-   {
-      const uint8_t* ptr = static_cast<const uint8_t*>(buffer);
-
-      while(n--)
-      {
-         uint8_t ch = *ptr++;
-         this->ansiWrite(ch);
-      }
-
-      return n;
-   }
-
-   virtual int read(void* buffer_, size_t n) override
-   {
-      uint8_t* buffer = static_cast<uint8_t*>(buffer_);
-
-      size_t i;
-
-      for(i = 0; i < n; i++)
-      {
-         if (draw_cursor) this->drawCursor(Impl::Cursor::BLOCK);
-         frame.refresh();
-
-         uint8_t ch = getInput();
-
-         switch(ch)
-         {
-         case PLT::QUIT:
-            this->drawCursor(Impl::Cursor::OFF);
-            return -1;
-
-         case PLT::TIMEOUT:
-            this->drawCursor(Impl::Cursor::OFF);
-            return 0;
-
-         default:
-            break;
-         }
-
-         buffer[i] = ch;
-         if (draw_cursor) this->drawCursor(Impl::Cursor::OFF);
-      }
-
-      return i;
-   }
-
-   using Device::read;
-   using Device::write;
+   GUI::Frame            frame;
+   const GUI::Font*      font{};
+   unsigned              border{0};
+   unsigned              line_space{0};
+   GUI::Vector           org;
+   STB::Colour           default_bg_col{STB::BLACK};
+   STB::Colour           default_fg_col{STB::WHITE};
+   bool                  draw_cursor{true};
+   unsigned              timeout_ms{0};
+   unsigned              sleep_ms{0};
+   GUI::Bitmap           sleep_image{};
+   STB::Fifo<uint8_t, 6> response;
+   bool                  shift{false};
+   bool                  caps_lock{false};
 };
 
 } // namespace TRM
-
-#endif // TRM_FRAME_H
