@@ -24,8 +24,8 @@
 
 #include "STB/ConsoleApp.h"
 
-#include "TRM/Frame.h"
-#include "TRM/Console.h"
+#include "TRM/FrameDevice.h"
+#include "TRM/ConsoleDevice.h"
 
 namespace TRM {
 
@@ -78,7 +78,7 @@ private:
 #endif
       {
          // Use the parent terminal
-         Console term(program);
+         ConsoleDevice term(program);
          return startTerminalApp(term);
       }
 #ifndef NO_TERMINAL_EMULATOR
@@ -110,7 +110,7 @@ private:
    template <unsigned WIDTH, unsigned HEIGHT>
    int launchDisplay()
    {
-      Frame<WIDTH,HEIGHT> term(program);
+      FrameDevice<WIDTH,HEIGHT> term(program);
       return startTerminalApp(term);
    }
 };

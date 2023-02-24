@@ -43,12 +43,12 @@ static const unsigned MIN_FONT_HEIGHT = 8;
 
 //! Terminal device using GUI::Frame back-end
 template <unsigned WIDTH, unsigned HEIGHT>
-class Frame
+class FrameDevice
    : public Device
    , private AnsiImpl<WIDTH/MIN_FONT_WIDTH, HEIGHT/MIN_FONT_HEIGHT>
 {
 public:
-   Frame(const char* title_)
+   FrameDevice(const char* title_)
       : frame(title_, WIDTH, HEIGHT)
       , font(&GUI::font_teletext15)
       , border(0)
@@ -57,7 +57,7 @@ public:
       initLayout();
    }
 
-   ~Frame() { frame.refresh(); }
+   ~FrameDevice() { frame.refresh(); }
 
    void setFont(const GUI::Font& font_)
    {

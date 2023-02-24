@@ -23,13 +23,13 @@
 
 #include <cstdio>
 
-#include "TRM/Console.h"
+#include "TRM/ConsoleDevice.h"
 #include "TRM/Curses.h"
 
 
 int main(int argc, char *argv[])
 {
-   TRM::Console console("TRM::Console");
+   TRM::ConsoleDevice console("TRM::Console");
    TRM::Curses win(&console);
 
    win.clear();

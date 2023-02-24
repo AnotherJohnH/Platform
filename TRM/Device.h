@@ -27,13 +27,12 @@
 
 namespace TRM {
 
+static constexpr unsigned long IOCTL_TERM(unsigned n) { return 0x100 | n; }
+
 //! Terminal device API
 class Device
 {
 public:
-
-#define IOCTL_TERM(N) (0x100 | N)
-
    static const unsigned long IOCTL_TERM_ECHO        = IOCTL_TERM(0);
    static const unsigned long IOCTL_TERM_ICANON      = IOCTL_TERM(2);
    static const unsigned long IOCTL_TERM_PALETTE     = IOCTL_TERM(3);

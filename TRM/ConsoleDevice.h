@@ -38,12 +38,12 @@
 namespace TRM {
 
 //! Terminal device implementation using stdio
-class Console : public Device
+class ConsoleDevice : public Device
 {
 public:
-   Console(const char* title_) { saveTio(); }
+   ConsoleDevice(const char* title_) { saveTio(); }
 
-   ~Console() { restoreTio(); }
+   ~ConsoleDevice() { restoreTio(); }
 
 protected:
    // Implement TRM::Device
@@ -150,7 +150,7 @@ private:
    {
       tcgetattr(0, getTio());
 
-      atexit(Console::restoreTio);
+      atexit(ConsoleDevice::restoreTio);
    }
 
    static void modifyTioFlag(unsigned flag, bool set)

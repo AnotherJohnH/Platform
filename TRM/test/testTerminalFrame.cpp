@@ -21,12 +21,12 @@
 //------------------------------------------------------------------------------
 
 
-#include "TRM/Frame.h"
+#include "TRM/FrameDevice.h"
 
 
 int main(int argc, char *argv[])
 {
-   TRM::Frame<512, 512>  frame("TRM::Frame test");
+   TRM::FrameDevice<512, 512> frame("TRM::Frame test");
 
    frame.write("Hello, world!\n\n>");
 

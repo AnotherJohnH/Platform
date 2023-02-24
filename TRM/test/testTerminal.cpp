@@ -23,13 +23,13 @@
 
 #include <cstdio>
 
-#include "TRM/Frame.h"
+#include "TRM/FrameDevice.h"
 #include "TRM/Curses.h"
 
 
 int main(int argc, char *argv[])
 {
-   TRM::Frame<512, 512> frame("TRM::Frame test");
+   TRM::FrameDevice<512, 512> frame("TRM::Frame test");
    TRM::Curses win(&frame);
 
    win.clear();
