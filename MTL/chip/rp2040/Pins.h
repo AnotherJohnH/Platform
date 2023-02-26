@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file Pins.h
 // \brief RP2040 pins
-//
-#ifndef MTL_RP2040_PINS_H
-#define MTL_RP2040_PINS_H
+
+#pragma once
 
 namespace MTL {
 
@@ -65,5 +63,3 @@ static const unsigned  PIN_30  = 0x1E;
 } // namespace rp2040
 
 } // namespace MTL
-
-#endif // MTL_RP2040_PINS_H

@@ -20,7 +20,7 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-# cmake configuration for RaspberryPi Pico
+# cmake configuration for RaspberryPi Pico builds
 
 set(PLT_PREFIX  arm-none-eabi-)
 set(PLT_MACHINE armv6m)
@@ -37,7 +37,7 @@ set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
 
 set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS}")
 
-set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/Platform/PLT/${PLT_TARGET}/script.ld")
+set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/Platform/MTL/${PLT_TARGET}/script.ld")
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
@@ -54,12 +54,10 @@ set(CMAKE_OBJCOPY             ${PLT_PREFIX}objcopy)
 set(CMAKE_OBJDUMP             ${PLT_PREFIX}objdump)
 set(CMAKE_SIZE                ${PLT_PREFIX}size)
 
-set(PLT_CONFIG_DIR "../Platform/PLT/rpipico")
-
 set(CMAKE_C_LINK_EXECUTABLE
     "${PLT_PREFIX}ld ${PLT_LD_FLAGS} <OBJECTS> -o <TARGET>.elf <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O ihex <TARGET>.elf <TARGET>.hex; \
-     ${PLT_CONFIG_DIR}/ihexToUF2.py <TARGET>.hex -o<TARGET>.uf2; \
+     ${CMAKE_SOURCE_DIR}/Platform/MTL/rpipico/ihexToUF2.py <TARGET>.hex -o<TARGET>.uf2; \
      ${CMAKE_SOURCE_DIR}/Platform/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>.elf; \
      ${CMAKE_SIZE} <TARGET>.elf")
 

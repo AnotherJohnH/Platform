@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file  Sio.h
 // \brief RP2040 Single-cycle I/O
 
-#ifndef MTL_RP2040_SIO_H
-#define MTL_RP2040_SIO_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -86,5 +84,3 @@ public:
 };
 
 } // namespace MTL
-
-#endif // MTL_RP2040_GPIO_H

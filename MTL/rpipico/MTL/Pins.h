@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2021 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,15 +20,19 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-extern "C" {
-void MTL_init();
-void platform_irq();
-}
+//! \brief module pins
 
-void MTL_init()
-{
-}
+#pragma once
 
-void platform_irq()
-{
-}
+#include "MTL/rp2040/Pins.h"
+
+namespace MTL {
+
+static const unsigned PIN_LED1 = rp2040::PIN_25;
+
+static const unsigned PIN_1 = rp2040::PIN_0;
+static const unsigned PIN_2 = rp2040::PIN_1;
+static const unsigned PIN_4 = rp2040::PIN_2;
+static const unsigned PIN_5 = rp2040::PIN_3;
+
+} // namespace MTL

@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \file  Gpio.h
 // \brief RP2040 General Purpose I/O
 
-#ifndef MTL_RP2040_GPIO_H
-#define MTL_RP2040_GPIO_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -127,5 +125,3 @@ private:
 } // namespace Gpio
 
 } // namespace MTL
-
-#endif // MTL_RP2040_GPIO_H
