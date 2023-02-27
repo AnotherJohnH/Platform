@@ -33,4 +33,7 @@ target_sources(MTL PRIVATE
                MTL_PS2KeyDecode.cpp
                PALVideo.cpp)
 
+target_compile_definitions(MTL PUBLIC MTL_TARGET=1)
+target_compile_definitions(MTL PUBLIC MTL_${PLT_TARGET}=1)
+
 target_include_directories(MTL PUBLIC ..)
