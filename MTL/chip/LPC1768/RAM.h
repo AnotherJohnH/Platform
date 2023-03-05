@@ -28,15 +28,13 @@
 
 #include <cstddef>
 
-#include "MTL/Periph.h"
-
 namespace MTL {
 
-class RAM : public Periph<uint8_t,0x2007C000>
+class RAM
 {
 public:
-   uint8_t* data() const { return (uint8_t*)reg; }
-   size_t   size() const { return 32 * 1024; }
+   static uint8_t* data() { return (uint8_t*)0x2007C000; }
+   static size_t   size() { return 32 * 1024; }
 };
 
 } // namespace MTL
