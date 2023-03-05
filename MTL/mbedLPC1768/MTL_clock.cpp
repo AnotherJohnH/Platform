@@ -21,15 +21,22 @@
 //------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
-
 #include "MTL/CortexM3/SysTick.h"
+#include "MTL/CortexM3/Vector.h"
 
-static MTL::SysTick      sys_timer;
+static const unsigned CLOCK_FREQ     = 96000000; //!< 96 MHz
+static const unsigned TICK_PERIOD_MS = 10;       //!< 10 mS
+
+static MTL::SysTick tick {CLOCK_FREQ * TICK_PERIOD_MS / 1000};
+
 static volatile uint32_t ticks{0};
-
-uint32_t MTL_clock() { return ticks; }
 
 void VEC_sysTick()
 {
    ++ticks;
+}
+
+uint32_t MTL_clock()
+{
+   return ticks;
 }

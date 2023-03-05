@@ -23,6 +23,7 @@
 add_library(MTL STATIC
             vector_table.s
             MTL_init.cpp
+            MTL_clock.cpp
             MTL_console.cpp)
 
 target_include_directories(MTL PUBLIC .)

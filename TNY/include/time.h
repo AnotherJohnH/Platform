@@ -26,7 +26,7 @@
 
 #include <stdlib.h>
 
-#define  CLOCKS_PER_SEC 1000
+#define  CLOCKS_PER_SEC 100
 
 typedef signed time_t;
 typedef signed clock_t;
