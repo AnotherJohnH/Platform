@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2013 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +20,19 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/MTL.h"
+// \brief NXP LPC11U24 Additional RAM
 
-__attribute__((weak))
-void MTL_halt(uint32_t status)
+#pragma once
+
+#include <cstddef>
+
+namespace MTL {
+
+class RAM
 {
-   while(true);
-}
+public:
+   static uint8_t* data() { return (uint8_t*)0x20004000; }
+   static size_t   size() { return 2 * 1024; }
+};
+
+} // namespace MTL

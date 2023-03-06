@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2023 John D. Haughton
+// Copyright (c) 2013 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,16 +21,10 @@
 //------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
-#include "MTL/LPC11U24/USART.h"
 
-static MTL::USART uart(MTL::USART::BAUD_9600);
+#include "SysCon.h"
 
-void MTL_putch(uint8_t ch)
+void MTL_init()
 {
-   uart.tx(ch);
-}
-
-int MTL_getch()
-{
-   return uart.rx();
+   MTL::SysCon().init();
 }

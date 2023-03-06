@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2013 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,22 +21,14 @@
 //------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
-#include "MTL/CortexM0/SysTick.h"
-#include "MTL/CortexM0/Vector.h"
+#include "MTL/Digital.h"
 
-static const unsigned CLOCK_FREQ     = 48000000; //!< 48 MHz
-static const unsigned TICK_PERIOD_MS = 10;       //!< 10 mS
-
-static MTL::SysTick tick {CLOCK_FREQ * TICK_PERIOD_MS / 1000};
-
-static volatile uint32_t ticks{0};
-
-void VEC_sysTick()
+void MTL_halt(uint32_t status)
 {
-   ++ticks;
-}
+   if (status & 0b1000) MTL::Digital::Out<MTL::PIN_LED1> led{true};
+   if (status & 0b0100) MTL::Digital::Out<MTL::PIN_LED2> led{true};
+   if (status & 0b0010) MTL::Digital::Out<MTL::PIN_LED3> led{true};
+   if (status & 0b0001) MTL::Digital::Out<MTL::PIN_LED4> led{true};
 
-uint32_t MTL_clock()
-{
-   return ticks;
+   while(true);
 }

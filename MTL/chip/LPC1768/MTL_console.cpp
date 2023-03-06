@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2023 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,16 @@
 
 #include "MTL/MTL.h"
 
-__attribute__((weak))
-void MTL_halt(uint32_t status)
+#include "UART.h"
+
+static MTL::UART0 uart(MTL::UART::BAUD_9600);
+
+void MTL_putch(uint8_t ch)
 {
-   while(true);
+   uart.tx(ch);
+}
+
+int MTL_getch()
+{
+   return uart.rx();
 }

@@ -21,16 +21,5 @@
 //------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
-#include "MTL/LPC1768/UART.h"
 
-static MTL::UART0 uart(MTL::UART::BAUD_9600);
-
-void MTL_putch(uint8_t ch)
-{
-   uart.tx(ch);
-}
-
-int MTL_getch()
-{
-   return uart.rx();
-}
+#define CLOCK_FREQ 48000000 //!< 48 MHz

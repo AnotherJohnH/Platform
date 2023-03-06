@@ -26,6 +26,16 @@
 
 #include <stdint.h>
 
+using Handler = void (*)(uint32_t);
+
+enum Exception
+{
+   EXC_BUS,
+   EXC_UND,
+   EXC_FPE,
+   NUM_EXC
+};
+
 extern "C"
 {
    //! Intialise the platform
@@ -38,7 +48,7 @@ extern "C"
    int MTL_main();
 
    //! Halt platform
-   [[ noreturn ]] extern void MTL_halt(int status);
+   [[ noreturn ]] extern void MTL_halt(uint32_t status);
 
    //! Get current millisecond tick count
    uint32_t MTL_clock();
@@ -48,4 +58,7 @@ extern "C"
 
    //! Get character from the console
    int MTL_getch();
+
+   //! Exception handling
+   void MTL_excep(Exception signal, Handler handler, uint32_t data);
 }

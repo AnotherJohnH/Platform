@@ -85,8 +85,6 @@ vector_table:
    .weak  VEC_nmi
    .weak  VEC_hard_fault
    .weak  VEC_mem_fault
-   .weak  VEC_bus_fault
-   .weak  VEC_usage_fault
    .weak  VEC_svc
    .weak  VEC_pendSv
    .weak  VEC_sysTick
@@ -148,8 +146,6 @@ VEC_reset:
 #
 VEC_hard_fault:
 VEC_mem_fault:
-VEC_bus_fault:
-VEC_usage_fault:
     bl   MTL_halt
 
 # Empty handlers

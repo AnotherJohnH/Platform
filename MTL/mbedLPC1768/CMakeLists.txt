@@ -21,11 +21,12 @@
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
-            vector_table.s
-            MTL_init.cpp
             MTL_halt.cpp
-            MTL_console.cpp
-            MTL_clock.cpp)
+            MTL/LPC1768/vector_table.s
+            MTL/LPC1768/MTL_init.cpp
+            MTL/LPC1768/MTL_console.cpp
+            MTL/CortexM3/MTL_excep.cpp
+            MTL/CortexM3/MTL_clock.cpp)
 
 target_include_directories(MTL PUBLIC .)
 

@@ -30,6 +30,7 @@ extern "C"
    void VEC_hard_fault();
    void VEC_mem_fault();
    void VEC_bus_fault();
+   void VEC_usage_fault();
    void VEC_svc();
    void VEC_pendSv();
    void VEC_sysTick();
