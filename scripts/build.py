@@ -120,6 +120,8 @@ if args.pull:
 
 if args.debug:
    cmake_opts += " -DCMAKE_BUILD_TYPE=Debug"
+else:
+   cmake_opts += " -DCMAKE_BUILD_TYPE=Release"
 
 for target in args.targets:
 
