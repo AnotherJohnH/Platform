@@ -72,21 +72,23 @@ public:
                    Burst    dest_burst,
                    Width    dest_width,
                    bool     dest_inc,
-                   unsigned size12) volatile
+                   unsigned size12,
+                   bool     irq = false) volatile
    {
-      control = (size12             << 0)
-              | (src_burst          <<12)
-              | (dest_burst         <<15)
-              | (src_width          <<18)
-              | (dest_width         <<21)
-              | ((src_inc  ? 1 : 0) <<26)
-              | ((dest_inc ? 1 : 0) <<27);
+      control = (size12         <<  0)
+              | (src_burst      << 12)
+              | (dest_burst     << 15)
+              | (src_width      << 18)
+              | (dest_width     << 21)
+              | ((src_inc  & 1) << 26)
+              | ((dest_inc & 1) << 27)
+              | ((irq      & 1) << 31);
    }
 
 private:
    const uint8_t*      src_addr {0};
    uint8_t*            dest_addr {0};
-   const volatile DMA* next {0};
+   const volatile DMA* next {nullptr};
    uint32_t            control {0};
 };
    
@@ -145,29 +147,27 @@ public:
 
    void configChan(unsigned n,
                    Periph   src_periph,
-                   Periph   dest_periph)
+                   Periph   dest_periph,
+                   bool     irq = false)
    {
-      // Clear any pending error interrupt request
-      reg->err_clr.setBit(n);
-
-      // Clear any pending interrupt terminal count request
-      reg->int_tc_clear.setBit(n);
+      clearIrq(n);
 
       // Configure source and destination types
       unsigned transfer_type;
       if (src_periph == MEMORY)
       {
-         transfer_type = dest_periph == MEMORY ? 0 : 1;
+         transfer_type = dest_periph == MEMORY ? 0b000 : 0b001;
       }
       else
       {
-         transfer_type = dest_periph == MEMORY ? 2 : 3;
+         transfer_type = dest_periph == MEMORY ? 0b010 : 0b011;
       }
 
-      reg->chan[n].config = (0                    <<0)
-                          | ((src_periph  & 0xF)  <<1)
-                          | ((dest_periph & 0xF)  <<6)
-                          | (transfer_type        <<11);
+      reg->chan[n].config = (0                   <<  0)
+                          | ((src_periph  & 0xF) <<  1)
+                          | ((dest_periph & 0xF) <<  6)
+                          | (transfer_type       << 11)
+                          | ((irq & 1)           << 15);
    }
 
    volatile DMA* getHead(unsigned n)
@@ -179,7 +179,15 @@ public:
    {
       reg->chan[n].config.setBit(0);
    }
-};
 
+   void clearIrq(unsigned n)
+   {
+      // Clear any pending error interrupt request
+      reg->err_clr.setBit(n);
+
+      // Clear any pending interrupt terminal count request
+      reg->int_tc_clear.setBit(n);
+   }
+};
 
 } // namespace MTL
