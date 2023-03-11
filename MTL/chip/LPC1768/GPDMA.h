@@ -27,18 +27,13 @@
 #pragma once
 
 #include "MTL/Periph.h"
-#include "MTL/chip/LPC1768/SysCon.h"
+
+#include "SysCon.h"
 
 namespace MTL {
 
 class DMA
 {
-private:
-   const uint8_t*        src_addr;
-   uint8_t*              dest_addr;
-   const volatile DMA*   next;
-   uint32_t              control;
-
 public:
    enum Burst
    {
@@ -54,12 +49,7 @@ public:
 
    enum Width { WIDTH8 = 0, WIDTH16 = 1, WIDTH32 = 2};
 
-   DMA()
-      : src_addr(0)
-      , dest_addr(0)
-      , next(0)
-      , control(0)
-   {}
+   DMA() = default;
 
    void setSrc(volatile const void* ptr) volatile
    {
@@ -76,13 +66,13 @@ public:
       next = ptr;
    }
 
-   void setControl(Burst     src_burst,
-                   Width     src_width,
-                   bool      src_inc,
-                   Burst     dest_burst,
-                   Width     dest_width,
-                   bool      dest_inc,
-                   unsigned  size12) volatile
+   void setControl(Burst    src_burst,
+                   Width    src_width,
+                   bool     src_inc,
+                   Burst    dest_burst,
+                   Width    dest_width,
+                   bool     dest_inc,
+                   unsigned size12) volatile
    {
       control = (size12             << 0)
               | (src_burst          <<12)
@@ -92,6 +82,12 @@ public:
               | ((src_inc  ? 1 : 0) <<26)
               | ((dest_inc ? 1 : 0) <<27);
    }
+
+private:
+   const uint8_t*      src_addr {0};
+   uint8_t*            dest_addr {0};
+   const volatile DMA* next {0};
+   uint32_t            control {0};
 };
    
 union GPDMAReg
@@ -113,9 +109,9 @@ union GPDMAReg
 
    struct Channel
    {
-      DMA                  dma;
-      Register<uint32_t>   config;
-      uint8_t              pad[0x20 - 5*4];
+      DMA                dma;
+      Register<uint32_t> config;
+      uint8_t            pad[0x20 - 5*4];
    };
  
    REG_TYPE_ARRAY(0x100, Channel, chan, 8);
