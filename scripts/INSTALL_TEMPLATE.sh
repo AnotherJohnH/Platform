@@ -61,7 +61,7 @@ echo
 mkdir -p ${project_dir}
 for name  in `ls -A scripts/template`
 do
-   if [ ! -d $name ]
+   if [ ! -d scripts/template/$name ]
    then
       installFile scripts/template/$name  $project_dir $name
    fi
