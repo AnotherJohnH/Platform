@@ -43,18 +43,10 @@ public:
          value = that.value << (N - M);
    }
 
-   //! Construct from an integer
-   FixP(int value_)
-   {
-      value = UNITY * value_;
-   }
+   //! Construct from another value
+   template <typename TYPE>
+   FixP(TYPE value_) { value = UNITY * value_; }
 
-   //! Construct from a floating point value
-   FixP(double value_)
-   {
-      value = UNITY * value_;
-   }
-  
    //! Assign from another value
    template <typename TYPE>
    FixP<N> operator=(TYPE that)
@@ -133,13 +125,16 @@ public:
    operator float()  const { return float(value) / UNITY; }
    operator double() const { return double(value) / UNITY; }
 
+   // Return raw value
+   VALUE raw() const { return value; }
+
 protected:
    using VALUE = int32_t;
    using WIDE  = int64_t;
 
    static const unsigned FRAC_BITS = N;
    static const unsigned BITS      = sizeof(VALUE) * 8;
-   static const WIDE     UNITY     = 1 << FRAC_BITS;
+   static const WIDE     UNITY     = WIDE(1) << FRAC_BITS;
 
    VALUE value;
 };
