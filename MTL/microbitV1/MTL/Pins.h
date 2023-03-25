@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Pins.h
 //! \brief micro::bit module pins
 
-#ifndef MTL_MICROBIT_PINS_H
-#define MTL_MICROBIT_PINS_H
+#pragma once
 
 #include "MTL/nRF51/Pins.h"
 
@@ -89,5 +87,3 @@ static const unsigned  PIN_LED1 = PIN_LED_COL1;
 static const unsigned  PIN_NOT_CONNECTED = 0xFFFFFFFF;
 
 } // namespace MTL
-
-#endif // MTL_MICROBIT_PINS_H

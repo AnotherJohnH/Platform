@@ -20,7 +20,6 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  PALVideo.h
 //! \brief Genetate a PAL video signal
 //
 //   Pad  8 is sync  => 750 ohm
@@ -29,8 +28,7 @@
 //   Pad  7 => Pad 13  (pixel clock)
 //
 
-#ifndef MTL_MICROBIT_PAL_VIDEO_H
-#define MTL_MICROBIT_PAL_VIDEO_H
+#pragma once
 
 #include "MTL/PixelGen.h"
 #include "MTL/Digital.h"
@@ -285,5 +283,3 @@ public:
 };
 
 } // namespace MTL
-
-#endif

@@ -1,5 +1,5 @@
 @------------------------------------------------------------------------------
-@ Copyright (c) 2016 John D. Haughton
+@ Copyright (c) 2013 John D. Haughton
 @
 @ Permission is hereby granted, free of charge, to any person obtaining a copy
 @ of this software and associated documentation files (the "Software"), to deal
@@ -46,6 +46,12 @@ vector_table:
    .word  VEC_pendSv+1
    .word  VEC_sysTick+1
 
+   .weak  VEC_fault
+   .weak  VEC_nmi
+   .weak  VEC_svc
+   .weak  VEC_pendSv
+   .weak  VEC_sysTick
+
    .word  PowerClock_IRQ+1  @ IRQ  0
    .word  Radio_IRQ+1       @ IRQ  1
    .word  Uart_IRQ+1        @ IRQ  2
@@ -73,12 +79,6 @@ vector_table:
    .word  Swi_4_IRQ+1       @ IRQ 24
    .word  Swi_5_IRQ+1       @ IRQ 25
 
-   .weak  VEC_nmi
-   .weak  VEC_fault
-   .weak  VEC_svc
-   .weak  VEC_pendSv
-   .weak  VEC_sysTick
-
    .weak  PowerClock_IRQ
    .weak  Radio_IRQ
    .weak  Uart_IRQ
@@ -99,15 +99,15 @@ vector_table:
    .weak  Rtc_1_IRQ
    .weak  Qdec_IRQ
    .weak  LpComp_IRQ
-   .weak  Swi_0_IRQ 
-   .weak  Swi_1_IRQ 
-   .weak  Swi_2_IRQ 
-   .weak  Swi_3_IRQ 
-   .weak  Swi_4_IRQ 
-   .weak  Swi_5_IRQ 
+   .weak  Swi_0_IRQ
+   .weak  Swi_1_IRQ
+   .weak  Swi_2_IRQ
+   .weak  Swi_3_IRQ
+   .weak  Swi_4_IRQ
+   .weak  Swi_5_IRQ
 
 .text
-.align	2
+.align 2
 
 VEC_reset:
 #
@@ -117,24 +117,28 @@ VEC_reset:
     movs    r1,#3
     str     r1,[r0]
 #
+# Initialise platform
+#
+    bl   MTL_init
+#
 # Initialise C/C++ runtime
 #
-    bl      TNY_init
+    bl   MTL_load
 #
 # Call application entry point
 #
-    bl      MTL_main
+    bl   MTL_main
 #
-    bl      platform_shutdown
-
-unhandled_exception:
-
-VEC_nmi:
+# Fall through to unhandled exception
+#
 VEC_fault:
+    bl   MTL_halt
+
+# Empty handlers
+VEC_nmi:
 VEC_svc:
 VEC_pendSv:
 VEC_sysTick:
-
 PowerClock_IRQ:
 Radio_IRQ:
 Uart_IRQ:
@@ -161,7 +165,7 @@ Swi_2_IRQ:
 Swi_3_IRQ:
 Swi_4_IRQ:
 Swi_5_IRQ:
-    bl      MTL_halt
+    bx   lr
 
 .align 2
 ramon:

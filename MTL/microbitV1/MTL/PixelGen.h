@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file  PixelGen.h
 //! \brief Pixel stream generator for microbit
 
-#ifndef MTL_MICROBIT_PIXEL_GEN_H
-#define MTL_MICROBIT_PIXEL_GEN_H
+#pragma once
 
 #include  <cstring>
 
@@ -141,5 +139,3 @@ public:
 
 
 } // namespace MTL
-
-#endif // MTL_MICROBIT_PIXELGEN_H

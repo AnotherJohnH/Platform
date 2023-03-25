@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2016 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,16 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/core/CortexM0/SysTick.h"
+// BBC microbit
 
+#pragma once
 
-static MTL::SysTick      sys_tick;
-static volatile uint32_t ticks{0};
+#include "MTL/nRF51/Uart.h"
+#include "MTL/Pins.h"
+#include "MTL/PS2Keyboard.h"
 
+namespace MTL {
 
-extern "C" {
-
-uint32_t MTL_ms_ticks() { return ticks; }
-
-void sysTick() { ++ticks; }
+using Keyboard = PS2Keyboard<nRF51::Uart<PIN_PAD_12> >;
 
 }

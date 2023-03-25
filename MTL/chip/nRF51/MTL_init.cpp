@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2016 John D. Haughton
+// Copyright (c) 2014 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,29 +20,8 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Reset.h
-//! \brief micro::bit module buttons
+#include "MTL/MTL.h"
 
-#ifndef MTL_RESET_H
-#define MTL_RESET_H
-
-#include "MTL/Digital.h"
-
-namespace MTL {
-
-class Reset
+void MTL_init()
 {
-private:
-   Digital::Out<PIN_RESET>  reset{true};
-
-public:
-   //! Request a reset
-   void go()
-   {
-      reset = false;
-   }
-};
-
-} // namespace MTL
-
-#endif // MTL_RESET_H
+}
