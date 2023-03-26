@@ -34,10 +34,18 @@ SECTIONS
    {
       KEEP(*(.vectors))
       *(.text*)
+      *(.rodata*)
       __init_array_start = ALIGN(4);
       KEEP(*(.init_array))
       __init_array_end = .;
-      *(.rodata*)
+
+   } > FLASH
+
+   .ARM.exidx :
+   {
+      __exidx_start = .;
+      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+      __exidx_end = .;
 
    } > FLASH
 
