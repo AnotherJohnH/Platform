@@ -31,6 +31,8 @@ template <unsigned N>
 class FixP 
 {
 public:
+   using RAW = int32_t;
+
    FixP() = default;
 
    //! Construct from another fixed point value
@@ -126,17 +128,16 @@ public:
    operator double() const { return double(value) / UNITY; }
 
    // Return raw value
-   VALUE raw() const { return value; }
+   RAW raw() const { return value; }
 
 protected:
-   using VALUE = int32_t;
    using WIDE  = int64_t;
 
    static const unsigned FRAC_BITS = N;
-   static const unsigned BITS      = sizeof(VALUE) * 8;
+   static const unsigned BITS      = sizeof(RAW) * 8;
    static const WIDE     UNITY     = WIDE(1) << FRAC_BITS;
 
-   VALUE value;
+   RAW value;
 };
 
 } // namespace STB
