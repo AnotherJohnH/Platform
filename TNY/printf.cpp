@@ -97,80 +97,85 @@ void vprintf(const char* format, va_list ap)
       {
          ch = *++s;
 
-         if (ch == '%') break;
-
-         char pad = ' ';
-
-         if (ch == '0')
+         if (ch == '%')
          {
-            pad = '0';
-            ch = *++s;
+            putchar('%');
          }
-
-         unsigned field_width = 0;
-         unsigned places = 0;
-
-         while( (ch >= '0') && (ch <= '9'))
+         else
          {
-            field_width = field_width*10 + ch - '0';
-            ch = *++s;
-         }
+            char pad = ' ';
 
-         if (ch == '.')
-         {
-            ch = *++s;
+            if (ch == '0')
+            {
+               pad = '0';
+               ch = *++s;
+            }
+
+            unsigned field_width = 0;
+            unsigned places = 0;
 
             while( (ch >= '0') && (ch <= '9'))
             {
-               places = places*10 + ch - '0';
+               field_width = field_width*10 + ch - '0';
                ch = *++s;
             }
-         }
 
-         switch(ch)
-         {
-         case 'b':
-            print_u(va_arg(ap, unsigned),  2, field_width, pad);
-            break;
+            if (ch == '.')
+            {
+               ch = *++s;
 
-         case 'o':
-            print_u(va_arg(ap, unsigned),  8, field_width, pad);
-            break;
+               while( (ch >= '0') && (ch <= '9'))
+               {
+                  places = places*10 + ch - '0';
+                  ch = *++s;
+               }
+            }
 
-         case 'u':
-            print_u(va_arg(ap, unsigned), 10, field_width, pad);
-            break;
+            switch(ch)
+            {
+            case 'b':
+               print_u(va_arg(ap, unsigned),  2, field_width, pad);
+               break;
 
-         case 'x':
-         case 'X':
-            print_u(va_arg(ap, unsigned), 16, field_width, pad);
-            break;
+            case 'o':
+               print_u(va_arg(ap, unsigned),  8, field_width, pad);
+               break;
 
-         case 'd':
-            print_i(va_arg(ap, unsigned), 10, field_width, pad);
-            break;
+            case 'u':
+               print_u(va_arg(ap, unsigned), 10, field_width, pad);
+               break;
+
+            case 'x':
+            case 'X':
+               print_u(va_arg(ap, unsigned), 16, field_width, pad);
+               break;
+
+            case 'd':
+               print_i(va_arg(ap, unsigned), 10, field_width, pad);
+               break;
 
 #ifdef FLOAT
-         case 'f':
-            print_f(va_arg(ap, double), field_width, places);
-            break;
+            case 'f':
+               print_f(va_arg(ap, double), field_width, places);
+               break;
 #endif
 
-         case 'p':
-            print_u((unsigned)va_arg(ap, void*), 16, 8, '0');
-            break;
+            case 'p':
+               print_u((unsigned)va_arg(ap, void*), 16, 8, '0');
+               break;
 
-         case 's':
-            for(const char* s = va_arg(ap, const char*); *s; s++)
-               putchar(*s);
-            break;
+            case 's':
+               for(const char* s = va_arg(ap, const char*); *s; s++)
+                  putchar(*s);
+               break;
 
-         case 'c':
-            putchar(va_arg(ap, int));
-            break;
+            case 'c':
+               putchar(va_arg(ap, int));
+               break;
 
-         default:
-            break;
+            default:
+               break;
+            }
          }
       }
       else
