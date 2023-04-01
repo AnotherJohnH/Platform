@@ -127,8 +127,48 @@ public:
    operator float()  const { return float(value) / UNITY; }
    operator double() const { return double(value) / UNITY; }
 
-   // Return raw value
+   // Comparison operators
+   template <typename TYPE>
+   bool operator<(TYPE that) const { return value < FixP<N>(that).value; }
+
+   template <typename TYPE>
+   bool operator<=(TYPE that) const { return value <= FixP<N>(that).value; }
+
+   template <typename TYPE>
+   bool operator>(TYPE that) const { return value > FixP<N>(that).value; }
+
+   template <typename TYPE>
+   bool operator>=(TYPE that) const { return value >= FixP<N>(that).value; }
+
+   template <typename TYPE>
+   bool operator==(TYPE that) const { return value == FixP<N>(that).value; }
+
+   template <typename TYPE>
+   bool operator!=(TYPE that) const { return value != FixP<N>(that).value; }
+
+   //! Return raw value
    RAW raw() const { return value; }
+
+   //! Return the fraction
+   RAW frac() const
+   {
+      const RAW MASK = (WIDE(1) << N) - 1;
+      return value & MASK;
+   }
+
+   //! Return smallest representable positive value
+   static FixP<N> DELTA()
+   {
+      FixP<N> result {};
+      result.value = 1;
+      return result;
+   }
+
+   //! Return number of delta() between 0 and 1
+   static unsigned SCALE()
+   {
+      return UNITY;
+   }
 
 protected:
    using WIDE  = int64_t;
