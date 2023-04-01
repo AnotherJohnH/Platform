@@ -42,22 +42,27 @@ union SysTickReg
 class SysTick : public Periph<SysTickReg,0xE000E000>
 {
 public:
-   //! Initialize, vut not start, the SysTick timer
+   //! Initialize, free-running tick timer
    SysTick()
    {
       // Select the core clock, not external reference, as clock source
       reg->csr.setBit(CSR_CLKSOURCE);
 
-      // Enable SysTick interrupt
-      reg->csr.setBit(CSR_TICKINT);
+      setPeriod(0x1000000);
+      start();
    }
 
    //! Start the SysTick timer
    //
    //! \param period24 24-bit clock tick
    SysTick(unsigned period)
-      : SysTick()
    {
+      // Select the core clock, not external reference, as clock source
+      reg->csr.setBit(CSR_CLKSOURCE);
+
+      // Enable SysTick interrupt
+      reg->csr.setBit(CSR_TICKINT);
+
       setPeriod(period);
       start();
    }
