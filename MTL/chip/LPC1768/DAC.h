@@ -26,6 +26,7 @@
 
 #pragma once
 
+#include "MTL/Config.h"
 #include "MTL/Periph.h"
 
 #include "SysCon.h"

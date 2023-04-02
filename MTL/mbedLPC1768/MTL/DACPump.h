@@ -52,37 +52,20 @@ public:
                        MTL::GPDMA::MEMORY, MTL::GPDMA::DAC, /* irq */ true);
 
       // Setup pair of DMA transfers in an infinite loop
-      dma_ping.setSrc(ping);
-      dma_ping.setDest(&dac.reg->dacr);
-      dma_ping.setNext(&dma_pong);
-      dma_ping.setControl(MTL::DMA::BURST16, MTL::DMA::WIDTH32, /* src_inc */ true,
-                      MTL::DMA::BURST1,  MTL::DMA::WIDTH32, /* dst_inc */ false,
-                      BUFFER_SIZE, /* irq */ true);
-
-      dma_pong.setSrc(pong);
-      dma_pong.setDest(&dac.reg->dacr);
-      dma_pong.setNext(&dma_ping);
-      dma_pong.setControl(MTL::DMA::BURST16, MTL::DMA::WIDTH32, /* src_inc */ true,
-                      MTL::DMA::BURST1,  MTL::DMA::WIDTH32, /* dst_inc */ false,
-                      BUFFER_SIZE, /* irq */ true);
+      progDMA(&dma_ping, buf_ping, &dma_pong);
+      progDMA(&dma_pong, buf_pong, &dma_ping);
    }
 
    void start()
    {
       // Prime both buffers starting with ping
-      DACPump_getSamples(ping, BUFFER_SIZE);
-      DACPump_getSamples(pong, BUFFER_SIZE);
+      DACPump_getSamples(buf_ping, BUFFER_SIZE);
+      DACPump_getSamples(buf_pong, BUFFER_SIZE);
 
       // Start DMA with ping buffer
       ping_pong = true;
 
-      volatile MTL::DMA* dma = gpdma.getHead(dma_channel);
-      dma->setSrc(ping);
-      dma->setDest(&dac.reg->dacr);
-      dma->setNext(&dma_pong);
-      dma->setControl(MTL::DMA::BURST16, MTL::DMA::WIDTH32, /* src_inc */ true,
-                      MTL::DMA::BURST1,  MTL::DMA::WIDTH32, /* dst_inc */ false,
-                      BUFFER_SIZE, /* irq */ true);
+      progDMA(gpdma.getHead(dma_channel), buf_ping, &dma_pong);
 
       gpdma.start(dma_channel);
    }
@@ -96,21 +79,33 @@ public:
    {
       gpdma.clearIrq(dma_channel);
 
-      uint32_t* buffer = ping_pong ? ping : pong;
+      uint32_t* buffer = ping_pong ? buf_ping
+                                   : buf_pong;
+
       ping_pong = not ping_pong;
 
       DACPump_getSamples(buffer, BUFFER_SIZE);
    }
 
 private:
+   void progDMA(volatile MTL::DMA* dma, uint32_t* buffer, MTL::DMA* next)
+   {
+      dma->setSrc(buffer);
+      dma->setDest(&dac.reg->dacr);
+      dma->setNext(next);
+      dma->setControl(MTL::DMA::BURST16, MTL::DMA::WIDTH32, /* src_inc */ true,
+                      MTL::DMA::BURST1,  MTL::DMA::WIDTH32, /* dst_inc */ false,
+                      BUFFER_SIZE, /* irq */ true);
+   }
+
    MTL::DAC   dac;
    unsigned   dma_channel;
    MTL::GPDMA gpdma {};
+   bool       ping_pong {false};
    MTL::DMA   dma_ping {};
    MTL::DMA   dma_pong {};
-   bool       ping_pong {false};
-   uint32_t   ping[BUFFER_SIZE];
-   uint32_t   pong[BUFFER_SIZE];
+   uint32_t   buf_ping[BUFFER_SIZE];
+   uint32_t   buf_pong[BUFFER_SIZE];
 };
 
 } // namespace MTL
