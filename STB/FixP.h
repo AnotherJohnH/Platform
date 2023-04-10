@@ -28,7 +28,7 @@ namespace STB {
 
 //! 32-bit fixed point type
 template <unsigned N>
-class FixP 
+class FixP
 {
 public:
    using RAW = int32_t;
@@ -156,6 +156,14 @@ public:
       return value & MASK;
    }
 
+   //! Translate raw value into FixP value
+   static FixP<N> fromRaw(RAW raw)
+   {
+      FixP<N> result {};
+      result.value = raw;
+      return result;
+   }
+
    //! Return smallest representable positive value
    static FixP<N> DELTA()
    {
@@ -171,7 +179,7 @@ public:
    }
 
 protected:
-   using WIDE  = int64_t;
+   using WIDE = int64_t;
 
    static const unsigned FRAC_BITS = N;
    static const unsigned BITS      = sizeof(RAW) * 8;
