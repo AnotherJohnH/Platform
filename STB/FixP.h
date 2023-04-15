@@ -178,10 +178,11 @@ public:
       return UNITY;
    }
 
+   static const unsigned FRAC_BITS = N;
+
 protected:
    using WIDE = int64_t;
 
-   static const unsigned FRAC_BITS = N;
    static const unsigned BITS      = sizeof(RAW) * 8;
    static const WIDE     UNITY     = WIDE(1) << FRAC_BITS;
 
