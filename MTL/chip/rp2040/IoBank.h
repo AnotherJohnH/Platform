@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2021 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,28 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/MTL.h"
+// \brief RP2040 IO_BANK peripheral
 
-#include "Clocks.h"
-#include "SIO.h"
-#include "Resets.h"
-#include "XOsc.h"
+#pragma once
 
-void MTL_init()
+#include "MTL/Periph.h"
+
+namespace MTL {
+
+struct IoBankReg
 {
-   MTL::Resets resets;
+   struct Gpio
+   {
+       uint32_t status;
+       uint32_t ctrl;
+   };
 
-   // reset everything except some essentials
-   resets.setReset(~(MTL::Resets::IO_QSPI   |
-                     MTL::Resets::PADS_QSPI |
-                     MTL::Resets::PLL_USB   |
-                     MTL::Resets::USBCTRL   |
-                     MTL::Resets::SYSCFG    |
-                     MTL::Resets::PLL_SYS));
+   Gpio gpio[30];
+};
 
-   // Clear reset for selected peripherals
-   resets.clrReset(0x003C7FFE);
+class IoBank : public Periph<IoBankReg, 0x40014000>
+{
+public:
+};
 
-   MTL::Clocks clocks;
-   MTL::XOsc   xosc;
-
-   xosc.start();
-
-   // Clear resets for everything
-   resets.clrReset(0x01FFFFFF);
-}
+} // namespace MTL

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2021 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,41 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/MTL.h"
+// \brief RP2040 XOSC peripheral
 
-#include "Clocks.h"
-#include "SIO.h"
-#include "Resets.h"
-#include "XOsc.h"
+#pragma once
 
-void MTL_init()
+#include "MTL/Periph.h"
+
+namespace MTL {
+
+struct XOscReg
 {
-   MTL::Resets resets;
+   uint32_t ctrl;
+   uint32_t status;
+   uint32_t dormant;
+   uint32_t startup;
+   uint32_t pad[3];
+   uint32_t count;
+};
 
-   // reset everything except some essentials
-   resets.setReset(~(MTL::Resets::IO_QSPI   |
-                     MTL::Resets::PADS_QSPI |
-                     MTL::Resets::PLL_USB   |
-                     MTL::Resets::USBCTRL   |
-                     MTL::Resets::SYSCFG    |
-                     MTL::Resets::PLL_SYS));
+class XOsc : public Periph<XOscReg, 0x40024000>
+{
+public:
+   void start()
+   {
+      reg->ctrl    = CTRL_FREQ_RANGE_1_15MHZ;
+      reg->startup = ((XTAL_FREQ / 1000) + 128) >> 8;
 
-   // Clear reset for selected peripherals
-   resets.clrReset(0x003C7FFE);
+      // enable
+      reg->ctrl    = (0xFAB << 12) | CTRL_FREQ_RANGE_1_15MHZ;
 
-   MTL::Clocks clocks;
-   MTL::XOsc   xosc;
+      // Wait until stable
+      while(reg->status & (1<<12) == 0);
+   }
 
-   xosc.start();
+   static const unsigned XTAL_FREQ               = 12000000;
+   static const uint32_t CTRL_FREQ_RANGE_1_15MHZ = 0xAA0;
+};
 
-   // Clear resets for everything
-   resets.clrReset(0x01FFFFFF);
-}
+} // namespace MTL

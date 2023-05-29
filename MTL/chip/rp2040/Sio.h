@@ -33,6 +33,7 @@ struct SioReg
    uint32_t cpu_id;
    uint32_t gpio_in;
    uint32_t gpio_hi_in;
+   uint32_t pad1;
    uint32_t gpio_out;
    uint32_t gpio_out_set;
    uint32_t gpio_out_clr;

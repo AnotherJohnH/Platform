@@ -23,7 +23,15 @@
 #-------------------------------------------------------------------------------
 
 import argparse
+import binascii
 import sys
+
+#-------------------------------------------------------------------------------
+
+# NOTE: borrowed from official pico-sdk
+
+def bitrev(x, width):
+    return int("{:0{w}b}".format(x, w=width)[::-1], 2)
 
 #-------------------------------------------------------------------------------
 #  IHEX decode
@@ -94,6 +102,38 @@ def readIHEX(filename):
    return record_list[:-1]
 
 #-------------------------------------------------------------------------------
+# Embed CRC at the end of the 1st block
+
+def addCRC(image):
+   ''' Write CRC to the last 4 bytes in the first 256 byte block '''
+
+   POLYNOMIAL = bitrev(0x04c11db7, 32)
+   crc        = 0xFFFFFFFF
+
+   for i in range(0, 252):
+
+      byte = bitrev(image[i], 8)
+
+      byte = (byte ^ crc) & 0xff
+
+      for bit in range(0, 8):
+          if (byte & 1) != 0:
+             byte = (byte >> 1) ^ POLYNOMIAL
+          else:
+             byte = byte >> 1
+
+      crc = byte ^ (crc >> 8)
+
+   crc = bitrev(crc, 32)
+
+   print(f'CRC = {crc:08x}')
+
+   image[252] = (crc >>  0) & 0xff
+   image[253] = (crc >>  8) & 0xff
+   image[254] = (crc >> 16) & 0xff
+   image[255] = (crc >> 24) & 0xff
+
+#-------------------------------------------------------------------------------
 # UF2 encode
 
 UF2_MAGIC1         = 0x0A324655
@@ -146,7 +186,7 @@ def writeUF2(filename, family_id, address, data):
 def parseArgs():
    ''' Parse command line arguments '''
 
-   parser = argparse.ArgumentParser(description='Create Microsoft UF2 file')
+   parser = argparse.ArgumentParser(description='Create Microsoft UF2 file from ihex')
 
    parser.add_argument(dest='input', type=str, default=None,
                        help='input file', metavar='<ihex>')
@@ -166,6 +206,7 @@ args = parseArgs()
 
 records = readIHEX(args.input)
 
+# Convert IHEX records to a raw image
 address = 0
 image   = []
 
@@ -175,5 +216,8 @@ for record in records:
 
    elif record['type'] == IHEX_DATA:
       image += record['data']
+
+# Add in the CRCR32 required by the RP2040 boot ROM
+addCRC(image)
 
 writeUF2(args.out, args.family_id, address, image)

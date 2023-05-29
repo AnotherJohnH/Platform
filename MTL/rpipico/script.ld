@@ -23,15 +23,16 @@
 MEMORY
 {
    FLASH (rx)  : ORIGIN = 0x10000000, LENGTH = 2M
-   RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = 264K
+   RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = 256K
 }
 
-ENTRY(vector_table)
+ENTRY(boot2)
 
 SECTIONS
 {
    .text :
    {
+      KEEP(*(.boot2))
       KEEP(*(.vectors))
       *(.text*)
       __init_array_start = ALIGN(4);

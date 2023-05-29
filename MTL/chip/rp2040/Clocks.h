@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2023 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,35 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "MTL/MTL.h"
+// \brief RP2040 CLOCKS peripheral
 
-#include "Clocks.h"
-#include "SIO.h"
-#include "Resets.h"
-#include "XOsc.h"
+#pragma once
 
-void MTL_init()
+#include "MTL/Periph.h"
+
+namespace MTL {
+
+struct ClocksReg
 {
-   MTL::Resets resets;
+    struct Generator
+    {
+       uint32_t ctrl;
+       uint32_t div;
+       uint32_t selected;
+    };
 
-   // reset everything except some essentials
-   resets.setReset(~(MTL::Resets::IO_QSPI   |
-                     MTL::Resets::PADS_QSPI |
-                     MTL::Resets::PLL_USB   |
-                     MTL::Resets::USBCTRL   |
-                     MTL::Resets::SYSCFG    |
-                     MTL::Resets::PLL_SYS));
+    Generator gpout[4];
+    Generator ref;
+    Generator sys;
+    Generator peri;
+    Generator usb;
+    Generator adc;
+    Generator rtc;
+};
 
-   // Clear reset for selected peripherals
-   resets.clrReset(0x003C7FFE);
+class Clocks : public Periph<ClocksReg, 0x40008000>
+{
+public:
+};
 
-   MTL::Clocks clocks;
-   MTL::XOsc   xosc;
-
-   xosc.start();
-
-   // Clear resets for everything
-   resets.clrReset(0x01FFFFFF);
-}
+} // namespace MTL

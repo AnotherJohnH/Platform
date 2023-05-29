@@ -21,6 +21,7 @@
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
+            MTL/rp2040/boot2.s
             MTL/rp2040/vector_table.s
             MTL/rp2040/MTL_init.cpp 
             MTL/CortexM0/MTL_clock.cpp

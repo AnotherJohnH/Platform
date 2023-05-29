@@ -26,85 +26,64 @@
 
 #include "MTL/Periph.h"
 
+#include "IoBank.h"
+#include "PadsBank.h"
+#include "SIO.h"
+#include "Resets.h"
+
 namespace MTL {
 
 namespace Gpio {
 
-struct Reg
-{
-   struct
-   {
-      uint32_t status;
-      uint32_t ctrl;
-
-   } io[30];
-
-   uint32_t intr[4];
-   uint32_t proc0_irq_ctrl;
-   uint32_t proc1_irq_ctrl;
-   uint32_t dormant_wake_irq_ctrl;
-};
-
-static const uint32_t IRQOVER_NO_INVERT  = 0x0<<28;
-static const uint32_t IRQOVER_INVERT     = 0x1<<28;
-static const uint32_t IRQOVER_DRIVE_LOW  = 0x2<<28;
-static const uint32_t IRQOVER_DRIVE_HIGH = 0x3<<28;
-
-static const uint32_t INOVER_NO_INVERT   = 0x0<<16;
-static const uint32_t INOVER_INVERT      = 0x1<<16;
-static const uint32_t INOVER_DRIVE_LOW   = 0x2<<16;
-static const uint32_t INOVER_DRIVE_HIGH  = 0x3<<16;
-
-static const uint32_t OEOVER_PERIPH      = 0x0<<12;
-static const uint32_t OEOVER_INV_PERIPH  = 0x1<<12;
-static const uint32_t OEOVER_DISABLE     = 0x2<<12;
-static const uint32_t OEOVER_ENABLE      = 0x3<<12;
-
-static const uint32_t OUTOVER_PERIPH     = 0x0<<8;
-static const uint32_t OUTOVER_INV_PERIPH = 0x1<<8;
-static const uint32_t OUTOVER_DRIVE_LOW  = 0x2<<8;
-static const uint32_t OUTOVER_DRIVE_HIGH = 0x3<<8;
-
-static const uint32_t FUNCSEL            = 0;
-
-
 template <unsigned WIDTH, unsigned PIN>
-class Out : public Periph<Reg, 0x40014000>
+class Out
 {
 public:
    Out()
    {
-      reg->io[PIN].ctrl = OEOVER_ENABLE | FUNCSEL;
+      sio.reg->gpio_oe_clr  = MASK << PIN;
+      sio.reg->gpio_out_clr = MASK << PIN;
+
+      for(unsigned i = 0; i < WIDTH; ++i)
+      {
+          pads_bank.reg->gpio[PIN + i]    = 0x56;
+          io_bank.reg->gpio[PIN + i].ctrl = 0x5;
+      }
+
+      sio.reg->gpio_oe_set = MASK << PIN;
    }
 
    operator uint32_t() const
    {
-      return 0;
+      return (sio.reg->gpio_out >> PIN) & MASK;
    }
 
    uint32_t operator=(uint32_t data)
    {
+      sio.reg->gpio_out = (sio.reg->gpio_out & ~(MASK << PIN)) | (data << PIN);
       return data;
    }
 
    void set(uint32_t data)
    {
-      reg->io[PIN].ctrl = (reg->io[PIN].ctrl & 0xFFFFF0FF) | OUTOVER_DRIVE_HIGH;
+      sio.reg->gpio_out_set = data << PIN;
    }
 
    void clr(uint32_t data)
    {
-      reg->io[PIN].ctrl = (reg->io[PIN].ctrl & 0xFFFFF0FF) | OUTOVER_DRIVE_LOW;
+      sio.reg->gpio_out_clr = data << PIN;
    }
 
 private:
-   static const unsigned LSB       = PIN & 0x1F;
-   static const unsigned MSB       = LSB + WIDTH - 1;
-   static const uint32_t DATA_MASK = (1<<WIDTH) - 1;
+   static const uint32_t MASK = (1 << WIDTH) - 1;
+
+   Sio      sio;
+   PadsBank pads_bank;
+   IoBank   io_bank;
 };
 
 template <unsigned WIDTH, unsigned PIN>
-class In : public Periph<Reg, 0x50000000>
+class In
 {
 public:
    In()
@@ -113,13 +92,15 @@ public:
 
    operator uint32_t() const
    {
-      return 0;
+      return (sio.reg->gpio_in>> PIN) & MASK;
    }
 
 private:
-   static const unsigned LSB       = PIN & 0x1F;
-   static const unsigned MSB       = LSB + WIDTH - 1;
-   static const uint32_t DATA_MASK = (1<<WIDTH) - 1;
+   static const uint32_t MASK = (1<<WIDTH) - 1;
+
+   Sio      sio;
+   PadsBank pads_bank;
+   IoBank   io_bank;
 };
 
 } // namespace Gpio
