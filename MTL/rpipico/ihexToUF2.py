@@ -160,7 +160,7 @@ def writeUF2(filename, family_id, address, data):
       ltl32(record,   4, UF2_MAGIC2)
       ltl32(record,   8, UF2_FLAG_FAMILY_ID)
       ltl32(record,  12, address)
-      ltl32(record,  16, len(data))
+      ltl32(record,  16, block_size)
       ltl32(record,  20, block_no)
       ltl32(record,  24, num_blocks)
       ltl32(record,  28, family_id)
@@ -169,17 +169,19 @@ def writeUF2(filename, family_id, address, data):
 
       f.write(bytearray(record))
 
+   block_size = 256
+
    with open(filename, 'wb') as f:
 
       block_no   = 0
-      num_blocks = (len(data) + 255) // 256
+      num_blocks = (len(data) + block_size) // block_size
 
       for block_no in range(num_blocks):
-         offset = block_no * 0x100
+         offset = block_no * block_size
          writeRecord(f, family_id,
-                     address, data[offset : offset + 0x100],
+                     address, data[offset : offset + block_size],
                      block_no, num_blocks)
-         address += 0x100
+         address += block_size
 
 #-------------------------------------------------------------------------------
 

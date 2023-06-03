@@ -29,7 +29,7 @@
 .global vector_table
 
 vector_table:
-   .word  0x20040000        @ stack pointer (256k RAM)
+   .word  0x20042000        @ stack pointer
    .word  VEC_reset+1
    .word  VEC_nmi+1
    .word  VEC_fault+1
@@ -118,6 +118,8 @@ vector_table:
 VEC_reset:
 #
 # Initialise platform
+# XXX Must not use static data or global constructors
+#     as not initialised yet
 #
     bl   MTL_init
 #

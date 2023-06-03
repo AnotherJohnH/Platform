@@ -23,30 +23,37 @@
 #include "MTL/MTL.h"
 
 #include "Clocks.h"
-#include "SIO.h"
 #include "Resets.h"
-#include "XOsc.h"
 
 void MTL_init()
 {
+   // Resets for essential peripherals
+   const uint32_t ESSENTIAL_RESETS = MTL::Resets::IO_QSPI   |
+                                     MTL::Resets::PADS_QSPI |
+                                     MTL::Resets::PLL_USB   |
+                                     MTL::Resets::USBCTRL   |
+                                     MTL::Resets::SYSCFG    |
+                                     MTL::Resets::PLL_SYS;
+
+   const uint32_t CLOCKED_RESETS = MTL::Resets::USBCTRL |
+                                   MTL::Resets::UART1   |
+                                   MTL::Resets::UART0   |
+                                   MTL::Resets::SPI1    |
+                                   MTL::Resets::SPI0    |
+                                   MTL::Resets::RTC     |
+                                   MTL::Resets::ADC;
+
    MTL::Resets resets;
 
-   // reset everything except some essentials
-   resets.setReset(~(MTL::Resets::IO_QSPI   |
-                     MTL::Resets::PADS_QSPI |
-                     MTL::Resets::PLL_USB   |
-                     MTL::Resets::USBCTRL   |
-                     MTL::Resets::SYSCFG    |
-                     MTL::Resets::PLL_SYS));
+   // reset everything except essentials
+   resets.setReset(MTL::Resets::ALL & ~ESSENTIAL_RESETS);
 
-   // Clear reset for selected peripherals
-   resets.clrReset(0x003C7FFE);
+   // Clear reset for all except some clocked peropherals
+   resets.clrReset(MTL::Resets::ALL & ~CLOCKED_RESETS);
 
-   MTL::Clocks clocks;
-   MTL::XOsc   xosc;
-
-   xosc.start();
+   // Start XOSC, PLLs and all the clock generators
+   MTL::Clocks().start();
 
    // Clear resets for everything
-   resets.clrReset(0x01FFFFFF);
+   resets.clrReset(MTL::Resets::ALL);
 }
