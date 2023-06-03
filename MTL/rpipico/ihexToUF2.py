@@ -126,8 +126,6 @@ def addCRC(image):
 
    crc = bitrev(crc, 32)
 
-   print(f'CRC = {crc:08x}')
-
    image[252] = (crc >>  0) & 0xff
    image[253] = (crc >>  8) & 0xff
    image[254] = (crc >> 16) & 0xff
