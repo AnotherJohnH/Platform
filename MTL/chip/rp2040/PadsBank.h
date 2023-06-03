@@ -39,6 +39,46 @@ struct PadsBankReg
 class PadsBank : public Periph<PadsBankReg, 0x4001C000>
 {
 public:
+    enum Drive
+    {
+        DRIVE_2MA  = 0,
+        DRIVE_4MA  = 0b00010000,
+        DRIVE_8MA  = 0b00100000,
+        DRIVE_12MA = 0b00110000 
+    };
+
+    enum Pull
+    {
+        PULL_NONE  = 0,
+        PULL_UP    = 0b00001000,
+        PULL_DOWN  = 0b00000100
+    };
+
+    //! Set I/O pin as an output
+    void setOut(unsigned io_pin, Drive drive, bool slew_fast = false)
+    {
+       uint32_t bits = IE | drive;
+
+       if (slew_fast) bits |= SLEWFAST;
+
+       reg->gpio[io_pin] = bits;
+    }
+
+    //! Set I/O pin as an input
+    void setIn(unsigned io_pin, Pull pull, bool schmitt_trigger = false)
+    {
+       uint32_t bits = OD | IE | pull;
+
+       if (schmitt_trigger) bits |= SCHMITT;
+
+       reg->gpio[io_pin] = bits;
+    }
+
+private:
+    static const uint32_t OD       = 0b10000000; //!< Output disable
+    static const uint32_t IE       = 0b01000000; //!< Input enable
+    static const uint32_t SCHMITT  = 0b00000010; //!< Enable schmitt trigger
+    static const uint32_t SLEWFAST = 0b00000001; //!< Slew rate control
 };
 
 } // namespace MTL

@@ -46,9 +46,17 @@ public:
       while((reg->reset_done & mask) != mask);
    }
 
+   //! Set reset for peripherals
    void setReset(uint32_t mask)
    {
       reg->reset |= mask;
+   }
+
+   //! Set and then clear reset for peripherals
+   void tglReset(uint32_t mask)
+   {
+      setReset(mask);
+      clrReset(mask);
    }
 
    // Peripheral bit masks

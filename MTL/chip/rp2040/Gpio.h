@@ -46,8 +46,8 @@ public:
 
       for(unsigned i = 0; i < WIDTH; ++i)
       {
-          pads_bank.reg->gpio[PIN + i]    = 0x56;
-          io_bank.reg->gpio[PIN + i].ctrl = 0x5;
+         pads_bank.setOut(PIN + i, PadsBank::DRIVE_4MA);
+         io_bank.setFunc( PIN + i, IoBank::SIO);
       }
 
       sio.reg->gpio_oe_set = MASK << PIN;
@@ -88,15 +88,22 @@ class In
 public:
    In()
    {
+      sio.reg->gpio_oe_clr = MASK << PIN;
+
+      for(unsigned i = 0; i < WIDTH; ++i)
+      {
+         pads_bank.setIn(PIN + i, PadsBank::PULL_UP);
+         io_bank.setFunc(PIN + i, IoBank::SIO);
+      }
    }
 
    operator uint32_t() const
    {
-      return (sio.reg->gpio_in>> PIN) & MASK;
+      return (sio.reg->gpio_in >> PIN) & MASK;
    }
 
 private:
-   static const uint32_t MASK = (1<<WIDTH) - 1;
+   static const uint32_t MASK = (1 << WIDTH) - 1;
 
    Sio      sio;
    PadsBank pads_bank;

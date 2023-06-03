@@ -73,8 +73,6 @@ struct ClocksReg
 class Clocks : public Periph<ClocksReg, 0x40008000>
 {
 public:
-    enum Index { GPOUT0, GPOUT1, GPOUT2, GPOUT3, REF, SYS, PERI, USB, ADC, RTC };
-
     void start()
     {
         // Disable resus
@@ -83,7 +81,7 @@ public:
         // Start the XTAL oscillator
         XOsc().start();
 
-        // Before starting PLLs ensure SYS and REF clocks switched away from their aux source
+        // Before starting PLLs ensure SYS and REF clocks switched away from aux sources
         reg->sys.ctrl &= ~0b1;
         while(reg->sys.selected != 1);
 
@@ -115,7 +113,8 @@ public:
 
         // RTC clock
         // PLL_USB => CLK_RTC => 46875 Hz
-        configAux(&reg->rtc, /* PLL USB */ 0, uint32_t((uint64_t(pll_usb.getFreq()) << 8) / RTC_FREQ));
+        configAux(&reg->rtc, /* PLL USB */ 0,
+                  uint32_t((uint64_t(pll_usb.getFreq()) << 8) / RTC_FREQ));
 
         // PERI clock
         // PLL_SYS => CLK_PERI => 125 MHz

@@ -27,7 +27,6 @@
 #include "MTL/Periph.h"
 
 #include "Resets.h"
-#include "XOsc.h"
 
 namespace MTL {
 
@@ -73,9 +72,7 @@ private:
                unsigned post_div2)
    {
        // Reset the PLL
-       Resets resets;
-       resets.setReset(RESET_BIT);
-       resets.clrReset(RESET_BIT);
+       Resets().tglReset(RESET_BIT);
 
        // Program ref and feedback dividers
        this->reg->cs        = refdiv;

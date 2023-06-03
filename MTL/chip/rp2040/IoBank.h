@@ -36,12 +36,41 @@ struct IoBankReg
        uint32_t ctrl;
    };
 
-   Gpio gpio[30];
+   Gpio     gpio[30];
+   uint32_t intr[4];
+   uint32_t proc0_inte[4];
+   uint32_t proc0_intf[4];
+   uint32_t proc0_ints[4];
+   uint32_t proc1_inte[4];
+   uint32_t proc1_intf[4];
+   uint32_t proc1_ints[4];
+   uint32_t dormant_wake_inte[4];
+   uint32_t dormant_wake_intf[4];
+   uint32_t dormant_wake_ints[4];
 };
 
 class IoBank : public Periph<IoBankReg, 0x40014000>
 {
 public:
+   enum Func
+   {
+       XIP   = 0,
+       SPI   = 1,
+       UART  = 2,
+       I2C   = 3,
+       PWM   = 4,
+       SIO   = 5,
+       PIO0  = 6,
+       PIO1  = 7,
+       CLOCK = 8,
+       USB   = 9
+   };
+
+   //! Set the function for an I/O pin
+   void setFunc(unsigned io_pin, Func func)
+   {
+      reg->gpio[io_pin].ctrl = (reg->gpio[io_pin].ctrl & ~0x1F) | func;
+   }
 };
 
 } // namespace MTL
