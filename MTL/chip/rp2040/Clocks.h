@@ -90,7 +90,7 @@ public:
 
         // Start the PLLs
         PllSys pll_sys;
-        pll_sys.start125MHz();
+        pll_sys.start133MHz();
 
         PllUsb pll_usb;
         pll_usb.start48MHz();
@@ -100,7 +100,7 @@ public:
         configGlitchless(&reg->ref, /* XOSC */ 2, /* div8 */ 0x100);
 
         // System clock
-        // PLL_SYS => CLK_SYS => 125 MHz
+        // PLL_SYS => CLK_SYS => 133 MHz
         configGlitchless(&reg->sys, /* PLL SYS */ 1, /* div8 */ 0x100);
 
         // USB clock
@@ -117,7 +117,7 @@ public:
                   uint32_t((uint64_t(pll_usb.getFreq()) << 8) / RTC_FREQ));
 
         // PERI clock
-        // PLL_SYS => CLK_PERI => 125 MHz
+        // PLL_SYS => CLK_PERI => 133 MHz
         configAux(&reg->peri, /* PLL SYS */ 0, /* div8 */ 0x100);
     }
 
