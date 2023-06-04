@@ -65,7 +65,7 @@ public:
     }
 
     //! Set I/O pin as an input
-    void setIn(unsigned io_pin, Pull pull, bool schmitt_trigger = false)
+    void setIn(unsigned io_pin, Pull pull = PULL_UP, bool schmitt_trigger = false)
     {
        uint32_t bits = OD | IE | pull;
 
