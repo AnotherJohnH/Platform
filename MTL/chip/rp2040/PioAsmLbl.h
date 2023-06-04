@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2023 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,54 +20,65 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \brief Memory mapped peripheral helper
+// \brief Code label class for use with PioAsm
 
 #pragma once
 
+#include <cassert>
 #include <cstdint>
 
-#include "MTL/Register.h"
+namespace PIO {
 
-#define  REG_TYPE(OFFSET, TYPE, NAME)  \
-    struct { uint8_t pad_##NAME[OFFSET]; TYPE NAME; }
-
-#define  REG_TYPE_ARRAY(OFFSET, TYPE, NAME, SIZE)  \
-    struct { uint8_t pad_##NAME[OFFSET]; TYPE NAME[SIZE]; }
-
-#define  REG(OFFSET, NAME) \
-    REG_TYPE(OFFSET, MTL::Register<uint32_t>, NAME)
-
-#define  REG_ARRAY(OFFSET, NAME, SIZE)  \
-    REG_TYPE_ARRAY(OFFSET, MTL::Register<uint32_t>, NAME, SIZE)
-
-namespace MTL {
-
-//! Base class for memory mapped peripherals
-template <typename REG_TYPE,
-          uint32_t BASE_ADDR,
-          unsigned INSTANCE=0,
-          uint32_t SIZE = 0x1000>
-class Periph
+class Lbl
 {
-protected:
-   const uint32_t PERIPH_ADDR = BASE_ADDR + INSTANCE*SIZE;
-
 public:
-   volatile REG_TYPE* const reg = (volatile REG_TYPE*)(PERIPH_ADDR);
+   Lbl() = default;
 
-   //! Register helper to set a field
-   void setField(volatile uint32_t& reg, unsigned msb, unsigned lsb, unsigned data)
+   ~Lbl()
    {
-       uint32_t mask = (1 << (msb - lsb + 1)) - 1;
-
-       reg = (reg & ~mask) | (data << lsb);
+      assert(unresolved == 0);
    }
 
-   //! Register helper to clear a field
-   void clrField(volatile uint32_t& reg, unsigned msb, unsigned lsb)
+   operator uint8_t() const
    {
-       setField(reg, msb, lsb, 0);
+      assert(resolved);
+      return addr5;
    }
+
+   //! Reference a label
+   uint8_t reference(uint8_t addr5_)
+   {
+       if (not resolved)
+       {
+          unresolved |= 1 << addr5_;
+       }
+
+       return addr5;
+   }
+
+   //! Resolve a label
+   void resolve(uint8_t addr5_, uint16_t* prog_)
+   {
+      assert(not resolved);
+
+      resolved = true;
+      addr5    = addr5_;
+
+      for(unsigned a = 0; a < 32; a++)
+      {
+         if (unresolved & (1 << a))
+         {
+            prog_[a] |= addr5_;
+         }
+      }
+
+      unresolved = 0;
+   }
+
+private:
+   bool     resolved{false};
+   uint8_t  addr5{0};
+   uint32_t unresolved{0};
 };
 
-} // namespace MTL
+} // namespace PIO
