@@ -76,6 +76,10 @@ struct Label
     uint32_t unresolved{0};
 };
 
+enum ShiftDir { SHIFT_RIGHT = 0, SHIFT_LEFT = 1 };
+
+enum Auto     { MANUAL = 0, AUTO_PULL = 1, AUTO_PUSH = 1 };
+
 template <unsigned INDEX, uint32_t BASE_ADDRESS>
 class PioBase : public Periph<PioReg, BASE_ADDRESS>
 {
@@ -89,62 +93,96 @@ public:
    }
 
    //! Set state machine OUT pins
-   void SM_setPinOUT(unsigned index, unsigned pin, unsigned n = 1)
+   void SM_PinOUT(unsigned sd, unsigned pin, unsigned n = 1)
    {
       configOut(pin, n);
 
-      this->setField(this->reg->sm[index].pinctrl,  4,  0, pin);
-      this->setField(this->reg->sm[index].pinctrl, 25, 20, n);
+      this->setField(this->reg->sm[sd].pinctrl,  4,  0, pin);
+      this->setField(this->reg->sm[sd].pinctrl, 25, 20, n);
    }
 
    //! Set state machine SET pins
-   void SM_setPinSET(unsigned index, unsigned pin, unsigned n = 1)
+   void SM_PinSET(unsigned sd, unsigned pin, unsigned n = 1)
    {
       configOut(pin, n);
 
-      this->setField(this->reg->sm[index].pinctrl,  9,  5, pin);
-      this->setField(this->reg->sm[index].pinctrl, 28, 26, n);
+      this->setField(this->reg->sm[sd].pinctrl,  9,  5, pin);
+      this->setField(this->reg->sm[sd].pinctrl, 28, 26, n);
    }
 
    //! Set state machine side set pins
-   void SM_setPinSideSet(unsigned index, unsigned pin, unsigned n = 1)
+   void SM_PinSDE(unsigned sd, unsigned pin, unsigned n = 1)
    {
       configOut(pin, n);
 
-      this->setField(this->reg->sm[index].pinctrl, 14, 10, pin);
-      this->setField(this->reg->sm[index].pinctrl, 31, 29, n);
+      this->setField(this->reg->sm[sd].pinctrl, 14, 10, pin);
+      this->setField(this->reg->sm[sd].pinctrl, 31, 29, n);
    }
 
    //! Set state machine INP pin
-   void SM_setPinINP(unsigned index, unsigned pin)
+   void SM_PinINP(unsigned sd, unsigned pin)
    {
       configIn(pin, 1);
 
-      this->setField(this->reg->sm[index].pinctrl, 19, 15, pin);
+      this->setField(this->reg->sm[sd].pinctrl, 19, 15, pin);
    }
 
    //! Set state machine clock divider
-   void SM_setClkDiv(unsigned index, uint32_t clkdiv8)
+   void SM_ClkDiv(unsigned sd, uint32_t clkdiv8)
    {
-      this->reg->sm[index].clkdiv = clkdiv8 << 8;
+      this->reg->sm[sd].clkdiv = clkdiv8 << 8;
    }
 
    //! Set state machine wrap points
-   void SM_setWrap(unsigned index, PIO::Lbl& btm, PIO::Lbl& top)
+   void SM_wrap(unsigned sd, unsigned btm, unsigned top)
    {
-      this->setField(this->reg->sm[index].exectrl, 16, 7, (top << 5) | btm);
+      this->setField(this->reg->sm[sd].execctrl, 16, 7, ((top - 1) << 5) | btm);
+   }
+
+   //! Configure output shift register
+   void SM_configOSR(unsigned sd, unsigned bits, ShiftDir dir, Auto autopull)
+   {
+      bits &= 0x1F;
+
+      this->reg->sm[sd].shiftctrl = (   1     << 30) |    // Combine TX + RX FIFO
+                                    (bits     << 25) |
+                                    (dir      << 19) |
+                                    (autopull << 17);
+   }
+
+   //! Configure input shift register
+   void SM_configISR(unsigned sd, unsigned bits, ShiftDir dir, Auto autopush)
+   {
+      bits &= 0x1F;
+
+      this->reg->sm[sd].shiftctrl = (   1     << 31) |   // Combine RX & TX FIFO
+                                    (bits     << 20) |
+                                    (dir      << 18) |
+                                    (autopush << 16);
+   }
+
+   //! Write to TX FIFO
+   void SM_write(unsigned sd, uint32_t data)
+   {
+      this->reg->txf[sd] = data;
+   }
+
+   //! Read from TX FIFO
+   uint32_t SM_read(unsigned sd)
+   {
+      return this->reg->rxf[sd];
    }
 
    //! Start state machines
-   void start(unsigned mask)
+   void start(unsigned sd_mask)
    {
-      this->setField(this->reg->ctrl, 3, 0, mask);
+      this->setField(this->reg->ctrl, 3, 0, sd_mask);
    }
 
    //! Stop state machines
-   void stop(unsigned mask)
+   void stop(unsigned sd_mask)
    {
-      this->clrField(this->reg->ctrl, 3, 0);
+      this->setField(this->reg->ctrl, 3, 0, this->reg->ctrl & ~sd_mask);
    }
 
 private:

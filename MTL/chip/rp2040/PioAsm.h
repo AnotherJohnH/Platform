@@ -80,8 +80,17 @@ class Asm
 public:
    Asm() = default;
 
+   //! Number of side set bits
+   unsigned sideSetBits() const { return side_set_bits; }
+
    //! Number of instructions encoded
    unsigned size() const { return pc; }
+
+   //! Set number of side set bits
+   void side_set(unsigned side_set_bits_)
+   {
+      side_set_bits = side_set_bits_;
+   }
 
    //! Read program
    uint16_t operator[](unsigned addr) const { return prog[addr]; }
@@ -93,93 +102,118 @@ public:
    }
 
    //! Jump to address if condition is true
-   void JMP(JmpCond cond, Lbl& label, unsigned delay_side_set = 0)
+   Asm& JMP(JmpCond cond, Lbl& label)
    {
-       code(0b000, delay_side_set, (cond << 5) | label.reference(pc));
+       return code(0b000, (cond << 5) | label.reference(pc));
    }
 
    //! Jump to address
-   void JMP(Lbl& label, unsigned delay_side_set = 0)
+   Asm& JMP(Lbl& label)
    {
-       code(0b000, delay_side_set, (0b000 << 5) | label.reference(pc));
+       return code(0b000, (0b000 << 5) | label.reference(pc));
    }
 
    //! Stall until a condition is met
-   void WFC(WaitCond cond, unsigned index5, unsigned delay_side_set = 0)
+   Asm& WFC(WaitCond cond, unsigned index5)
    {
-       code(0b001, delay_side_set, (cond << 5) | index5);
+       return code(0b001, (cond << 5) | index5);
    }
 
    //! Shift bit_count bits from source into the ISR
-   void INP(Operand source, unsigned bit_count, unsigned delay_side_set = 0)
+   Asm& INP(Operand source, unsigned bit_count = 1)
    {
-       code(0b010, delay_side_set, (source << 5) | (bit_count & 0x1F));
+       return code(0b010, (source << 5) | (bit_count & 0x1F));
    }
 
    //! Shift bit_count bits from OSR into the destination
-   void OUT(Operand dest, unsigned bit_count, unsigned delay_side_set = 0)
+   Asm& OUT(Operand dest, unsigned bit_count = 1)
    {
-       code(0b011, delay_side_set, (dest << 5) | (bit_count & 0x1F));
+       return code(0b011, (dest << 5) | (bit_count & 0x1F));
    }
 
    //! Push contents of the ISR into the RX FIFO
-   void PSH(PushPull mode = BLOCK, unsigned delay_side_set = 0)
+   Asm& PSH(PushPull mode = BLOCK)
    {
-       code(0b100, delay_side_set, mode);
+       return code(0b100, mode);
    }
 
    //! Push contents of the OSR into the TX FIFO
-   void PUL(PushPull mode = BLOCK, unsigned delay_side_set = 0)
+   Asm& PUL(PushPull mode = BLOCK)
    {
-       code(0b100, delay_side_set, (1 << 7) | mode);
+       return code(0b100, (1 << 7) | mode);
    }
 
    //! Copy data from source to destination
-   void MOV(Operand dest, Operand source, unsigned delay_side_set = 0)
+   Asm& MOV(Operand dest, Operand source)
    {
-       code(0b101, delay_side_set, (dest << 5) | (0b00 << 3) | source);
+       return code(0b101, (dest << 5) | (0b00 << 3) | source);
    }
 
    //! Invert data from source to destination
-   void INV(Operand dest, Operand source, unsigned delay_side_set = 0)
+   Asm& INV(Operand dest, Operand source)
    {
-       code(0b101, delay_side_set, (dest << 5) | (0b01 << 3) | source);
+       return code(0b101, (dest << 5) | (0b01 << 3) | source);
    }
 
    //! Bit reverese data from source to destination
-   void REV(Operand dest, Operand source, unsigned delay_side_set = 0)
+   Asm& REV(Operand dest, Operand source)
    {
-       code(0b101, delay_side_set, (dest << 5) | (0b10 << 3) | source);
+       return code(0b101, (dest << 5) | (0b10 << 3) | source);
    }
 
    //! Set or clear an IRQ
-   void IRQ(Irq mode, unsigned irq_num, unsigned delay_side_set = 0)
+   Asm& IRQ(Irq mode, unsigned irq_num)
    {
-       code(0b110, delay_side_set, (mode << 5) | irq_num);
+       return code(0b110, (mode << 5) | irq_num);
    }
 
    //! Write immediate value to destination
-   void SET(Operand dest, unsigned imm5, unsigned delay_side_set = 0)
+   Asm& SET(Operand dest, unsigned imm5)
    {
-       code(0b111, delay_side_set, (dest << 5) | imm5);
+       return code(0b111, (dest << 5) | imm5);
    }
 
    //! No operation
-   void NOP(unsigned delay_side_set = 0)
+   Asm& NOP()
    {
-      MOV(Y, Y, delay_side_set);
+      return MOV(Y, Y);
+   }
+
+   //! Set delay in the instruction just written
+   Asm& delay(unsigned cycles)
+   {
+      assert(cycles < (1 << (5 - side_set_bits)));
+
+      uint16_t& inst = prog[pc - 1];
+
+      inst = inst | (cycles << (8 + side_set_bits));
+      return *this;
+   }
+
+   //! Set side set bits in the instruction just written
+   Asm& side(unsigned bits)
+   {
+      assert(bits < (1 << side_set_bits));
+
+      uint16_t& inst = prog[pc - 1];
+      inst = inst | (bits << 8);
+
+      return *this;
    }
 
 private:
-   void code(unsigned op, unsigned delay_side_set, uint16_t inst)
+   Asm& code(unsigned op, uint16_t inst)
    {
        assert(pc < MAX_INST);
 
-       prog[pc++] = (op << 13) | (delay_side_set << 8) | inst;
+       prog[pc++] = (op << 13) | inst;
+
+       return *this;
    }
 
    static const unsigned MAX_INST = 32;
 
+   uint8_t  side_set_bits{0};
    uint8_t  pc{0};
    uint16_t prog[MAX_INST];
 };
