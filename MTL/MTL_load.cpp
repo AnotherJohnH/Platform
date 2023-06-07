@@ -24,31 +24,41 @@
 
 #include "MTL/MTL.h"
 
-extern uint8_t __etext[];
-extern uint8_t __data_start__[];
-extern uint8_t __data_end__;
-extern uint8_t __bss_start__[];
-extern uint8_t __bss_end__;
-extern void    (*__init_array_start)();
-extern void    (*__init_array_end)();
-
-void MTL_load()
+//! Initialise data section and clear BSS
+void MTL_data_and_bss()
 {
-   // Initialise data section
+   extern uint8_t __etext[];
+   extern uint8_t __data_start__[];
+   extern uint8_t __data_end__;
+   extern uint8_t __bss_start__[];
+   extern uint8_t __bss_end__;
+
    for(signed i = 0; i < &__data_end__ - &__data_start__[0]; ++i)
    {
       __data_start__[i] = __etext[i];
    }
 
-   // Clear BSS
    for(signed i = 0; i < &__bss_end__ - &__bss_start__[0]; ++i)
    {
       __bss_start__[i] = 0;
    }
+}
 
-   // Call global constructors
+//! Call global constructors
+void MTL_global_construction()
+{
+   extern void (*__init_array_start)();
+   extern void (*__init_array_end)();
+
    for(void (**func)() = &__init_array_start; func < &__init_array_end; ++func)
    {
       (**func)();
    }
+}
+
+void MTL_load()
+{
+    MTL_data_and_bss();
+
+    MTL_global_construction();
 }

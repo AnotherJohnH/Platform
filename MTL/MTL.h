@@ -41,6 +41,12 @@ extern "C"
    //! Intialise the platform
    void MTL_init();
 
+   //! Initialise image
+   void MTL_data_and_bss();
+
+   //! Construct global objects
+   void MTL_global_construction();
+
    //! Intialise the application
    void MTL_load();
 

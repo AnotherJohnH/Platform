@@ -58,9 +58,29 @@ public:
    //! Register helper to set a field
    void setField(volatile uint32_t& reg, unsigned msb, unsigned lsb, unsigned data)
    {
-       uint32_t mask = (1 << (msb - lsb + 1)) - 1;
+      uint32_t mask = (1 << (msb - lsb + 1)) - 1;
 
-       reg = (reg & ~mask) | (data << lsb);
+      reg = (reg & ~(mask << lsb)) | (data << lsb);
+   }
+
+   //! Register helper to get a field
+   unsigned getField(volatile uint32_t& reg, unsigned msb, unsigned lsb)
+   {
+      uint32_t mask = (1 << (msb - lsb + 1)) - 1;
+
+      return (reg >> lsb) & mask;
+   }
+
+   //! Register helper to set a bit
+   void setBit(volatile uint32_t& reg, unsigned bit, unsigned data)
+   {
+       setField(reg, bit, bit, data);
+   }
+
+   //! Register helper to get a bit
+   unsigned getBit(volatile uint32_t& reg, unsigned bit)
+   {
+       return getField(reg, bit, bit);
    }
 
    //! Register helper to clear a field
