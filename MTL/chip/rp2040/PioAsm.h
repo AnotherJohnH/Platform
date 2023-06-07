@@ -61,7 +61,7 @@ enum Operand
    STATUS   = 0b101
 };
 
-enum PushPull
+enum FifoMode
 {
    BLOCK             = 0b0100000,
    NO_BLOCK          = 0b0000000,
@@ -78,7 +78,15 @@ enum Irq { SET = 0b00, WAIT = 0b01, CLR = 0b10 };
 class Asm
 {
 public:
-   Asm() = default;
+   enum OpCode
+   {
+      OP_JMP = 0b000, OP_WFC = 0b001
+   };
+
+   Asm(unsigned side_set_bits_ = 0)
+       : side_set_bits(side_set_bits_)
+   {
+   }
 
    //! Number of side set bits
    unsigned sideSetBits() const { return side_set_bits; }
@@ -86,37 +94,48 @@ public:
    //! Number of instructions encoded
    unsigned size() const { return pc; }
 
-   //! Set number of side set bits
+   uint8_t getEntry() const { return lbl_entry; }
+
+   uint8_t getWrap() const { return lbl_wrap; }
+
+   uint8_t getWrapTarget() const { return lbl_wrap_target; }
+
+   //! Read program
+   uint16_t operator[](unsigned addr) const { return prog[addr]; }
+
    void side_set(unsigned side_set_bits_)
    {
       side_set_bits = side_set_bits_;
    }
 
-   //! Read program
-   uint16_t operator[](unsigned addr) const { return prog[addr]; }
-
    //! Fix a label at the current location
-   void lbl(Lbl& label)
-   {
-      label.resolve(pc, prog); 
-   }
+   void lbl(Lbl& label) { label.resolve(pc, prog); }
+
+   //! Fix entry label at the current location
+   void entry()       { lbl(lbl_entry);       }
+
+   //! Fix wrap label at the current location
+   void wrap()        { lbl(lbl_wrap);        }
+
+   //! Fix wrap target label at the current location
+   void wrap_target() { lbl(lbl_wrap_target); }
 
    //! Jump to address if condition is true
    Asm& JMP(JmpCond cond, Lbl& label)
    {
-       return code(0b000, (cond << 5) | label.reference(pc));
+       return code(OP_JMP, (cond << 5) | label.reference(pc));
    }
 
    //! Jump to address
    Asm& JMP(Lbl& label)
    {
-       return code(0b000, (0b000 << 5) | label.reference(pc));
+       return code(OP_JMP, (ALWAYS << 5) | label.reference(pc));
    }
 
    //! Stall until a condition is met
    Asm& WFC(WaitCond cond, unsigned index5)
    {
-       return code(0b001, (cond << 5) | index5);
+       return code(OP_WFC, (cond << 5) | index5);
    }
 
    //! Shift bit_count bits from source into the ISR
@@ -132,13 +151,13 @@ public:
    }
 
    //! Push contents of the ISR into the RX FIFO
-   Asm& PSH(PushPull mode = BLOCK)
+   Asm& PSH(FifoMode mode = BLOCK)
    {
        return code(0b100, mode);
    }
 
-   //! Push contents of the OSR into the TX FIFO
-   Asm& PUL(PushPull mode = BLOCK)
+   //! Pull contents of the TX FIFO into the OSR
+   Asm& POP(FifoMode mode = BLOCK)
    {
        return code(0b100, (1 << 7) | mode);
    }
@@ -186,7 +205,7 @@ public:
 
       uint16_t& inst = prog[pc - 1];
 
-      inst = inst | (cycles << (8 + side_set_bits));
+      inst = inst | (cycles << 8);
       return *this;
    }
 
@@ -196,17 +215,18 @@ public:
       assert(bits < (1 << side_set_bits));
 
       uint16_t& inst = prog[pc - 1];
-      inst = inst | (bits << 8);
+      inst = inst | (bits << (13 - side_set_bits));
 
       return *this;
    }
 
-private:
-   Asm& code(unsigned op, uint16_t inst)
-   {
-       assert(pc < MAX_INST);
+   //! Get the instruction just encoded
+   uint16_t op() const { return prog[pc - 1]; }
 
-       prog[pc++] = (op << 13) | inst;
+private:
+   Asm& code(unsigned op_, uint16_t inst_)
+   {
+       prog[pc++] = (op_ << 13) | inst_;
 
        return *this;
    }
@@ -216,6 +236,9 @@ private:
    uint8_t  side_set_bits{0};
    uint8_t  pc{0};
    uint16_t prog[MAX_INST];
+   Lbl      lbl_entry{0x00};
+   Lbl      lbl_wrap{0x1F};
+   Lbl      lbl_wrap_target{0x00};
 };
 
 } // namespace PIO

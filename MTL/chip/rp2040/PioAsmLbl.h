@@ -34,6 +34,12 @@ class Lbl
 public:
    Lbl() = default;
 
+   Lbl(uint8_t addr5_)
+      : resolved(true)
+      , addr5(addr5_)
+   {
+   }
+
    ~Lbl()
    {
       assert(unresolved == 0);
@@ -59,8 +65,6 @@ public:
    //! Resolve a label
    void resolve(uint8_t addr5_, uint16_t* prog_)
    {
-      assert(not resolved);
-
       resolved = true;
       addr5    = addr5_;
 

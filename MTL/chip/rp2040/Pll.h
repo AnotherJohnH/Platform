@@ -101,8 +101,11 @@ private:
        this->reg->pwr &= ~(1<<3);
    }
 
-   unsigned freq {};
+   static unsigned freq;
 };
+
+template <uint32_t BASE_ADDRESS, unsigned RESET_BIT>
+unsigned MTL::PllBase<BASE_ADDRESS, RESET_BIT>::freq {0};
 
 class PllSys : public PllBase<0x40028000, Resets::PLL_SYS> {};
 

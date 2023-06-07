@@ -72,7 +72,7 @@ public:
    }
 
    //! Register helper to set a bit
-   void setBit(volatile uint32_t& reg, unsigned bit, unsigned data)
+   void setBit(volatile uint32_t& reg, unsigned bit, unsigned data = 1)
    {
        setField(reg, bit, bit, data);
    }
@@ -87,6 +87,12 @@ public:
    void clrField(volatile uint32_t& reg, unsigned msb, unsigned lsb)
    {
        setField(reg, msb, lsb, 0);
+   }
+
+   //! Register helper to clear a field
+   void clrBit(volatile uint32_t& reg, unsigned bit)
+   {
+       clrField(reg, bit, bit);
    }
 };
 
