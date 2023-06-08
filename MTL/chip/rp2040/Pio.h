@@ -72,19 +72,13 @@ struct PioReg
    uint32_t     irq1_ints;
 };
 
-struct Label
-{
-    bool     resolved{false};
-    uint32_t addr{0};
-    uint32_t unresolved{0};
-};
-
 enum ShiftDir { SHIFT_RIGHT = 0, SHIFT_LEFT = 1 };
 
-enum Auto     { MANUAL = 0, AUTO_PULL = 1, AUTO_PUSH = 1 };
+enum Auto { MANUAL = 0, AUTO_PULL = 1, AUTO_PUSH = 1 };
 
 template <unsigned INDEX, uint32_t BASE_ADDRESS>
 class PioBase : public Periph<PioReg, BASE_ADDRESS>
+              , public PIO::AsmBase<1>
 {
 public:
    //! Allocate the next free state machine
@@ -116,13 +110,17 @@ public:
    //! Set state machine side set pins
    void SM_pinSDE(unsigned sd, unsigned pin, unsigned n = 1)
    {
+      side_set(n);
+
+      unsigned mask = (1 << n) - 1;
+
       configOut(pin, n);
 
       this->setField(this->reg->sm[sd].pinctrl, 14, 10, pin);
       this->setField(this->reg->sm[sd].pinctrl, 31, 29, n);
 
       this->setBit(this->reg->sm[sd].execctrl, 29);
-      SM_exec(sd, NOP().side((1 << n) - 1, n).op());
+      SM_exec(sd, NOP().side(mask).op());
       this->clrBit(this->reg->sm[sd].execctrl, 29);
    }
 
@@ -212,7 +210,7 @@ public:
       }
 
       SM_wrap(sd, code.getWrapTarget() + start, code.getWrap() + start);
-      SM_exec(sd, JMP(PIO::ALWAYS, code.getEntry() + start).op());
+      SM_exec(sd, JMP(code.getEntry() + start).op());
    }
 
    //! Start state machines
@@ -231,90 +229,7 @@ public:
       this->setField(this->reg->ctrl, 3, 0, this->reg->ctrl & ~sd_mask);
    }
 
-   PioBase& JMP(PIO::JmpCond cond, unsigned addr5)
-   {
-      return code(PIO::Asm::OP_JMP, (cond << 5) | addr5);
-   }
-
-   PioBase& JMP(unsigned addr5)
-   {
-      return JMP(PIO::ALWAYS, addr5);
-   }
-
-   PioBase& WFC(PIO::WaitCond cond, unsigned index5)
-   {
-      return code(PIO::Asm::OP_WFC, (cond << 5) | index5);
-   }
-
-   PioBase& INP(PIO::Operand source, unsigned bit_count = 1)
-   {
-      return code(0b010, (source << 5) | bit_count);
-   }
-
-   PioBase& OUT(PIO::Operand dest, unsigned bit_count = 1)
-   {
-      return code(0b011, (dest << 5) | bit_count);
-   }
-
-   PioBase& PSH(PIO::FifoMode mode = PIO::BLOCK)
-   {
-      return code(0b100, mode);
-   }
-
-   PioBase& POP(PIO::FifoMode mode = PIO::BLOCK)
-   {
-      return code(0b100, (1 << 7) | mode);
-   }
-
-   PioBase& MOV(PIO::Operand dest, PIO::Operand source)
-   {
-      return code(0b101, (dest << 5) | (0b00 << 3) | source);
-   }
-
-   PioBase& INV(PIO::Operand dest, PIO::Operand source)
-   {
-      return code(0b101, (dest << 5) | (0b01 << 3) | source);
-   }
-
-   PioBase& REV(PIO::Operand dest, PIO::Operand source)
-   {
-      return code(0b101, (dest << 5) | (0b10 << 3) | source);
-   }
-
-   PioBase& IRQ(PIO::Irq mode, unsigned irq_num)
-   {
-      return code(0b110, (mode << 5) | irq_num);
-   }
-
-   PioBase& SET(PIO::Operand dest, unsigned imm5)
-   {
-      return code(0b111, (dest << 5) | imm5);
-   }
-
-   PioBase& NOP()
-   {
-      return MOV(PIO::Y, PIO::Y);
-   }
-
-   //! Set side set bits in the instruction just written
-   PioBase& side(unsigned bits, unsigned side_set_bits)
-   {
-      assert(bits < (1 << side_set_bits));
-
-      inst = inst | (bits << (13 - side_set_bits));
-
-      return *this;
-   }
-
-   uint16_t op() const { return inst; }
-
 private:
-   PioBase& code(unsigned op_, uint16_t inst_)
-   {
-      inst = (op_ << 13) | inst_;
-      return *this;
-   }
-
    void configOut(unsigned pin, unsigned n)
    {
       for(unsigned i = 0; i < n; ++i)
@@ -335,7 +250,6 @@ private:
 
    PadsBank pads_bank{};
    IoBank   io_bank{};
-   uint16_t inst {0};
 
    static const uint8_t NUM_STATE_MACHINE = 4;
 
