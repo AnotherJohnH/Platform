@@ -55,8 +55,8 @@ enum Operand
 // MOV src  PINS  X     Y     ZERO  -        STATUS  ISR   OSR
 // SET      PINS  X     Y     -     PINDIRS  -       -     -
 
-   PINS    = 0b000, X = 0b001,  Y = 0b010,   ZERO = 0b011,
-   PINDIRS = 0b100, PC = 0b101, ISR = 0b110, OSR  = 0b111,
+   PINS     = 0b000, X  = 0b001, Y   = 0b010, ZERO = 0b011,
+   PINDIRS  = 0b100, PC = 0b101, ISR = 0b110, OSR  = 0b111,
 
    IGN      = 0b011,
    EXEC_OUT = 0b111,

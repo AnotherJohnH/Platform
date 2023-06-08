@@ -96,6 +96,12 @@ public:
 
       this->setField(this->reg->sm[sd].pinctrl,  4,  0, pin);
       this->setField(this->reg->sm[sd].pinctrl, 25, 20, n);
+
+      // Set pin direction using OUT pins
+      unsigned mask = (1 << n) - 1;
+      SM_push(sd, mask);
+      SM_exec(sd, POP().op());
+      SM_exec(sd, OUT(PIO::PINDIRS, n).op());
    }
 
    //! Set state machine SET pins
@@ -103,33 +109,82 @@ public:
    {
       configOut(pin, n);
 
-      this->setField(this->reg->sm[sd].pinctrl,  9,  5, pin);
-      this->setField(this->reg->sm[sd].pinctrl, 28, 26, n);
+      // Get PINCTRL
+      uint32_t pinctrl = this->reg->sm[sd].pinctrl;
+
+      // Configure SET pins
+      this->setField(pinctrl,  9,  5, pin);
+      this->setField(pinctrl, 28, 26, n);
+
+      // Configure OUT pins as SET pins
+      uint32_t tmp_pinctrl = pinctrl;
+      this->setField(tmp_pinctrl,  4,  0, pin);
+      this->setField(tmp_pinctrl, 25, 20, n);
+      this->reg->sm[sd].pinctrl = tmp_pinctrl;
+
+      // Set SET pin direction using OUT pins
+      unsigned mask = (1 << n) - 1;
+      SM_push(sd, mask);
+      SM_exec(sd, POP().op());
+      SM_exec(sd, OUT(PIO::PINDIRS, n).op());
+
+      // Set PINCTRL (restores previous OUT config)
+      this->reg->sm[sd].pinctrl = pinctrl;
    }
 
-   //! Set state machine side set pins
-   void SM_pinSDE(unsigned sd, unsigned pin, unsigned n = 1)
+   //! Set state machine SIDE set pins
+   void SM_pinSIDE(unsigned sd, unsigned pin, unsigned n = 1)
    {
       side_set(n);
 
-      unsigned mask = (1 << n) - 1;
-
       configOut(pin, n);
 
-      this->setField(this->reg->sm[sd].pinctrl, 14, 10, pin);
-      this->setField(this->reg->sm[sd].pinctrl, 31, 29, n);
+      // Get PINCTRL
+      uint32_t pinctrl = this->reg->sm[sd].pinctrl;
 
-      this->setBit(this->reg->sm[sd].execctrl, 29);
-      SM_exec(sd, NOP().side(mask).op());
-      this->clrBit(this->reg->sm[sd].execctrl, 29);
+      // Configure SIDE pins
+      this->setField(pinctrl, 14, 10, pin);
+      this->setField(pinctrl, 31, 29, n);
+
+      // Configure OUT pins as SIDE pins
+      uint32_t tmp_pinctrl = pinctrl;
+      this->setField(tmp_pinctrl,  4,  0, pin);
+      this->setField(tmp_pinctrl, 25, 20, n);
+      this->reg->sm[sd].pinctrl = tmp_pinctrl;
+
+      // Set SIDE pin direction using OUT pins
+      unsigned mask = (1 << n) - 1;
+      SM_push(sd, mask);
+      SM_exec(sd, POP().op());
+      SM_exec(sd, OUT(PIO::PINDIRS, n).op());
+
+      // Set PINCTRL (restores previous OUT config)
+      this->reg->sm[sd].pinctrl = pinctrl;
    }
 
    //! Set state machine INP pin
-   void SM_pinINP(unsigned sd, unsigned pin)
+   void SM_pinINP(unsigned sd, unsigned pin, unsigned n = 1)
    {
-      configIn(pin, 1);
+      configIn(pin, n);
 
-      this->setField(this->reg->sm[sd].pinctrl, 19, 15, pin);
+      // Get PINCTRL
+      uint32_t pinctrl = this->reg->sm[sd].pinctrl;
+
+      // Configure INP pins
+      this->setField(pinctrl, 19, 15, pin);
+
+      // Configure OUT pins as INP pins
+      uint32_t tmp_pinctrl = pinctrl;
+      this->setField(tmp_pinctrl,  4,  0, pin);
+      this->setField(tmp_pinctrl, 25, 20, n);
+      this->reg->sm[sd].pinctrl = tmp_pinctrl;
+
+      // Set INP pin direction using OUT pins
+      SM_exec(sd, MOV(PIO::OSR, PIO::ZERO).op());
+      SM_exec(sd, OUT(PIO::PINDIRS, n).op());
+
+      // Set PINCTRL (restores previous OUT config)
+      this->reg->sm[sd].pinctrl = pinctrl;
    }
 
    //! Set state machine clock
