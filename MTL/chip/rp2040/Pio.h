@@ -76,11 +76,13 @@ enum ShiftDir { SHIFT_RIGHT = 1, SHIFT_LEFT = 0 };
 
 enum Auto { MANUAL = 0, AUTO_PULL = 1, AUTO_PUSH = 1 };
 
-template <unsigned INDEX, uint32_t BASE_ADDRESS>
-class PioBase : public Periph<PioReg, BASE_ADDRESS>
-              , public PIO::AsmBase<1>
+template <IoBank::Func IO_FUNC, uint32_t BASE_ADDRESS>
+class Pio : public Periph<PioReg, BASE_ADDRESS>
+          , public PIO::AsmBase<1>
 {
 public:
+   Pio() = default;
+
    //! Allocate the next free state machine
    signed allocSM()
    {
@@ -304,7 +306,7 @@ private:
       for(unsigned i = 0; i < n; ++i)
       {
          pads_bank.setOut(pin + i, PadsBank::DRIVE_2MA, /* slew_fast */ true);
-         io_bank.setFunc( pin + i, INDEX == 0 ? IoBank::PIO0 : IoBank::PIO1);
+         io_bank.setFunc( pin + i, IO_FUNC);
       }
    }
 
@@ -313,7 +315,7 @@ private:
       for(unsigned i = 0; i < n; ++i)
       {
          pads_bank.setIn(pin + i);
-         io_bank.setFunc(pin + i, INDEX == 0 ? IoBank::PIO0 : IoBank::PIO1);
+         io_bank.setFunc(pin + i, IO_FUNC);
       }
    }
 
@@ -326,14 +328,13 @@ private:
    static uint8_t free_pc;
 };
 
-template <unsigned INDEX, uint32_t BASE_ADDRESS>
-uint8_t PioBase<INDEX,BASE_ADDRESS>::free_state_machine = 0;
+template <IoBank::Func IO_FUNC, uint32_t BASE_ADDRESS>
+uint8_t Pio<IO_FUNC,BASE_ADDRESS>::free_state_machine = 0;
 
-template <unsigned INDEX, uint32_t BASE_ADDRESS>
-uint8_t PioBase<INDEX,BASE_ADDRESS>::free_pc = 0;
+template <IoBank::Func IO_FUNC, uint32_t BASE_ADDRESS>
+uint8_t Pio<IO_FUNC,BASE_ADDRESS>::free_pc = 0;
 
-class Pio0 : public PioBase<0,0x50200000> {};
-
-class Pio1 : public PioBase<1,0x50300000> {};
+using Pio0 = Pio<IoBank::PIO0,0x50200000>;
+using Pio1 = Pio<IoBank::PIO1,0x50300000>;
 
 } // namespace MTL

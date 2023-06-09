@@ -39,7 +39,7 @@ struct PllReg
 };
 
 template <uint32_t BASE_ADDRESS, unsigned RESET_BIT>
-class PllBase : public Periph<PllReg, BASE_ADDRESS>
+class Pll : public Periph<PllReg, BASE_ADDRESS>
 {
 public:
    //! Return configured frequency of PLL (Hz)
@@ -105,10 +105,9 @@ private:
 };
 
 template <uint32_t BASE_ADDRESS, unsigned RESET_BIT>
-unsigned MTL::PllBase<BASE_ADDRESS, RESET_BIT>::freq {0};
+unsigned MTL::Pll<BASE_ADDRESS, RESET_BIT>::freq {0};
 
-class PllSys : public PllBase<0x40028000, Resets::PLL_SYS> {};
-
-class PllUsb : public PllBase<0x4002C000, Resets::PLL_USB> {};
+using PllSys = Pll<0x40028000, Resets::PLL_SYS>;
+using PllUsb = Pll<0x4002C000, Resets::PLL_USB>;
 
 } // namespace MTL
