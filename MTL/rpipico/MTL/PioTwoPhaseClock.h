@@ -1,0 +1,62 @@
+//------------------------------------------------------------------------------
+// Copyright (c) 2023 John D. Haughton
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//------------------------------------------------------------------------------
+
+#pragma once
+
+#include "rp2040/Pio.h"
+
+namespace MTL {
+
+class PioTwoPhaseClock : public PIO::Asm
+{
+public:
+   PioTwoPhaseClock()
+   {
+       side_set(1);
+
+       wrap_target();
+          SET(PIO::PINS, 0).side(1);
+          SET(PIO::PINS, 1).side(0);
+       wrap();
+   }
+
+   template <typename TYPE>
+   signed download(TYPE& pio, unsigned freq, unsigned pin_a, unsigned pin_b)
+   {
+       // Allocate a state machine
+       signed sd = pio.allocSM();
+       if (sd < 0)
+          return sd;
+
+       // Write code to PIO
+       pio.SM_program(sd, *this);
+
+       // Configure state machine
+       pio.SM_clock(  sd, freq * 2);
+       pio.SM_pinSET( sd, pin_a); // Main output
+       pio.SM_pinSIDE(sd, pin_b); // Inverted output
+
+       return sd;
+   }
+};
+
+}

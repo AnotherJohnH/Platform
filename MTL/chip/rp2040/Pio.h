@@ -204,25 +204,33 @@ public:
    }
 
    //! Configure output shift register
-   void SM_configOSR(unsigned sd, unsigned bits, ShiftDir dir, Auto autopull)
+   void SM_configOSR(unsigned sd,
+                     unsigned bits,
+                     ShiftDir dir,
+                     Auto     autopull,
+                     bool     join_tx)
    {
       bits &= 0x1F;
 
-      this->reg->sm[sd].shiftctrl = (   1     << 30) |    // Combine TX + RX FIFO
-                                    (bits     << 25) |
-                                    (dir      << 19) |
-                                    (autopull << 17);
+      this->reg->sm[sd].shiftctrl = ((join_tx ? 1 : 0) << 30) |
+                                    (bits              << 25) |
+                                    (dir               << 19) |
+                                    (autopull          << 17);
    }
 
    //! Configure input shift register
-   void SM_configISR(unsigned sd, unsigned bits, ShiftDir dir, Auto autopush)
+   void SM_configISR(unsigned sd,
+                     unsigned bits,
+                     ShiftDir dir,
+                     Auto     autopush,
+                     bool     join_rx)
    {
       bits &= 0x1F;
 
-      this->reg->sm[sd].shiftctrl = (   1     << 31) |   // Combine RX & TX FIFO
-                                    (bits     << 20) |
-                                    (dir      << 18) |
-                                    (autopush << 16);
+      this->reg->sm[sd].shiftctrl = ((join_rx ? 1 : 0) << 31) |
+                                    (bits              << 20) |
+                                    (dir               << 18) |
+                                    (autopush          << 16);
    }
 
    //! Execute an instruction
