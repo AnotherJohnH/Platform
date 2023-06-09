@@ -72,7 +72,7 @@ struct PioReg
    uint32_t     irq1_ints;
 };
 
-enum ShiftDir { SHIFT_RIGHT = 0, SHIFT_LEFT = 1 };
+enum ShiftDir { SHIFT_RIGHT = 1, SHIFT_LEFT = 0 };
 
 enum Auto { MANUAL = 0, AUTO_PULL = 1, AUTO_PUSH = 1 };
 
@@ -236,12 +236,18 @@ public:
    //! Push data into TX FIFO
    void SM_push(unsigned sd, uint32_t data)
    {
+      // Block if FIFO full
+      while(this->getBit(this->reg->fstat, 16 + sd) != 0);
+
       this->reg->txf[sd] = data;
    }
 
    //! Pop data from RX FIFO
    uint32_t SM_pop(unsigned sd)
    {
+      // Block if FIFO empty
+      while(this->getBit(this->reg->fstat, 8 + sd) != 0);
+
       return this->reg->rxf[sd];
    }
 
