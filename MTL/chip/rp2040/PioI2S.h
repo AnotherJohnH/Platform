@@ -22,41 +22,60 @@
 
 #pragma once
 
-#include "rp2040/Pio.h"
+#include "Pio.h"
 
 namespace MTL {
 
-class PioTwoPhaseClock : public PIO::Asm
+class PioI2S : public PIO::Asm
 {
 public:
-   PioTwoPhaseClock()
+   PioI2S()
    {
-       side_set(1);
+      PIO::Lbl left_loop;
+      PIO::Lbl right_loop;
 
-       wrap_target();
-          SET(PIO::PINS, 0).side(1);
-          SET(PIO::PINS, 1).side(0);
-       wrap();
+      side_set(2);
+
+      wrap_target();
+
+      lbl(left_loop);
+         OUT(PIO::PINS, 1)                 .side(0b00);
+         JMP(PIO::X_NE_Z_DEC, left_loop)   .side(0b10);
+         OUT(PIO::PINS, 1)                 .side(0b01);
+         SET(PIO::X, 14)                   .side(0b11);
+
+      lbl(right_loop);
+         OUT(PIO::PINS, 1)                 .side(0b01);
+         JMP(PIO::X_NE_Z_DEC, right_loop)  .side(0b11);
+         OUT(PIO::PINS, 1)                 .side(0b00);
+      entry();
+         SET(PIO::X, 14)                   .side(0b10);
+
+      wrap();
    }
 
    template <typename TYPE>
-   signed download(TYPE& pio, unsigned freq, unsigned pin_a, unsigned pin_b)
+   signed download(TYPE&    pio,
+                   unsigned sample_freq,
+                   unsigned pin_sd,
+                   unsigned pin_lrclk)
    {
-       // Allocate a state machine
-       signed sd = pio.allocSM();
-       if (sd < 0)
-          return sd;
+      // Allocate a state machine
+      signed sd = pio.allocSM();
+      if (sd < 0)
+         return sd;
 
-       // Write code to PIO
-       pio.SM_program(sd, *this);
+      // Write code to PIO
+      pio.SM_program(sd, *this);
 
-       // Configure state machine
-       pio.SM_clock(  sd, freq * 2);
-       pio.SM_pinSET( sd, pin_a); // Main output
-       pio.SM_pinSIDE(sd, pin_b); // Inverted output
+      // Configure state machine
+      pio.SM_clock(    sd, sample_freq * 32 * 2);
+      pio.SM_pinOUT(   sd, pin_sd);
+      pio.SM_pinSIDE(  sd, pin_lrclk, 2);
+      pio.SM_configOSR(sd, 32, MTL::SHIFT_LEFT, MTL::AUTO_PULL, /* join_tx */ true);
 
-       return sd;
+      return sd;
    }
 };
 
-}
+} // namespace MTL

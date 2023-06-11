@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "rp2040/Pio.h"
+#include "Pio.h"
 
 namespace MTL {
 

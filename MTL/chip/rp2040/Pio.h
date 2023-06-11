@@ -76,7 +76,7 @@ enum ShiftDir { SHIFT_RIGHT = 1, SHIFT_LEFT = 0 };
 
 enum Auto { MANUAL = 0, AUTO_PULL = 1, AUTO_PUSH = 1 };
 
-template <IoBank::Func IO_FUNC, uint32_t BASE_ADDRESS>
+template <IoBank::Func IO_FUNC, uint32_t BASE_ADDRESS, unsigned DREQ_BASE>
 class Pio : public Periph<PioReg, BASE_ADDRESS>
           , public PIO::AsmBase<1>
 {
@@ -284,6 +284,18 @@ public:
       SM_exec(sd, JMP(code.getEntry() + start).op());
    }
 
+   //! Return TX FIFO
+   volatile uint32_t* SM_getTxFIFO(unsigned sd) const { return &this->reg->txf[sd]; }
+
+   //! Return RX FIFO
+   volatile uint32_t* SM_getRxFIFO(unsigned sd) const { return &this->reg->rxf[sd]; }
+
+   //! Return DMA DREQ for TX FIFO
+   unsigned SM_getTxDREQ(unsigned sd) const { return DREQ_BASE + 0 + sd; }
+
+   //! Return DMA DREQ for RX FIFO
+   unsigned SM_getRxDREQ(unsigned sd) const { return DREQ_BASE + 4 + sd; }
+
    //! Start state machines
    void start(unsigned sd_mask)
    {
@@ -328,13 +340,13 @@ private:
    static uint8_t free_pc;
 };
 
-template <IoBank::Func IO_FUNC, uint32_t BASE_ADDRESS>
-uint8_t Pio<IO_FUNC,BASE_ADDRESS>::free_state_machine = 0;
+template <IoBank::Func IO_FUNC, uint32_t BASE_ADDRESS, unsigned DREQ_BASE>
+uint8_t Pio<IO_FUNC,BASE_ADDRESS,DREQ_BASE>::free_state_machine = 0;
 
-template <IoBank::Func IO_FUNC, uint32_t BASE_ADDRESS>
-uint8_t Pio<IO_FUNC,BASE_ADDRESS>::free_pc = 0;
+template <IoBank::Func IO_FUNC, uint32_t BASE_ADDRESS, unsigned DREQ_BASE>
+uint8_t Pio<IO_FUNC,BASE_ADDRESS,DREQ_BASE>::free_pc = 0;
 
-using Pio0 = Pio<IoBank::PIO0,0x50200000>;
-using Pio1 = Pio<IoBank::PIO1,0x50300000>;
+using Pio0 = Pio<IoBank::PIO0,0x50200000,/* DREQ_BASE */ 0>;
+using Pio1 = Pio<IoBank::PIO1,0x50300000,/* DREQ_BASE */ 8>;
 
 } // namespace MTL

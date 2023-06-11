@@ -46,71 +46,71 @@ vector_table:
    .word  VEC_pendSv+1
    .word  VEC_sysTick+1
 
-   .weak  VEC_fault
-   .weak  VEC_nmi
-   .weak  VEC_svc
-   .weak  VEC_pendSv
-   .weak  VEC_sysTick
-
-   .word  IRQ_GPIO_0+1     @ IRQ 0
-   .word  IRQ_GPIO_1+1     @ IRQ 1
-   .word  IRQ_GPIO_2+1     @ IRQ 2
-   .word  IRQ_GPIO_3+1     @ IRQ 3
-   .word  IRQ_GPIO_4+1     @ IRQ 4
-   .word  IRQ_GPIO_5+1     @ IRQ 5
-   .word  IRQ_GPIO_6+1     @ IRQ 6
-   .word  IRQ_GPIO_7+1     @ IRQ 7
-   .word  IRQ_GINT0+1      @ IRQ 8
-   .word  IRQ_GINT1+1      @ IRQ 9
-   .word  0                @ IRQ 10
-   .word  0                @ IRQ 11
-   .word  0                @ IRQ 12
-   .word  0                @ IRQ 13
-   .word  IRQ_SSP1+1       @ IRQ 14
-   .word  IRQ_I2C+1        @ IRQ 15
-   .word  IRQ_CT16B0+1     @ IRQ 16
-   .word  IRQ_CT16B1+1     @ IRQ 17
-   .word  IRQ_CT32B0+1     @ IRQ 18
-   .word  IRQ_CT32B1+1     @ IRQ 19
-   .word  IRQ_SSP0+1       @ IRQ 20
-   .word  IRQ_USART+1      @ IRQ 21
-   .word  IRQ_USB_IRQ+1    @ IRQ 22
-   .word  IRQ_USB_FIQ+1    @ IRQ 23
-   .word  IRQ_ADC+1        @ IRQ 24
-   .word  IRQ_BOD+1        @ IRQ 25
-   .word  IRQ_WWDT+1       @ IRQ 26
-   .word  IRQ_FLASH+1      @ IRQ 27
+   .word  IRQ_TIMER_0+1    @ IRQ  0
+   .word  IRQ_TIMER_1+1    @ IRQ  1
+   .word  IRQ_TIMER_2+1    @ IRQ  2
+   .word  IRQ_TIMER_3+1    @ IRQ  3
+   .word  IRQ_PWM_WRAP+1   @ IRQ  4
+   .word  IRQ_USBCTRL+1    @ IRQ  5
+   .word  IRQ_XIP+1        @ IRQ  6
+   .word  IRQ_PIO0_0+1     @ IRQ  7
+   .word  IRQ_PIO0_1+1     @ IRQ  8
+   .word  IRQ_PIO1_0+1     @ IRQ  9
+   .word  IRQ_PIO1_1+1     @ IRQ 10
+   .word  IRQ_DMA_0+1      @ IRQ 11
+   .word  IRQ_DMA_1+1      @ IRQ 12
+   .word  IRQ_IO_BANK0+1   @ IRQ 13
+   .word  IRQ_IO_QSPI+1    @ IRQ 14
+   .word  IRQ_SIO_PROC0+1  @ IRQ 15
+   .word  IRQ_SIO_PROC1+1  @ IRQ 16
+   .word  IRQ_CLOCKS+1     @ IRQ 17
+   .word  IRQ_SPI0+1       @ IRQ 18
+   .word  IRQ_SPI1+1       @ IRQ 19
+   .word  IRQ_UART0+1      @ IRQ 20
+   .word  IRQ_UART1+1      @ IRQ 21
+   .word  IRQ_ADC_FIFO+1   @ IRQ 22
+   .word  IRQ_I2C0+1       @ IRQ 23
+   .word  IRQ_I2C1+1       @ IRQ 24
+   .word  IRQ_RTC+1        @ IRQ 25
+   .word  0                @ IRQ 26
+   .word  0                @ IRQ 27
    .word  0                @ IRQ 28
    .word  0                @ IRQ 29
-   .word  IRQ_USB_WAKEUP+1 @ IRQ 30
-   .word  IRQ_IOH+1        @ IRQ 31
+   .word  0                @ IRQ 30
+   .word  0                @ IRQ 31
 
-   .weak IRQ_GPIO_0
-   .weak IRQ_GPIO_1
-   .weak IRQ_GPIO_2
-   .weak IRQ_GPIO_3
-   .weak IRQ_GPIO_4
-   .weak IRQ_GPIO_5
-   .weak IRQ_GPIO_6
-   .weak IRQ_GPIO_7
-   .weak IRQ_GINT0
-   .weak IRQ_GINT1
-   .weak IRQ_SSP1
-   .weak IRQ_I2C
-   .weak IRQ_CT16B0
-   .weak IRQ_CT16B1
-   .weak IRQ_CT32B0
-   .weak IRQ_CT32B1
-   .weak IRQ_SSP0
-   .weak IRQ_USART
-   .weak IRQ_USB_IRQ
-   .weak IRQ_USB_FIQ
-   .weak IRQ_ADC
-   .weak IRQ_WWDT
-   .weak IRQ_BOD
-   .weak IRQ_FLASH
-   .weak IRQ_USB_WAKEUP
-   .weak IRQ_IOH
+.weak VEC_fault
+.weak VEC_nmi
+.weak VEC_svc
+.weak VEC_pendSv
+.weak VEC_sysTick
+
+.weak IRQ_TIMER_0
+.weak IRQ_TIMER_1
+.weak IRQ_TIMER_2
+.weak IRQ_TIMER_3
+.weak IRQ_PWM_WRAP
+.weak IRQ_USBCTRL
+.weak IRQ_XIP
+.weak IRQ_PIO0_0
+.weak IRQ_PIO0_1
+.weak IRQ_PIO1_0
+.weak IRQ_PIO1_1
+.weak IRQ_DMA_0
+.weak IRQ_DMA_1
+.weak IRQ_IO_BANK0
+.weak IRQ_IO_QSPI
+.weak IRQ_SIO_PROC0
+.weak IRQ_SIO_PROC1
+.weak IRQ_CLOCKS
+.weak IRQ_SPI0
+.weak IRQ_SPI1
+.weak IRQ_UART0
+.weak IRQ_UART1
+.weak IRQ_ADC_FIFO
+.weak IRQ_I2C0
+.weak IRQ_I2C1
+.weak IRQ_RTC
 
 .text
 .align 2
@@ -145,30 +145,30 @@ VEC_nmi:
 VEC_svc:
 VEC_pendSv:
 VEC_sysTick:
-IRQ_GPIO_0:
-IRQ_GPIO_1:
-IRQ_GPIO_2:
-IRQ_GPIO_3:
-IRQ_GPIO_4:
-IRQ_GPIO_5:
-IRQ_GPIO_6:
-IRQ_GPIO_7:
-IRQ_GINT0:
-IRQ_GINT1:
-IRQ_SSP1:
-IRQ_I2C:
-IRQ_CT16B0:
-IRQ_CT16B1:
-IRQ_CT32B0:
-IRQ_CT32B1:
-IRQ_SSP0:
-IRQ_USART:
-IRQ_USB_IRQ:
-IRQ_USB_FIQ:
-IRQ_ADC:
-IRQ_WWDT:
-IRQ_BOD:
-IRQ_FLASH:
-IRQ_USB_WAKEUP:
-IRQ_IOH:
+IRQ_TIMER_0:
+IRQ_TIMER_1:
+IRQ_TIMER_2:
+IRQ_TIMER_3:
+IRQ_PWM_WRAP:
+IRQ_USBCTRL:
+IRQ_XIP:
+IRQ_PIO0_0:
+IRQ_PIO0_1:
+IRQ_PIO1_0:
+IRQ_PIO1_1:
+IRQ_DMA_0:
+IRQ_DMA_1:
+IRQ_IO_BANK0:
+IRQ_IO_QSPI:
+IRQ_SIO_PROC0:
+IRQ_SIO_PROC1:
+IRQ_CLOCKS:
+IRQ_SPI0:
+IRQ_SPI1:
+IRQ_UART0:
+IRQ_UART1:
+IRQ_ADC_FIFO:
+IRQ_I2C0:
+IRQ_I2C1:
+IRQ_RTC:
     bx   lr

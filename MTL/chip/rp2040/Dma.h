@@ -100,25 +100,68 @@ public:
 
       return free_channel++;
    }
-   void CH_start(unsigned cd,
-                 uint32_t read_addr,
-                 bool     read_incr,
-                 uint32_t write_addr,
-                 bool     write_incr,
-                 unsigned trans_count,
-                 DataSize log2_data_size,
-                 unsigned chain_cd)
-   {
-      uint32_t ctrl = (chain_cd             << 11) |
-                      ((write_incr ? 1 : 0) << 5) |
-                      ((read_incr  ? 1 : 0) << 4) |
-                      (log2_data_size       << 2) |
-                      (/* EN */ 1           << 0);
 
-      reg->ch[cd].read_addr   = read_addr;
-      reg->ch[cd].read_addr   = write_addr;
+   //! Program a channel
+   void CH_prog(unsigned       cd,
+                unsigned       chain_cd,
+                volatile void* read_addr,
+                bool           read_incr,
+                volatile void* write_addr,
+                bool           write_incr,
+                unsigned       trans_count,
+                DataSize       log2_data_size,
+                unsigned       dreq)
+   {
+      uint32_t ctrl = (dreq                 << 15) |
+                      (chain_cd             << 11) |
+                      ((write_incr ? 1 : 0) <<  5) |
+                      ((read_incr  ? 1 : 0) <<  4) |
+                      (log2_data_size       <<  2) |
+                      (/* EN */ 1           <<  0);
+
+      // Setup without triggering
+      reg->ch[cd].read_addr   = uint32_t(read_addr);
+      reg->ch[cd].write_addr  = uint32_t(write_addr);
       reg->ch[cd].trans_count = trans_count;
-      reg->ch[cd].ctrl__trig  = ctrl;
+      reg->ch[cd].al1_ctrl    = ctrl;
+   }
+
+   void CH_setReadAddr(unsigned cd, volatile void* addr)
+   {
+      reg->ch[cd].read_addr = uint32_t(addr);
+   }
+
+   void CH_setWriteAddr(unsigned cd, volatile void* addr)
+   {
+      reg->ch[cd].write_addr = uint32_t(addr);
+   }
+
+   void CH_clrIrq(unsigned cd, unsigned irq_n)
+   {
+      if (irq_n == 0)
+         reg->ints0 = reg->ints0;
+      else
+         reg->ints1 = reg->ints1;
+   }
+
+   void CH_enableIrq(unsigned cd, unsigned irq_n)
+   {
+      if (irq_n == 0)
+         setBit(reg->inte0, cd, 1);
+      else
+         setBit(reg->inte1, cd, 1);
+   }
+
+   //! Start a channel
+   void CH_start(unsigned cd)
+   {
+      setBit(reg->ch[cd].ctrl__trig, /* EN_BIT */ 0, 1);
+   }
+
+   //! Stop a channel
+   void CH_stop(unsigned cd)
+   {
+      setBit(reg->ch[cd].al1_ctrl, /* EN_BIT */ 0, 0);
    }
 
 private:
