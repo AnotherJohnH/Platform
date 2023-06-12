@@ -22,4 +22,6 @@
 
 #include "MTL/MTL.h"
 
-#define CLOCK_FREQ 125000000 //!< 125 MHz
+#define CLOCK_FREQ     133000000  //!<  System clock 133 MHz
+#define RAM_SIZE       (256*1024) //!<  RAM          256 KiB
+#define FLASH_SIZE  (2*1024*1024) //!<  FLASH          2 MiB

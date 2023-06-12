@@ -23,7 +23,7 @@
 cmake_minimum_required(`VERSION' 3.19.1)
 
 project(APPLICATION
-        LANGUAGES CXX
+        LANGUAGES CXX C ASM
         `VERSION' VERSION)
 
 add_subdirectory(Platform)

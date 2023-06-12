@@ -32,6 +32,7 @@ SECTIONS
 {
    .text :
    {
+      __text_start__ = .;
       KEEP(*(.boot2))
       KEEP(*(.vectors))
       *(.text*)
@@ -39,6 +40,7 @@ SECTIONS
       KEEP(*(.init_array))
       __init_array_end = .;
       *(.rodata*)
+      __text_end__ = .;
 
    } > FLASH
 
