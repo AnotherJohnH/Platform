@@ -48,7 +48,6 @@ public:
          OUT(PIO::PINS, 1)                 .side(0b01);
          JMP(PIO::X_NE_Z_DEC, right_loop)  .side(0b11);
          OUT(PIO::PINS, 1)                 .side(0b00);
-      entry();
          SET(PIO::X, 14)                   .side(0b10);
 
       wrap();
@@ -73,6 +72,8 @@ public:
       pio.SM_pinOUT(   sd, pin_sd);
       pio.SM_pinSIDE(  sd, pin_lrclk, 2);
       pio.SM_configOSR(sd, 32, MTL::SHIFT_LEFT, MTL::AUTO_PULL, /* join_tx */ true);
+
+      pio.SM_exec(     sd, SET(PIO::X, 12).side(0b00).op() );
 
       return sd;
    }
