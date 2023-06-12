@@ -90,7 +90,7 @@ public:
 
         // Start the PLLs
         PllSys pll_sys;
-        pll_sys.start133MHz();
+        pll_sys.start(/* freq_mhz */ 132);
 
         PllUsb pll_usb;
         pll_usb.start48MHz();

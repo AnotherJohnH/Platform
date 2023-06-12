@@ -45,24 +45,14 @@ public:
    //! Return configured frequency of PLL (Hz)
    unsigned getFreq() const { return freq; }
 
-   //! Start PLL at 133 MHz (assumes a 12 MHz XTAL input)
-   void start133MHz()
+   //! Start PLL (assumes a 12 MHz XTAL input)
+   void start(unsigned freq_mhz)
    {
-      // XTAL          REF      FBDIV    VCO                 POSTDIV
-      // 12 MHz / 1 => 12 MHz * 133   => 1596 MHz / 6 / 2 => 133 MHz
-      config(/* refdiv */ 1, /* fbdiv */ 133, /* post_div1 */ 6, /* post_div2 */ 2);
+      // XTAL          REF      FBDIV    VCO                   POSTDIV
+      // 12 MHz / 1 => 12 MHz * freq  => (f*12) MHz / 6 / 2 => freq MHz
+      config(/* refdiv */ 1, /* fbdiv */ freq_mhz, /* post_div1 */ 6, /* post_div2 */ 2);
 
-      freq = 133000000;
-   }
-
-   //! Start PLL at 125 MHz (assumes a 12 MHz XTAL input)
-   void start125MHz()
-   {
-      // XTAL          REF      FBDIV    VCO                 POSTDIV
-      // 12 MHz / 1 => 12 MHz * 125   => 1500 MHz / 6 / 2 => 125 MHz
-      config(/* refdiv */ 1, /* fbdiv */ 125, /* post_div1 */ 6, /* post_div2 */ 2);
-
-      freq = 125000000;
+      freq = freq_mhz * 1000000;
    }
 
    //! Start PLL at 48 MHz (assumes a 12 MHz XTAL input)
