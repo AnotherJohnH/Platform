@@ -32,12 +32,14 @@ SECTIONS
 {
    .text :
    {
+      __text_start__ = .;
       KEEP(*(.vectors))
       *(.text*)
-      *(.rodata*)
       __init_array_start = ALIGN(4);
       KEEP(*(.init_array))
       __init_array_end = .;
+      *(.rodata*)
+      __text_end__ = .;
 
    } > FLASH
 
@@ -48,6 +50,7 @@ SECTIONS
       __exidx_end = .;
 
    } > FLASH
+
 
    __etext = .;
 
