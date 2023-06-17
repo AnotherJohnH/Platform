@@ -50,6 +50,9 @@ public:
 
    void noteOn(uint8_t channel, uint8_t note,  uint8_t level)
    {
+      if (level == 0)
+         return noteOff(channel, note, level);
+
       if ((channel != number) and not omni) return;
 
       if (poly)
@@ -65,7 +68,9 @@ public:
          signed index = channel - number;
 
          if ((index >= 0) && (index < num_voices))
+         {
             voiceOn(index, note, level);
+         }
       }
    }
 
@@ -134,7 +139,7 @@ public:
       }
    }
 
-   void pitchBend(uint8_t channel, int16_t value)
+   void channelPitchBend(uint8_t channel, int16_t value)
    {
       if ((channel != number) and not omni) return;
 
