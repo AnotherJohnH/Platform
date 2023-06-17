@@ -64,7 +64,7 @@ public:
    }
 
    //! Register helper to get a field
-   unsigned getField(volatile uint32_t& reg, unsigned msb, unsigned lsb)
+   unsigned getField(volatile uint32_t& reg, unsigned msb, unsigned lsb) const
    {
       uint32_t mask = (1 << (msb - lsb + 1)) - 1;
 
@@ -78,7 +78,7 @@ public:
    }
 
    //! Register helper to get a bit
-   unsigned getBit(volatile uint32_t& reg, unsigned bit)
+   unsigned getBit(volatile uint32_t& reg, unsigned bit) const
    {
        return getField(reg, bit, bit);
    }

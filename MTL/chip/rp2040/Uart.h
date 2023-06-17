@@ -92,10 +92,22 @@ public:
                       (1 << 0);   // EN
    }
 
+   //! Check if RX FIFO is empty
+   bool empty() const
+   {
+      return this->getBit(this->reg->tfr, 4) != 0;
+   }
+
+   //! Check if TX FIFO is full
+   bool full() const
+   {
+      return this->getBit(this->reg->tfr, 5) != 0;
+   }
+
    void tx(uint8_t data)
    {
       // Block when FIFO full
-      while(this->getBit(this->reg->tfr, 5) != 0);
+      while(full());
 
       this->reg->dr = data;
    }
@@ -103,7 +115,7 @@ public:
    uint8_t rx()
    {
       // Block when FIFO empty
-      while(this->getBit(this->reg->tfr, 4) != 0);
+      while(empty());
 
       return this->reg->dr;
    }
@@ -113,7 +125,11 @@ private:
    IoBank   io_bank;
 };
 
-using Uart0 = Uart<0x40034000, MTL::rp2040::IO_PIN_0,  MTL::rp2040::IO_PIN_1>;
-using Uart1 = Uart<0x40038000, MTL::rp2040::IO_PIN_16, MTL::rp2040::IO_PIN_17>;
+using Uart0      = Uart<0x40034000, MTL::rp2040::IO_PIN_0,  MTL::rp2040::IO_PIN_1>;
+using Uart0_ALT1 = Uart<0x40034000, MTL::rp2040::IO_PIN_12, MTL::rp2040::IO_PIN_13>;
+using Uart0_ALT2 = Uart<0x40034000, MTL::rp2040::IO_PIN_16, MTL::rp2040::IO_PIN_17>;
+
+using Uart1      = Uart<0x40038000, MTL::rp2040::IO_PIN_4, MTL::rp2040::IO_PIN_5>;
+using Uart1_ALT  = Uart<0x40038000, MTL::rp2040::IO_PIN_8, MTL::rp2040::IO_PIN_9>;
 
 } // namespace MTL
