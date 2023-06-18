@@ -54,6 +54,7 @@ namespace UART
    {
       BAUD_9600,
       BAUD_19200,
+      BAUD_31250,
       BAUD_38400,
       BAUD_57600,
       BAUD_74800,
@@ -110,6 +111,7 @@ public:
       default: // Fall through to 9600
       case UART::BAUD_9600:   divisor = 500; this->reg->fdr = FRAC_1_1_4;   break;
       case UART::BAUD_19200:  divisor = 250; this->reg->fdr = FRAC_1_1_4;   break;
+      case UART::BAUD_31250:  divisor = 154; this->reg->fdr = FRAC_1_1_4;   break;
       case UART::BAUD_38400:  divisor = 125; this->reg->fdr = FRAC_1_1_4;   break;
       case UART::BAUD_57600:  divisor =  54; this->reg->fdr = FRAC_1_13_14; break;
       case UART::BAUD_74800:  divisor =  42; this->reg->fdr = FRAC_1_12_14; break;
@@ -146,16 +148,30 @@ public:
       this->reg->iir_fcr.setBit(0);
    }
 
+   //! Check if RX FIFO is empty
+   bool empty() const
+   {
+      return (this->reg->lsr & (1<<0)) == 0;
+   }
+
+   //! Check if TX FIFO is full
+   bool full() const
+   {
+      return (this->reg->lsr & (1<<5)) == 0;
+   }
+
    void tx(uint8_t data)
    {
-      while((this->reg->lsr & (1<<5)) == 0);
+      // Block when FIFO full
+      while(full());
 
       this->reg->rbr_thr_dll = data;
    }
 
    uint8_t rx()
    {
-      while((this->reg->lsr & (1<<0)) == 0);
+      // Block when FIFO empty
+      while(empty());
 
       return this->reg->rbr_thr_dll;
    }
