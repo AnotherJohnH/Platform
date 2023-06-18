@@ -26,27 +26,44 @@
 
 namespace MIDI {
 
-//! MIDI channel
-class Channel
+//! MIDI instrument
+class Instrument
 {
 public:
-   Channel(uint8_t num_voices_, uint8_t number_ = 0)
+   Instrument(uint8_t num_voices_, uint8_t number_ = 0)
       : num_voices(num_voices_)
       , number(number_)
    {
    }
 
    // Instrument implementation
+
+   //! Allocate a voice
    virtual signed allocVoice() const { return -1; }
+
+   //! Find the vocie playing a note
    virtual signed findVoice(uint8_t note) const { return -1; }
 
+   //! Start a voice
    virtual void voiceOn(unsigned voice, uint8_t note, uint8_t level) {}
+
+   //! Stop a voice
    virtual void voiceOff(unsigned voice) {}
+
+   //! Set voice level
    virtual void voiceLevel(unsigned voice, uint8_t level) {}
-   virtual void voiceControl(unsigned voice, uint8_t control, uint8_t value) {}
+
+   //! Voice pitch bend
    virtual void voicePitch(unsigned voice, int16_t value) {}
 
-   // MIDI Voice messages
+   //! Control a voice
+   virtual void voiceControl(unsigned voice, uint8_t control, uint8_t value) {}
+
+   //! Program change
+   virtual void voiceProgram(unsigned voice, uint8_t prog) {}
+
+
+   // MIDI channel messages
 
    void noteOn(uint8_t channel, uint8_t note,  uint8_t level)
    {
@@ -124,9 +141,14 @@ public:
       }
    }
 
-   void programChange(uint8_t channel, uint8_t index)
+   void programChange(uint8_t channel, uint8_t prog)
    {
       if ((channel != number) and not omni) return;
+
+      for(unsigned index = 0; index < num_voices; ++index)
+      {
+         voiceProgram(index, prog);
+      }
    }
 
    void channelPressure(uint8_t channel, uint8_t value)
