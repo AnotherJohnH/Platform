@@ -212,7 +212,9 @@ image   = []
 
 for record in records:
    if record['type'] == IHEX_EXT_LIN_ADDR:
-      address = (record['data'][0] << 24) | (record['data'][1] << 16)
+      if address == 0:
+         # Only start address required
+         address = (record['data'][0] << 24) | (record['data'][1] << 16)
 
    elif record['type'] == IHEX_DATA:
       image += record['data']
