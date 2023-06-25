@@ -44,6 +44,14 @@ SECTIONS
 
    } > FLASH
 
+   .ARM.exidx :
+   {
+      __exidx_start = .;
+      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+      __exidx_end = .;
+
+   } > FLASH
+
    __etext = .;
 
    .data : AT (__etext)

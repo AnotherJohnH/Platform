@@ -25,6 +25,12 @@
 #include "Clocks.h"
 #include "Resets.h"
 
+//! Default system clock freqency 132 MHz
+//  declared weak so that applications may override
+namespace MTL {
+Clocks::SysFreq __attribute__((weak)) clocks_sys_freq = Clocks::SYS_FREQ_132_00_MHZ;
+}
+
 void MTL_init()
 {
    // Resets for essential peripherals

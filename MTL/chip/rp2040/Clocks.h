@@ -73,6 +73,14 @@ struct ClocksReg
 class Clocks : public Periph<ClocksReg, 0x40008000>
 {
 public:
+    enum SysFreq
+    {
+       SYS_FREQ_125_00_MHZ,
+       SYS_FREQ_132_00_MHZ,
+       SYS_FREQ_133_00_MHZ,
+       SYS_FREQ_137_48_MHZ
+    };
+
     void start()
     {
         // Disable resus
@@ -90,7 +98,14 @@ public:
 
         // Start the PLLs
         PllSys pll_sys;
-        pll_sys.start(/* freq_mhz */ 132);
+        extern SysFreq clocks_sys_freq;
+        switch(clocks_sys_freq)
+        {
+        case SYS_FREQ_125_00_MHZ: pll_sys.start(/* freq_mhz */ 125); break;
+        case SYS_FREQ_132_00_MHZ: pll_sys.start(/* freq_mhz */ 132); break;
+        case SYS_FREQ_133_00_MHZ: pll_sys.start(/* freq_mhz */ 133); break;
+        case SYS_FREQ_137_48_MHZ: pll_sys.start137_48MHz(); break;
+        }
 
         PllUsb pll_usb;
         pll_usb.start48MHz();

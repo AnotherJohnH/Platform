@@ -65,6 +65,16 @@ public:
       freq = 48000000;
    }
 
+   //! Start PLL at 137.48 MHz (assumes a 12 MHz XTAL input)
+   void start137_48MHz()
+   {
+      // XTAL          REF      FBDIV    VCO                 POSTDIV
+      // 12 MHz / 30 => 400 KHz * 3437 => 1374.8 MHz / 5 / 2 => 137.48 MHz
+      config(/* refdiv */ 30, /* fbdiv */ 3437, /* post_div1 */ 5, /* post_div2 */ 2);
+
+      freq = 137480000;
+   }
+
 private:
    void config(unsigned refdiv,
                unsigned fbdiv,
