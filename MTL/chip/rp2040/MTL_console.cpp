@@ -35,3 +35,8 @@ int MTL_getch()
 {
    return uart.rx();
 }
+
+bool MTL_getch_empty()
+{
+   return uart.empty();
+}

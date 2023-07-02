@@ -65,6 +65,9 @@ extern "C"
    //! Get character from the console
    int MTL_getch();
 
+   //! Check if character avialable from the console
+   bool MTL_getch_empty();
+
    //! Exception handling
    void MTL_excep(Exception signal, Handler handler, uint32_t data);
 }
