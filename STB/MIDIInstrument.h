@@ -213,6 +213,9 @@ public:
       mono_channels = 0;
    }
 
+   // System Exclusive interface
+   virtual void sysEx(uint8_t byte) {}
+
 protected:
    uint8_t num_voices {0};
    uint8_t number {0};

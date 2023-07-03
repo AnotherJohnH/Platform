@@ -70,6 +70,15 @@ public:
                case 0xFE:
                   break;
 
+               case 0xF0:
+                  while(true)
+                  {
+                     inst->sysEx(byte);
+                     if (byte == 0xF7) break;
+                     byte = rx();
+                  }
+                  break;
+
                default:
                   DBG("SYSTEM %02X\n", byte);
                   break;
