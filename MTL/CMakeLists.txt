@@ -35,5 +35,7 @@ target_sources(MTL PRIVATE
 
 target_compile_definitions(MTL PUBLIC MTL_TARGET=1)
 target_compile_definitions(MTL PUBLIC MTL_${PLT_TARGET}=1)
+target_compile_definitions(MTL PUBLIC MTL_VERSION="${PROJECT_VERSION}")
+target_compile_definitions(MTL PUBLIC MTL_COMMIT="${PLT_COMMIT}")
 
 target_include_directories(MTL PUBLIC ..)

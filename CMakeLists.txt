@@ -33,6 +33,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 #    PLT_MACHINE
 #    PLT_COMMIT
 
+# Determine current git commit
+execute_process(COMMAND git log --pretty=format:%H -n 1
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                OUTPUT_VARIABLE PLT_COMMIT)
+
 if(NOT PLT_TARGET)
    if(DEFINED ENV{PLT_TARGET})
       set(PLT_TARGET ${ENV{PLAT_TARGET})
@@ -58,11 +63,6 @@ else()
    add_subdirectory(MTL)
 
 endif()
-
-# Determine current git commit
-execute_process(COMMAND git log --pretty=format:%H -n 1
-                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                OUTPUT_VARIABLE PLT_COMMIT)
 
 message("--------------------------------------------------------------------------------")
 message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
