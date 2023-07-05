@@ -74,7 +74,9 @@ bool Option<int64_t>::set(const char* arg_)
 
 template <> void Option<int64_t>::showDefault() const
 {
+#if defined(PRId64)
    printf(" [%" PRId64, value);
+#endif
 }
 
 template <>
@@ -150,7 +152,9 @@ bool Option<uint64_t>::set(const char* arg_)
 
 template <> void Option<uint64_t>::showDefault() const
 {
+#if defined(PRIx64)
    printf(" [0x%" PRIx64, value);
+#endif
 }
 
 template <>
