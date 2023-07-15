@@ -30,9 +30,9 @@ namespace MIDI {
 class Instrument
 {
 public:
-   Instrument(uint8_t num_voices_, uint8_t number_ = 0)
+   Instrument(uint8_t num_voices_, uint8_t base_channel_ = 0)
       : num_voices(num_voices_)
-      , number(number_)
+      , base_channel(base_channel_)
    {
    }
 
@@ -42,187 +42,214 @@ public:
    virtual signed allocVoice() const { return -1; }
 
    //! Find the vocie playing a note
-   virtual signed findVoice(uint8_t note) const { return -1; }
+   virtual signed findVoice(uint8_t note_) const { return -1; }
+
+   //! Mute a voice
+   virtual void voiceMute(unsigned voice_) {}
+
+   //! Reset a voice
+   virtual void voiceReset(unsigned voice_) {}
 
    //! Start a voice
-   virtual void voiceOn(unsigned voice, uint8_t note, uint8_t level) {}
+   virtual void voiceOn(unsigned voice_, uint8_t note_, uint8_t level_) {}
 
    //! Stop a voice
-   virtual void voiceOff(unsigned voice) {}
+   virtual void voiceOff(unsigned voice_) {}
 
    //! Set voice level
-   virtual void voiceLevel(unsigned voice, uint8_t level) {}
+   virtual void voiceLevel(unsigned voice_, uint8_t level_) {}
 
    //! Voice pitch bend
-   virtual void voicePitch(unsigned voice, int16_t value) {}
+   virtual void voicePitch(unsigned voice_, int16_t value_) {}
 
    //! Control a voice
-   virtual void voiceControl(unsigned voice, uint8_t control, uint8_t value) {}
+   virtual void voiceControl(unsigned voice_, uint8_t control_, uint8_t value_) {}
 
    //! Program change
-   virtual void voiceProgram(unsigned voice, uint8_t prog) {}
+   virtual void voiceProgram(unsigned voice_, uint8_t prog_) {}
 
 
    // MIDI channel messages
 
-   void noteOn(uint8_t channel, uint8_t note,  uint8_t level)
+   void noteOn(uint8_t channel_, uint8_t note_,  uint8_t level_)
    {
-      if (level == 0)
-         return noteOff(channel, note, level);
+      if (level_ == 0)
+         return noteOff(channel_, note_, 0);
 
-      if ((channel != number) and not omni) return;
+      if (not isValidChannel(channel_)) return;
 
-      if (poly)
+      signed index = poly ? allocVoice()
+                          : channel_ - base_channel;
+
+      if ((index >= 0) && (index < num_voices))
       {
-         signed index = allocVoice();
-         if (index < 0)
-            return;
-
-         voiceOn(index, note, level);
-      }
-      else
-      {
-         signed index = channel - number;
-
-         if ((index >= 0) && (index < num_voices))
-         {
-            voiceOn(index, note, level);
-         }
+         voiceOn(index, note_, level_);
       }
    }
 
-   void noteOff(uint8_t channel, uint8_t note,  uint8_t level)
+   void noteOff(uint8_t channel_, uint8_t note_,  uint8_t level_)
    {
-      if ((channel != number) and not omni) return;
+      if (not isValidChannel(channel_)) return;
 
-      if (poly)
+      signed index = poly ? findVoice(note_)
+                          : channel_ - base_channel;
+
+      if ((index >= 0) && (index < num_voices))
       {
-         signed index = findVoice(note);
-         if (index < 0)
-            return;
-      
          voiceOff(index);
       }
-      else
-      {
-         signed index = channel - number;
+   }
 
-         if ((index >= 0) && (index < num_voices))
+   void notePressure(uint8_t channel_, uint8_t note_, uint8_t level_)
+   {
+      if (not isValidChannel(channel_)) return;
+
+      signed index = poly ? findVoice(note_)
+                          : channel_ - base_channel;
+
+      if ((index >= 0) && (index < num_voices))
+      {
+         voiceLevel(index, level_);
+      }
+   }
+
+   void controlChange(uint8_t channel_, uint8_t control_, uint8_t value_)
+   {
+      if (not isValidChannel(channel_)) return;
+
+      switch (control_)
+      {
+      case 0x78:
+         for(unsigned index = 0; index < num_voices; ++index)
+         {
+            voiceMute(index);
+         }
+         break;
+
+      case 0x79:
+         for(unsigned index = 0; index < num_voices; ++index)
+         {
+            voiceReset(index);
+         }
+         break;
+
+      case 0x7A:
+         local_control = value_ == 0x7F;
+         break;
+
+      case 0x7B:
+         for(unsigned index = 0; index < num_voices; ++index)
+         {
             voiceOff(index);
+         }
+         break;
+
+      case 0x7C: omni = false; return;
+      case 0x7D: omni = true;  return;
+
+      case 0x7E:
+         poly         = false;
+         num_channels = value_ == 0 ? num_voices : value_;
+         break;
+
+      case 0x7F:
+         poly         = true;
+         num_channels = 1;
+         break;
+
+      default:
+         for(unsigned index = 0; index < num_voices; ++index)
+         {
+            voiceControl(index, control_, value_);
+         }
+         break;
       }
    }
 
-   void notePressure(uint8_t channel, uint8_t note, uint8_t level)
+   void programChange(uint8_t channel_, uint8_t prog_)
    {
-      if ((channel != number) and not omni) return;
-
-      if (poly)
-      {
-         signed index = findVoice(note);
-         if (index < 0)
-            return;
-      }
-      else
-      {
-         signed index = channel - number;
-
-         if ((index >= 0) && (index < num_voices))
-            voiceLevel(index, level);
-      }
-   }
-
-   void controlChange(uint8_t channel, uint8_t control, uint8_t value)
-   {
-      if ((channel != number) and not omni) return;
+      if (not isValidChannel(channel_)) return;
 
       for(unsigned index = 0; index < num_voices; ++index)
       {
-         voiceControl(index, control, value);
+         voiceMute(index);
+         voiceProgram(index, prog_);
       }
    }
 
-   void programChange(uint8_t channel, uint8_t prog)
+   void channelPressure(uint8_t channel_, uint8_t value_)
    {
-      if ((channel != number) and not omni) return;
+      if (not isValidChannel(channel_)) return;
 
       for(unsigned index = 0; index < num_voices; ++index)
       {
-         voiceProgram(index, prog);
+         voiceLevel(index, value_);
       }
    }
 
-   void channelPressure(uint8_t channel, uint8_t value)
+   void channelPitchBend(uint8_t channel_, int16_t value_)
    {
-      if ((channel != number) and not omni) return;
+      if (not isValidChannel(channel_)) return;
 
       for(unsigned index = 0; index < num_voices; ++index)
       {
-         voiceLevel(index, value);
-      }
-   }
-
-   void channelPitchBend(uint8_t channel, int16_t value)
-   {
-      if ((channel != number) and not omni) return;
-
-      for(unsigned index = 0; index < num_voices; ++index)
-      {
-         voicePitch(index, value);
+         voicePitch(index, value_);
       }
    }
 
    // Channel mode messages
 
-   void localControl(uint8_t channel, bool on)
+   void allSoundsOff(uint8_t channel_)
    {
-      if ((channel != number) and not omni) return;
-
-      local_control = on;
+      controlChange(channel_, 0x78, 0x00);
    }
 
-   void allNotesOff(uint8_t channel)
+   void resetAllControllers(uint8_t channel_)
    {
-      if ((channel != number) and not omni) return;
-
-      for(unsigned index = 0; index < num_voices; ++index)
-      {
-         voiceOff(index);
-      }
+      controlChange(channel_, 0x79, 0x00);
    }
 
-   void omniMode(uint8_t channel, bool on)
+   void localControl(uint8_t channel_, bool on_)
    {
-      if (channel != number) return;
-
-      omni = on;
+      controlChange(channel_, 0x7A, on_ ? 0x7F : 0x00);
    }
 
-   void monoMode(uint8_t channel, uint8_t num_channels)
+   void allNotesOff(uint8_t channel_)
    {
-      if ((channel != number) and not omni) return;
-
-      poly          = false;
-      mono_channels = num_channels;
+      controlChange(channel_, 0x7B, 0x00);
    }
 
-   void polyMode(uint8_t channel)
+   void omniMode(uint8_t channel_, bool on_)
    {
-      if ((channel != number) and not omni) return;
+      controlChange(channel_, on_ ? 0x7D : 0x7C, 0x00);
+   }
 
-      poly          = true;
-      mono_channels = 0;
+   void monoMode(uint8_t channel_, uint8_t num_channels_ = 0)
+   {
+      controlChange(channel_, 0x7E, num_channels_);
+   }
+
+   void polyMode(uint8_t channel_)
+   {
+      controlChange(channel_, 0x7F, 0x00);
    }
 
    // System Exclusive interface
-   virtual void sysEx(uint8_t byte) {}
+   virtual void sysEx(uint8_t byte_) {}
 
-protected:
+private:
+   bool isValidChannel(uint8_t channel_)
+   {
+      return omni or ((channel_ >= base_channel) and
+                      (channel_ < (base_channel + num_channels)));
+   }
+
    uint8_t num_voices {0};
-   uint8_t number {0};
+   uint8_t base_channel {0};
+   uint8_t num_channels {1};
    bool    local_control {true};
    bool    omni {true};
    bool    poly {true};
-   uint8_t mono_channels {0};
 };
 
 } // namespace MIDI
