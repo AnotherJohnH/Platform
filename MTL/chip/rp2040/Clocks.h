@@ -78,7 +78,9 @@ public:
        SYS_FREQ_125_00_MHZ,
        SYS_FREQ_132_00_MHZ,
        SYS_FREQ_133_00_MHZ,
-       SYS_FREQ_137_48_MHZ
+       SYS_FREQ_137_48_MHZ,
+       SYS_FREQ_157_10_MHZ,
+       SYS_FREQ_191_08_MHZ,
     };
 
     void start()
@@ -105,6 +107,8 @@ public:
         case SYS_FREQ_132_00_MHZ: pll_sys.start(/* freq_mhz */ 132); break;
         case SYS_FREQ_133_00_MHZ: pll_sys.start(/* freq_mhz */ 133); break;
         case SYS_FREQ_137_48_MHZ: pll_sys.start137_48MHz(); break;
+        case SYS_FREQ_157_10_MHZ: pll_sys.start157_10MHz(); break;
+        case SYS_FREQ_191_08_MHZ: pll_sys.start191_08MHz(); break;
         }
 
         PllUsb pll_usb;

@@ -75,6 +75,26 @@ public:
       freq = 137480000;
    }
 
+   //! Start PLL at 157.104 MHz (assumes a 12 MHz XTAL input)
+   void start157_10MHz()
+   {
+      // XTAL          REF      FBDIV    VCO                 POSTDIV
+      // 12 MHz / 25 => 480 KHz * 3437 => 1571.04 MHz / 2 / 5 => 157.104 MHz
+      config(/* refdiv */ 25, /* fbdiv */ 3273, /* post_div1 */ 5, /* post_div2 */ 2);
+
+      freq = 157104000;
+   }
+
+   //! Start PLL at 191.08 MHz (assumes a 12 MHz XTAL input)
+   void start191_08MHz()
+   {
+      // XTAL          REF      FBDIV    VCO                 POSTDIV
+      // 12 MHz / 28 => 429 KHz * 3121 => 1337.6 MHz / 1 / 7 => 191.08 MHz
+      config(/* refdiv */ 28, /* fbdiv */ 3121, /* post_div1 */ 7, /* post_div2 */ 1);
+
+      freq = 191081633;
+   }
+
 private:
    void config(unsigned refdiv,
                unsigned fbdiv,
