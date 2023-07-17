@@ -25,6 +25,9 @@
 #pragma once
 
 #include "MTL/Periph.h"
+#include "MTL/CortexM0/NVIC.h"
+
+#include "STB/Fifo.h"
 
 #include "PadsBank.h"
 #include "Pll.h"
@@ -39,31 +42,55 @@ struct UartReg
 {
    uint32_t dr;
    uint32_t rsr;
-   uint32_t pad1[4];
+   uint32_t pad[4];
    uint32_t tfr;
    uint32_t pad2;
+
    uint32_t ilpr;
    uint32_t ibrd;
    uint32_t fbrd;
    uint32_t lcr_h;
+
    uint32_t cr;
-   uint32_t ifls;
-   uint32_t imsc;
-   uint32_t ris;
-   uint32_t mis;
-   uint32_t icr;
+   uint32_t ifls;    //!< Interrupt FIFO level select
+   uint32_t imsc;    //!< Interrupt mask set/clear
+   uint32_t ris;     //!< Raw interrupt status
+
+   uint32_t mis;     //!< Masked interrupt status
+   uint32_t icr;     //!< Interrupt clear
    uint32_t dmacr;
 };
 
-template <uint32_t BASE_ADDRESS, unsigned TX_PIN, unsigned RX_PIN>
-class Uart : public Periph<UartReg, BASE_ADDRESS>
+using UartFifo = STB::Fifo<uint8_t, /* LOG2_BUFFER_SIZE */ 9>;
+
+//! Base class with RX/TX buffers for each UART instance
+template <unsigned INDEX>
+class UartBuffers
 {
 public:
+   UartBuffers() = default;
+
+protected:
+   static UartFifo rx_buffer;
+   static UartFifo tx_buffer;
+};
+
+template <uint32_t BASE_ADDRESS, unsigned INDEX, unsigned TX_PIN, unsigned RX_PIN>
+class Uart
+   : public Periph<UartReg, BASE_ADDRESS>
+   , public UartBuffers<INDEX>
+{
+public:
+   Uart() = default;
+
    Uart(unsigned     baud,
         unsigned     data_bits = 8,
         UART::Parity parity    = UART::NONE,
         unsigned     stop_bits = 1)
    {
+      PadsBank pads_bank;
+      IoBank   io_bank;
+
       // Configure TX pin
       pads_bank.setOut(TX_PIN, PadsBank::DRIVE_2MA);
       io_bank.setFunc(TX_PIN, IoBank::UART);
@@ -86,50 +113,127 @@ public:
       this->setBit(  lcr_h, 1,    parity != UART::NONE); // PEN
       this->reg->lcr_h = lcr_h;
 
-      // Enable
+      // Enable UART TX and RX
       this->reg->cr = (1 << 9) |  // TXEN
                       (1 << 8) |  // RXEN
                       (1 << 0);   // EN
+
+      // Enable interrupts
+      this->reg->ifls = (/* RXIFLSEL (7/8 full) */ 4 << 3) | /* TXIFLSEL (1/8 empty) */ 0;
+      this->reg->imsc = RXIM;
+
+      MTL::NVIC<20 + INDEX>().enable();
    }
 
-   //! Check if RX FIFO is empty
+   //! Check if recieve buffers are empty
    bool empty() const
+   {
+      return this->rx_buffer.empty() && rx_fifo_empty();
+   }
+
+   //! Check if transmit buffers are full
+   bool full() const
+   {
+      return this->tx_buffer.full() || tx_fifo_full();
+   }
+
+   //! Schedule a byte to be sent
+   void tx(uint8_t byte)
+   {
+      if (this->tx_buffer.empty())
+      {
+         if (not tx_fifo_full())
+         {
+            // push into HW FIFO
+            this->reg->dr = byte;
+            return;
+         }
+
+         // push into TX buffer and exanble TX FIFO low irq
+         this->tx_buffer.push(byte);
+         this->reg->imsc |= TXIM;
+         return;
+      }
+
+      // Block when transmit buffer is full
+      while(this->tx_buffer.full());
+
+      this->tx_buffer.push(byte);
+   }
+
+   //! Return the next byte recieved
+   uint8_t rx()
+   {
+      if (not this->rx_buffer.empty())
+      {
+         uint8_t byte = this->rx_buffer.back();
+         this->rx_buffer.pop();
+         return byte;
+      }
+
+      // Block when hardware FIFO empty
+      while(rx_fifo_empty());
+
+      return this->reg->dr;
+   }
+
+   //! Interrupt handler
+   void irq()
+   {
+      if (this->reg->mis & RXIM)
+      {
+         // Spool HW FIFO into RX buffer
+         while(not rx_fifo_empty())
+         {
+            if (not this->rx_buffer.full())
+            {
+               this->rx_buffer.push(this->reg->dr);
+            }
+            // else { XXX DATA LOSS }
+         }
+      }
+
+      if (this->reg->mis & TXIM)
+      {
+         // Spool TX buffer into HW FIFO
+         while(not tx_fifo_full())
+         {
+            if (this->tx_buffer.empty())
+            {
+               // Disable TX FIFO low IRQ
+               this->reg->imsc &= ~TXIM;
+               break;
+            }
+
+            this->reg->dr = this->tx_buffer.back();
+            this->tx_buffer.pop();
+         }
+      }
+   }
+
+private:
+   //! Check if RX FIFO is empty
+   bool rx_fifo_empty() const
    {
       return this->getBit(this->reg->tfr, 4) != 0;
    }
 
    //! Check if TX FIFO is full
-   bool full() const
+   bool tx_fifo_full() const
    {
       return this->getBit(this->reg->tfr, 5) != 0;
    }
 
-   void tx(uint8_t data)
-   {
-      // Block when FIFO full
-      while(full());
-
-      this->reg->dr = data;
-   }
-
-   uint8_t rx()
-   {
-      // Block when FIFO empty
-      while(empty());
-
-      return this->reg->dr;
-   }
-
-private:
-   PadsBank pads_bank;
-   IoBank   io_bank;
+   // Interrupt masks
+   static const uint32_t TXIM = 1 << 5;
+   static const uint32_t RXIM = 1 << 4;
 };
 
-using Uart0      = Uart<0x40034000, MTL::rp2040::IO_PIN_0,  MTL::rp2040::IO_PIN_1>;
-using Uart0_ALT1 = Uart<0x40034000, MTL::rp2040::IO_PIN_12, MTL::rp2040::IO_PIN_13>;
-using Uart0_ALT2 = Uart<0x40034000, MTL::rp2040::IO_PIN_16, MTL::rp2040::IO_PIN_17>;
+using Uart0      = Uart<0x40034000, 0, MTL::rp2040::IO_PIN_0,  MTL::rp2040::IO_PIN_1>;
+using Uart0_ALT1 = Uart<0x40034000, 0, MTL::rp2040::IO_PIN_12, MTL::rp2040::IO_PIN_13>;
+using Uart0_ALT2 = Uart<0x40034000, 0, MTL::rp2040::IO_PIN_16, MTL::rp2040::IO_PIN_17>;
 
-using Uart1      = Uart<0x40038000, MTL::rp2040::IO_PIN_4, MTL::rp2040::IO_PIN_5>;
-using Uart1_ALT  = Uart<0x40038000, MTL::rp2040::IO_PIN_8, MTL::rp2040::IO_PIN_9>;
+using Uart1      = Uart<0x40038000, 1, MTL::rp2040::IO_PIN_4, MTL::rp2040::IO_PIN_5>;
+using Uart1_ALT  = Uart<0x40038000, 1, MTL::rp2040::IO_PIN_8, MTL::rp2040::IO_PIN_9>;
 
 } // namespace MTL
