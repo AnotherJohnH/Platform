@@ -26,8 +26,6 @@
 
 #include "STB/MIDIInstrument.h"
 
-#define DBG if (1) printf
-
 namespace MIDI {
 
 class Interface
@@ -43,6 +41,11 @@ public:
    void attachInstrument(MIDI::Instrument& instrument_)
    {
       inst = &instrument_;
+   }
+
+   void setDebug(bool debug_ = true)
+   {
+      debug = debug_;
    }
 
    void tick()
@@ -75,7 +78,7 @@ public:
                   break;
 
                default:
-                  DBG("SYSTEM %02X\n", byte);
+                  if (debug) printf("SYSTEM %02X\n", byte);
                   break;
                }
             }
@@ -109,7 +112,7 @@ private:
          {
             uint8_t note  = byte;
             uint8_t level = rx();
-            DBG("CH%u NOTE OFF %3u %3u\n", chan, note, level);
+            if (debug) printf("CH%u NOTE OFF %3u %3u\n", chan, note, level);
             inst->noteOff(chan, note, level);
          }
          break;
@@ -118,7 +121,7 @@ private:
          {
             uint8_t note  = byte;
             uint8_t level = rx();
-            DBG("CH%u NOTE ON  %3u %3u\n", chan, note, level);
+            if (debug) printf("CH%u NOTE ON  %3u %3u\n", chan, note, level);
             inst->noteOn(chan, note, level);
          }
          break;
@@ -127,7 +130,7 @@ private:
          {
             uint8_t note  = byte;
             uint8_t level = rx();
-            DBG("CH%u NOTE PRE %3u %3u\n", chan, note, level);
+            if (debug) printf("CH%u NOTE PRE %3u %3u\n", chan, note, level);
             inst->notePressure(chan, note, level);
          }
          break;
@@ -136,7 +139,7 @@ private:
          {
             uint8_t ctrl  = byte;
             uint8_t value = rx();
-            DBG("CH%u CTRL     %3u %3u\n", chan, ctrl, value);
+            if (debug) printf("CH%u CTRL     %3u %3u\n", chan, ctrl, value);
             inst->controlChange(chan, ctrl, value);
          }
          break;
@@ -144,7 +147,7 @@ private:
       case 0xC:
          {
             uint8_t prog = byte;
-            DBG("CH%u PROG     %3u\n", chan, prog);
+            if (debug) printf("CH%u PROG     %3u\n", chan, prog);
             inst->programChange(chan, prog);
          }
          break;
@@ -152,7 +155,7 @@ private:
       case 0xD:
          {
             uint8_t level = byte;
-            DBG("CH%u PRES     %3u\n", chan, rx());
+            if (debug) printf("CH%u PRES     %3u\n", chan, rx());
             inst->channelPressure(chan, level);
          }
          break;
@@ -162,7 +165,7 @@ private:
             uint8_t lsb   = byte;
             uint8_t msb   = rx();
             int16_t pitch = ((msb << 7) | lsb) - 0x2000;
-            DBG("CH%u PTCH     %d\n", chan, pitch);
+            if (debug) printf("CH%u PTCH     %d\n", chan, pitch);
             inst->channelPitchBend(chan, pitch);
          }
          break;
@@ -172,6 +175,7 @@ private:
    MIDI::Instrument* inst {nullptr};
    unsigned          cmd {0};
    unsigned          chan {0};
+   bool              debug {false};
 };
 
 } // namespace MIDI
