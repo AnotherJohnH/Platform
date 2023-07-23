@@ -87,7 +87,7 @@ static void print_f(double value, int width, unsigned places)
 }
 #endif
 
-void vprintf(const char* format, va_list ap)
+int vprintf(const char* format, va_list ap)
 {
    for(const char* s = format; *s; s++)
    {
@@ -183,6 +183,8 @@ void vprintf(const char* format, va_list ap)
          putchar(ch);
       }
    }
+
+   return 0;
 }
 
 
@@ -191,8 +193,8 @@ int printf(const char* format, ...)
    va_list  ap;
 
    va_start(ap, format);
-   vprintf(format, ap);
+   int status = vprintf(format, ap);
    va_end(ap);
 
-   return 0;
+   return status;
 }
