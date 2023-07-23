@@ -28,7 +28,7 @@
 
 #include "IoBank.h"
 #include "PadsBank.h"
-#include "SIO.h"
+#include "Sio.h"
 #include "Resets.h"
 
 namespace MTL {
