@@ -24,7 +24,12 @@
 
 #include "Uart.h"
 
-static MTL::Uart0 uart{9600, 8, MTL::UART::NONE, 1};
+namespace MTL {
+//  declared weak so that applications may override
+extern const unsigned __attribute__((weak)) console_baud = 115200;
+}
+
+static MTL::Uart0 uart{MTL::console_baud, 8, MTL::UART::NONE, 1};
 
 void MTL_putch(uint8_t ch)
 {
