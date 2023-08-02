@@ -110,19 +110,19 @@ private:
       {
       case 0x8:
          {
-            uint8_t note  = byte;
-            uint8_t level = rx();
-            if (debug) printf("CH%u NOTE OFF %3u %3u\n", chan, note, level);
-            inst->noteOff(chan, note, level);
+            uint8_t note     = byte;
+            uint8_t velocity = rx();
+            if (debug) printf("CH%u NOTE OFF %3u %3u\n", chan, note, velocity);
+            inst->noteOff(chan, note, velocity);
          }
          break;
 
       case 0x9:
          {
-            uint8_t note  = byte;
-            uint8_t level = rx();
-            if (debug) printf("CH%u NOTE ON  %3u %3u\n", chan, note, level);
-            inst->noteOn(chan, note, level);
+            uint8_t note     = byte;
+            uint8_t velocity = rx();
+            if (debug) printf("CH%u NOTE ON  %3u %3u\n", chan, note, velocity);
+            inst->noteOn(chan, note, velocity);
          }
          break;
 
@@ -155,7 +155,7 @@ private:
       case 0xD:
          {
             uint8_t level = byte;
-            if (debug) printf("CH%u PRES     %3u\n", chan, rx());
+            if (debug) printf("CH%u PRES     %3u\n", chan, level);
             inst->channelPressure(chan, level);
          }
          break;

@@ -51,16 +51,16 @@ public:
    virtual void voiceReset(unsigned voice_) {}
 
    //! Start a voice
-   virtual void voiceOn(unsigned voice_, uint8_t note_, uint8_t level_) {}
+   virtual void voiceOn(unsigned voice_, uint8_t note_, uint8_t velocity_) {}
 
    //! Stop a voice
-   virtual void voiceOff(unsigned voice_) {}
+   virtual void voiceOff(unsigned voice_, uint8_t velocity_) {}
 
-   //! Set voice level
-   virtual void voiceLevel(unsigned voice_, uint8_t level_) {}
+   //! Set voice aftertouch
+   virtual void voicePressure(unsigned voice_, uint8_t level_) {}
 
    //! Voice pitch bend
-   virtual void voicePitch(unsigned voice_, int16_t value_) {}
+   virtual void voicePitchBend(unsigned voice_, int16_t value_) {}
 
    //! Control a voice
    virtual void voiceControl(unsigned voice_, uint8_t control_, uint8_t value_) {}
@@ -87,7 +87,7 @@ public:
       }
    }
 
-   void noteOff(uint8_t channel_, uint8_t note_,  uint8_t level_)
+   void noteOff(uint8_t channel_, uint8_t note_,  uint8_t velocity_)
    {
       if (not isValidChannel(channel_)) return;
 
@@ -96,7 +96,7 @@ public:
 
       if ((index >= 0) && (index < num_voices))
       {
-         voiceOff(index);
+         voiceOff(index, velocity_);
       }
    }
 
@@ -109,7 +109,7 @@ public:
 
       if ((index >= 0) && (index < num_voices))
       {
-         voiceLevel(index, level_);
+         voicePressure(index, level_);
       }
    }
 
@@ -140,7 +140,7 @@ public:
       case 0x7B:
          for(unsigned index = 0; index < num_voices; ++index)
          {
-            voiceOff(index);
+            voiceOff(index, /* velocity */ 0);
          }
          break;
 
@@ -183,7 +183,7 @@ public:
 
       for(unsigned index = 0; index < num_voices; ++index)
       {
-         voiceLevel(index, value_);
+         voicePressure(index, value_);
       }
    }
 
@@ -193,7 +193,7 @@ public:
 
       for(unsigned index = 0; index < num_voices; ++index)
       {
-         voicePitch(index, value_);
+         voicePitchBend(index, value_);
       }
    }
 
