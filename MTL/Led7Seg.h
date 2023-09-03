@@ -27,15 +27,17 @@
 #include "MTL/MTL.h"
 #include "MTL/Digital.h"
 
-template <unsigned PIN_CLK, unsigned PIN_DATA, unsigned NUM_DIGITS, unsigned DELAY = 5>
+namespace MTL {
+
+template <unsigned PIN_CLK, unsigned PIN_DATA, unsigned NUM_DIGITS, unsigned DELAY = 10>
 class Led7Seg
 {
 public:
    Led7Seg()
    {
       // Dirty state so that following clear is always sent
-      // and so guarantees synchronization with external shift
-      // registers
+      // and so guarantees synchronization of state[] with
+      // the external shift registers
       state[0] = 1;
 
       clear();
@@ -54,33 +56,33 @@ public:
       updateState(buffer);
    }
 
-   //! Send hex (or BCD) value to daisy chained 7-seg modules
-   void printHex(uint32_t digits, unsigned dp = NO_DP)
+   //! Send value to daisy chained 7-seg modules
+   void print(unsigned value, unsigned base = 10, unsigned dp = NO_DP)
    {
       uint8_t buffer[NUM_DIGITS];
 
       for(unsigned i = 0; i < NUM_DIGITS; ++i)
       {
-         buffer[i] = convertDigit(digits & 0xF, dp == i);
-         digits >>= 4;
+         buffer[i] = convertDigit(value % base, dp == i);
+         value /= base;
       }
 
       updateState(buffer);
+   }
+
+   //! Send hex (or BCD) value to daisy chained 7-seg modules
+   void printHex(uint32_t value, unsigned dp = NO_DP)
+   {
+      print(value, /* base */ 16, dp);
    }
 
    //! Send decimal value to daisy chained 7-seg modules
    void printDec(unsigned value, unsigned dp = NO_DP)
    {
-      uint8_t buffer[NUM_DIGITS];
-
-      for(unsigned i = 0; i < NUM_DIGITS; ++i)
-      {
-         buffer[i] = convertDigit(value % 10, dp == i);
-         value /= 10;
-      }
-
-      updateState(buffer);
+      print(value, /* base */ 10, dp);
    }
+
+   static const unsigned NO_DP = NUM_DIGITS;
 
 private:
    //! A simple uncalibrated delay
@@ -89,10 +91,10 @@ private:
       // The specifc frequency used to clock the shift registers is
       // unimportant. What is important is that the clock is not too
       // fast for the shift registers and not too slow for the application.
-      // Measurements have found that a DELAY of 5 will result in a shift
-      // reg clock of ~1/100th the CPU clock e.g...
-      // => a CPU clock of 100 MHz will give a shift reg clock of 1 MHz
-      // and an update time of 8 uS per digit
+      // Measurements have found that a DELAY of 10 will result in a shift
+      // reg clock of ~1/200th the CPU clock e.g...
+      // => a CPU clock of 100 MHz will give a shift reg clock of 500 KHz
+      // and an update time of 16 uS per digit
       volatile uint32_t n = DELAY;
       while(n--);
    }
@@ -169,14 +171,14 @@ private:
       uint8_t segments = table_edc_bafg[digit];
 
       if (dp) 
-         segments |= 0b10000;
+         segments |= 0b00010000;
 
       return segments;
    }
-
-   static const unsigned NO_DP = NUM_DIGITS;
 
    MTL::Digital::Out<PIN_CLK>  port_clk;
    MTL::Digital::Out<PIN_DATA> port_data;
    uint8_t                     state[NUM_DIGITS];
 };
+
+} // namespace MTL
