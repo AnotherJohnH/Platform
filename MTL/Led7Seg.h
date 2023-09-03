@@ -27,7 +27,7 @@
 #include "MTL/MTL.h"
 #include "MTL/Digital.h"
 
-template <unsigned PIN_CLK, unsigned PIN_DATA, unsigned NUM_DIGITS>
+template <unsigned PIN_CLK, unsigned PIN_DATA, unsigned NUM_DIGITS, unsigned DELAY = 5>
 class Led7Seg
 {
 public:
@@ -86,7 +86,14 @@ private:
    //! A simple uncalibrated delay
    void delay()
    {
-      volatile uint32_t n = 100;
+      // The specifc frequency used to clock the shift registers is
+      // unimportant. What is important is that the clock is not too
+      // fast for the shift registers and not too slow for the application.
+      // Measurements have found that a DELAY of 5 will result in a shift
+      // reg clock of ~1/100th the CPU clock e.g...
+      // => a CPU clock of 100 MHz will give a shift reg clock of 1 MHz
+      // and an update time of 8 uS per digit
+      volatile uint32_t n = DELAY;
       while(n--);
    }
 
