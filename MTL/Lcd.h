@@ -159,7 +159,7 @@ private:
    void delayUs(volatile uint32_t n)
    {
       // XXX this is a nasty hack TODO use a hardware timer
-      n *= 100;
+      n *= 200;
 
       while(n--);
    }
