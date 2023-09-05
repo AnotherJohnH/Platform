@@ -20,57 +20,56 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \brief C API
+// \brief RP2040 Timer peripheral
 
 #pragma once
 
-#include <stdint.h>
+#include "MTL/Periph.h"
 
-using Handler = void (*)(uint32_t);
+namespace MTL {
 
-enum Exception
+struct USTimerReg
 {
-   EXC_BUS,
-   EXC_UND,
-   EXC_FPE,
-   NUM_EXC
+   uint32_t timehw;
+   uint32_t timelw;
+   uint32_t timehr;
+   uint32_t timelr;
+   uint32_t alarm0;
+   uint32_t alarm1;
+   uint32_t alarm2;
+   uint32_t alarm3;
+   uint32_t armed;
+   uint32_t timeawh;
+   uint32_t timeawl;
+   uint32_t dbgpause;
+   uint32_t pause;
+   uint32_t intr;
+   uint32_t inte;
+   uint32_t intf;
+   uint32_t ints;
 };
 
-extern "C"
+//! 1 MHz timer
+class USTimer
+   : public Periph<USTimerReg, 0x40054000>
 {
-   //! Intialise the platform
-   void MTL_init();
+public:
+   USTimer() = default;
 
-   //! Initialise image
-   void MTL_data_and_bss();
+   //! Get 64-bit timer value XXX not thread safe
+   uint64_t read64() const
+   {
+      uint32_t lsw = reg->timelr;
+      uint32_t msw = reg->timehr;
 
-   //! Construct global objects
-   void MTL_global_construction();
+      return (uint64_t(msw) << 32) | lsw;
+   }
 
-   //! Intialise the application
-   void MTL_load();
+   //! Get 32-bit timer value
+   uint64_t read32() const
+   {
+      return reg->timeawl;
+   }
+};
 
-   //! Application entry point
-   int MTL_main();
-
-   //! Halt platform
-   [[ noreturn ]] extern void MTL_halt(uint32_t status);
-
-   //! Get current 100 Hz tick count
-   uint32_t MTL_clock();
-
-   //! Get current microsecond tick count
-   uint32_t MTL_us_clock();
-
-   //! Send character to console
-   void MTL_putch(uint8_t ch);
-
-   //! Get character from the console
-   int MTL_getch();
-
-   //! Check if character avialable from the console
-   bool MTL_getch_empty();
-
-   //! Exception handling
-   void MTL_excep(Exception signal, Handler handler, uint32_t data);
-}
+} // namespace MTL

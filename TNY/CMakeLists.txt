@@ -53,6 +53,7 @@ add_library(TNY STATIC
             rand.cpp
             sin.c
             scanf.cpp
+            sleep.cpp
             snprintf.cpp
             sprintf.cpp
             srand.cpp
@@ -70,6 +71,7 @@ add_library(TNY STATIC
             strtoull.cpp
             system.cpp
             time.cpp
+            usleep.cpp
             vfprintf.cpp
             vsnprintf.cpp
             vsprintf.cpp)

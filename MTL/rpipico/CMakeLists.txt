@@ -26,7 +26,7 @@ add_library(MTL STATIC
             MTL/rp2040/Uart.cpp
             MTL/rp2040/MTL_init.cpp 
             MTL/rp2040/MTL_console.cpp 
-            MTL/CortexM0/MTL_clock.cpp
+            MTL/rp2040/MTL_clock.cpp
             MTL/CortexM0/MTL_excep.cpp)
 
 target_include_directories(MTL PUBLIC .)

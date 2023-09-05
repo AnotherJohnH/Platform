@@ -20,57 +20,18 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \brief C API
+#include "USTimer.h"
 
-#pragma once
+static MTL::USTimer us_timer;
 
-#include <stdint.h>
-
-using Handler = void (*)(uint32_t);
-
-enum Exception
+//! Return 100 Hz clock value
+uint32_t MTL_clock()
 {
-   EXC_BUS,
-   EXC_UND,
-   EXC_FPE,
-   NUM_EXC
-};
+   return us_timer.read64() / 10000;
+}
 
-extern "C"
+//! Return 1 MHz clock value
+uint32_t MTL_us_clock()
 {
-   //! Intialise the platform
-   void MTL_init();
-
-   //! Initialise image
-   void MTL_data_and_bss();
-
-   //! Construct global objects
-   void MTL_global_construction();
-
-   //! Intialise the application
-   void MTL_load();
-
-   //! Application entry point
-   int MTL_main();
-
-   //! Halt platform
-   [[ noreturn ]] extern void MTL_halt(uint32_t status);
-
-   //! Get current 100 Hz tick count
-   uint32_t MTL_clock();
-
-   //! Get current microsecond tick count
-   uint32_t MTL_us_clock();
-
-   //! Send character to console
-   void MTL_putch(uint8_t ch);
-
-   //! Get character from the console
-   int MTL_getch();
-
-   //! Check if character avialable from the console
-   bool MTL_getch_empty();
-
-   //! Exception handling
-   void MTL_excep(Exception signal, Handler handler, uint32_t data);
+   return us_timer.read32();
 }

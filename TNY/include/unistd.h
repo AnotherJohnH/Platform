@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+/*------------------------------------------------------------------------------
+// Copyright (C) 2023 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,18 +18,19 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//------------------------------------------------------------------------------
+//----------------------------------------------------------------------------*/
 
-#include "MTL/MTL.h"
+//! \brief tiny C library implementation
 
-__attribute__((weak))
-uint32_t MTL_clock()
-{
-   return 0;
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern int usleep(unsigned microseconds);
+extern int sleep(unsigned  seconds);
+
+#ifdef __cplusplus
 }
-
-__attribute__((weak))
-uint32_t MTL_us_clock()
-{
-   return 0;
-}
+#endif
