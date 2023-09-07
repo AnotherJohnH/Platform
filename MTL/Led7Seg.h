@@ -29,7 +29,7 @@
 
 namespace MTL {
 
-template <unsigned PIN_CLK, unsigned PIN_DATA, unsigned NUM_DIGITS, unsigned DELAY = 10>
+template <unsigned PIN_CLK, unsigned PIN_DATA, unsigned NUM_DIGITS, bool COMMON_ANODE = false, unsigned DELAY = 10>
 class Led7Seg
 {
 public:
@@ -134,7 +134,10 @@ private:
          // has changed
          for(unsigned i = 0; i < NUM_DIGITS; ++i)
          {
-            txRaw(new_state[i]);
+            if (COMMON_ANODE)
+               txRaw(~new_state[i]);
+            else
+               txRaw(new_state[i]);
 
             state[i] = new_state[i];
          }
