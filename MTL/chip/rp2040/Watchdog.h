@@ -1,5 +1,5 @@
-/*------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+//------------------------------------------------------------------------------
+// Copyright (c) 2023 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,22 +18,40 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//----------------------------------------------------------------------------*/
+//------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+// \brief RP2040 Watchdog peripheral
 
-#include <unistd.h>
+#pragma once
 
-#include "MTL/MTL.h"
+#include "MTL/Periph.h"
 
-int usleep(unsigned microseconds)
+namespace MTL {
+
+struct WatchdogReg
 {
-   if (microseconds > 0)
-   {
-      uint32_t future = MTL_us_clock() + microseconds + 1;
+   uint32_t ctrl;
+   uint32_t load;
+   uint32_t reason;
+   uint32_t scratch[8];
+   uint32_t tick;
+};
 
-      while(MTL_us_clock() < future);
+//! 1 MHz timer
+class Watchdog
+   : public Periph<WatchdogReg, 0x40058000>
+{
+public:
+   Watchdog() = default;
+
+   //! Start the tick clock for a specific reference clock
+   void start(unsigned cycles)
+   {
+      reg->tick = TICK_ENABLE | cycles;
    }
 
-   return 0;
-}
+private:
+   static const uint32_t TICK_ENABLE = 1 << 9;
+};
+
+} // namespace MTL

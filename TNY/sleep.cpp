@@ -28,9 +28,12 @@
 
 int sleep(unsigned seconds)
 {
-   uint32_t future = MTL_clock() + seconds;
+   if (seconds > 0)
+   {
+       uint32_t future = MTL_clock() + seconds * 100 + 1;
 
-   while(MTL_clock() < future);
+       while(MTL_clock() < future);
+   }
 
    return 0;
 }

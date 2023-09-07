@@ -28,6 +28,7 @@
 
 #include "XOsc.h"
 #include "Pll.h"
+#include "Watchdog.h"
 
 namespace MTL {
 
@@ -138,6 +139,9 @@ public:
         // PERI clock
         // PLL_SYS => CLK_PERI => 133 MHz
         configAux(&reg->peri, /* PLL SYS */ 0, /* div8 */ 0x100);
+
+        // Start the watchdog for 1us tick (assuming 12 MHz XOsc)
+        Watchdog().start(XOsc::XTAL_FREQ_MHZ);
     }
 
 private:

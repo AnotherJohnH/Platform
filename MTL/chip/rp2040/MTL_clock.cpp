@@ -20,18 +20,22 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "USTimer.h"
+#include "MTL/MTL.h"
 
-static MTL::USTimer us_timer;
+#include "USTimer.h"
 
 //! Return 100 Hz clock value
 uint32_t MTL_clock()
 {
+   MTL::USTimer us_timer;
+
    return us_timer.read64() / 10000;
 }
 
 //! Return 1 MHz clock value
 uint32_t MTL_us_clock()
 {
+   MTL::USTimer us_timer;
+
    return us_timer.read32();
 }

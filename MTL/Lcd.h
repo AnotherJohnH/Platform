@@ -31,6 +31,8 @@
 
 #include "MTL/Gpio.h"
 
+#include <unistd.h>
+
 namespace MTL {
 
 template <unsigned PIN_DATA,
@@ -44,15 +46,18 @@ class Lcd
 public:
    Lcd()
    {
-      delayUs(40000);
+      usleep(40000);
 
       // Initialisation involves sending the "function" cmd four times
       function(/* dl_8bit */ true);
-      delayUs(8000);
+      usleep(4100);
+
       function(/* dl_8bit */ true);
-      delayUs(200);
+      usleep(100);
+
       function(/* dl_8bit */ true);
-      delayUs(200);
+      usleep(100);
+
       function(DL_8BIT);
 
       control(/* on */ false, /* cursor */ false, /* blink */ false);
@@ -69,7 +74,7 @@ public:
       col = row = 0;
 
       send(0b00000001);
-      delayUs(1520);
+      usleep(1520);
    }
 
    //! Move cursor to home
@@ -78,7 +83,7 @@ public:
       col = row = 0;
 
       send(0b00000010);
-      delayUs(1520);
+      usleep(1520);
    }
 
    //! Set entry mode
@@ -155,25 +160,16 @@ public:
    }
 
 private:
-   //! A us delay
-   void delayUs(volatile uint32_t n)
-   {
-      // XXX this is a nasty hack TODO use a hardware timer
-      n *= 200;
-
-      while(n--);
-   }
-
    //! Transfer 8 or 4 bits to LCD
    void tx(uint8_t data, bool ram)
    {
       port_data   = data;
       port_r_s    = ram;
       port_enable = true;
-      delayUs(10);
+      usleep(10);
 
       port_enable = false;
-      delayUs(40);
+      usleep(38);
    }
 
    //! Send command to LCD
