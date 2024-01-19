@@ -44,13 +44,13 @@ public:
    }
 
    //! Display width (pixels)
-   unsigned getWidth() const { return WIDTH; }
+   static constexpr unsigned getWidth() { return WIDTH; }
 
    //! Display height (pixels)
-   unsigned getHeight() const { return HEIGHT; }
+   static constexpr unsigned getHeight() { return HEIGHT; }
 
    //! Frame buffer width stride (bytes)
-   unsigned getStride() const { return (WIDTH + 7) / 8; }
+   static constexpr unsigned getStride() { return (WIDTH + 7) / 8; }
 
    //! Reset the display ready for a new image
    void wakeup()
