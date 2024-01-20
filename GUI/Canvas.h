@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CANVAS_H
-#define GUI_CANVAS_H
+#pragma once
 
 #include <cassert>
 #include <cstdlib>
@@ -650,11 +649,6 @@ protected:
    }
 
 private:
-   static const uint32_t LOG2_MAX_ALPHA_BPP = 4;
-
-   Vector      size{0, 0};
-   STB::Colour alpha_table[1 << LOG2_MAX_ALPHA_BPP] = {};
-
    //! Clip value to between 0 and limit (inclusive range)
    void clip(int32_t& value, int32_t limit)
    {
@@ -703,8 +697,11 @@ private:
          }
       }
    }
+
+   static const uint32_t LOG2_MAX_ALPHA_BPP = 4;
+
+   Vector      size{0, 0};
+   STB::Colour alpha_table[1 << LOG2_MAX_ALPHA_BPP] = {};
 };
 
 } // namespace GUI
-
-#endif

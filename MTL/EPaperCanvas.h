@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2024 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,15 +20,51 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+//! \brief Generic canvas for E-Paper displays
+
 #pragma once
 
-#include "GUI/Font.h"
+#include "GUI/Canvas.h"
 
-namespace GUI {
+namespace MTL {
 
-extern const Font font_teletext18;
-extern const Font font_teletext15;
-extern const Font font_teletext12;
-extern const Font font_teletext9;
+template <typename EPAPER, bool SWAP_XY = false>
+class EPaperCanvas : public GUI::Canvas
+{
+public:
+   EPaperCanvas()
+      : GUI::Canvas(SWAP_XY ? EPAPER::getHeight() : EPAPER::getWidth(),
+                    SWAP_XY ? EPAPER::getWidth()  : EPAPER::getHeight())
+   {
+   }
 
-} // namespace GUI
+private:
+   void canvasPoint(STB::Colour colour, int32_t x_, int32_t y_) override
+   {
+      int32_t  x    = SWAP_XY ? y_                            : x_;
+      int32_t  y    = SWAP_XY ? EPAPER::getHeight() - x_  - 1 : y_;
+      uint8_t& byte = frame[y * EPAPER::getStride() + (x / 8)];
+      uint8_t  bit  = 0b10000000 >> (x % 8);
+
+      if (colour == STB::BLACK)
+      {
+         byte &= ~bit;
+      }
+      else
+      {
+         byte |= bit;
+      }
+   }
+
+   void canvasRefresh(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override
+   {
+      epaper.wakeup();
+      epaper.display(frame);
+      epaper.sleep();
+   }
+
+   EPAPER  epaper{};
+   uint8_t frame[EPAPER::getStride() * EPAPER::getHeight()];
+};
+
+} // namespace MTL

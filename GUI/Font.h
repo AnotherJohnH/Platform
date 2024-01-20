@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_FONT_H
-#define GUI_FONT_H
+#pragma once
 
 #include <cassert>
 #include <cstdint>
@@ -124,5 +123,3 @@ public: // TODO make these private
 };
 
 } // namespace GUI
-
-#endif
