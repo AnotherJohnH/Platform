@@ -132,9 +132,9 @@ public:
         configAux(&reg->adc, /* PLL USB */ 0, /* div8 */ 0x100);
 
         // RTC clock
-        // PLL_USB => CLK_RTC => 46875 Hz
-        configAux(&reg->rtc, /* PLL USB */ 0,
-                  uint32_t((uint64_t(pll_usb.getFreq()) << 8) / RTC_FREQ));
+        // XOSC => CLK_RTC => 46875 Hz
+        configAux(&reg->rtc, /* XOSC */ 3,
+                  /* div8 */ (uint64_t(XOsc::XTAL_FREQ_MHZ * 1000000) << 8) / RTC_FREQ);
 
         // PERI clock
         // PLL_SYS => CLK_PERI => 133 MHz
@@ -143,6 +143,8 @@ public:
         // Start the watchdog for 1us tick (assuming 12 MHz XOsc)
         Watchdog().start(XOsc::XTAL_FREQ_MHZ);
     }
+
+    static const unsigned RTC_FREQ = 46875;
 
 private:
     void configGlitchless(volatile ClocksReg::Generator* clock,
@@ -188,8 +190,6 @@ private:
        // Set DIV if not already set
        clock->div = div8;
     }
-
-    static const unsigned RTC_FREQ = 46875;
 };
 
 } // namespace MTL

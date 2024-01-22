@@ -46,7 +46,7 @@ struct SpiReg
    uint32_t macr;
 };
 
-//! Analogue to digital convertor
+//! Seiral Peripheral Interface
 template <uint32_t BASE_ADDRESS,
          unsigned  INDEX,
          unsigned  CS_PIN,
