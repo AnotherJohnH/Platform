@@ -38,6 +38,11 @@ public:
    {
    }
 
+   void partialRefresh()
+   {
+      epaper.display(frame, /* partial */ true);
+   }
+
 private:
    void canvasPoint(STB::Colour colour, int32_t x_, int32_t y_) override
    {
@@ -58,9 +63,7 @@ private:
 
    void canvasRefresh(int32_t x1, int32_t y1, int32_t x2, int32_t y2) override
    {
-      epaper.wakeup();
       epaper.display(frame);
-      epaper.sleep();
    }
 
    EPAPER  epaper{};

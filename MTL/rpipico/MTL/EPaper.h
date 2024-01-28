@@ -52,41 +52,14 @@ public:
    //! Frame buffer width stride (bytes)
    static constexpr unsigned getStride() { return (WIDTH + 7) / 8; }
 
-   //! Reset the display ready for a new image
-   void wakeup()
-   {
-      reset();
-      wait();
-
-      sendCmd(CMD_SWRST);
-      wait();
-
-      sendCmd(CMD_DRV_OUT_CTRL,    /* A[7:0] */ 0xF9, /* A[8] */ 0x00, /* B[2:1] */ 0b000);
-      sendCmd(CMD_DATA_ENTRY_MODE, /* AM = X, Y = inc, X = inc */ 0b011);
-
-      setWindow(0, 0, WIDTH - 1, HEIGHT - 1);
-      setCursor(0, 0);
-
-      sendCmd(CMD_BRDR_WAVFRM,
-          /* VBD option */ (0b00 << 6) |
-          /* VBD level */  (0b00 << 4) |
-          /* GS control */ ( 0b1 << 2) |
-          /* GS setting */ (0b01 << 0) );
-
-      sendCmd(CMD_DISP_UPDATE_CTRL1,
-          /* Red RAM option = normal */      (0b000 << 4) |
-          /* Blk RAM option = normal */      (0b000 << 0),
-          /* Source output mode = S0-S175 */ (0b1   << 7));
- 
-      sendCmd(CMD_TEMP_SENSE_CTRL, /* = internal */ 0x80);
-      wait();
-
-      loadFullLUT();
-   }
-
    //! Clear display to white
-   void clear()
+   void clear(bool partial = false)
    {
+      if (partial)
+         partialWakeup();
+      else
+         fullWakeup();
+
       sendCmd(CMD_WRITE_RAM_BW);
 
       unsigned bytes_per_row = getStride();
@@ -96,25 +69,24 @@ public:
          sendData(0xFF);
       }
 
-      turnOn();
+      turnOn(partial);
+
+      sleep();
    }
 
-   //! Update the display
-   void display(const uint8_t* buffer)
+   //! Update the display with partial update
+   void display(const uint8_t* buffer, bool partial = false)
    {
-      unsigned bytes_per_row = getStride();
+      if (partial)
+         partialWakeup();
+      else
+         fullWakeup();
 
       sendCmd(CMD_WRITE_RAM_BW, getStride() * HEIGHT, buffer);
 
-      turnOn();
-   }
+      turnOn(partial);
 
-   //! Put display to sleep
-   void sleep()
-   {
-      sendCmd(CMD_DISP_UPDATE_CTRL2, /* disable clock signal */ 0x01);
-
-      usleep(100000);
+      sleep();
    }
 
    static const unsigned WIDTH  = 122;
@@ -280,6 +252,67 @@ private:
       };
 
       loadLUT(lut);
+   }
+
+   //! Reset the display ready for a new image
+   void fullWakeup()
+   {
+      reset();
+      wait();
+
+      sendCmd(CMD_SWRST);
+      wait();
+
+      sendCmd(CMD_DRV_OUT_CTRL,    /* A[7:0] */ 0xF9, /* A[8] */ 0x00, /* B[2:1] */ 0b000);
+      sendCmd(CMD_DATA_ENTRY_MODE, /* AM = X, Y = inc, X = inc */ 0b011);
+
+      setWindow(0, 0, WIDTH - 1, HEIGHT - 1);
+      setCursor(0, 0);
+
+      sendCmd(CMD_BRDR_WAVFRM,
+          /* VBD option */ (0b00 << 6) |
+          /* VBD level */  (0b00 << 4) |
+          /* GS control */ ( 0b1 << 2) |
+          /* GS setting */ (0b01 << 0) );
+
+      sendCmd(CMD_DISP_UPDATE_CTRL1,
+          /* Red RAM option = normal */      (0b000 << 4) |
+          /* Blk RAM option = normal */      (0b000 << 0),
+          /* Source output mode = S0-S175 */ (0b1   << 7));
+ 
+      sendCmd(CMD_TEMP_SENSE_CTRL, /* = internal */ 0x80);
+      wait();
+
+      loadFullLUT();
+   }
+
+   //! Reset the display ready for a new image with partial update
+   void partialWakeup()
+   {
+      reset();
+      wait();
+
+      loadPartialLUT();
+
+      const uint8_t data[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00};
+      sendCmd(0x37, sizeof(data), data);
+
+      sendCmd(CMD_BRDR_WAVFRM,
+          /* VBD option */ (0b10 << 6) |
+          /* VBD level */  (0b00 << 4) |
+          /* GS control */ ( 0b0 << 2) |
+          /* GS setting */ (0b00 << 0) );
+
+      setWindow(0, 0, WIDTH - 1, HEIGHT - 1);
+      setCursor(0, 0);
+   }
+
+   //! Put display to sleep
+   void sleep()
+   {
+      sendCmd(CMD_DISP_UPDATE_CTRL2, /* disable clock signal */ 0x01);
+
+      usleep(100000);
    }
 
    // chip select (CS) timing
