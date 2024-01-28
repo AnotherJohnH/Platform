@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //------------------------------------------------------------------------------
-// \brief RP2040 SPI peripheral #pragma once
+// \brief RP2040 SPI peripheral
 
 #pragma once
 
@@ -48,7 +48,6 @@ struct SpiReg
 
 //! Seiral Peripheral Interface
 template <uint32_t BASE_ADDRESS,
-         unsigned  INDEX,
          unsigned  CS_PIN,
          unsigned  CLK_PIN,
          unsigned  MOSI_PIN,
@@ -117,13 +116,13 @@ private:
    bool isTxFifoEmpty() const { return this->getBit(this->reg->psr, 0) != 0; }
 };
 
-using Spi0      = Spi<0x4003C000, 0, rp2040::IO_PIN_1,  rp2040::IO_PIN_2,  rp2040::IO_PIN_3,  rp2040::IO_PIN_0>;
-using Spi0_ALT1 = Spi<0x4003C000, 0, rp2040::IO_PIN_5,  rp2040::IO_PIN_6,  rp2040::IO_PIN_7,  rp2040::IO_PIN_4>;
-using Spi0_ALT2 = Spi<0x4003C000, 0, rp2040::IO_PIN_17, rp2040::IO_PIN_18, rp2040::IO_PIN_19, rp2040::IO_PIN_16>;
-using Spi0_ALT3 = Spi<0x4003C000, 0, rp2040::IO_PIN_21, rp2040::IO_PIN_22, rp2040::IO_PIN_23, rp2040::IO_PIN_20>;
+using Spi0      = Spi<0x4003C000, rp2040::IO_PIN_1,  rp2040::IO_PIN_2,  rp2040::IO_PIN_3,  rp2040::IO_PIN_0>;
+using Spi0_ALT1 = Spi<0x4003C000, rp2040::IO_PIN_5,  rp2040::IO_PIN_6,  rp2040::IO_PIN_7,  rp2040::IO_PIN_4>;
+using Spi0_ALT2 = Spi<0x4003C000, rp2040::IO_PIN_17, rp2040::IO_PIN_18, rp2040::IO_PIN_19, rp2040::IO_PIN_16>;
+using Spi0_ALT3 = Spi<0x4003C000, rp2040::IO_PIN_21, rp2040::IO_PIN_22, rp2040::IO_PIN_23, rp2040::IO_PIN_20>;
 
-using Spi1      = Spi<0x40040000, 1, rp2040::IO_PIN_9,  rp2040::IO_PIN_10, rp2040::IO_PIN_11, rp2040::IO_PIN_8>;
-using Spi1_ALT1 = Spi<0x40040000, 1, rp2040::IO_PIN_13, rp2040::IO_PIN_14, rp2040::IO_PIN_15, rp2040::IO_PIN_12>;
-using Spi1_ALT2 = Spi<0x40040000, 1, rp2040::IO_PIN_25, rp2040::IO_PIN_26, rp2040::IO_PIN_27, rp2040::IO_PIN_24>;
+using Spi1      = Spi<0x40040000, rp2040::IO_PIN_9,  rp2040::IO_PIN_10, rp2040::IO_PIN_11, rp2040::IO_PIN_8>;
+using Spi1_ALT1 = Spi<0x40040000, rp2040::IO_PIN_13, rp2040::IO_PIN_14, rp2040::IO_PIN_15, rp2040::IO_PIN_12>;
+using Spi1_ALT2 = Spi<0x40040000, rp2040::IO_PIN_25, rp2040::IO_PIN_26, rp2040::IO_PIN_27, rp2040::IO_PIN_24>;
 
 } // namespace MTL
