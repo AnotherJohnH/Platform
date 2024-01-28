@@ -39,23 +39,17 @@ struct PadsBankReg
 class PadsBank : public Periph<PadsBankReg, 0x4001C000>
 {
 public:
-    enum Drive
-    {
-        DRIVE_2MA  = 0,
-        DRIVE_4MA  = 0b00010000,
-        DRIVE_8MA  = 0b00100000,
-        DRIVE_12MA = 0b00110000 
-    };
+    static const uint8_t DRIVE_2MA  = 0;
+    static const uint8_t DRIVE_4MA  = 0b00010000;
+    static const uint8_t DRIVE_8MA  = 0b00100000;
+    static const uint8_t DRIVE_12MA = 0b00110000;
 
-    enum Pull
-    {
-        PULL_NONE  = 0,
-        PULL_UP    = 0b00001000,
-        PULL_DOWN  = 0b00000100
-    };
+    static const uint8_t PULL_NONE  = 0;
+    static const uint8_t PULL_UP    = 0b00001000;
+    static const uint8_t PULL_DOWN  = 0b00000100;
 
     //! Set I/O pin as an output
-    void setOut(unsigned io_pin, Drive drive, bool slew_fast = false)
+    void setOut(unsigned io_pin, uint8_t drive, bool slew_fast = false)
     {
        uint32_t bits = IE | drive;
 
@@ -65,7 +59,7 @@ public:
     }
 
     //! Set I/O pin as an input
-    void setIn(unsigned io_pin, Pull pull = PULL_UP, bool schmitt_trigger = false)
+    void setIn(unsigned io_pin, uint8_t pull = PULL_UP, bool schmitt_trigger = false)
     {
        uint32_t bits = OD | IE | pull;
 
