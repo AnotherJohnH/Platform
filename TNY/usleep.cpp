@@ -32,7 +32,7 @@ int usleep(unsigned microseconds)
    {
       uint32_t future = MTL_us_clock() + microseconds + 1;
 
-      while(MTL_us_clock() < future);
+      while(int32_t(MTL_us_clock() - future) < 0);
    }
 
    return 0;
