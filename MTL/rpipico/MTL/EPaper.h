@@ -303,6 +303,13 @@ private:
           /* GS control */ ( 0b0 << 2) |
           /* GS setting */ (0b00 << 0) );
 
+      // Display Update Sequence Option
+      // Enable clock and  Enable analog
+      sendCmd(CMD_DISP_UPDATE_CTRL2, 0xC0);
+
+      sendCmd(CMD_MASTER_ACTIVATION);
+      wait();
+
       setWindow(0, 0, WIDTH - 1, HEIGHT - 1);
       setCursor(0, 0);
    }
