@@ -31,6 +31,7 @@
 
 #include "MTL/MTL.h"
 #include "MTL/Digital.h"
+#include "MTL/CanvasRGB565.h"
 
 #include "MTL/rp2040/Gpio.h"
 #include "MTL/rp2040/Pwm.h"
@@ -40,8 +41,13 @@ namespace MTL {
 class Lcd_ST7789V
 {
 public:
+   using Canvas = CanvasRGB565<Lcd_ST7789V>;
+
    //! Display width (pixels)
    static constexpr unsigned getWidth() { return WIDTH; }
+
+   //! Display frame stride (pixels)
+   static constexpr unsigned getStride() { return WIDTH; }
 
    //! Display height (pixels)
    static constexpr unsigned getHeight() { return HEIGHT; }
