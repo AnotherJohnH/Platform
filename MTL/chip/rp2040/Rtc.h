@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //------------------------------------------------------------------------------
-// \brief RP2040 RTC peripheral #pragma once
+// \brief RP2040 RTC peripheral
 
 #pragma once
 
