@@ -42,9 +42,9 @@ public:
 private:
    void canvasPoint(STB::Colour colour, int32_t x_, int32_t y_) override
    {
-      unsigned red = (colour >> 27) &  0b11111;
-      unsigned grn = (colour >> 18) & 0b111111;
-      unsigned blu = (colour >> 11) &  0b11111;
+      unsigned red = (colour >> 19) &  0b11111;
+      unsigned grn = (colour >> 10) & 0b111111;
+      unsigned blu = (colour >>  3) &  0b11111;
 
       uint16_t rgb565 = (red << 11) | (grn << 5) | blu;
 

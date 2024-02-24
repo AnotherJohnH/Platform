@@ -61,27 +61,58 @@ public:
       out_db = 0;
       out_bl = 0;
 
+      // Register values below taken from piromoni example code
+
       command({SWRESET});
 
       usleep(150000);
 
+      // Tearing effect line on             XXX why and what about the parameter?
       command(TEON);
-      command(COLMOD,   {0x05});
+
+      // Use 16 bits/per pixel (with the control interface)
+      command(COLMOD,   {(0b000 << 4) | (0b101 << 0)});
+
+      // Porch settings:  BPA   FPA  PSEN   FPB   BPC
       command(PORCTRL,  {0x0c, 0x0c, 0x00, 0x33, 0x33});
-      command(LCMCTRL,  {0x2c});
+
+      // LCM control:    XBGR | XMX | XMH   XXX the default, may not be the actual required setting
+      command(LCMCTRL,  {0b00101100});
+
+      // VDV and VRH command enable: CMDEN  XXX what about second parameter
       command(VDVVRHEN, {0x01});
+
+      // VRH set:  +4.45V
       command(VRHS,     {0x12});
+
+      // VDV set:      0V
       command(VDVS,     {0x20});
+
+      // Power control 1:  0xa4? AVDD = +6.8V, AVCL = -4.8V, VDDS = +2.3V
       command(PWCTRL1,  {0xa4, 0xa1});
-      command(FRCTRL2,  {0x0f});
 
+      // Frame rate control in normal mode: 64Hz XXX piromoni example of 60Hz was strobing
+      command(FRCTRL2,  {0x0D});
+
+      // Gate control: VGH = +12.54V, VGL = -9.6V
       command(GCTRL,    {0x14});
-      command(VCOMS,    {0x37});
-      command(GMCTRP1,  {0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23});
-      command(GMCTRN1,  {0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23});
 
+      // VCOMS setting: VCOMS = +1.475 V
+      command(VCOMS,    {0x37});
+
+      // XXX ?
+      command(NVGAMCTRL,  {0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23});
+
+      // XXX ?
+      command(DGMLUTR,    {0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23});
+
+      // Inversion mode on
       command(INVON);
+
+      // Turn off full sleep mode
       command(SLPOUT);
+
+      // Display on
       command(DISPON);
 
       usleep(150000);
@@ -89,15 +120,26 @@ public:
       uint16_t       word_pair[2];
       const uint8_t* b = (uint8_t*)word_pair;
 
+      // Column address set
       word_pair[0] = 0;
       word_pair[1] = WIDTH - 1;
       command(CASET, {b[1], b[0], b[3], b[2]});
 
+      // Row address set
       word_pair[0] = 0;
       word_pair[1] = HEIGHT - 1;
       command(RASET, {b[1], b[0], b[3], b[2]});
 
-      command(MADCTL, {MADCTL_COL_ORDER | MADCTL_SWAP_XY | MADCTL_SCAN_ORDER});
+      // Memory Data Access control
+      static const uint8_t MADCTL_MY  = 0b10000000;
+      static const uint8_t MADCTL_MX  = 0b01000000;
+      static const uint8_t MADCTL_MV  = 0b00100000;
+      static const uint8_t MADCTL_ML  = 0b00010000;
+      static const uint8_t MADCTL_RGB = 0b00001000;
+      static const uint8_t MADCTL_MH  = 0b00000100;
+
+      // Swap XY and reverse page and line address order
+      command(MADCTL, {MADCTL_MY | MADCTL_MV | MADCTL_ML});
 
       usleep(50000);
 
@@ -212,40 +254,32 @@ private:
    }
 
    // Command codes
-   static const uint8_t SWRESET  = 0x01;
-   static const uint8_t SLPOUT   = 0x11;
-   static const uint8_t INVOFF   = 0x20;
-   static const uint8_t INVON    = 0x21;
-   static const uint8_t GAMSET   = 0x26;
-   static const uint8_t DISPOFF  = 0x28;
-   static const uint8_t DISPON   = 0x29;
-   static const uint8_t CASET    = 0x2A;
-   static const uint8_t RASET    = 0x2B;
-   static const uint8_t RAMWR    = 0x2C;
-   static const uint8_t TEOFF    = 0x34;
-   static const uint8_t TEON     = 0x35;
-   static const uint8_t MADCTL   = 0x36;
-   static const uint8_t COLMOD   = 0x3A;
-   static const uint8_t PORCTRL  = 0xB2;
-   static const uint8_t GCTRL    = 0xB7;
-   static const uint8_t VCOMS    = 0xBB;
-   static const uint8_t LCMCTRL  = 0xC0;
-   static const uint8_t VDVVRHEN = 0xC2;
-   static const uint8_t VRHS     = 0xC3;
-   static const uint8_t VDVS     = 0xC4;
-   static const uint8_t FRCTRL2  = 0xC6;
-   static const uint8_t PWMFRSEL = 0xCC;
-   static const uint8_t PWCTRL1  = 0xD0;
-   static const uint8_t GMCTRP1  = 0xE0;
-   static const uint8_t GMCTRN1  = 0xE1;
-
-   // MADCTL command masks
-   static const uint8_t MADCTL_ROW_ORDER   = 0b10000000;
-   static const uint8_t MADCTL_COL_ORDER   = 0b01000000;
-   static const uint8_t MADCTL_SWAP_XY     = 0b00100000;
-   static const uint8_t MADCTL_SCAN_ORDER  = 0b00010000;
-   static const uint8_t MADCTL_RGB_BGR     = 0b00001000;
-   static const uint8_t MADCTL_HORIZ_ORDER = 0b00000100;
+   static const uint8_t SWRESET   = 0x01;
+   static const uint8_t SLPOUT    = 0x11;
+   static const uint8_t INVOFF    = 0x20;
+   static const uint8_t INVON     = 0x21;
+   static const uint8_t GAMSET    = 0x26;
+   static const uint8_t DISPOFF   = 0x28;
+   static const uint8_t DISPON    = 0x29;
+   static const uint8_t CASET     = 0x2A;
+   static const uint8_t RASET     = 0x2B;
+   static const uint8_t RAMWR     = 0x2C;
+   static const uint8_t TEOFF     = 0x34;
+   static const uint8_t TEON      = 0x35;
+   static const uint8_t MADCTL    = 0x36;
+   static const uint8_t COLMOD    = 0x3A;
+   static const uint8_t PORCTRL   = 0xB2;
+   static const uint8_t GCTRL     = 0xB7;
+   static const uint8_t VCOMS     = 0xBB;
+   static const uint8_t LCMCTRL   = 0xC0;
+   static const uint8_t VDVVRHEN  = 0xC2;
+   static const uint8_t VRHS      = 0xC3;
+   static const uint8_t VDVS      = 0xC4;
+   static const uint8_t FRCTRL2   = 0xC6;
+   static const uint8_t PWMFRSEL  = 0xCC;
+   static const uint8_t PWCTRL1   = 0xD0;
+   static const uint8_t NVGAMCTRL = 0xE0;
+   static const uint8_t DGMLUTR   = 0xE1;
 
    MTL::Gpio::Out<1,MTL::PIN_14> out_cs; // Chip Select
    MTL::Gpio::Out<1,MTL::PIN_15> out_dc; // Data not Command
