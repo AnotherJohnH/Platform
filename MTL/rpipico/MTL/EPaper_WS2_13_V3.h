@@ -27,15 +27,18 @@
 
 #include "MTL/MTL.h"
 #include "MTL/Digital.h"
+#include "MTL/CanvasMono1.h"
 
 #include "MTL/rp2040/Spi.h"
 
 namespace MTL {
 
-class EPaper_213_V3
+class EPaper_WS2_13_V3
 {
 public:
-   EPaper_213_V3()
+   using Canvas = CanvasMono1<EPaper_WS2_13_V3, /* SWAP_XY */ true>;
+
+   EPaper_WS2_13_V3()
    {
       pin_cs  = 1;
       pin_rst = 1;

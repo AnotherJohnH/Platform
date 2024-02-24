@@ -49,8 +49,8 @@ private:
    void canvasPoint(STB::Colour colour, int32_t x_, int32_t y_) override
    {
       int32_t  x    = SWAP_XY ? y_                            : x_;
-      int32_t  y    = SWAP_XY ? EPAPER::getHeight() - x_  - 1 : y_;
-      uint8_t& byte = frame[y * EPAPER::getStride() + (x / 8)];
+      int32_t  y    = SWAP_XY ? DISPLAY::getHeight() - x_  - 1 : y_;
+      uint8_t& byte = frame[y * DISPLAY::getStride() + (x / 8)];
       uint8_t  bit  = 0b10000000 >> (x % 8);
 
       if (colour == STB::BLACK)
