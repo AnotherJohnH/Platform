@@ -35,9 +35,16 @@
 
 #include "MTL/rp2040/Gpio.h"
 #include "MTL/rp2040/Pwm.h"
+#include "MTL/rp2040/Pio8080.h"
 
 namespace MTL {
 
+template <unsigned PIN_CS,
+          unsigned PIN_DC,
+          unsigned PIN_WR,
+          unsigned PIN_RD,
+          unsigned PIN_DB,
+          unsigned PIN_BL>
 class Lcd_ST7789V
 {
 public:
@@ -54,6 +61,9 @@ public:
 
    Lcd_ST7789V()
    {
+      // Pio0 pio;
+      // pio_wr.download(pio, 1000000, PIN_DB, PIN_WR);
+
       out_cs = 1;
       out_dc = 1;
       out_wr = 1;
@@ -61,87 +71,7 @@ public:
       out_db = 0;
       out_bl = 0;
 
-      // Register values below taken from piromoni example code
-
-      command({SWRESET});
-
-      usleep(150000);
-
-      // Tearing effect line on             XXX why and what about the parameter?
-      command(TEON);
-
-      // Use 16 bits/per pixel (with the control interface)
-      command(COLMOD,   {(0b000 << 4) | (0b101 << 0)});
-
-      // Porch settings:  BPA   FPA  PSEN   FPB   BPC
-      command(PORCTRL,  {0x0c, 0x0c, 0x00, 0x33, 0x33});
-
-      // LCM control:    XBGR | XMX | XMH   XXX the default, may not be the actual required setting
-      command(LCMCTRL,  {0b00101100});
-
-      // VDV and VRH command enable: CMDEN  XXX what about second parameter
-      command(VDVVRHEN, {0x01});
-
-      // VRH set:  +4.45V
-      command(VRHS,     {0x12});
-
-      // VDV set:      0V
-      command(VDVS,     {0x20});
-
-      // Power control 1:  0xa4? AVDD = +6.8V, AVCL = -4.8V, VDDS = +2.3V
-      command(PWCTRL1,  {0xa4, 0xa1});
-
-      // Frame rate control in normal mode: 64Hz XXX piromoni example of 60Hz was strobing
-      command(FRCTRL2,  {0x0D});
-
-      // Gate control: VGH = +12.54V, VGL = -9.6V
-      command(GCTRL,    {0x14});
-
-      // VCOMS setting: VCOMS = +1.475 V
-      command(VCOMS,    {0x37});
-
-      // XXX ?
-      command(NVGAMCTRL,  {0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23});
-
-      // XXX ?
-      command(DGMLUTR,    {0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23});
-
-      // Inversion mode on
-      command(INVON);
-
-      // Turn off full sleep mode
-      command(SLPOUT);
-
-      // Display on
-      command(DISPON);
-
-      usleep(150000);
-
-      uint16_t       word_pair[2];
-      const uint8_t* b = (uint8_t*)word_pair;
-
-      // Column address set
-      word_pair[0] = 0;
-      word_pair[1] = WIDTH - 1;
-      command(CASET, {b[1], b[0], b[3], b[2]});
-
-      // Row address set
-      word_pair[0] = 0;
-      word_pair[1] = HEIGHT - 1;
-      command(RASET, {b[1], b[0], b[3], b[2]});
-
-      // Memory Data Access control
-      static const uint8_t MADCTL_MY  = 0b10000000;
-      static const uint8_t MADCTL_MX  = 0b01000000;
-      static const uint8_t MADCTL_MV  = 0b00100000;
-      static const uint8_t MADCTL_ML  = 0b00010000;
-      static const uint8_t MADCTL_RGB = 0b00001000;
-      static const uint8_t MADCTL_MH  = 0b00000100;
-
-      // Swap XY and reverse page and line address order
-      command(MADCTL, {MADCTL_MY | MADCTL_MV | MADCTL_ML});
-
-      usleep(50000);
+      setupRegs();
 
       setBrightness(128);
    }
@@ -253,6 +183,95 @@ private:
       command(cmd, {});
    }
 
+   void setupRegs()
+   {
+      // Register values below taken from piromoni example code
+
+      command({SWRESET});
+
+      usleep(150000);
+
+      // Tearing effect line on
+      // XXX why and what about the parameter?
+      command(TEON);
+
+      // Use 16 bits/per pixel (with the control interface)
+      command(COLMOD,   {(0b000 << 4) | (0b101 << 0)});
+
+      // Porch settings:  BPA   FPA  PSEN   FPB   BPC
+      command(PORCTRL,  {0x0c, 0x0c, 0x00, 0x33, 0x33});
+
+      // LCM control:    XBGR | XMX | XMH
+      // XXX the default, may not be the actual required setting
+      command(LCMCTRL,  {0b00101100});
+
+      // VDV and VRH command enable: CMDEN
+      // XXX what about second parameter
+      command(VDVVRHEN, {0x01});
+
+      // VRH set:  +4.45V
+      command(VRHS,     {0x12});
+
+      // VDV set:      0V
+      command(VDVS,     {0x20});
+
+      // Power control 1:  0xa4? AVDD = +6.8V, AVCL = -4.8V, VDDS = +2.3V
+      command(PWCTRL1,  {0xa4, 0xa1});
+
+      // Frame rate control in normal mode: 64Hz
+      // XXX piromoni example of 60Hz was strobing
+      command(FRCTRL2,  {0x0D});
+
+      // Gate control: VGH = +12.54V, VGL = -9.6V
+      command(GCTRL,    {0x14});
+
+      // VCOMS setting: VCOMS = +1.475 V
+      command(VCOMS,    {0x37});
+
+      // XXX ? piromoni example code does not match the data sheet
+      command(NVGAMCTRL,  {0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23});
+
+      // XXX ? piromoni example code does not match the data sheet
+      command(DGMLUTR,    {0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23});
+
+      // Inversion mode on
+      command(INVON);
+
+      // Turn off full sleep mode
+      command(SLPOUT);
+
+      // Display on
+      command(DISPON);
+
+      usleep(150000);
+
+      uint16_t       word_pair[2];
+      const uint8_t* b = (uint8_t*)word_pair;
+
+      // Column address set
+      word_pair[0] = 0;
+      word_pair[1] = WIDTH - 1;
+      command(CASET, {b[1], b[0], b[3], b[2]});
+
+      // Row address set
+      word_pair[0] = 0;
+      word_pair[1] = HEIGHT - 1;
+      command(RASET, {b[1], b[0], b[3], b[2]});
+
+      // Memory Data Access control
+      static const uint8_t MADCTL_MY  = 0b10000000;
+      static const uint8_t MADCTL_MX  = 0b01000000;
+      static const uint8_t MADCTL_MV  = 0b00100000;
+      static const uint8_t MADCTL_ML  = 0b00010000;
+      static const uint8_t MADCTL_RGB = 0b00001000;
+      static const uint8_t MADCTL_MH  = 0b00000100;
+
+      // Swap XY and reverse page and line address order
+      command(MADCTL, {MADCTL_MY | MADCTL_MV | MADCTL_ML});
+
+      usleep(50000);
+   }
+
    // Command codes
    static const uint8_t SWRESET   = 0x01;
    static const uint8_t SLPOUT    = 0x11;
@@ -281,13 +300,21 @@ private:
    static const uint8_t NVGAMCTRL = 0xE0;
    static const uint8_t DGMLUTR   = 0xE1;
 
-   MTL::Gpio::Out<1,MTL::PIN_14> out_cs; // Chip Select
-   MTL::Gpio::Out<1,MTL::PIN_15> out_dc; // Data not Command
-   MTL::Gpio::Out<1,MTL::PIN_16> out_wr; // Write
-   MTL::Gpio::Out<1,MTL::PIN_17> out_rd; // Read
-   MTL::Gpio::Out<8,MTL::PIN_19> out_db; // Data byte
-
-   MTL::Pwm<MTL::PIN_4> out_bl{0x10000}; // Back-light
+   Gpio::Out<1,PIN_CS> out_cs{}; // Chip Select
+   Gpio::Out<1,PIN_DC> out_dc{}; // Data not Command
+   Gpio::Out<1,PIN_WR> out_wr{}; // Write
+   Gpio::Out<1,PIN_RD> out_rd{}; // Read
+   Gpio::Out<8,PIN_DB> out_db{}; // Data byte
+   Pwm<PIN_BL,0x10000> out_bl{}; // Back-light
+   Pio8080             pio_wr{};
 };
+
+// Piromoni tufty 2040
+using Lcd_tufty2040 = Lcd_ST7789V</* CS */ PIN_14,
+                                  /* DC */ PIN_15,
+                                  /* WR */ PIN_16,
+                                  /* RD */ PIN_17,
+                                  /* DB */ PIN_19,
+                                  /* BL */ PIN_4>;
 
 } // namespace MTL

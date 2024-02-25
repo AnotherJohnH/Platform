@@ -51,13 +51,12 @@ struct PwmReg
 };
 
 //! PWM peripheral
-template <unsigned PIN>
+template <unsigned PIN, unsigned PERIOD>
 class Pwm : public Periph<PwmReg, 0x40050000>
 {
 public:
    //! Configure a single PWM output
-   Pwm(unsigned period_,
-       unsigned sys_clk_div8_4_ = 0b100000000)
+   Pwm(unsigned sys_clk_div8_4_ = 0b100000000)
    {
       PadsBank pads_bank;
       IoBank   io_bank;
@@ -68,7 +67,7 @@ public:
 
       // Configure slice XXX may be shared with another PWM pin
       unsigned slice = getSlice();
-      reg->ch[slice].top = period_ - 1;
+      reg->ch[slice].top = PERIOD - 1;
       reg->ch[slice].div = sys_clk_div8_4_;
       reg->ch[slice].cc  = 0;
       reg->ch[slice].csr = (1 << 0); // EN

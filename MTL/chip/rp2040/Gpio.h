@@ -41,6 +41,9 @@ class Out
 public:
    Out()
    {
+      PadsBank pads_bank;
+      IoBank   io_bank;
+
       sio.reg->gpio_oe_clr  = MASK << PIN;
       sio.reg->gpio_out_clr = MASK << PIN;
 
@@ -77,22 +80,26 @@ public:
 private:
    static const uint32_t MASK = (1 << WIDTH) - 1;
 
-   Sio      sio;
-   PadsBank pads_bank;
-   IoBank   io_bank;
+   Sio sio;
 };
 
-template <unsigned WIDTH, unsigned PIN>
+template <unsigned WIDTH,
+          unsigned PIN,
+          uint8_t  PULL            = PadsBank::PULL_UP,
+          bool     SCHMITT_TRIGGER = false>
 class In
 {
 public:
    In()
    {
+      PadsBank pads_bank;
+      IoBank   io_bank;
+
       sio.reg->gpio_oe_clr = MASK << PIN;
 
       for(unsigned i = 0; i < WIDTH; ++i)
       {
-         pads_bank.setIn(PIN + i, PadsBank::PULL_UP);
+         pads_bank.setIn(PIN + i, PULL, SCHMITT_TRIGGER);
          io_bank.setFunc(PIN + i, IoBank::SIO);
       }
    }
@@ -105,9 +112,7 @@ public:
 private:
    static const uint32_t MASK = (1 << WIDTH) - 1;
 
-   Sio      sio;
-   PadsBank pads_bank;
-   IoBank   io_bank;
+   Sio sio;
 };
 
 } // namespace Gpio
