@@ -55,6 +55,7 @@ extern size_t  fwrite(const void*, size_t, size_t, FILE* stream);
 extern int     fclose(FILE* stream);
 extern int     feof(FILE* stream);
 
+extern char*   fgets(char*, int, FILE*);
 extern int     fgetc(FILE*);
 extern int     fputc(int, FILE*);
 extern int     fputs(const char*, FILE*);
