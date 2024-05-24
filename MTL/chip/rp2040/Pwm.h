@@ -51,12 +51,13 @@ struct PwmReg
 };
 
 //! PWM peripheral
-template <unsigned PIN, unsigned PERIOD>
+template <unsigned PIN>
 class Pwm : public Periph<PwmReg, 0x40050000>
 {
 public:
    //! Configure a single PWM output
-   Pwm(unsigned sys_clk_div8_4_ = 0b100000000)
+   Pwm(unsigned sys_clk_div8_4_ = 0b100000000,
+       unsigned period_         = 0x10000)
    {
       PadsBank pads_bank;
       IoBank   io_bank;
@@ -67,13 +68,26 @@ public:
 
       // Configure slice XXX may be shared with another PWM pin
       unsigned slice = getSlice();
-      reg->ch[slice].top = PERIOD - 1;
+      reg->ch[slice].top = period_ - 1;
       reg->ch[slice].div = sys_clk_div8_4_;
       reg->ch[slice].cc  = 0;
       reg->ch[slice].csr = (1 << 0); // EN
    }
 
-   void set(unsigned value_)
+   //! Set system clock divider for PWM counter clock in fixed-point 8.4
+   void setSysClkDiv8_4(unsigned sys_clk_div8_4_)
+   {
+      reg->ch[getSlice()].div = sys_clk_div8_4_;
+   }
+
+   //! Set PWM period in PWM counter clock ticks
+   void setPeriod(unsigned period_)
+   {
+      reg->ch[getSlice()].top = period_ - 1;
+   }
+
+   //! Set pulse width in PWM counter clock ticks
+   void setWidth(unsigned value_)
    {
       unsigned slice = getSlice();
       unsigned chan  = getChan();
@@ -92,7 +106,7 @@ public:
 
    unsigned operator=(unsigned value_)
    {
-      set(value_);
+      setWidth(value_);
       return value_;
    }
 

@@ -305,7 +305,7 @@ private:
    Gpio::Out<1,PIN_WR> out_wr{}; // Write
    Gpio::Out<1,PIN_RD> out_rd{}; // Read
    Gpio::Out<8,PIN_DB> out_db{}; // Data byte
-   Pwm<PIN_BL,0x10000> out_bl{}; // Back-light
+   Pwm<PIN_BL>         out_bl{}; // Back-light
    Pio8080             pio_wr{};
 };
 

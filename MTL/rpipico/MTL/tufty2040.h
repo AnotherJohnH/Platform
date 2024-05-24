@@ -54,7 +54,7 @@ using Lcd = Lcd_ST7789V</* CS */ rp2040::IO_PIN_10,
 
 using LedUser    = Gpio::Out<1, PIN_USER_LED>;
 using PwrLux     = Gpio::Out<1, PIN_SENSOR_PWR>;
-using PwmLedUser = Pwm<PIN_USER_LED,0x10000>;
+using PwmLedUser = Pwm<PIN_USER_LED>;
 
 using SwitchUp = Gpio::In<1, PIN_SW_UP, PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
 using SwitchDn = Gpio::In<1, PIN_SW_DN, PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
