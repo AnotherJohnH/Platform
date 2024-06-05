@@ -233,7 +233,8 @@ using Uart0      = Uart<0x40034000, 0, MTL::rp2040::IO_PIN_0,  MTL::rp2040::IO_P
 using Uart0_ALT1 = Uart<0x40034000, 0, MTL::rp2040::IO_PIN_12, MTL::rp2040::IO_PIN_13>;
 using Uart0_ALT2 = Uart<0x40034000, 0, MTL::rp2040::IO_PIN_16, MTL::rp2040::IO_PIN_17>;
 
-using Uart1      = Uart<0x40038000, 1, MTL::rp2040::IO_PIN_4, MTL::rp2040::IO_PIN_5>;
-using Uart1_ALT  = Uart<0x40038000, 1, MTL::rp2040::IO_PIN_8, MTL::rp2040::IO_PIN_9>;
+using Uart1      = Uart<0x40038000, 1, MTL::rp2040::IO_PIN_4,  MTL::rp2040::IO_PIN_5>;
+using Uart1_ALT1 = Uart<0x40038000, 1, MTL::rp2040::IO_PIN_8,  MTL::rp2040::IO_PIN_9>;
+using Uart1_ALT2 = Uart<0x40038000, 1, MTL::rp2040::IO_PIN_20, MTL::rp2040::IO_PIN_21>;
 
 } // namespace MTL
