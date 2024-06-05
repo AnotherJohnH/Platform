@@ -43,16 +43,21 @@ class PioAudio
 {
 public:
    PioAudio(unsigned sample_freq,
-            unsigned pin_mclk,
             unsigned pin_sd,
-            unsigned pin_lrclk)
+            unsigned pin_lrclk_sclk,
+            unsigned pin_mclk           = PIN_IGNORE,
+            bool     lsb_lrclk_msb_sclk = true)
+       : i2s(lsb_lrclk_msb_sclk)
    {
-      // Setup MCLK
-      sd_clk = clk.download(pio, sample_freq * 256, pin_mclk);
-      if (sd_clk < 0) return;
+      if (pin_mclk != PIN_IGNORE)
+      {
+          // Setup MCLK
+          sd_clk = clk.download(pio, sample_freq * 256, pin_mclk);
+          if (sd_clk < 0) return;
+      }
 
       // Setup I2S for SDIN, LRCLK, SCLK
-      sd_i2s = i2s.download(pio, sample_freq, pin_sd, pin_lrclk);
+      sd_i2s = i2s.download(pio, sample_freq, pin_sd, pin_lrclk_sclk);
       if (sd_i2s < 0) return;
 
       ch_ping = dma.allocCH();
@@ -89,8 +94,16 @@ public:
       PioAudio_getSamples(buf_ping, BUFFER_SIZE);
       PioAudio_getSamples(buf_pong, BUFFER_SIZE);
 
-      // Start MCLK and I2S
-      pio.start((1 << sd_clk) | (1 << sd_i2s));
+      if (sd_clk >= 0)
+      {
+         // Start MCLK and I2S
+         pio.start((1 << sd_clk) | (1 << sd_i2s));
+      }
+      else
+      {
+         // Start I2S
+         pio.start(1 << sd_i2s);
+      }
 
       // Start DMA ping/pong
       ping_pong = true;

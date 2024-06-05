@@ -57,4 +57,6 @@ static const unsigned PIN_31   = rp2040::IO_PIN_26;
 static const unsigned PIN_32   = rp2040::IO_PIN_27;
 static const unsigned PIN_34   = rp2040::IO_PIN_28;
 
+static const unsigned PIN_IGNORE = 0xFFFFFFFF;
+
 } // namespace MTL
