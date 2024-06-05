@@ -29,8 +29,11 @@ namespace MTL {
 class PioI2S : public PIO::Asm
 {
 public:
-   PioI2S()
+   PioI2S(bool lsb_lrclk_msb_sclk = true)
    {
+      unsigned lrclk = lsb_lrclk_msb_sclk ? 0b01 : 0b10;
+      unsigned sclk  = lsb_lrclk_msb_sclk ? 0b10 : 0b01;
+
       PIO::Lbl left_loop;
       PIO::Lbl right_loop;
 
@@ -40,15 +43,15 @@ public:
 
       lbl(left_loop);
          OUT(PIO::PINS, 1)                 .side(0b00);
-         JMP(PIO::X_NE_Z_DEC, left_loop)   .side(0b10);
-         OUT(PIO::PINS, 1)                 .side(0b01);
-         SET(PIO::X, 14)                   .side(0b11);
+         JMP(PIO::X_NE_Z_DEC, left_loop)   .side(sclk);
+         OUT(PIO::PINS, 1)                 .side(       lrclk);
+         SET(PIO::X, 14)                   .side(sclk | lrclk);
 
       lbl(right_loop);
-         OUT(PIO::PINS, 1)                 .side(0b01);
-         JMP(PIO::X_NE_Z_DEC, right_loop)  .side(0b11);
+         OUT(PIO::PINS, 1)                 .side(lrclk);
+         JMP(PIO::X_NE_Z_DEC, right_loop)  .side(sclk | lrclk);
          OUT(PIO::PINS, 1)                 .side(0b00);
-         SET(PIO::X, 14)                   .side(0b10);
+         SET(PIO::X, 14)                   .side(sclk);
 
       wrap();
    }
@@ -57,7 +60,7 @@ public:
    signed download(TYPE&    pio,
                    unsigned sample_freq,
                    unsigned pin_sd,
-                   unsigned pin_lrclk)
+                   unsigned pin_lrclk_sclk)
    {
       // Allocate a state machine
       signed sd = pio.allocSM();
@@ -70,7 +73,7 @@ public:
       // Configure state machine
       pio.SM_clock(    sd, sample_freq * 32 * 2);
       pio.SM_pinOUT(   sd, pin_sd);
-      pio.SM_pinSIDE(  sd, pin_lrclk, 2);
+      pio.SM_pinSIDE(  sd, pin_lrclk_sclk, 2);
       pio.SM_configOSR(sd, 32, MTL::SHIFT_LEFT, MTL::AUTO_PULL, /* join_tx */ true);
 
       pio.SM_exec(     sd, SET(PIO::X, 12).side(0b00).op() );
