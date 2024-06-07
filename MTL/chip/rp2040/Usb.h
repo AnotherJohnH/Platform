@@ -27,10 +27,9 @@
 #include <cstring>
 
 #include "MTL/Periph.h"
+#include "MTL/USBTypes.h"
 #include "MTL/CortexM0/NVIC.h"
 #include "MTL/rp2040/Resets.h"
-
-#include "USBTypes.h"
 
 #define LOG if (1) printf
 
@@ -308,7 +307,7 @@ private:
 
       ep0_in.startTx(bytes);
 
-      LOG("GET_DESCR STR %u %u %u\n", id, packet->length, bytes);
+      LOG("GET_DESCR STR id=%u bytes=%u\n", id, bytes);
    }
 
    void handleSetAddress(USB::SetupReq* packet)
