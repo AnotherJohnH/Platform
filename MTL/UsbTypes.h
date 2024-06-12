@@ -19,13 +19,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //------------------------------------------------------------------------------
-// \brief RP2040 USB peripheral
+// \brief USB types
 
 #pragma once
 
 #include <cstdint>
 
 namespace USB {
+
+
+static const uint8_t CLASS_AUDIO = 0x01;
 
 
 enum class Request : uint8_t
@@ -75,11 +78,13 @@ struct SetupReq
 
 enum DescrType
 {
-   DEVICE    = 0x1,
-   CONFIG    = 0x2,
-   STRING    = 0x3,
-   INTERFACE = 0x4,
-   ENDPOINT  = 0x5
+   DEVICE       = 0x1,
+   CONFIG       = 0x2,
+   STRING       = 0x3,
+   INTERFACE    = 0x4,
+   ENDPOINT     = 0x5,
+   CS_INTERFACE = 0x24,
+   CS_ENDPOINT  = 0x25
 };
 
 
@@ -136,7 +141,6 @@ struct InterfaceDescr
    uint8_t  name_idx{0};
 };
 
-
 struct EndPointDescr
 {
    enum Dir  { OUT = 0b00000000, IN = 0b10000000 };
@@ -168,11 +172,74 @@ struct StringDescr
 
 
 //------------------------------------------------------------------------------
+// Class-specific descriptors
+
+struct CSInterfaceDescr
+{
+   CSInterfaceDescr() = default;
+
+   uint8_t  length{sizeof(CSInterfaceDescr)};
+   uint8_t  type{CS_INTERFACE};
+   uint8_t  sub_type{0};
+   uint16_t adc_bcd{0x0000};
+   uint16_t total_length{sizeof(CSInterfaceDescr)};
+
+} __attribute__((__packed__));
+
+
+struct CSEndPointDescr
+{
+   CSEndPointDescr(size_t length_, uint8_t sub_type_)
+      : length(uint8_t(length_))
+      , sub_type(sub_type_)
+   {
+   }
+
+   uint8_t length{};
+   uint8_t type{CS_ENDPOINT};
+   uint8_t sub_type{};
+   
+} __attribute__((__packed__));
+
+
+//------------------------------------------------------------------------------
 // Device Management
+
+template <typename TYPE>
+class List
+{
+public:
+   void push_front(TYPE* elem_)
+   {
+      elem_->next = first;
+      first       = elem_;
+   }
+
+   TYPE* getFirst() { return first; }
+
+protected:
+   TYPE* first{nullptr};
+};
+
+
+template <typename TYPE>
+class Elem
+{
+   friend class List<TYPE>;
+
+public:
+   TYPE* getNext() { return next; }
+
+protected:
+   TYPE* next{nullptr};
+};
+
 
 class Config;
 class Interface;
 class EndPoint;
+class CSInterface;
+class CSEndPoint;
 
 class Device
 {
@@ -189,13 +256,10 @@ public:
       addString("\x09\x04", 2);
    }
 
-   Config* addConfig(Config* config_)
+   void addConfig(Config* config_)
    {
       descr.num_configs++;
-
-      Config* next = config_list;
-      config_list  = config_;
-      return next;
+      config_list.push_front(config_);
    }
 
    //! Allocate a StringDescr for a string \return index
@@ -214,7 +278,7 @@ public:
       return idx;
    }
 
-   void setClassAndProtocol(uint8_t class_, uint8_t sub_class_, uint8_t protocol_)
+   void setClassAndProtocol(uint8_t class_, uint8_t sub_class_, uint8_t protocol_ = 0)
    {
       descr.clas      = class_;
       descr.sub_class = sub_class_;
@@ -243,40 +307,37 @@ public:
    DeviceDescr descr{};
 
 private:
-   Config*    config_list{nullptr};
-   Config*    active_config{nullptr};
-   uint8_t    string_idx{0};
-   uint8_t    string_buffer[256];
-   Interface* buffer_handler[16] = {};
+   List<Config> config_list{};
+   uint8_t      string_idx{0};
+   uint8_t      string_buffer[256];
+   Interface*   buffer_handler[16] = {};
 };
 
 
-class Config
+class Config : public Elem<Config>
 {
 public:
    Config(Device& device_)
    {
       device = &device_;
-      next   = device->addConfig(this);
+      device->addConfig(this);
 
       descr.attributes = 0b11000000; // USB 1.0 Bus Powered, no remote wakeup
       descr.max_power  = 50;         // 100 mA
    }
 
-   Interface* addInterface(Interface* interface_)
+   void addInterface(Interface* interface_)
    {
       descr.num_interfaces++;
       descr.total_length += sizeof(InterfaceDescr);
-
-      Interface* next = interface_list;
-      interface_list  = interface_;
-      return next;
+      interface_list.push_front(interface_);
    }
+
+   Interface* getFirstInterface() { return interface_list.getFirst(); }
 
    void addEndPoint(unsigned ep_, Interface* handler_)
    {
       device->setBufferHandler(ep_, handler_);
-
       descr.total_length += sizeof(EndPointDescr);
    }
 
@@ -287,41 +348,42 @@ public:
 
    void setName(const char* name_) { descr.name_idx = addString(name_); }
 
-   Interface* getFirstInterface() { return interface_list; }
-   Config*    getNext() { return next; }
-
    ConfigDescr descr{};
 
 private:
-   Device*    device;
-   Config*    next{nullptr};
-   Interface* interface_list{nullptr};
+   Device*         device;
+   List<Interface> interface_list{};
 };
 
 
-class Interface
+class Interface : public Elem<Interface>
 {
 public:
    Interface(Config& config_)
    {
       config = &config_;
-      next   = config->addInterface(this);
+      config->addInterface(this);
 
       descr.number = config->descr.num_interfaces - 1;
    }
 
-   EndPoint* addEndPoint(EndPoint* endpoint_, uint8_t ep_)
+   void addCSInterface(CSInterface* cs_interface_)
    {
-      descr.num_endpoints++;
-
-      config->addEndPoint(ep_, this);
-
-      EndPoint* next = endpoint_list;
-      endpoint_list  = endpoint_;
-      return next;
+      cs_interface_list.push_front(cs_interface_);
    }
 
-   void setClassAndProtocol(uint8_t class_, uint8_t sub_class_, uint8_t protocol_)
+   CSInterface* getFirstCSInterface() { return cs_interface_list.getFirst(); }
+
+   void addEndPoint(EndPoint* endpoint_, uint8_t ep_)
+   {
+      descr.num_endpoints++;
+      config->addEndPoint(ep_, this);
+      endpoint_list.push_front(endpoint_);
+   }
+
+   EndPoint* getFirstEndPoint() { return endpoint_list.getFirst(); }
+
+   void setClassAndProtocol(uint8_t class_, uint8_t sub_class_, uint8_t protocol_ = 0)
    {
       descr.clas      = class_;
       descr.sub_class = sub_class_;
@@ -329,9 +391,6 @@ public:
    }
 
    void setName(const char* name_) { descr.name_idx = config->addString(name_); }
-
-   EndPoint*  getFirstEndPoint() { return endpoint_list; }
-   Interface* getNext() { return next; }
 
    //! Handle a buffer recieved
    virtual void buffRx(uint8_t ep_, const uint8_t* data_, unsigned len_) {}
@@ -342,15 +401,16 @@ public:
    InterfaceDescr descr{};
 
 private:
-   Config*    config;
-   Interface* next{nullptr};
-   EndPoint*  endpoint_list{nullptr};
+   Config*           config;
+   List<CSInterface> cs_interface_list{};
+   List<EndPoint>    endpoint_list{};
 };
 
 
-class EndPoint
+class EndPoint : public Elem<EndPoint>
 {
 public:
+   //! Construct End-point zero
    EndPoint(EndPointDescr::Dir dir_)
       : descr(0, dir_, EndPointDescr::CONTROL)
    {
@@ -362,21 +422,37 @@ public:
             EndPointDescr::Type type_)
       : descr(addr_, dir_, type_)
    {
-      next = interface_.addEndPoint(this, addr_ & 0xF);
+      interface_.addEndPoint(this, addr_ & 0xF);
    }
+ 
+   //! Set class specific descriptor
+   void setCSDescr(const uint8_t* cs_descr_) { cs_descr = cs_descr_; }
 
-   EndPoint* getNext() { return next; }
+   //! Get class specific descriptor
+   const uint8_t* getCSDescr() const { return cs_descr; }
 
    EndPointDescr descr;
 
 private:
-   EndPoint* next{nullptr};
+   const uint8_t* cs_descr{nullptr}; //!< Optional class specific descriptor
+};
+
+
+class CSInterface : public Elem<CSInterface>
+{
+public:
+   CSInterface() = default;
+
+   CSInterface(Interface& interface_)
+   {
+      interface_.addCSInterface(this);
+   }
 };
 
 
 Config* Device::getConfig(uint8_t number_)
 {
-   for(Config* config = config_list; config; config->getNext())
+   for(Config* config = config_list.getFirst(); config; config->getNext())
    {
       if (config->descr.value == number_)
          return config;

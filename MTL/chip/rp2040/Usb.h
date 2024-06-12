@@ -261,11 +261,28 @@ private:
          {
             offset = ep0_in.write(interface->descr, offset);
 
+            for(USB::CSInterface* cs_interface = interface->getFirstCSInterface();
+                cs_interface;
+                cs_interface = cs_interface->getNext())
+            {
+#if 0
+               offset = ep0_in.writeBytes(cs_interface->getDescr(), cs_interface->getSize(), offset);
+#endif
+            }
+
             for(USB::EndPoint* end_point = interface->getFirstEndPoint();
                  end_point!= nullptr;
                  end_point = end_point->getNext())
             {
                offset = ep0_in.write(end_point->descr, offset);
+
+               const uint8_t* cs_descr = end_point->getCSDescr();
+               if (cs_descr != nullptr)
+               {
+#if 0
+                  offset = ep0_in.writeBytes(cs_descr, cs_descr[0], offset);
+#endif
+               }
             }
          }
       }
@@ -358,6 +375,7 @@ private:
          case USB::Request::SET_CONFIG:  handleSetConfig(packet);  break;
 
          default:
+            LOG("SETUP OTHER IN %u\n", packet->request);
             break;
          }
 
@@ -377,6 +395,7 @@ private:
             break;
 
          default:
+            LOG("SETUP OTHER OUT %u\n", packet->request);
             break;
          }
       }
