@@ -265,9 +265,9 @@ private:
                 cs_interface;
                 cs_interface = cs_interface->getNext())
             {
-#if 0
-               offset = ep0_in.writeBytes(cs_interface->getDescr(), cs_interface->getSize(), offset);
-#endif
+               const uint8_t* cs_descr = cs_interface->getDescr();
+
+               offset = ep0_in.writeBytes(cs_descr, cs_descr[0], offset);
             }
 
             for(USB::EndPoint* end_point = interface->getFirstEndPoint();
@@ -279,9 +279,7 @@ private:
                const uint8_t* cs_descr = end_point->getCSDescr();
                if (cs_descr != nullptr)
                {
-#if 0
                   offset = ep0_in.writeBytes(cs_descr, cs_descr[0], offset);
-#endif
                }
             }
          }

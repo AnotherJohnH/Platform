@@ -47,7 +47,7 @@ struct HeaderInterfaceDescr
 {
    HeaderInterfaceDescr() = default;
 
-   uint8_t  length{sizeof(HeaderInterfaceDescr)};
+   uint8_t  length{uint8_t(sizeof(HeaderInterfaceDescr))};
    uint8_t  type{CS_INTERFACE};
    uint8_t  sub_type{1};
    uint16_t version_bcd{0x100};
@@ -60,27 +60,34 @@ struct InJackInterfaceDescr
 {
    InJackInterfaceDescr() = default;
 
-   uint8_t  length{sizeof(InJackInterfaceDescr)};
+   uint8_t  length{uint8_t(sizeof(InJackInterfaceDescr))};
    uint8_t  type{CS_INTERFACE};
    uint8_t  sub_type{2};
    uint8_t  jack_type{EMBEDDED};
-   uint8_t  jack_id{};
+   uint8_t  jack_id{1};
    uint8_t  jack_idx{0};
 
 } __attribute__((__packed__));
 
 
+template <unsigned N>
 struct OutJackInterfaceDescr
 {
    OutJackInterfaceDescr() = default;
 
-   uint8_t  length{sizeof(OutJackInterfaceDescr)};
+   uint8_t  length;             // XXX compiler doens't seem to want inline init of this member
    uint8_t  type{CS_INTERFACE};
    uint8_t  sub_type{3};
    uint8_t  jack_type{EMBEDDED};
-   uint8_t  jack_id{};
-   uint8_t  source_id{};
-   uint8_t  soutrce_pin{};
+   uint8_t  jack_id{1};
+
+   struct Source
+   {
+      uint8_t id{};
+      uint8_t pin{};
+
+   } source[N];
+
    uint8_t  jack_idx{0};
 
 } __attribute__((__packed__));
@@ -89,12 +96,13 @@ struct OutJackInterfaceDescr
 template <unsigned N>
 struct EndPointDescr
 {
-   EndPointDescr(EndPoint& endpoint_)
+   EndPointDescr(EndPoint& endpoint_, uint8_t jack_id_)
    {
-      endpoint_.setCSDescr(&length);
+      endpoint_.setCSDescr(*this);
+      assoc_jack_id[0] = jack_id_;
    }
 
-   uint8_t length{sizeof(EndPointDescr<N>)};
+   uint8_t length{uint8_t(sizeof(EndPointDescr<N>))};
    uint8_t type{CS_ENDPOINT};
    uint8_t sub_type{GENERAL}; 
    uint8_t num_emb_midi_jack{N};
@@ -110,7 +118,7 @@ class HeaderInterface : public CSInterface
 {
 public:
    HeaderInterface(Interface& interface_)
-      : CSInterface(interface_)
+      : CSInterface(interface_, descr)
       , interface(&interface_)
    {
    }
@@ -118,10 +126,11 @@ public:
    void addCSInterface(CSInterface* cs_interface_, size_t length_)
    {
       descr.total_length += length_;
-      interface->addCSInterface(cs_interface_);
+
+      interface->addCSInterface(cs_interface_, length_);
    }
 
-   HeaderInterfaceDescr descr;
+   HeaderInterfaceDescr descr{};
 
 private:
    Interface* interface;
@@ -130,23 +139,36 @@ private:
 class InJackInterface : public CSInterface
 {
 public:
-   InJackInterface(HeaderInterface& header_)
+   InJackInterface(HeaderInterface& header_,
+                   uint8_t          jack_type_,
+                   uint8_t          jack_id_)
    {
       header_.addCSInterface(this, sizeof(descr));
+
+      descr.length    = sizeof(descr);
+      descr.jack_type = jack_type_;
+      descr.jack_id   = jack_id_;
    }
 
-   InJackInterfaceDescr descr;
+   InJackInterfaceDescr descr{};
 };
 
+template <unsigned N>
 class OutJackInterface : public CSInterface
 {
 public:
-   OutJackInterface(HeaderInterface& header_)
+   OutJackInterface(HeaderInterface& header_,
+                    uint8_t          jack_type_,
+                    uint8_t          jack_id_)
    {
       header_.addCSInterface(this, sizeof(descr));
+
+      descr.length    = sizeof(descr);
+      descr.jack_type = jack_type_;
+      descr.jack_id   = jack_id_;
    }
 
-   OutJackInterfaceDescr descr;
+   OutJackInterfaceDescr<N> descr{};
 };
 
 

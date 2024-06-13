@@ -34,15 +34,15 @@ static const uint8_t SUB_CLASS = 0x01;
 //------------------------------------------------------------------------------
 // Class-specific descriptors
 
-struct InterfaceDescr
+struct HeaderInterfaceDescr
 {
-   InterfaceDescr() = default;
+   HeaderInterfaceDescr() = default;
 
-   uint8_t  length{sizeof(InterfaceDescr)};
+   uint8_t  length{sizeof(HeaderInterfaceDescr)};
    uint8_t  type{CS_INTERFACE};
    uint8_t  sub_type{1};
    uint16_t version_bcd{0x100};
-   uint16_t total_length{sizeof(InterfaceDescr)};
+   uint16_t total_length{sizeof(HeaderInterfaceDescr)};
    uint8_t  in_collection{1};  // Number of streaming interfaces
    uint8_t  a_interface_nr{1}; // MIDI streaming interface 1 belongs to this AudioControl interface
 
@@ -52,12 +52,15 @@ struct InterfaceDescr
 //------------------------------------------------------------------------------
 // Management
 
-class Interface : public CSInterface
+class HeaderInterface : public CSInterface
 {
 public:
-   using CSInterface::CSInterface;
+   HeaderInterface(Interface& interface_)
+      : CSInterface(interface_, descr)
+   {
+   }
 
-   InterfaceDescr descr;
+   HeaderInterfaceDescr descr{};
 };
 
 } // namespace AC

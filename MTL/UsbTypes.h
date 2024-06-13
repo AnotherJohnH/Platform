@@ -215,6 +215,22 @@ public:
       first       = elem_;
    }
 
+   void push_back(TYPE* elem_)
+   {
+      if (first == nullptr)
+      {
+         first = elem_;
+      }
+      else
+      {
+         TYPE* prev;
+
+         for(prev = first; prev->next != nullptr; prev = prev->next);
+
+         prev->next = elem_;
+      }
+   }
+
    TYPE* getFirst() { return first; }
 
 protected:
@@ -259,7 +275,7 @@ public:
    void addConfig(Config* config_)
    {
       descr.num_configs++;
-      config_list.push_front(config_);
+      config_list.push_back(config_);
    }
 
    //! Allocate a StringDescr for a string \return index
@@ -330,7 +346,7 @@ public:
    {
       descr.num_interfaces++;
       descr.total_length += sizeof(InterfaceDescr);
-      interface_list.push_front(interface_);
+      interface_list.push_back(interface_);
    }
 
    Interface* getFirstInterface() { return interface_list.getFirst(); }
@@ -367,9 +383,10 @@ public:
       descr.number = config->descr.num_interfaces - 1;
    }
 
-   void addCSInterface(CSInterface* cs_interface_)
+   void addCSInterface(CSInterface* cs_interface_, size_t length_)
    {
-      cs_interface_list.push_front(cs_interface_);
+      config->descr.total_length += length_;
+      cs_interface_list.push_back(cs_interface_);
    }
 
    CSInterface* getFirstCSInterface() { return cs_interface_list.getFirst(); }
@@ -378,7 +395,12 @@ public:
    {
       descr.num_endpoints++;
       config->addEndPoint(ep_, this);
-      endpoint_list.push_front(endpoint_);
+      endpoint_list.push_back(endpoint_);
+   }
+
+   void add(size_t length_)
+   {
+      config->descr.total_length += length_;
    }
 
    EndPoint* getFirstEndPoint() { return endpoint_list.getFirst(); }
@@ -423,10 +445,16 @@ public:
       : descr(addr_, dir_, type_)
    {
       interface_.addEndPoint(this, addr_ & 0xF);
+      interface = &interface_;
    }
  
    //! Set class specific descriptor
-   void setCSDescr(const uint8_t* cs_descr_) { cs_descr = cs_descr_; }
+   template <typename DESCR>
+   void setCSDescr(const DESCR& descr_)
+   {
+      cs_descr = (const uint8_t*)&descr_;
+      interface->add(sizeof(DESCR));
+   }
 
    //! Get class specific descriptor
    const uint8_t* getCSDescr() const { return cs_descr; }
@@ -434,6 +462,7 @@ public:
    EndPointDescr descr;
 
 private:
+   Interface*     interface;
    const uint8_t* cs_descr{nullptr}; //!< Optional class specific descriptor
 };
 
@@ -443,10 +472,17 @@ class CSInterface : public Elem<CSInterface>
 public:
    CSInterface() = default;
 
-   CSInterface(Interface& interface_)
+   template <typename DESCR>
+   CSInterface(Interface& interface_, const DESCR& descr_)
+      : descr(&descr_.length)
    {
-      interface_.addCSInterface(this);
+      interface_.addCSInterface(this, sizeof(DESCR));
    }
+
+   const uint8_t* getDescr() { return descr; }
+
+private:
+   const uint8_t* descr;
 };
 
 
