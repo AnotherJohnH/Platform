@@ -351,10 +351,12 @@ public:
 
    Interface* getFirstInterface() { return interface_list.getFirst(); }
 
-   void addEndPoint(unsigned ep_, Interface* handler_)
+   uint8_t addEndPoint(Interface* interface_)
    {
-      device->setBufferHandler(ep_, handler_);
+      uint8_t addr = ++ep_addr;
+      device->setBufferHandler(addr, interface_);  // XXX this is broken for multiple configs
       descr.total_length += sizeof(EndPointDescr);
+      return addr;
    }
 
    uint8_t addString(const char* string_)
@@ -369,6 +371,7 @@ public:
 private:
    Device*         device;
    List<Interface> interface_list{};
+   uint8_t         ep_addr{0};
 };
 
 
@@ -391,11 +394,11 @@ public:
 
    CSInterface* getFirstCSInterface() { return cs_interface_list.getFirst(); }
 
-   void addEndPoint(EndPoint* endpoint_, uint8_t ep_)
+   uint8_t addEndPoint(EndPoint* endpoint_)
    {
       descr.num_endpoints++;
-      config->addEndPoint(ep_, this);
       endpoint_list.push_back(endpoint_);
+      return config->addEndPoint(this);
    }
 
    void add(size_t length_)
@@ -441,14 +444,14 @@ public:
    }
 
    EndPoint(Interface&          interface_,
-            unsigned            addr_,
             EndPointDescr::Dir  dir_,
             EndPointDescr::Type type_)
-      : descr(addr_, dir_, type_)
+      : descr(interface_.addEndPoint(this), dir_, type_)
    {
-      interface_.addEndPoint(this, addr_ & 0xF);
       interface = &interface_;
    }
+
+   bool isAddr(uint8_t addr_) const { return (descr.addr & 0xF) == addr_; }
  
    //! Set class specific descriptor
    template <typename DESCR>

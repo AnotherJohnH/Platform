@@ -170,8 +170,8 @@ public:
                    INT_SETUP_REQ;
 
        // Setup device control end-points
-       setupEndPoint(&ep0_in, 0);
-       setupEndPoint(&ep0_out, 0);
+       setupEndPoint(&ep0_in);
+       setupEndPoint(&ep0_out);
 
        // Present a full-speed device by enabling the pull-up
        reg->sie_ctrl  |= 1 << 16;      // PULLUP_EN
@@ -202,11 +202,10 @@ private:
    Periph<DPSRamReg,0x50100000> ram;
 
    //! Initialise an end-point
-   void setupEndPoint(EndPoint* endpoint_, unsigned ep_index)
+   void setupEndPoint(EndPoint* endpoint_)
    {
-      // TODO set end point index in descriptor
       // Compute register index
-      ep_index = endpoint_->descr.addr & 0xF;
+      unsigned ep_index = endpoint_->descr.addr & 0xF;
       unsigned rg_index = (ep_index << 1) | ((endpoint_->descr.addr >> 7) ^ 0b1);
 
       endpoint_->control = &ram.reg->buffer_control[rg_index];
@@ -338,8 +337,6 @@ private:
    {
       USB::Config* config = device->getConfig(packet->value & 0xFF);
 
-      unsigned ep_index = 1;
-
       dpram_offset = 0x180;
 
       for(USB::Interface* interface = config->getFirstInterface();
@@ -350,7 +347,7 @@ private:
              end_point!= nullptr;
              end_point = end_point->getNext())
          {
-            setupEndPoint((EndPoint*)end_point, ep_index++);
+            setupEndPoint((EndPoint*)end_point);
          }
 
          interface->configured();
