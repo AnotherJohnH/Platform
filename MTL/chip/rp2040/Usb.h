@@ -27,7 +27,7 @@
 #include <cstring>
 
 #include "MTL/Periph.h"
-#include "MTL/USBTypes.h"
+#include "MTL/UsbTypes.h"
 #include "MTL/CortexM0/NVIC.h"
 #include "MTL/rp2040/Resets.h"
 
@@ -217,12 +217,12 @@ private:
       }
       else
       {
-         ram.reg->ep_control[rg_index] = (1 << 31) | // ENABLE
-                                         (1 << 29) | // INTERRUPT_PER_BUFFER_TRF
-                                         (endpoint_->descr.attr << 26) |
-                                         dpram_offset;
+         ram.reg->ep_control[rg_index - 2] = (1 << 31) | // ENABLE
+                                             (1 << 29) | // INTERRUPT_PER_BUFFER_TRF
+                                             (endpoint_->descr.attr << 26) |
+                                             dpram_offset;
 
-         endpoint_->buffer = (volatile uint8_t*)(&ram.reg + dpram_offset);
+         endpoint_->buffer = (volatile uint8_t*)(ram.reg) + dpram_offset;
 
          // XXX 64 may not always be the right value here
          dpram_offset += 64;
@@ -352,6 +352,8 @@ private:
          {
             setupEndPoint((EndPoint*)end_point, ep_index++);
          }
+
+         interface->configured();
       }
 
       LOG("SET_CONFIG %u\n", packet->value);
@@ -409,12 +411,12 @@ private:
 
           if (buffer_mask & mask)
           {
-              bool     is_rx = (bit & 1) == 0;
+              bool     is_tx = (bit & 1) == 0;
               unsigned ep    = bit / 2;
 
               if (ep == 0)
               {
-                 if (is_rx)
+                 if (is_tx)
                  {
                     if (set_address)
                     {
@@ -429,17 +431,17 @@ private:
               }
               else
               {
-                 if (is_rx)
+                 if (is_tx)
                  {
-                    unsigned       len    = ram.reg->buffer_control[bit] & 0x3FF;
-                    unsigned       offset = ram.reg->ep_control[bit] & 0xFC0;
-                    const uint8_t* buffer = (const uint8_t*)(&ram.reg + offset);
-
-                    device->handleBuffRx(ep, buffer, len);
+                    device->handleBuffTx(ep);
                  }
                  else
                  {
-                    device->handleBuffTx(ep);
+                    unsigned       len    = ram.reg->buffer_control[bit] & 0x3FF;
+                    unsigned       offset = ram.reg->ep_control[bit - 2] & 0xFC0;
+                    const uint8_t* buffer = (const uint8_t*)(ram.reg) + offset;
+
+                    device->handleBuffRx(ep, buffer, len);
                  }
               }
 

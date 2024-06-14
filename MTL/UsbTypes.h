@@ -414,6 +414,8 @@ public:
 
    void setName(const char* name_) { descr.name_idx = config->addString(name_); }
 
+   virtual void configured() {}
+
    //! Handle a buffer recieved
    virtual void buffRx(uint8_t ep_, const uint8_t* data_, unsigned len_) {}
 
