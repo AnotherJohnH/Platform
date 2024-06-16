@@ -254,28 +254,22 @@ private:
 
       if (packet->length == config->descr.total_length)
       {
-         for(USB::Interface* interface = config->getFirstInterface();
-             interface != nullptr;
-             interface = interface->getNext())
+         for(auto& interface : config->interface_list)
          {
-            offset = ep0_in.write(interface->descr, offset);
+            offset = ep0_in.write(interface.descr, offset);
 
-            for(USB::CSInterface* cs_interface = interface->getFirstCSInterface();
-                cs_interface;
-                cs_interface = cs_interface->getNext())
+            for(auto& cs_interface : interface.cs_interface_list)
             {
-               const uint8_t* cs_descr = cs_interface->getDescr();
+               const uint8_t* cs_descr = cs_interface.getDescr();
 
                offset = ep0_in.writeBytes(cs_descr, cs_descr[0], offset);
             }
 
-            for(USB::EndPoint* end_point = interface->getFirstEndPoint();
-                 end_point!= nullptr;
-                 end_point = end_point->getNext())
+            for(auto& end_point : interface.endpoint_list)
             {
-               offset = ep0_in.write(end_point->descr, offset);
+               offset = ep0_in.write(end_point.descr, offset);
 
-               const uint8_t* cs_descr = end_point->getCSDescr();
+               const uint8_t* cs_descr = end_point.getCSDescr();
                if (cs_descr != nullptr)
                {
                   offset = ep0_in.writeBytes(cs_descr, cs_descr[0], offset);
@@ -339,18 +333,14 @@ private:
 
       dpram_offset = 0x180;
 
-      for(USB::Interface* interface = config->getFirstInterface();
-          interface != nullptr;
-          interface = interface->getNext())
+      for(auto& interface : config->interface_list)
       {
-         for(USB::EndPoint* end_point = interface->getFirstEndPoint();
-             end_point!= nullptr;
-             end_point = end_point->getNext())
+         for(auto& endpoint : interface.endpoint_list)
          {
-            setupEndPoint((EndPoint*)end_point);
+            setupEndPoint((EndPoint*)&endpoint);
          }
 
-         interface->configured();
+         interface.configured();
       }
 
       LOG("SET_CONFIG %u\n", packet->value);

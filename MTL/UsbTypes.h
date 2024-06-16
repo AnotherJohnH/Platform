@@ -25,6 +25,8 @@
 
 #include <cstdint>
 
+#include "STB/List.h"
+
 namespace USB {
 
 
@@ -205,52 +207,6 @@ struct CSEndPointDescr
 //------------------------------------------------------------------------------
 // Device Management
 
-template <typename TYPE>
-class List
-{
-public:
-   void push_front(TYPE* elem_)
-   {
-      elem_->next = first;
-      first       = elem_;
-   }
-
-   void push_back(TYPE* elem_)
-   {
-      if (first == nullptr)
-      {
-         first = elem_;
-      }
-      else
-      {
-         TYPE* prev;
-
-         for(prev = first; prev->next != nullptr; prev = prev->next);
-
-         prev->next = elem_;
-      }
-   }
-
-   TYPE* getFirst() { return first; }
-
-protected:
-   TYPE* first{nullptr};
-};
-
-
-template <typename TYPE>
-class Elem
-{
-   friend class List<TYPE>;
-
-public:
-   TYPE* getNext() { return next; }
-
-protected:
-   TYPE* next{nullptr};
-};
-
-
 class Config;
 class Interface;
 class EndPoint;
@@ -320,17 +276,17 @@ public:
 
    void handleBuffTx(uint8_t ep);
 
-   DeviceDescr descr{};
+   DeviceDescr       descr{};
+   STB::List<Config> config_list{};
 
 private:
-   List<Config> config_list{};
-   uint8_t      string_idx{0};
-   uint8_t      string_buffer[256];
-   Interface*   buffer_handler[16] = {};
+   uint8_t    string_idx{0};
+   uint8_t    string_buffer[256];
+   Interface* buffer_handler[16] = {};
 };
 
 
-class Config : public Elem<Config>
+class Config : public STB::List<Config>::Element
 {
 public:
    Config(Device& device_)
@@ -349,8 +305,6 @@ public:
       interface_list.push_back(interface_);
    }
 
-   Interface* getFirstInterface() { return interface_list.getFirst(); }
-
    uint8_t addEndPoint(Interface* interface_)
    {
       uint8_t addr = ++ep_addr;
@@ -366,16 +320,16 @@ public:
 
    void setName(const char* name_) { descr.name_idx = addString(name_); }
 
-   ConfigDescr descr{};
+   ConfigDescr          descr{};
+   STB::List<Interface> interface_list{};
 
 private:
-   Device*         device;
-   List<Interface> interface_list{};
-   uint8_t         ep_addr{0};
+   Device* device;
+   uint8_t ep_addr{0};
 };
 
 
-class Interface : public Elem<Interface>
+class Interface : public STB::List<Interface>::Element
 {
 public:
    Interface(Config& config_)
@@ -392,8 +346,6 @@ public:
       cs_interface_list.push_back(cs_interface_);
    }
 
-   CSInterface* getFirstCSInterface() { return cs_interface_list.getFirst(); }
-
    uint8_t addEndPoint(EndPoint* endpoint_)
    {
       descr.num_endpoints++;
@@ -405,8 +357,6 @@ public:
    {
       config->descr.total_length += length_;
    }
-
-   EndPoint* getFirstEndPoint() { return endpoint_list.getFirst(); }
 
    void setClassAndProtocol(uint8_t class_, uint8_t sub_class_, uint8_t protocol_ = 0)
    {
@@ -425,16 +375,16 @@ public:
    //! Handle a buffer sent
    virtual void buffTx(uint8_t ep_) {}
 
-   InterfaceDescr descr{};
+   InterfaceDescr         descr{};
+   STB::List<EndPoint>    endpoint_list{};
+   STB::List<CSInterface> cs_interface_list{};
 
 private:
-   Config*           config;
-   List<CSInterface> cs_interface_list{};
-   List<EndPoint>    endpoint_list{};
+   Config* config;
 };
 
 
-class EndPoint : public Elem<EndPoint>
+class EndPoint : public STB::List<EndPoint>::Element
 {
 public:
    //! Construct End-point zero
@@ -472,7 +422,7 @@ private:
 };
 
 
-class CSInterface : public Elem<CSInterface>
+class CSInterface : public STB::List<CSInterface>::Element
 {
 public:
    CSInterface() = default;
@@ -493,10 +443,10 @@ private:
 
 Config* Device::getConfig(uint8_t number_)
 {
-   for(Config* config = config_list.getFirst(); config; config->getNext())
+   for(auto& config : config_list)
    {
-      if (config->descr.value == number_)
-         return config;
+      if (config.descr.value == number_)
+         return &config;
    }
 
    return nullptr;

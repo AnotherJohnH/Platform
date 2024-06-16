@@ -22,8 +22,7 @@
 
 // \brief Singly linked ordered list
 
-#ifndef STB_LIST_H 
-#define STB_LIST_H 
+#pragma once
 
 #include <cassert>
 
@@ -40,7 +39,7 @@ public:
    friend class List;
 
    private:
-       TYPE* next{nullptr};
+      TYPE* next{nullptr};
    };
 
    //! Iterator for list elements
@@ -117,6 +116,24 @@ public:
       first = element;
    }
 
+   //! Insert a new element at the back of the list
+   //  XXX O(n)
+   void push_back(TYPE* element)
+   {
+      if (first == nullptr)
+      {
+         first = element;
+      }
+      else
+      {
+         TYPE* prev;
+
+         for(prev = first; prev->next != nullptr; prev = prev->next);
+
+         prev->next = element;
+      }
+   }
+
    //! Insert a new element into the list
    //  item must not already be in the list
    void insert(TYPE* element)
@@ -151,4 +168,3 @@ private:
 
 } // namespace STB
 
-#endif
