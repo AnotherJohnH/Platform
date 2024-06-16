@@ -78,7 +78,7 @@ struct SetupReq
 //------------------------------------------------------------------------------
 // Descriptors
 
-enum DescrType
+enum DescrType : uint8_t
 {
    DEVICE       = 0x1,
    CONFIG       = 0x2,
@@ -87,6 +87,45 @@ enum DescrType
    ENDPOINT     = 0x5,
    CS_INTERFACE = 0x24,
    CS_ENDPOINT  = 0x25
+};
+
+
+//! Base class for descriptors
+class Descr : public STB::List<Descr>::Element
+{
+public:
+   using List = STB::List<Descr>;
+
+   Descr() = default;
+
+   Descr(const uint8_t& length_)
+      : raw(&length_)
+   {
+   }
+
+   Descr(List& list_, const uint8_t& length_)
+      : raw(&length_)
+   {
+      list_.push_back(this);
+   }
+
+   //! Set option implementation pointer
+   void setImpl(void* impl_) { impl = impl_; }
+
+   //! Returns pointer to first byte in descriptor
+   const uint8_t* getRaw() const { return raw; }
+
+   //! Returns length of descriptor as a reference
+   const uint8_t& getLength() const { return raw[0]; }
+
+   //! Returns type of descriptor
+   uint8_t getType() const { return raw[1]; }
+
+   void* getImpl() const { return impl; }
+
+private:
+   const uint8_t* raw{};
+   void*          impl{nullptr};
 };
 
 
@@ -116,9 +155,9 @@ struct ConfigDescr
 {
    ConfigDescr() = default;
 
-   uint8_t  length{sizeof(ConfigDescr)};
+   uint8_t  length{9};
    uint8_t  type{CONFIG};
-   uint16_t total_length{sizeof(ConfigDescr)};
+   uint16_t total_length{0};
    uint8_t  num_interfaces{0};
    uint8_t  value{1};
    uint8_t  name_idx{0};
@@ -128,33 +167,56 @@ struct ConfigDescr
 } __attribute__((__packed__));
 
 
-struct InterfaceDescr
+
+struct InterfaceDescr : public Descr
 {
    InterfaceDescr() = default;
 
-   uint8_t  length{sizeof(InterfaceDescr)};
-   uint8_t  type{INTERFACE};
-   uint8_t  number{0};
-   uint8_t  alternate_setting{0};
-   uint8_t  num_endpoints{0};
-   uint8_t  clas{0xFF};
-   uint8_t  sub_class{0};
-   uint8_t  protocol{0};
-   uint8_t  name_idx{0};
-};
-
-struct EndPointDescr
-{
-   enum Dir  { OUT = 0b00000000, IN = 0b10000000 };
-   enum Type { CONTROL = 0b00, ISOCHRONOUS = 0b01, BULK = 0b10, INTERRUPT = 0b11 };
-
-   EndPointDescr(unsigned addr_, Dir dir_, Type type_)
+   InterfaceDescr(List& list_, uint8_t class_, uint8_t sub_class_, uint8_t protocol_ = 0)
+      : Descr(list_, length)
+      , clas(class_)
+      , sub_class(sub_class_)
+      , protocol(protocol_)
    {
-      addr = dir_ | addr_;
-      attr = type_;
    }
 
-   uint8_t  length{sizeof(EndPointDescr)};
+   uint8_t length{9};
+   uint8_t type{INTERFACE};
+   uint8_t number{0};
+   uint8_t alternate_setting{0};
+   uint8_t num_endpoints{0};
+   uint8_t clas{0xFF};
+   uint8_t sub_class{0};
+   uint8_t protocol{0};
+   uint8_t name_idx{0};
+
+} __attribute__((__packed__));
+
+
+// XXX seems a false positive with GCC 10.2.1
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow="
+
+struct EndPointDescr : public Descr
+{
+   // Direction
+   static const uint8_t OUT = 0b00000000;
+   static const uint8_t IN  = 0b10000000;
+
+   // Type
+   static const uint8_t CONTROL     = 0b00;
+   static const uint8_t ISOCHrONOUS = 0b00;
+   static const uint8_t BULK        = 0b10;
+   static const uint8_t INTERRUPt   = 0b11;
+ 
+   EndPointDescr(List& list_, uint8_t dir_, uint8_t type_)
+      : Descr(list_, length)
+      , addr(dir_)
+      , attr(uint8_t(type_))
+   {
+   }
+
+   uint8_t  length{7};
    uint8_t  type{ENDPOINT};
    uint8_t  addr{0};
    uint8_t  attr{0};
@@ -162,6 +224,8 @@ struct EndPointDescr
    uint8_t  interval{0};
 
 } __attribute__((__packed__));
+
+#pragma GCC diagnostic pop
 
 
 struct StringDescr
@@ -174,44 +238,10 @@ struct StringDescr
 
 
 //------------------------------------------------------------------------------
-// Class-specific descriptors
-
-struct CSInterfaceDescr
-{
-   CSInterfaceDescr() = default;
-
-   uint8_t  length{sizeof(CSInterfaceDescr)};
-   uint8_t  type{CS_INTERFACE};
-   uint8_t  sub_type{0};
-   uint16_t adc_bcd{0x0000};
-   uint16_t total_length{sizeof(CSInterfaceDescr)};
-
-} __attribute__((__packed__));
-
-
-struct CSEndPointDescr
-{
-   CSEndPointDescr(size_t length_, uint8_t sub_type_)
-      : length(uint8_t(length_))
-      , sub_type(sub_type_)
-   {
-   }
-
-   uint8_t length{};
-   uint8_t type{CS_ENDPOINT};
-   uint8_t sub_type{};
-   
-} __attribute__((__packed__));
-
-
-//------------------------------------------------------------------------------
 // Device Management
 
 class Config;
 class Interface;
-class EndPoint;
-class CSInterface;
-class CSEndPoint;
 
 class Device
 {
@@ -298,21 +328,6 @@ public:
       descr.max_power  = 50;         // 100 mA
    }
 
-   void addInterface(Interface* interface_)
-   {
-      descr.num_interfaces++;
-      descr.total_length += sizeof(InterfaceDescr);
-      interface_list.push_back(interface_);
-   }
-
-   uint8_t addEndPoint(Interface* interface_)
-   {
-      uint8_t addr = ++ep_addr;
-      device->setBufferHandler(addr, interface_);  // XXX this is broken for multiple configs
-      descr.total_length += sizeof(EndPointDescr);
-      return addr;
-   }
-
    uint8_t addString(const char* string_)
    {
       return device->addString(string_);
@@ -320,52 +335,23 @@ public:
 
    void setName(const char* name_) { descr.name_idx = addString(name_); }
 
+   void linkDescriptors();
+
    ConfigDescr          descr{};
    STB::List<Interface> interface_list{};
 
-private:
    Device* device;
-   uint8_t ep_addr{0};
 };
 
 
 class Interface : public STB::List<Interface>::Element
 {
 public:
-   Interface(Config& config_)
+   Interface(Config& config_, uint8_t class_, uint8_t sub_class_, uint8_t protocol_ = 0)
+      : descr(descr_list, class_, sub_class_, protocol_)
    {
-      config = &config_;
-      config->addInterface(this);
-
-      descr.number = config->descr.num_interfaces - 1;
+      config_.interface_list.push_back(this);
    }
-
-   void addCSInterface(CSInterface* cs_interface_, size_t length_)
-   {
-      config->descr.total_length += length_;
-      cs_interface_list.push_back(cs_interface_);
-   }
-
-   uint8_t addEndPoint(EndPoint* endpoint_)
-   {
-      descr.num_endpoints++;
-      endpoint_list.push_back(endpoint_);
-      return config->addEndPoint(this);
-   }
-
-   void add(size_t length_)
-   {
-      config->descr.total_length += length_;
-   }
-
-   void setClassAndProtocol(uint8_t class_, uint8_t sub_class_, uint8_t protocol_ = 0)
-   {
-      descr.clas      = class_;
-      descr.sub_class = sub_class_;
-      descr.protocol  = protocol_;
-   }
-
-   void setName(const char* name_) { descr.name_idx = config->addString(name_); }
 
    virtual void configured() {}
 
@@ -375,69 +361,22 @@ public:
    //! Handle a buffer sent
    virtual void buffTx(uint8_t ep_) {}
 
-   InterfaceDescr         descr{};
-   STB::List<EndPoint>    endpoint_list{};
-   STB::List<CSInterface> cs_interface_list{};
+   STB::List<Descr> descr_list{};
 
 private:
-   Config* config;
+   USB::InterfaceDescr descr;
 };
 
 
-class EndPoint : public STB::List<EndPoint>::Element
+class EndPoint
 {
 public:
-   //! Construct End-point zero
-   EndPoint(EndPointDescr::Dir dir_)
-      : descr(0, dir_, EndPointDescr::CONTROL)
+   EndPoint() = default;
+
+   EndPoint(Descr& descr_)
    {
+      descr_.setImpl(this);
    }
-
-   EndPoint(Interface&          interface_,
-            EndPointDescr::Dir  dir_,
-            EndPointDescr::Type type_)
-      : descr(interface_.addEndPoint(this), dir_, type_)
-   {
-      interface = &interface_;
-   }
-
-   bool isAddr(uint8_t addr_) const { return (descr.addr & 0xF) == addr_; }
- 
-   //! Set class specific descriptor
-   template <typename DESCR>
-   void setCSDescr(const DESCR& descr_)
-   {
-      cs_descr = (const uint8_t*)&descr_;
-      interface->add(sizeof(DESCR));
-   }
-
-   //! Get class specific descriptor
-   const uint8_t* getCSDescr() const { return cs_descr; }
-
-   EndPointDescr descr;
-
-private:
-   Interface*     interface;
-   const uint8_t* cs_descr{nullptr}; //!< Optional class specific descriptor
-};
-
-
-class CSInterface : public STB::List<CSInterface>::Element
-{
-public:
-   CSInterface() = default;
-
-   template <typename DESCR>
-   CSInterface(Interface& interface_, const DESCR& descr_)
-      : descr(&descr_.length)
-   {
-      interface_.addCSInterface(this, sizeof(DESCR));
-   }
-
-   const uint8_t* getDescr() { return descr; }
-
-private:
-   const uint8_t* descr;
 };
 
 
@@ -467,5 +406,76 @@ void Device::handleBuffTx(uint8_t ep)
       buffer_handler[ep]->buffTx(ep);
    }
 }
+
+
+void Config::linkDescriptors()
+{
+   if (descr.total_length != 0)
+      return;
+
+   uint8_t ep_addr = 1;
+
+   descr.num_interfaces = 0;
+   descr.total_length   = descr.length;
+
+   for(auto& interface : interface_list)
+   {
+      InterfaceDescr* interface_descr{nullptr};
+
+      for(auto& d : interface.descr_list)
+      {
+         descr.total_length += d.getLength();
+
+         switch(d.getType())
+         {
+         case INTERFACE:
+            interface_descr = (InterfaceDescr*)&d;
+            interface_descr->num_endpoints = 0;
+            interface_descr->number        = descr.num_interfaces++;
+            break;
+
+         case ENDPOINT:
+            if (interface_descr != nullptr)
+            {
+               interface_descr->num_endpoints++;
+               EndPointDescr* endpoint_descr = (EndPointDescr*)&d;
+               endpoint_descr->addr = (endpoint_descr->addr & 0xF0) | ep_addr;
+
+               // TODO this should move to set configuration time
+               device->setBufferHandler(ep_addr, &interface);
+
+               ep_addr++;
+            }
+            break;
+
+         default:
+            break;
+         }
+      }
+
+#if 0
+      for(auto& d : interface.descr_list)
+      {
+         char ch;
+         uint8_t n;
+         switch(d.getType())
+         {
+         case INTERFACE: ch = 'I'; n = 9; break;
+         case ENDPOINT:  ch = 'E'; n = 7; break;
+         default:        ch = '?'; n = 7; break;
+         }
+
+         putchar(ch);
+         const uint8_t* r = d.getRaw();
+         for(unsigned i = 0; i < n; ++i)
+         {
+            printf(" %02x", r[i]);
+         }
+         printf("\n");
+      }
+#endif
+   }
+}
+
 
 }

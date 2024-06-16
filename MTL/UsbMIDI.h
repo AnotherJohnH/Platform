@@ -35,7 +35,7 @@ static const uint8_t SUB_CLASS = 0x03;
 // Class-specific descriptors
 
 
-// Interface sub-types
+// Interface jack sub-types
 static const uint8_t EMBEDDED = 0x1;
 static const uint8_t EXTERNAL = 0x2;
 
@@ -43,43 +43,53 @@ static const uint8_t EXTERNAL = 0x2;
 static const uint8_t GENERAL  = 0x1;
 
 
-struct HeaderInterfaceDescr
+struct Header : public Descr
 {
-   HeaderInterfaceDescr() = default;
+   Header(List& list_)
+      : Descr(list_, length)
+   {}
 
-   uint8_t  length{uint8_t(sizeof(HeaderInterfaceDescr))};
+   uint8_t  length{7};
    uint8_t  type{CS_INTERFACE};
    uint8_t  sub_type{1};
    uint16_t version_bcd{0x100};
-   uint16_t total_length{sizeof(HeaderInterfaceDescr)};
+   uint16_t total_length{0};
 
 } __attribute__((__packed__));
 
 
-struct InJackInterfaceDescr
+struct JackIn : public Descr
 {
-   InJackInterfaceDescr() = default;
+   JackIn(List& list_, uint8_t jack_type_, uint8_t jack_id_)
+      : Descr(list_, length)
+      , jack_type(jack_type_)
+      , jack_id(jack_id_)
+   {}
 
-   uint8_t  length{uint8_t(sizeof(InJackInterfaceDescr))};
+   uint8_t  length{6};
    uint8_t  type{CS_INTERFACE};
    uint8_t  sub_type{2};
-   uint8_t  jack_type{EMBEDDED};
-   uint8_t  jack_id{1};
+   uint8_t  jack_type;
+   uint8_t  jack_id;
    uint8_t  jack_idx{0};
 
 } __attribute__((__packed__));
 
 
 template <unsigned N>
-struct OutJackInterfaceDescr
+struct JackOut : public Descr
 {
-   OutJackInterfaceDescr() = default;
+   JackOut(List& list_, uint8_t jack_type_, uint8_t jack_id_)
+      : Descr(list_, length)
+      , jack_type(jack_type_)
+      , jack_id(jack_id_)
+   {}
 
-   uint8_t  length;             // XXX compiler doens't seem to want inline init of this member
+   uint8_t  length{6 + 2 * N};
    uint8_t  type{CS_INTERFACE};
    uint8_t  sub_type{3};
-   uint8_t  jack_type{EMBEDDED};
-   uint8_t  jack_id{1};
+   uint8_t  jack_type;
+   uint8_t  jack_id;
 
    struct Source
    {
@@ -94,15 +104,15 @@ struct OutJackInterfaceDescr
 
 
 template <unsigned N>
-struct EndPointDescr
+struct CSEndPoint : public Descr
 {
-   EndPointDescr(EndPoint& endpoint_, uint8_t jack_id_)
+   CSEndPoint(List& list_, uint8_t jack_id_)
+      : Descr(list_, length)
    {
-      endpoint_.setCSDescr(*this);
       assoc_jack_id[0] = jack_id_;
    }
 
-   uint8_t length{uint8_t(sizeof(EndPointDescr<N>))};
+   uint8_t length{4 + N};
    uint8_t type{CS_ENDPOINT};
    uint8_t sub_type{GENERAL}; 
    uint8_t num_emb_midi_jack{N};
@@ -111,65 +121,35 @@ struct EndPointDescr
 } __attribute__((__packed__));
 
 
-//------------------------------------------------------------------------------
-// Management
-
-class HeaderInterface : public CSInterface
+struct EndPoint : public Descr
 {
-public:
-   HeaderInterface(Interface& interface_)
-      : CSInterface(interface_, descr)
-      , interface(&interface_)
+   // Direction
+   static const uint8_t OUT = 0b00000000;
+   static const uint8_t IN  = 0b10000000;
+
+   // Type
+   static const uint8_t CONTROL     = 0b00;
+   static const uint8_t ISOCHrONOUS = 0b00;
+   static const uint8_t BULK        = 0b10;
+   static const uint8_t INTERRUPt   = 0b11;
+
+   EndPoint(List& list_, uint8_t dir_, uint8_t type_)
+      : Descr(list_, length)
+      , addr(dir_)
+      , attr(uint8_t(type_))
    {
    }
 
-   void addCSInterface(CSInterface* cs_interface_, size_t length_)
-   {
-      descr.total_length += length_;
+   uint8_t  length{9};
+   uint8_t  type{ENDPOINT};
+   uint8_t  addr{0};
+   uint8_t  attr{0};
+   uint16_t max_packet_size{64};
+   uint8_t  interval{0};
+   uint8_t  refresh{0};
+   uint8_t  sync_addr{0};
 
-      interface->addCSInterface(cs_interface_, length_);
-   }
-
-   HeaderInterfaceDescr descr{};
-
-private:
-   Interface* interface;
-};
-
-class InJackInterface : public CSInterface
-{
-public:
-   InJackInterface(HeaderInterface& header_,
-                   uint8_t          jack_type_,
-                   uint8_t          jack_id_)
-   {
-      header_.addCSInterface(this, sizeof(descr));
-
-      descr.length    = sizeof(descr);
-      descr.jack_type = jack_type_;
-      descr.jack_id   = jack_id_;
-   }
-
-   InJackInterfaceDescr descr{};
-};
-
-template <unsigned N>
-class OutJackInterface : public CSInterface
-{
-public:
-   OutJackInterface(HeaderInterface& header_,
-                    uint8_t          jack_type_,
-                    uint8_t          jack_id_)
-   {
-      header_.addCSInterface(this, sizeof(descr));
-
-      descr.length    = sizeof(descr);
-      descr.jack_type = jack_type_;
-      descr.jack_id   = jack_id_;
-   }
-
-   OutJackInterfaceDescr<N> descr{};
-};
+} __attribute__((__packed__));
 
 
 } // namespace MS

@@ -80,7 +80,12 @@ public:
    class EndPoint : public USB::EndPoint
    {
    public:
-      using USB::EndPoint::EndPoint;
+      EndPoint() = default;
+
+      EndPoint(USB::Descr& descr_)
+         : USB::EndPoint(descr_)
+      {
+      }
 
       //! Set next PID as DATA1
       void setPID()
@@ -121,6 +126,12 @@ public:
       unsigned write(const TYPE& data, unsigned offset = 0)
       {
          return writeBytes(&data, sizeof(TYPE), offset);
+      }
+
+      //! Write a descriptor (first byte is length)
+      unsigned writeDescr(const uint8_t& length, unsigned offset)
+      {
+         return writeBytes(&length, length, offset);
       }
 
       static const uint32_t BC0_FULL      = 1 << 15;
@@ -170,8 +181,8 @@ public:
                    INT_SETUP_REQ;
 
        // Setup device control end-points
-       setupEndPoint(&ep0_in);
-       setupEndPoint(&ep0_out);
+       initEndPoint(&ep0_in,  USB::EndPointDescr::IN,  USB::EndPointDescr::CONTROL);
+       initEndPoint(&ep0_out, USB::EndPointDescr::OUT, USB::EndPointDescr::CONTROL);
 
        // Present a full-speed device by enabling the pull-up
        reg->sie_ctrl  |= 1 << 16;      // PULLUP_EN
@@ -202,11 +213,11 @@ private:
    Periph<DPSRamReg,0x50100000> ram;
 
    //! Initialise an end-point
-   void setupEndPoint(EndPoint* endpoint_)
+   void initEndPoint(EndPoint* endpoint_, uint8_t addr_, uint8_t type_)
    {
       // Compute register index
-      unsigned ep_index = endpoint_->descr.addr & 0xF;
-      unsigned rg_index = (ep_index << 1) | ((endpoint_->descr.addr >> 7) ^ 0b1);
+      unsigned ep_index = addr_ & 0b00001111;
+      unsigned rg_index = (ep_index << 1) | ((addr_ >> 7) ^ 0b1);
 
       endpoint_->control = &ram.reg->buffer_control[rg_index];
 
@@ -218,7 +229,7 @@ private:
       {
          ram.reg->ep_control[rg_index - 2] = (1 << 31) | // ENABLE
                                              (1 << 29) | // INTERRUPT_PER_BUFFER_TRF
-                                             (endpoint_->descr.attr << 26) |
+                                             (type_ << 26) |
                                              dpram_offset;
 
          endpoint_->buffer = (volatile uint8_t*)(ram.reg) + dpram_offset;
@@ -250,30 +261,17 @@ private:
    {
       USB::Config* config = device->getConfig(1);
 
+      config->linkDescriptors();
+
       unsigned offset = ep0_in.write(config->descr);
 
       if (packet->length == config->descr.total_length)
       {
          for(auto& interface : config->interface_list)
          {
-            offset = ep0_in.write(interface.descr, offset);
-
-            for(auto& cs_interface : interface.cs_interface_list)
+            for(auto& d : interface.descr_list)
             {
-               const uint8_t* cs_descr = cs_interface.getDescr();
-
-               offset = ep0_in.writeBytes(cs_descr, cs_descr[0], offset);
-            }
-
-            for(auto& end_point : interface.endpoint_list)
-            {
-               offset = ep0_in.write(end_point.descr, offset);
-
-               const uint8_t* cs_descr = end_point.getCSDescr();
-               if (cs_descr != nullptr)
-               {
-                  offset = ep0_in.writeBytes(cs_descr, cs_descr[0], offset);
-               }
+               offset = ep0_in.writeDescr(d.getLength(), offset);
             }
          }
       }
@@ -335,9 +333,14 @@ private:
 
       for(auto& interface : config->interface_list)
       {
-         for(auto& endpoint : interface.endpoint_list)
+         for(const auto& descr : interface.descr_list)
          {
-            setupEndPoint((EndPoint*)&endpoint);
+            if (descr.getType() == USB::ENDPOINT)
+            {
+               const USB::EndPointDescr* ep_descr = (USB::EndPointDescr*)&descr;
+               EndPoint*                 ep = (EndPoint*) ep_descr->getImpl();
+               initEndPoint(ep, ep_descr->addr, ep_descr->attr);
+            }
          }
 
          interface.configured();
@@ -445,8 +448,8 @@ private:
    static const uint32_t INT_BUFF_STATUS = 1 <<  4;
 
    USB::Device* device;
-   EndPoint     ep0_in{ USB::EndPointDescr::IN};
-   EndPoint     ep0_out{USB::EndPointDescr::OUT};
+   EndPoint     ep0_in{};
+   EndPoint     ep0_out{};
    uint32_t     dpram_offset{0x180};  // XXX what about 0x140-0x17F
 
    bool         set_address{false};
