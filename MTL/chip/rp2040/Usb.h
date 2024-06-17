@@ -263,7 +263,8 @@ private:
 
       config->linkDescriptors();
 
-      unsigned offset = ep0_in.write(config->descr);
+      buffer.clear();
+      buffer.write(&config->descr.length, config->descr.length);
 
       if (packet->length == config->descr.total_length)
       {
@@ -271,14 +272,16 @@ private:
          {
             for(auto& d : interface.descr_list)
             {
-               offset = ep0_in.writeDescr(d.getLength(), offset);
+               buffer.write(&d.getLength(), d.getLength());
             }
          }
       }
 
-      ep0_in.startTx(std::min(offset, unsigned(packet->length)));
+      size_t bytes = std::min(size_t(64), buffer.size());
+      ep0_in.writeBytes(buffer.read(bytes), bytes);
+      ep0_in.startTx(bytes);
 
-      LOG("GET_DESCR CFG %u\n", packet->length);
+      LOG("GET_DESCR CFG %u/%u\n", bytes, packet->length);
    }
 
    void handleGetStringDescr(USB::SetupReq* packet)
@@ -413,6 +416,13 @@ private:
                        reg->addr_endp[0] = address;
                        set_address = false;
                     }
+                    else if (not buffer.empty())
+                    {
+                       size_t bytes = std::min(size_t(64), buffer.size());
+                       ep0_in.writeBytes(buffer.read(bytes), bytes);
+                       ep0_in.startTx(bytes);
+                       LOG("TX remaining %u\n", bytes);
+                    }
                     else
                     {
                        ep0_out.startRx(0);
@@ -443,6 +453,35 @@ private:
       }
    }
 
+   template <size_t N>
+   class Buffer
+   {
+   public:
+      size_t size() const { return write_ptr - read_ptr; }
+
+      bool empty() const { return size() == 0; }
+
+      void clear() { write_ptr = read_ptr = 0; }
+
+      void write(const uint8_t* raw_, size_t size_)
+      {
+         memcpy(raw + write_ptr, raw_, size_);
+         write_ptr += size_;
+      }
+
+      const uint8_t* read(size_t size_)
+      {
+         const uint8_t* ptr = raw + read_ptr;
+         read_ptr += std::min(size_, size());
+         return ptr;
+      }
+
+   private:
+      uint8_t write_ptr{0};
+      uint8_t read_ptr{0};
+      uint8_t raw[N];
+   };
+
    static const uint32_t INT_SETUP_REQ   = 1 << 16;
    static const uint32_t INT_BUS_RESET   = 1 << 12;
    static const uint32_t INT_BUFF_STATUS = 1 <<  4;
@@ -454,6 +493,7 @@ private:
 
    bool         set_address{false};
    uint8_t      address{};
+   Buffer<128>  buffer{};
 };
 
 } // namespace MTL
