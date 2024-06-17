@@ -90,16 +90,17 @@ struct JackOutDescr : public Descr
       , jack_id(jack_id_)
    {}
 
-   uint8_t length{6 + 2 * N};
+   uint8_t length{7 + 2 * N};
    uint8_t type{CS_INTERFACE};
    uint8_t sub_type{OUT_JACK};
    uint8_t jack_type;
    uint8_t jack_id;
+   uint8_t nr_input_pins{N};
 
    struct Source
    {
       uint8_t id{};
-      uint8_t pin{};
+      uint8_t pin{1};
 
    } source[N];
 
