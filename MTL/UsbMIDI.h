@@ -29,13 +29,18 @@ namespace USB {
 
 namespace MS {
 
-static const uint8_t SUB_CLASS = 0x03;
+static const uint8_t SUB_CLASS = 0x03; //!< MIDISTREAMING audio interface
 
 //------------------------------------------------------------------------------
 // Class-specific descriptors
 
+// Interface sub-types
+static const uint8_t HEADER   = 0x1;
+static const uint8_t IN_JACK  = 0x2;
+static const uint8_t OUT_JACK = 0x3;
+static const uint8_t ELEMENT  = 0x4;
 
-// Interface jack sub-types
+// Interface jack types
 static const uint8_t EMBEDDED = 0x1;
 static const uint8_t EXTERNAL = 0x2;
 
@@ -43,53 +48,53 @@ static const uint8_t EXTERNAL = 0x2;
 static const uint8_t GENERAL  = 0x1;
 
 
-struct Header : public Descr
+struct HeaderDescr : public Descr
 {
-   Header(List& list_)
+   HeaderDescr(List& list_)
       : Descr(list_, length)
    {}
 
    uint8_t  length{7};
    uint8_t  type{CS_INTERFACE};
-   uint8_t  sub_type{1};
-   uint16_t version_bcd{0x100};
-   uint16_t total_length{0};
+   uint8_t  sub_type{HEADER};
+   uint16_t version_bcd{0x100};    // MIDI Streaming sub-class release 1.00
+   uint16_t total_length{0};       // XXX not clear what this is the total of
 
 } __attribute__((__packed__));
 
 
-struct JackIn : public Descr
+struct JackInDescr : public Descr
 {
-   JackIn(List& list_, uint8_t jack_type_, uint8_t jack_id_)
+   JackInDescr(List& list_, uint8_t jack_type_, uint8_t jack_id_)
       : Descr(list_, length)
       , jack_type(jack_type_)
       , jack_id(jack_id_)
    {}
 
-   uint8_t  length{6};
-   uint8_t  type{CS_INTERFACE};
-   uint8_t  sub_type{2};
-   uint8_t  jack_type;
-   uint8_t  jack_id;
-   uint8_t  jack_idx{0};
+   uint8_t length{6};
+   uint8_t type{CS_INTERFACE};
+   uint8_t sub_type{IN_JACK};
+   uint8_t jack_type;
+   uint8_t jack_id;
+   uint8_t jack_idx{0};
 
 } __attribute__((__packed__));
 
 
 template <unsigned N>
-struct JackOut : public Descr
+struct JackOutDescr : public Descr
 {
-   JackOut(List& list_, uint8_t jack_type_, uint8_t jack_id_)
+   JackOutDescr(List& list_, uint8_t jack_type_, uint8_t jack_id_)
       : Descr(list_, length)
       , jack_type(jack_type_)
       , jack_id(jack_id_)
    {}
 
-   uint8_t  length{6 + 2 * N};
-   uint8_t  type{CS_INTERFACE};
-   uint8_t  sub_type{3};
-   uint8_t  jack_type;
-   uint8_t  jack_id;
+   uint8_t length{6 + 2 * N};
+   uint8_t type{CS_INTERFACE};
+   uint8_t sub_type{OUT_JACK};
+   uint8_t jack_type;
+   uint8_t jack_id;
 
    struct Source
    {
@@ -98,15 +103,15 @@ struct JackOut : public Descr
 
    } source[N];
 
-   uint8_t  jack_idx{0};
+   uint8_t jack_idx{0};
 
 } __attribute__((__packed__));
 
 
 template <unsigned N>
-struct CSEndPoint : public Descr
+struct CSEndPointDescr : public Descr
 {
-   CSEndPoint(List& list_, uint8_t jack_id_)
+   CSEndPointDescr(List& list_, uint8_t jack_id_)
       : Descr(list_, length)
    {
       assoc_jack_id[0] = jack_id_;
@@ -121,19 +126,9 @@ struct CSEndPoint : public Descr
 } __attribute__((__packed__));
 
 
-struct EndPoint : public Descr
+struct EndPointDescr : public Descr
 {
-   // Direction
-   static const uint8_t OUT = 0b00000000;
-   static const uint8_t IN  = 0b10000000;
-
-   // Type
-   static const uint8_t CONTROL     = 0b00;
-   static const uint8_t ISOCHrONOUS = 0b00;
-   static const uint8_t BULK        = 0b10;
-   static const uint8_t INTERRUPt   = 0b11;
-
-   EndPoint(List& list_, uint8_t dir_, uint8_t type_)
+   EndPointDescr(List& list_, uint8_t dir_, uint8_t type_)
       : Descr(list_, length)
       , addr(dir_)
       , attr(uint8_t(type_))
