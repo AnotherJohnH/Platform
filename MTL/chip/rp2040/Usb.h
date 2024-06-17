@@ -114,24 +114,11 @@ public:
       }
 
       //! Write data into buffer
-      unsigned writeBytes(const void* data, unsigned length, unsigned offset = 0)
+      unsigned write(const void* data, unsigned length, unsigned offset = 0)
       {
          memcpy((void*)&buffer[offset], data, length);
          offset += length;
          return offset;
-      }
-
-      //! Write data into buffer
-      template<typename TYPE>
-      unsigned write(const TYPE& data, unsigned offset = 0)
-      {
-         return writeBytes(&data, sizeof(TYPE), offset);
-      }
-
-      //! Write a descriptor (first byte is length)
-      unsigned writeDescr(const uint8_t& length, unsigned offset)
-      {
-         return writeBytes(&length, length, offset);
       }
 
       static const uint32_t BC0_FULL      = 1 << 15;
@@ -251,7 +238,7 @@ private:
    {
       ep0_in.setPID();
 
-      unsigned bytes = ep0_in.write(device->descr);
+      unsigned bytes = ep0_in.write(&device->descr, device->descr.length);
       ep0_in.startTx(std::min(bytes, unsigned(packet->length)));
 
       LOG("GET_DESCR DEV %u\n", packet->length);
@@ -278,7 +265,7 @@ private:
       }
 
       size_t bytes = std::min(size_t(64), buffer.size());
-      ep0_in.writeBytes(buffer.read(bytes), bytes);
+      ep0_in.write(buffer.read(bytes), bytes);
       ep0_in.startTx(bytes);
 
       LOG("GET_DESCR CFG %u/%u\n", bytes, packet->length);
@@ -289,31 +276,34 @@ private:
       uint8_t        id     = packet->value & 0xFF;
       const uint8_t* string = device->getString(id);
       uint8_t        len    = *string++;
-      uint8_t        bytes;
+
+      buffer.clear();
 
       if (id == 0)
       {
-         uint8_t lang_desc[4] = {4, USB::STRING, string[0], string[1]};
-
-         bytes = std::min(lang_desc[0], uint8_t(packet->length));
-
-         ep0_in.writeBytes(lang_desc, bytes);
+         // Language descriptor
+         buffer.write(4);
+         buffer.write(USB::STRING);
+         buffer.write(string[0]);
+         buffer.write(string[1]);
       }
       else
       {
-         uint8_t pair[2] = {uint8_t(2 + len * 2), USB::STRING};
+         buffer.write(2 + len * 2);
+         buffer.write(USB::STRING);
 
-         bytes = std::min(pair[0], uint8_t(packet->length));
-
-         for(unsigned offset = ep0_in.writeBytes(pair, 2);
-             offset < bytes;
-             offset = ep0_in.writeBytes(pair, 2, offset))
+         for(unsigned i = 0; i < len; ++i)
          {
-            pair[0] = *string++;
-            pair[1] = '\0';
+            if (buffer.size() == packet->length)
+               break;
+
+            buffer.write(string[i]);
+            buffer.write(0x00);
          }
       }
 
+      size_t bytes = std::min(size_t(64), buffer.size());
+      ep0_in.write(buffer.read(bytes), bytes);
       ep0_in.startTx(bytes);
 
       LOG("GET_DESCR STR id=%u bytes=%u\n", id, bytes);
@@ -419,7 +409,7 @@ private:
                     else if (not buffer.empty())
                     {
                        size_t bytes = std::min(size_t(64), buffer.size());
-                       ep0_in.writeBytes(buffer.read(bytes), bytes);
+                       ep0_in.write(buffer.read(bytes), bytes);
                        ep0_in.startTx(bytes);
                        LOG("TX remaining %u\n", bytes);
                     }
@@ -462,6 +452,11 @@ private:
       bool empty() const { return size() == 0; }
 
       void clear() { write_ptr = read_ptr = 0; }
+
+      void write(uint8_t byte_)
+      {
+         raw[write_ptr++] = byte_;
+      }
 
       void write(const uint8_t* raw_, size_t size_)
       {
