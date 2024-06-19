@@ -444,7 +444,7 @@ void Config::linkDescriptors()
                // TODO this should move to set configuration time
                device->setBufferHandler(ep_addr, &interface);
 
-               // ep_addr++;
+               ep_addr++;
             }
             break;
 
