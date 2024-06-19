@@ -135,7 +135,7 @@ struct DeviceDescr
 
    uint8_t  length{sizeof(DeviceDescr)};
    uint8_t  type{DEVICE};
-   uint16_t usb_bcd{0x110};         // USB 1.1
+   uint16_t usb_bcd{0x200};         // USB 2.0
    uint8_t  clas{0};
    uint8_t  sub_class{0};
    uint8_t  protocol{0};
@@ -161,7 +161,7 @@ struct ConfigDescr
    uint8_t  num_interfaces{0};
    uint8_t  value{1};
    uint8_t  name_idx{0};
-   uint8_t  attributes{0b11000000};
+   uint8_t  attributes{0b10100000};
    uint8_t  max_power{50};
 
 } __attribute__((__packed__));
@@ -324,7 +324,7 @@ public:
       device = &device_;
       device->addConfig(this);
 
-      descr.attributes = 0b11000000; // USB 1.0 Bus Powered, no remote wakeup
+      descr.attributes = 0b10100000; // USB 2.0 Bus Powered, no remote wakeup
       descr.max_power  = 50;         // 100 mA
    }
 
@@ -444,7 +444,7 @@ void Config::linkDescriptors()
                // TODO this should move to set configuration time
                device->setBufferHandler(ep_addr, &interface);
 
-               ep_addr++;
+               // ep_addr++;
             }
             break;
 
