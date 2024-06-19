@@ -457,17 +457,20 @@ void Config::linkDescriptors()
       for(auto& d : interface.descr_list)
       {
          char ch;
-         uint8_t n;
+
          switch(d.getType())
          {
-         case INTERFACE: ch = 'I'; n = 9; break;
-         case ENDPOINT:  ch = 'E'; n = 7; break;
-         default:        ch = '?'; n = 7; break;
+         case INTERFACE:    ch = 'I'; break;
+         case CS_INTERFACE: ch = 'i'; break;
+         case ENDPOINT:     ch = 'E'; break;
+         case CS_ENDPOINT:  ch = 'e'; break;
+         default:           ch = '?'; break;
          }
 
          putchar(ch);
+
          const uint8_t* r = d.getRaw();
-         for(unsigned i = 0; i < n; ++i)
+         for(unsigned i = 0; i < r[0]; ++i)
          {
             printf(" %02x", r[i]);
          }
