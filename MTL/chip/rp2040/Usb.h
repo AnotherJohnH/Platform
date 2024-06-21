@@ -31,7 +31,7 @@
 #include "MTL/CortexM0/NVIC.h"
 #include "MTL/rp2040/Resets.h"
 
-#define LOG if (1) printf
+#define LOG if (0) printf
 
 namespace MTL {
 

@@ -57,15 +57,6 @@ struct SetupReq
    unsigned getType()        const { return (type >> 5) & 0b11; }
    unsigned getRecipient()   const { return type & 0b11111; }
 
-   void print()
-   {
-      printf(".type    = %02X\n", type);
-      printf(".request = %02X\n", unsigned(request));
-      printf(".value   = %04X\n", value);
-      printf(".index   = %04X\n", index);
-      printf(".length  = %04X\n", length);
-   }
-
    uint8_t  type{};
    Request  request{};
    uint16_t value{};
