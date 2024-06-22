@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "UsbTypes.h"
+#include "USB/Descr.h"
 
 namespace USB {
 
@@ -55,7 +55,7 @@ struct HeaderDescr : public Descr
    {}
 
    uint8_t  length{7};
-   uint8_t  type{CS_INTERFACE};
+   uint8_t  type{TYPE_CS_INTERFACE};
    uint8_t  sub_type{HEADER};
    uint16_t version_bcd{0x100};    // MIDI Streaming sub-class release 1.00
    uint16_t total_length{0};       // XXX not clear what this is the total of
@@ -72,7 +72,7 @@ struct JackInDescr : public Descr
    {}
 
    uint8_t length{6};
-   uint8_t type{CS_INTERFACE};
+   uint8_t type{TYPE_CS_INTERFACE};
    uint8_t sub_type{IN_JACK};
    uint8_t jack_type;
    uint8_t jack_id;
@@ -91,7 +91,7 @@ struct JackOutDescr : public Descr
    {}
 
    uint8_t length{7 + 2 * N};
-   uint8_t type{CS_INTERFACE};
+   uint8_t type{TYPE_CS_INTERFACE};
    uint8_t sub_type{OUT_JACK};
    uint8_t jack_type;
    uint8_t jack_id;
@@ -119,7 +119,7 @@ struct CSEndPointDescr : public Descr
    }
 
    uint8_t length{4 + N};
-   uint8_t type{CS_ENDPOINT};
+   uint8_t type{TYPE_CS_ENDPOINT};
    uint8_t sub_type{GENERAL}; 
    uint8_t num_emb_midi_jack{N};
    uint8_t assoc_jack_id[N] = {};
@@ -137,7 +137,7 @@ struct EndPointDescr : public Descr
    }
 
    uint8_t  length{9};
-   uint8_t  type{ENDPOINT};
+   uint8_t  type{TYPE_ENDPOINT};
    uint8_t  addr{0};
    uint8_t  attr{0};
    uint16_t max_packet_size{64};

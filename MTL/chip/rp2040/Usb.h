@@ -27,9 +27,12 @@
 #include <cstring>
 
 #include "MTL/Periph.h"
-#include "MTL/UsbTypes.h"
 #include "MTL/CortexM0/NVIC.h"
 #include "MTL/rp2040/Resets.h"
+
+#include "USB/Device.h"
+#include "USB/EndPoint.h"
+#include "USB/Request.h"
 
 #define LOG if (0) printf
 
@@ -238,7 +241,8 @@ private:
    {
       ep0_in.setPID();
 
-      unsigned bytes = ep0_in.write(&device->descr, device->descr.length);
+      const USB::DeviceDescr& descr = device->getDescr();
+      unsigned bytes = ep0_in.write(&descr, descr.length);
       ep0_in.startTx(std::min(bytes, unsigned(packet->length)));
 
       LOG("GET_DESCR DEV %u\n", packet->length);
@@ -283,14 +287,14 @@ private:
       {
          // Language descriptor
          buffer.write(4);
-         buffer.write(USB::STRING);
+         buffer.write(USB::TYPE_STRING);
          buffer.write(string[0]);
          buffer.write(string[1]);
       }
       else
       {
          buffer.write(2 + len * 2);
-         buffer.write(USB::STRING);
+         buffer.write(USB::TYPE_STRING);
 
          for(unsigned i = 0; i < len; ++i)
          {
@@ -328,7 +332,7 @@ private:
       {
          for(const auto& descr : interface.descr_list)
          {
-            if (descr.getType() == USB::ENDPOINT)
+            if (descr.getType() == USB::TYPE_ENDPOINT)
             {
                const USB::EndPointDescr* ep_descr = (USB::EndPointDescr*)&descr;
                EndPoint*                 ep = (EndPoint*) ep_descr->getImpl();
@@ -371,9 +375,9 @@ private:
          case USB::Request::GET_DESCRIPTOR:
             switch(packet->value >> 8)
             {
-            case USB::DEVICE: handleGetDeviceDescr(packet); break;
-            case USB::CONFIG: handleGetConfigDescr(packet); break;
-            case USB::STRING: handleGetStringDescr(packet); break;
+            case USB::TYPE_DEVICE: handleGetDeviceDescr(packet); break;
+            case USB::TYPE_CONFIG: handleGetConfigDescr(packet); break;
+            case USB::TYPE_STRING: handleGetStringDescr(packet); break;
             }
             break;
 
