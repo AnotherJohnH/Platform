@@ -23,6 +23,7 @@
 #include <CoreMIDI/CoreMIDI.h>
 #include <cstdint>
 #include <cstdio>
+#include <mutex>
 
 #include "PLT/MIDIInterface.h"
 #include "STB/Fifo.h"
@@ -131,6 +132,8 @@ struct Interface::Pimpl
       {
          const MIDIPacket* pkt = &pkt_list_->packet[i];
 
+         std::lock_guard<std::mutex> lock{pimpl->mutex};
+
          for(unsigned i = 0; i < pkt->length; ++i)
          {
              pimpl->fifo.push(pkt->data[i]);
@@ -142,6 +145,7 @@ struct Interface::Pimpl
    MIDIClientRef         client{};
    MIDIPortRef           port{};
    bool                  connected{false};
+   std::mutex            mutex{};
    STB::Fifo<uint8_t,10> fifo;
 };
 
@@ -164,11 +168,15 @@ bool Interface::connected() const
 
 bool Interface::empty() const
 {
+   std::lock_guard<std::mutex> lock{pimpl->mutex};
+
    return pimpl->fifo.empty();
 }
 
 uint8_t Interface::rx()
 {
+   std::lock_guard<std::mutex> lock{pimpl->mutex};
+
    uint8_t byte = pimpl->fifo.back();
    pimpl->fifo.pop();
    return byte;
