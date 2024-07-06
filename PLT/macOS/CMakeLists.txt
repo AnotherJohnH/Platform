@@ -25,6 +25,7 @@ find_package(SDL2 REQUIRED)
 
 add_library(PLT STATIC
             Midi.cpp
+            MIDIInterface.cpp
             ../SDL2/Audio.cpp
             ../SDL2/Event.cpp
             ../SDL2/Frame.cpp

@@ -32,6 +32,7 @@ add_library(PLT OBJECT
             ../Stub/Info.cpp
             ../Stub/Sounder.cpp
             ../Stub/Midi.cpp
+            ../Stub/MIDIInterface.cpp
             ../POSIX/Yield.cpp
             ../POSIX/File.cpp
             ../POSIX/Rtc.cpp
