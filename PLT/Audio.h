@@ -71,6 +71,8 @@ public:
    //! \param enable true => enable, false => disable
    bool setEnable(bool enable);
 
+   void start() { setEnable(true); }
+
 protected:
    //! Configure and open a connection to a raw audio device
    //

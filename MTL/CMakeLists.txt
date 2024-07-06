@@ -39,7 +39,7 @@ target_compile_options(MTL PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:-Wno-stringop-overf
 
 target_compile_definitions(MTL PUBLIC MTL_TARGET=1)
 target_compile_definitions(MTL PUBLIC MTL_${PLT_TARGET}=1)
-target_compile_definitions(MTL PUBLIC MTL_VERSION="${PROJECT_VERSION}")
-target_compile_definitions(MTL PUBLIC MTL_COMMIT="${PLT_COMMIT}")
+target_compile_definitions(MTL PUBLIC PLT_VERSION="${PROJECT_VERSION}")
+target_compile_definitions(MTL PUBLIC PLT_COMMIT="${PLT_COMMIT}")
 
 target_include_directories(MTL PUBLIC ..)
