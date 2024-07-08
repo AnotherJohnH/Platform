@@ -82,6 +82,17 @@ struct SioReg
 class Sio : public Periph<SioReg, 0xD0000000>
 {
 public:
+   Sio() = default;
+
+   bool try_lock(unsigned index_)
+   {
+      return reg->spinlock[index_] != 0;
+   }
+
+   void unlock(unsigned index_)
+   {
+      reg->spinlock[index_] = 0;
+   }
 };
 
 } // namespace MTL
