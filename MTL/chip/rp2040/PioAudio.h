@@ -46,8 +46,9 @@ public:
             unsigned pin_sd,
             unsigned pin_lrclk_sclk,
             unsigned pin_mclk           = PIN_IGNORE,
+            bool     mono               = false,
             bool     lsb_lrclk_msb_sclk = true)
-       : i2s(lsb_lrclk_msb_sclk)
+       : i2s(mono, lsb_lrclk_msb_sclk)
    {
       if (pin_mclk != PIN_IGNORE)
       {
