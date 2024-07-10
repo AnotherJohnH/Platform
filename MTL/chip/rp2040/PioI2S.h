@@ -123,13 +123,13 @@ private:
          OUT(PIO::PINS, 1)                 .side(0b00)          .delay(1);
          JMP(PIO::X_NE_Z_DEC, left_loop_1) .side(sclk)          .delay(1);
          OUT(PIO::PINS, 1)                 .side(       lrclk)  .delay(1);
-         SET(PIO::X, 14)                   .side(sclk | lrclk)  .delay(1);
+         SET(PIO::X, 14)                   .side(sclk | lrclk);
+         MOV(PIO::OSR, PIO::Y)             .side(sclk | lrclk);
 
       lbl(right_loop_1);
          OUT(PIO::PINS, 1)                 .side(lrclk)         .delay(1);
          JMP(PIO::X_NE_Z_DEC, right_loop_1).side(sclk | lrclk)  .delay(1);
-         OUT(PIO::PINS, 1)                 .side(0b00);
-         NOP()                             .side(0b00);
+         OUT(PIO::PINS, 1)                 .side(0b00)          .delay(1);
          SET(PIO::X, 14)                   .side(sclk);
          MOV(PIO::Y, PIO::OSR)             .side(sclk);
 
@@ -137,7 +137,8 @@ private:
          OUT(PIO::PINS, 1)                 .side(0b00)          .delay(1);
          JMP(PIO::X_NE_Z_DEC, left_loop_2) .side(sclk)          .delay(1);
          OUT(PIO::PINS, 1)                 .side(       lrclk)  .delay(1);
-         SET(PIO::X, 14)                   .side(sclk | lrclk)  .delay(1);
+         SET(PIO::X, 14)                   .side(sclk | lrclk);
+         MOV(PIO::OSR, PIO::Y)             .side(sclk | lrclk);
 
       lbl(right_loop_2);
          OUT(PIO::PINS, 1)                 .side(lrclk)         .delay(1);
