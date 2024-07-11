@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2023 John D. Haughton
+// Copyright (c) 2014 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,60 +20,49 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \brief C API
+#include <cstdint>
+#include <cstdio>
 
-#pragma once
+#include "MTL/MTL.h"
 
-#include <stdint.h>
+#include "Sio.h"
 
-using Handler = void (*)(uint32_t);
+extern uint32_t vector_table_core1;
 
-enum Exception
+static MTL::Sio sio;
+
+static bool send(uint32_t data)
 {
-   EXC_BUS,
-   EXC_UND,
-   EXC_FPE,
-   NUM_EXC
-};
+   sio.txFifoPush(data);
+   __asm__("sev");
 
-extern "C"
+   uint32_t response = sio.rxFifoPop();
+
+   return response == data;
+}
+
+bool MTL_start_core(unsigned core_num_, void (*func)())
 {
-   //! Intialise the platform
-   void MTL_init();
+   if (core_num_ != 1)
+      return false;
 
-   //! Initialise image
-   void MTL_data_and_bss();
+   while(true)
+   {
+       sio.rxFifoDrain();
+       __asm__("sev");
+       if (not send(0)) continue;
 
-   //! Construct global objects
-   void MTL_global_construction();
+       sio.rxFifoDrain();
+       __asm__("sev");
+       if (not send(0)) continue;
 
-   //! Intialise the application
-   void MTL_load();
+       if (not send(1)) continue;
+       if (not send(uint32_t(&vector_table_core1))) continue;
+       if (not send(uint32_t(vector_table_core1))) continue;
+       if (not send(uint32_t(func) | 1)) continue;
 
-   //! Application entry point
-   int MTL_main();
+       break;
+   }
 
-   //! Halt platform
-   [[ noreturn ]] extern void MTL_halt(uint32_t status);
-
-   //! Get current 100 Hz tick count
-   uint32_t MTL_clock();
-
-   //! Get current microsecond tick count
-   uint32_t MTL_us_clock();
-
-   //! Send character to console
-   void MTL_putch(uint8_t ch);
-
-   //! Get character from the console
-   int MTL_getch();
-
-   //! Check if character avialable from the console
-   bool MTL_getch_empty();
-
-   //! Exception handling
-   void MTL_excep(Exception signal, Handler handler, uint32_t data);
-
-   //! Start another core
-   bool MTL_start_core(unsigned index, void (*func)());
+   return true;
 }

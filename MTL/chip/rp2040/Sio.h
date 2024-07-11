@@ -93,6 +93,38 @@ public:
    {
       reg->spinlock[index_] = 0;
    }
+
+   bool rxFifoEmpty() const
+   {
+      return (reg->fifo_st & 0b0001) == 0;
+   }
+
+   uint32_t rxFifoPop()
+   {
+      while(rxFifoEmpty());
+
+      return reg->fifo_rd;
+   }
+
+   void rxFifoDrain()
+   {
+      while(not rxFifoEmpty())
+      {
+         (void) rxFifoPop();
+      }
+   }
+
+   bool txFifoFull() const
+   {
+      return (reg->fifo_st & 0b0010) == 0;
+   }
+
+   void txFifoPush(uint32_t data_)
+   {
+      while(txFifoFull());
+
+      reg->fifo_wr = data_;
+   }
 };
 
 } // namespace MTL

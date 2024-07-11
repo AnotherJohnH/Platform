@@ -165,7 +165,7 @@ skip_sreg_programming:
     bx      r0
 
 vector_into_flash:
-    ldr     r0, =vector_table
+    ldr     r0, =vector_table_core0
     ldr     r1, =0xe000ed08
     str     r0, [r1, #0]
     ldmia   r0, {r0, r1}

@@ -26,9 +26,9 @@
 .section .vectors
 .align 8
 
-.global vector_table
+.global vector_table_core0
 
-vector_table:
+vector_table_core0:
    .word  0x20042000        @ stack pointer
    .word  VEC_reset+1
    .word  VEC_nmi+1
