@@ -20,8 +20,26 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 //
-//  Stereo: One 16-bit left+right sample pair per 32-bit word written to the FIFO
-//  Mono:   Two 16-bit samples per 32-bit word written to the FIFO
+//   MTL::PioI2S::Format specifes the sample buffer format
+//
+//   STEREO_16         32 bit word              One 32bit word for one sample pair
+//                     +---------+---------+
+//                     | RIGHT   | LEFT    |
+//                     +---------+---------+
+//
+//   MONO_16           32 bit word              One 32bit word for two samples
+//                     +---------+---------+    Same 16-bit MONO value sent to left
+//                     | MONO-2  | MONO-1  |    and right I2S channels
+//                     +---------+---------+
+//
+//   STERO_PAIRS_16    32 bit word              Two 32bit words for two sample pairs
+//                     +---------+---------+
+//                     | LEFT-2  | LEFT-1  |
+//                     +---------+---------+
+//                     | RIGHT-2 | RIGHT-1 |
+//                     +---------+---------+
+//
+//
 
 #pragma once
 
@@ -32,18 +50,23 @@ namespace MTL {
 class PioI2S : public PIO::Asm
 {
 public:
-   PioI2S(bool mono_ = false, bool lsb_lrclk_msb_sclk_ = true)
+   enum Format
    {
-      unsigned lrclk = lsb_lrclk_msb_sclk_ ? 0b01 : 0b10;
-      unsigned sclk  = lsb_lrclk_msb_sclk_ ? 0b10 : 0b01;
+      STEREO_16,       //!<  Alternating L/R 16-bit samples
+      MONO_16,         //!<  Single 16-bit sample copied to L and R
+      STEREO_PAIRS_16  //!<  Alternating L/R pairs of 16-bit samples
+   };
 
-      if (mono_)
+   PioI2S(Format format_ = STEREO_16, bool lsb_lrclk_msb_sclk_ = true)
+   {
+      S_0_1 = lsb_lrclk_msb_sclk_ ? 0b01 : 0b10;
+      S_1_0 = S_0_1 ^ 0b11;
+
+      switch(format_)
       {
-         progMono(lrclk, sclk);
-      }
-      else
-      {
-         progStereo(lrclk, sclk);
+      case STEREO_16:       progStereo16();     break;
+      case MONO_16:         progMono16();       break;
+      case STEREO_PAIRS_16: progStereoPair16(); break;
       }
    }
 
@@ -62,22 +85,23 @@ public:
       pio.SM_program(sd, *this);
 
       // Configure state machine
-      pio.SM_clock(    sd, sample_freq * 32 * clk_mul);
+      pio.SM_clock(    sd, sample_freq * I2S_BITS_PER_SAMPLE * 2 * clk_mul * 2);
       pio.SM_pinOUT(   sd, pin_sd);
       pio.SM_pinSIDE(  sd, pin_lrclk_sclk, 2);
-      pio.SM_configOSR(sd, 32, MTL::SHIFT_LEFT,
+      pio.SM_configOSR(sd, I2S_BITS_PER_SAMPLE * 2, MTL::SHIFT_LEFT,
                        auto_pull ? MTL::AUTO_PULL : MTL::MANUAL,
                        /* join_tx */ true);
 
-      pio.SM_exec(     sd, SET(PIO::X, 12).side(0b00).op() );
+      unsigned x_init = auto_pull ? X_INIT - 2 : X_INIT;
+      pio.SM_exec(sd, SET(PIO::X, x_init).side(S_0_0).op() );
 
       return sd;
    }
 
 private:
-   void progStereo(unsigned lrclk, unsigned sclk)
+   void progStereo16()
    {
-      clk_mul   = 2;
+      clk_mul   = 1;
       auto_pull = true;
 
       PIO::Lbl left_loop;
@@ -87,24 +111,38 @@ private:
 
       wrap_target();
 
+      //###############################################################
+      // OSR = R:L
       lbl(left_loop);
-         OUT(PIO::PINS, 1)                 .side(0b00);
-         JMP(PIO::X_NE_Z_DEC, left_loop)   .side(sclk);
-         OUT(PIO::PINS, 1)                 .side(       lrclk);
-         SET(PIO::X, 14)                   .side(sclk | lrclk);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                .side(S_0_0);
+      //---------------------------------------------------------------
+         JMP(PIO::X_NE_Z_DEC, left_loop)  .side(S_1_0);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                .side(S_0_1);
+      //---------------------------------------------------------------
+         SET(PIO::X, X_INIT)              .side(S_1_1);
+      //---------------------------------------------------------------
 
+      //###############################################################
+      // OSR = 0:R
       lbl(right_loop);
-         OUT(PIO::PINS, 1)                 .side(lrclk);
-         JMP(PIO::X_NE_Z_DEC, right_loop)  .side(sclk | lrclk);
-         OUT(PIO::PINS, 1)                 .side(0b00);
-         SET(PIO::X, 14)                   .side(sclk);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                .side(S_0_1);
+      //---------------------------------------------------------------
+         JMP(PIO::X_NE_Z_DEC, right_loop) .side(S_1_1);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                .side(S_0_0);
+      //---------------------------------------------------------------
+         SET(PIO::X, X_INIT)              .side(S_1_0);
+      //---------------------------------------------------------------
 
       wrap();
    }
 
-   void progMono(unsigned lrclk, unsigned sclk)
+   void progMono16()
    {
-      clk_mul   = 4;
+      clk_mul   = 2;
       auto_pull = false;
 
       PIO::Lbl left_loop_1;
@@ -119,38 +157,207 @@ private:
 
       wrap_target();
 
+      //###############################################################
+      // OSR = S2:S1 Y = S2:S1
       lbl(left_loop_1);
-         OUT(PIO::PINS, 1)                 .side(0b00)          .delay(1);
-         JMP(PIO::X_NE_Z_DEC, left_loop_1) .side(sclk)          .delay(1);
-         OUT(PIO::PINS, 1)                 .side(       lrclk)  .delay(1);
-         SET(PIO::X, 14)                   .side(sclk | lrclk);
-         MOV(PIO::OSR, PIO::Y)             .side(sclk | lrclk);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                  .side(S_0_0)  .delay(1);
+      // NOP                                .side(S_0_0);
+      //---------------------------------------------------------------
+         JMP(PIO::X_NE_Z_DEC, left_loop_1)  .side(S_1_0)  .delay(1);
+      // NOP                                .side(S_1_0);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                  .side(S_0_1)  .delay(1);
+      // NOP                                .side(S_0_1);
+      //---------------------------------------------------------------
+         SET(PIO::X, X_INIT)                .side(S_1_1);
+         MOV(PIO::OSR, PIO::Y)              .side(S_1_1);
+      //---------------------------------------------------------------
 
+      //###############################################################
+      // OSR = S2:S1 Y = S2:S1
       lbl(right_loop_1);
-         OUT(PIO::PINS, 1)                 .side(lrclk)         .delay(1);
-         JMP(PIO::X_NE_Z_DEC, right_loop_1).side(sclk | lrclk)  .delay(1);
-         OUT(PIO::PINS, 1)                 .side(0b00)          .delay(1);
-         SET(PIO::X, 14)                   .side(sclk);
-         MOV(PIO::Y, PIO::OSR)             .side(sclk);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                  .side(S_0_1)  .delay(1);
+      // NOP                                .side(S_0_1);
+      //---------------------------------------------------------------
+         JMP(PIO::X_NE_Z_DEC, right_loop_1) .side(S_1_1)  .delay(1);
+      // NOP                                .side(S_1_1);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                  .side(S_0_0)  .delay(1);
+      // NOP                                .side(S_0_0);
+      //---------------------------------------------------------------
+         SET(PIO::X, X_INIT)                .side(S_1_0);
+         MOV(PIO::Y, PIO::OSR)              .side(S_1_0);
+      //---------------------------------------------------------------
 
+      //###############################################################
+      // OSR = 0:S2 Y = 0:S2
       lbl(left_loop_2);
-         OUT(PIO::PINS, 1)                 .side(0b00)          .delay(1);
-         JMP(PIO::X_NE_Z_DEC, left_loop_2) .side(sclk)          .delay(1);
-         OUT(PIO::PINS, 1)                 .side(       lrclk)  .delay(1);
-         SET(PIO::X, 14)                   .side(sclk | lrclk);
-         MOV(PIO::OSR, PIO::Y)             .side(sclk | lrclk);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                  .side(S_0_0)  .delay(1);
+      // NOP                                .side(S_0_0);
+      //---------------------------------------------------------------
+         JMP(PIO::X_NE_Z_DEC, left_loop_2)  .side(S_1_0)  .delay(1);
+      // NOP                                .side(S_1_0);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                  .side(S_0_1)  .delay(1);
+      // NOP                                .side(S_0_1);
+      //---------------------------------------------------------------
+         SET(PIO::X, X_INIT)                .side(S_1_1);
+         MOV(PIO::OSR, PIO::Y)              .side(S_1_1);
+      //---------------------------------------------------------------
 
+      //###############################################################
+      // OSR = 0:S2 Y = 0:S2
       lbl(right_loop_2);
-         OUT(PIO::PINS, 1)                 .side(lrclk)         .delay(1);
-         JMP(PIO::X_NE_Z_DEC, right_loop_2).side(sclk | lrclk)  .delay(1);
-         OUT(PIO::PINS, 1)                 .side(0b00);
-         POP()                             .side(0b00);
-         SET(PIO::X, 14)                   .side(sclk);
-         MOV(PIO::Y, PIO::OSR)             .side(sclk);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                  .side(S_0_1)  .delay(1);
+      // NOP                                .side(S_0_1);
+      //---------------------------------------------------------------
+         JMP(PIO::X_NE_Z_DEC, right_loop_2) .side(S_1_1)  .delay(1);
+      // NOP                                .side(S_1_1);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                  .side(S_0_0);
+         POP()                              .side(S_0_0);
+      //---------------------------------------------------------------
+         SET(PIO::X, X_INIT)                    .side(S_1_0);
+         MOV(PIO::Y, PIO::OSR)              .side(S_1_0);
+      //---------------------------------------------------------------
 
       wrap();
    }
 
+   void progStereoPair16()
+   {
+      clk_mul   = 4;
+      auto_pull = false;
+
+      PIO::Lbl left_loop1;
+      PIO::Lbl right_loop1;
+      PIO::Lbl left_loop2;
+      PIO::Lbl right_loop2;
+
+      side_set(2);
+
+         POP();
+
+      wrap_target();
+
+      //###############################################################
+      // OSR = L2:L1
+
+      lbl(left_loop1);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                 .side(S_0_0)  .delay(3);
+      // NOP                               .side(S_0_0);
+      // NOP                               .side(S_0_0);
+      // NOP                               .side(S_0_0);
+      //---------------------------------------------------------------
+         JMP(PIO::X_NE_Z_DEC, left_loop1)  .side(S_1_0)  .delay(3);
+      // NOP                               .side(S_1_0);
+      // NOP                               .side(S_1_0);
+      // NOP                               .side(S_1_0);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                 .side(S_0_1);
+         MOV(PIO::Y, PIO::OSR)             .side(S_0_1);
+         POP()                             .side(S_0_1)  .delay(1);
+      // NOP                               .side(S_0_1);
+      //---------------------------------------------------------------
+         SET(PIO::X, X_INIT)               .side(S_1_1)  .delay(3);
+      // NOP                               .side(S_1_1);
+      // NOP                               .side(S_1_1);
+      // NOP                               .side(S_1_1);
+      //---------------------------------------------------------------
+
+      //###############################################################
+      // OSR = R2:R1, Y = 0:L2
+
+      lbl(right_loop1);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                 .side(S_0_1)  .delay(3);
+      // NOP                               .side(S_0_1);
+      // NOP                               .side(S_0_1);
+      // NOP                               .side(S_0_1);
+      //---------------------------------------------------------------
+         JMP(PIO::X_NE_Z_DEC, right_loop1) .side(S_1_1)  .delay(3);
+      // NOP                               .side(S_1_1);
+      // NOP                               .side(S_1_1);
+      // NOP                               .side(S_1_1);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                 .side(S_0_0);
+         MOV(PIO::X, PIO::OSR)             .side(S_0_0);
+         MOV(PIO::OSR, PIO::Y)             .side(S_0_0);
+         MOV(PIO::Y, PIO::X)               .side(S_0_0);
+      //---------------------------------------------------------------
+         SET(PIO::X, X_INIT)               .side(S_1_0)  .delay(3);
+      // NOP                               .side(S_1_0);
+      // NOP                               .side(S_1_0);
+      // NOP                               .side(S_1_0);
+      //---------------------------------------------------------------
+
+      //###############################################################
+      // OSR = 0:L2 Y = 0:R2
+
+      lbl(left_loop2);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                 .side(S_0_0)  .delay(3);
+      // NOP                               .side(S_0_0);
+      // NOP                               .side(S_0_0);
+      // NOP                               .side(S_0_0);
+      //---------------------------------------------------------------
+         JMP(PIO::X_NE_Z_DEC, left_loop2)  .side(S_1_0)  .delay(3);
+      // NOP                               .side(S_1_0);
+      // NOP                               .side(S_1_0);
+      // NOP                               .side(S_1_0);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                 .side(S_0_1);
+         MOV(PIO::OSR, PIO::Y)             .side(S_0_1)  .delay(2);
+      // NOP                               .side(S_0_1);
+      // NOP                               .side(S_0_1);
+      //---------------------------------------------------------------
+         SET(PIO::X, X_INIT)               .side(S_1_1)  .delay(3);
+      // NOP                               .side(S_1_1);
+      // NOP                               .side(S_1_1);
+      // NOP                               .side(S_1_1);
+      //---------------------------------------------------------------
+
+      //###############################################################
+      // OSR = 0:R2
+
+      lbl(right_loop2);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                 .side(S_0_1)  .delay(3);
+      // NOP                               .side(S_0_1);
+      // NOP                               .side(S_0_1);
+      // NOP                               .side(S_0_1);
+      //---------------------------------------------------------------
+         JMP(PIO::X_NE_Z_DEC, right_loop2) .side(S_1_1)  .delay(3);
+      // NOP                               .side(S_1_1);
+      // NOP                               .side(S_1_1);
+      // NOP                               .side(S_1_1);
+      //---------------------------------------------------------------
+         OUT(PIO::PINS, 1)                 .side(S_0_0);
+         POP()                             .side(S_0_0)  .delay(2);
+      // NOP                               .side(S_0_0);
+      // NOP                               .side(S_0_0);
+      //---------------------------------------------------------------
+         SET(PIO::X, X_INIT)               .side(S_1_0)  .delay(3);
+      // NOP                               .side(S_1_0);
+      // NOP                               .side(S_1_0);
+      // NOP                               .side(S_1_0);
+      //---------------------------------------------------------------
+
+      wrap();
+   }
+
+   static const unsigned I2S_BITS_PER_SAMPLE = 16;
+   static const unsigned X_INIT              = I2S_BITS_PER_SAMPLE - 2;
+
+   uint8_t  S_0_0{0b00};
+   uint8_t  S_0_1{0b01};
+   uint8_t  S_1_0{0b10};
+   uint8_t  S_1_1{0b11};
    unsigned clk_mul;
    bool     auto_pull;
 };

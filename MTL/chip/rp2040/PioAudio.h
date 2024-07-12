@@ -42,13 +42,13 @@ template <typename PIO_TYPE, unsigned BUFFER_SIZE = 1024, unsigned IRQ = 0>
 class PioAudio
 {
 public:
-   PioAudio(unsigned sample_freq,
-            unsigned pin_sd,
-            unsigned pin_lrclk_sclk,
-            unsigned pin_mclk           = PIN_IGNORE,
-            bool     mono               = false,
-            bool     lsb_lrclk_msb_sclk = true)
-       : i2s(mono, lsb_lrclk_msb_sclk)
+   PioAudio(unsigned       sample_freq,
+            unsigned       pin_sd,
+            unsigned       pin_lrclk_sclk,
+            unsigned       pin_mclk           = PIN_IGNORE,
+            PioI2S::Format format             = PioI2S::STEREO_16,
+            bool           lsb_lrclk_msb_sclk = true)
+       : i2s(format, lsb_lrclk_msb_sclk)
    {
       if (pin_mclk != PIN_IGNORE)
       {
