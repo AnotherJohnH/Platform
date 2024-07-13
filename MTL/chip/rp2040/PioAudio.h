@@ -107,7 +107,6 @@ public:
       }
 
       // Start DMA ping/pong
-      ping_pong = true;
       dma.CH_start(ch_ping);
    }
 
@@ -120,15 +119,18 @@ public:
    //! Handler for DMA ping/pong
    void irqHandler()
    {
-      uint32_t* buffer = ping_pong ? buf_ping : buf_pong;;
-      signed    ch     = ping_pong ? ch_ping  : ch_pong;
-
-      dma.CH_clrIrq(ch, IRQ);
-      dma.CH_setReadAddr(ch, buffer);
-
-      ping_pong = not ping_pong;
-
-      PioAudio_getSamples(buffer, BUFFER_SIZE);
+      if (dma.CH_isIrq(ch_ping, IRQ))
+      {
+         dma.CH_clrIrq(ch_ping, IRQ);
+         dma.CH_setReadAddr(ch_ping, buf_ping);
+         PioAudio_getSamples(buf_ping, BUFFER_SIZE);
+      }
+      else
+      {
+         dma.CH_clrIrq(ch_pong, IRQ);
+         dma.CH_setReadAddr(ch_pong, buf_pong);
+         PioAudio_getSamples(buf_pong, BUFFER_SIZE);
+      }
    }
 
 private:
@@ -140,7 +142,6 @@ private:
    signed        sd_i2s{-1};
    signed        ch_ping{-1};
    signed        ch_pong{-1};
-   bool          ping_pong {false};
    uint32_t      buf_ping[BUFFER_SIZE];
    uint32_t      buf_pong[BUFFER_SIZE];
 };

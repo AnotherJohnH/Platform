@@ -136,6 +136,12 @@ public:
       reg->ch[cd].write_addr = uint32_t(addr);
    }
 
+   bool CH_isIrq(unsigned cd, unsigned irq_n) const
+   {
+      return irq_n == 0 ? getBit(reg->ints0, cd)
+                        : getBit(reg->ints1, cd);
+   }
+
    void CH_clrIrq(unsigned cd, unsigned irq_n)
    {
       if (irq_n == 0)
