@@ -64,22 +64,38 @@ public:
       ch_ping = dma.allocCH();
       if (ch_ping < 0) return;
 
+      ch_reset_ping = dma.allocCH();
+      if (ch_reset_ping < 0) return;
+
       ch_pong = dma.allocCH();
       if (ch_pong < 0) return;
 
-      dma.CH_prog(ch_ping, ch_pong,
+      ch_reset_pong = dma.allocCH();
+      if (ch_reset_pong < 0) return;
+
+      dma.CH_prog(ch_ping, ch_reset_ping,
                   buf_ping,                 /* read_incr */  true,
                   pio.SM_getTxFIFO(sd_i2s), /* write_incr */ false,
                   BUFFER_SIZE,
                   Dma::FOUR_BYTE,
                   pio.SM_getTxDREQ(sd_i2s));
 
-      dma.CH_prog(ch_pong, ch_ping,
+      dma.CH_prog(ch_reset_ping, ch_pong,
+                  &buf_ping_addr,                 /* read_incr */  false,
+                  dma.CH_getReadRegAddr(ch_ping), /* write_incr */ false,
+                  1, Dma::FOUR_BYTE);
+
+      dma.CH_prog(ch_pong, ch_reset_pong,
                   buf_pong,                 /* read_incr */  true,
                   pio.SM_getTxFIFO(sd_i2s), /* write_incr */ false,
                   BUFFER_SIZE,
                   Dma::FOUR_BYTE,
                   pio.SM_getTxDREQ(sd_i2s));
+
+      dma.CH_prog(ch_reset_pong, ch_ping,
+                  &buf_pong_addr,                 /* read_incr */  false,
+                  dma.CH_getReadRegAddr(ch_pong), /* write_incr */ false,
+                  1, Dma::FOUR_BYTE);
 
       // Enable interrupt
       dma.CH_enableIrq(ch_ping, IRQ);
@@ -122,13 +138,11 @@ public:
       if (dma.CH_isIrq(ch_ping, IRQ))
       {
          dma.CH_clrIrq(ch_ping, IRQ);
-         dma.CH_setReadAddr(ch_ping, buf_ping);
          PioAudio_getSamples(buf_ping, BUFFER_SIZE);
       }
       else
       {
          dma.CH_clrIrq(ch_pong, IRQ);
-         dma.CH_setReadAddr(ch_pong, buf_pong);
          PioAudio_getSamples(buf_pong, BUFFER_SIZE);
       }
    }
@@ -141,9 +155,13 @@ private:
    signed        sd_clk{-1};
    signed        sd_i2s{-1};
    signed        ch_ping{-1};
+   signed        ch_reset_ping{-1};
    signed        ch_pong{-1};
+   signed        ch_reset_pong{-1};
    uint32_t      buf_ping[BUFFER_SIZE];
    uint32_t      buf_pong[BUFFER_SIZE];
+   uint32_t      buf_ping_addr{uint32_t(&buf_ping)};
+   uint32_t      buf_pong_addr{uint32_t(&buf_pong)};
 };
 
 } // namespace MTL

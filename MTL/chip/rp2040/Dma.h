@@ -101,6 +101,8 @@ public:
       return free_channel++;
    }
 
+   static const unsigned DREQ_UNPACED = 0x3F;
+
    //! Program a channel
    void CH_prog(unsigned       cd,
                 unsigned       chain_cd,
@@ -110,7 +112,7 @@ public:
                 bool           write_incr,
                 unsigned       trans_count,
                 DataSize       log2_data_size,
-                unsigned       dreq)
+                unsigned       dreq = DREQ_UNPACED)
    {
       uint32_t ctrl = (dreq                 << 15) |
                       (chain_cd             << 11) |
@@ -130,6 +132,8 @@ public:
    {
       reg->ch[cd].read_addr = uint32_t(addr);
    }
+
+   volatile uint32_t* CH_getReadRegAddr(unsigned cd) const { return &reg->ch[cd].read_addr; }
 
    void CH_setWriteAddr(unsigned cd, volatile void* addr)
    {
