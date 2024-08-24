@@ -57,7 +57,7 @@ public:
    static constexpr unsigned getHeight() { return HEIGHT; }
 
    //! Frame buffer width stride (bytes)
-   static constexpr unsigned getStride() { return (WIDTH + 7) / 8; }
+   static constexpr unsigned getStride() { return (HEIGHT + 7) / 8; }
 
    //! Update the display
    void display(const uint8_t* buffer, bool partial = false)
@@ -67,7 +67,7 @@ public:
 
       unsigned bytes_per_row = getStride();
 
-      sendCmd(CMD_DTM2, HEIGHT * bytes_per_row, buffer);
+      sendCmd(CMD_DTM2, WIDTH * bytes_per_row, buffer);
 
       sendCmd(CMD_DSP);
       sendCmd(CMD_DRF);

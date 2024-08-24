@@ -33,8 +33,7 @@ class CanvasMono1 : public GUI::Canvas
 {
 public:
    CanvasMono1()
-      : GUI::Canvas(SWAP_XY ? DISPLAY::getHeight() : DISPLAY::getWidth(),
-                    SWAP_XY ? DISPLAY::getWidth()  : DISPLAY::getHeight())
+      : GUI::Canvas(DISPLAY::getWidth(), DISPLAY::getHeight())
    {
    }
 
@@ -48,10 +47,10 @@ public:
 private:
    void canvasPoint(STB::Colour colour, int32_t x_, int32_t y_) override
    {
-      int32_t  x    = SWAP_XY ? y_                            : x_;
-      int32_t  y    = SWAP_XY ? DISPLAY::getHeight() - x_  - 1 : y_;
-      uint8_t& byte = frame[y * DISPLAY::getStride() + (x / 8)];
-      uint8_t  bit  = 0b10000000 >> (x % 8);
+      int32_t  col  = SWAP_XY ? y_                            : x_;
+      int32_t  row  = SWAP_XY ? DISPLAY::getWidth() - x_  - 1 : y_;
+      uint8_t& byte = frame[row * DISPLAY::getStride() + (col / 8)];
+      uint8_t  bit  = 0b10000000 >> (col % 8);
 
       if ((colour == STB::BLACK) != INVERT)
       {

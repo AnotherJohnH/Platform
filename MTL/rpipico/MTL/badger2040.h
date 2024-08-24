@@ -44,8 +44,8 @@ static const unsigned PIN_SW_UP    = rp2040::IO_PIN_15;
 static const unsigned PIN_SW_USR   = rp2040::IO_PIN_23;
 static const unsigned PIN_USER_LED = rp2040::IO_PIN_25;
 
-using EPaper = EPaper_UC8151</* WIDTH  */ 128,
-                             /* HEIGHT */ 296,
+using EPaper = EPaper_UC8151</* WIDTH  */ 296,
+                             /* HEIGHT */ 128,
                              /* DC  */ rp2040::IO_PIN_20,
                              /* CS  */ rp2040::IO_PIN_17,
                              /* RST */ rp2040::IO_PIN_21,

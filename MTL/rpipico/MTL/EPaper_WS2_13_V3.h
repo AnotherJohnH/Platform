@@ -53,7 +53,7 @@ public:
    static constexpr unsigned getHeight() { return HEIGHT; }
 
    //! Frame buffer width stride (bytes)
-   static constexpr unsigned getStride() { return (WIDTH + 7) / 8; }
+   static constexpr unsigned getStride() { return (HEIGHT + 7) / 8; }
 
    //! Clear display to white
    void clear(bool partial = false)
@@ -67,7 +67,7 @@ public:
 
       unsigned bytes_per_row = getStride();
 
-      for(unsigned i = 0; i < (bytes_per_row * HEIGHT); ++i)
+      for(unsigned i = 0; i < (bytes_per_row * WIDTH); ++i)
       {
          sendData(0xFF);
       }
@@ -85,15 +85,15 @@ public:
       else
          fullWakeup();
 
-      sendCmd(CMD_WRITE_RAM_BW, getStride() * HEIGHT, buffer);
+      sendCmd(CMD_WRITE_RAM_BW, getStride() * WIDTH, buffer);
 
       turnOn(partial);
 
       sleep();
    }
 
-   static const unsigned WIDTH  = 122;
-   static const unsigned HEIGHT = 250;
+   static const unsigned WIDTH  = 250;
+   static const unsigned HEIGHT = 122;
 
 private:
    //! Apply a 2ms RST pulse
@@ -269,7 +269,7 @@ private:
       sendCmd(CMD_DRV_OUT_CTRL,    /* A[7:0] */ 0xF9, /* A[8] */ 0x00, /* B[2:1] */ 0b000);
       sendCmd(CMD_DATA_ENTRY_MODE, /* AM = X, Y = inc, X = inc */ 0b011);
 
-      setWindow(0, 0, WIDTH - 1, HEIGHT - 1);
+      setWindow(0, 0, HEIGHT - 1, WIDTH - 1);
       setCursor(0, 0);
 
       sendCmd(CMD_BRDR_WAVFRM,
@@ -313,7 +313,7 @@ private:
       sendCmd(CMD_MASTER_ACTIVATION);
       wait();
 
-      setWindow(0, 0, WIDTH - 1, HEIGHT - 1);
+      setWindow(0, 0, HEIGHT - 1, WIDTH - 1);
       setCursor(0, 0);
    }
 
