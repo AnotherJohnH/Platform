@@ -28,7 +28,7 @@
 
 namespace MTL {
 
-template <typename DISPLAY, bool SWAP_XY = false>
+template <typename DISPLAY, bool SWAP_XY = false, bool INVERT = false>
 class CanvasMono1 : public GUI::Canvas
 {
 public:
@@ -53,7 +53,7 @@ private:
       uint8_t& byte = frame[y * DISPLAY::getStride() + (x / 8)];
       uint8_t  bit  = 0b10000000 >> (x % 8);
 
-      if (colour == STB::BLACK)
+      if ((colour == STB::BLACK) != INVERT)
       {
          byte &= ~bit;
       }
