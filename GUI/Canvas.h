@@ -530,8 +530,8 @@ public:
    //! Refresh the whole canvas to the display device
    void refresh() { canvasRefresh(0, 0, size.x, size.y); }
 
-   //! Paretial refresh (for ePaper support)
-   virtual void partialRefresh() { refresh(); }
+   //! Quick refresh (for ePaper support)
+   virtual void quickRefresh() { refresh(); }
 
    //! Resize the canvas
    void resize(uint32_t width, uint32_t height)

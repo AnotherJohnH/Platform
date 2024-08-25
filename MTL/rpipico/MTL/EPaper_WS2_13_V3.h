@@ -77,19 +77,28 @@ public:
       sleep();
    }
 
-   //! Update the display with partial update
-   void display(const uint8_t* buffer, bool partial = false)
+   //! Update the display with optional quick update
+   void display(const uint8_t* buffer, bool quick = false)
    {
-      if (partial)
+      if (quick)
          partialWakeup();
       else
          fullWakeup();
 
       sendCmd(CMD_WRITE_RAM_BW, getStride() * WIDTH, buffer);
 
-      turnOn(partial);
+      turnOn(quick);
 
       sleep();
+
+      if (not quick)
+      {
+         // XXX Seems to take four quick refreshes to recover E-paper from
+         //     a full refresh
+         display(buffer, /* quick */ true);
+         display(buffer, /* quick */ true);
+         display(buffer, /* quick */ true);
+      }
    }
 
    static const unsigned WIDTH  = 250;

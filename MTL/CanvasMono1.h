@@ -37,9 +37,9 @@ public:
    {
    }
 
-   void partialRefresh()
+   void quickRefresh()
    {
-      hw.display(frame, /* partial */ true);
+      hw.display(frame, /* quick */ true);
    }
 
    DISPLAY hw{};
