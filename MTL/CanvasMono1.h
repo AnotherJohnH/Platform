@@ -67,7 +67,8 @@ private:
       hw.display(frame);
    }
 
-   uint8_t frame[DISPLAY::getStride() * DISPLAY::getHeight()];
+   uint8_t frame[DISPLAY::getStride() * (SWAP_XY ? DISPLAY::getWidth()
+                                                 : DISPLAY::getHeight())];
 };
 
 } // namespace MTL

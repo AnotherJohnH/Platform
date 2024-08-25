@@ -65,9 +65,7 @@ public:
       sendCmd(CMD_PON);
       sendCmd(CMD_PTOUT);
 
-      unsigned bytes_per_row = getStride();
-
-      sendCmd(CMD_DTM2, WIDTH * bytes_per_row, buffer);
+      sendCmd(CMD_DTM2, WIDTH * getStride(), buffer);
 
       sendCmd(CMD_DSP);
       sendCmd(CMD_DRF);
