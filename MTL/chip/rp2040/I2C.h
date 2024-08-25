@@ -181,6 +181,7 @@ private:
 };
 
 using I2C0_P1_P2   = I2C<0x40044000, Resets::I2C0, rp2040::IO_PIN_0,  rp2040::IO_PIN_1>;
+using I2C0_P6_P7   = I2C<0x40044000, Resets::I2C0, rp2040::IO_PIN_4,  rp2040::IO_PIN_1>;
 using I2C0_P11_P12 = I2C<0x40044000, Resets::I2C0, rp2040::IO_PIN_8,  rp2040::IO_PIN_9>;
 using I2C0_P16_P17 = I2C<0x40044000, Resets::I2C0, rp2040::IO_PIN_12, rp2040::IO_PIN_13>;
 using I2C0_P21_P22 = I2C<0x40044000, Resets::I2C0, rp2040::IO_PIN_16, rp2040::IO_PIN_17>;

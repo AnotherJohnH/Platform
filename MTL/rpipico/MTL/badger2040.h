@@ -29,6 +29,7 @@
 #include "MTL/rp2040/Pwm.h"
 #include "MTL/rp2040/Gpio.h"
 #include "MTL/rp2040/Spi.h"
+#include "MTL/rp2040/I2C.h"
 
 #include "MTL/EPaper_UC8151.h"
 
@@ -61,6 +62,8 @@ using SwitchA   = Gpio::In<1, PIN_SW_A,   PadsBank::PULL_DOWN, /* schmitt trigge
 using SwitchB   = Gpio::In<1, PIN_SW_B,   PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
 using SwitchC   = Gpio::In<1, PIN_SW_C,   PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
 using SwitchUsr = Gpio::In<1, PIN_SW_USR, PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
+
+using I2C_QwSt  = I2C0_P6_P7;
 
 } // namespace badger2040
 
