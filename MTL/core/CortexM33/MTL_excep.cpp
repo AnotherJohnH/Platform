@@ -1,5 +1,5 @@
-/*------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+//------------------------------------------------------------------------------
+// Copyright (c) 2023 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,49 +18,30 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//----------------------------------------------------------------------------*/
-
-#include <cstdint>
+//------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
 
-//! Initialise data section and clear BSS
-void MTL_data_and_bss()
+#include "Vector.h"
+
+struct Vector
 {
-   extern uint8_t __etext[];
-   extern uint8_t __data_start__[];
-   extern uint8_t __data_end__;
-   extern uint8_t __bss_start__[];
-   extern uint8_t __bss_end__;
+   Handler  handler;
+   uint32_t data;
+};
 
-   for(signed i = 0; i < &__data_end__ - &__data_start__[0]; ++i)
-   {
-      __data_start__[i] = __etext[i];
-   }
+static Vector exc_table = {MTL_halt, 1};
 
-   for(signed i = 0; i < &__bss_end__ - &__bss_start__[0]; ++i)
-   {
-      __bss_start__[i] = 0;
-   }
+void VEC_fault()
+{
+   (*exc_table.handler)(exc_table.data);
 }
 
-//! Call global constructors
-void MTL_global_construction()
+void MTL_excep(Exception exc, Handler handler, uint32_t data)
 {
-   extern void (*__init_array_start)();
-   extern void (*__init_array_end)();
-
-   for(void (**func)() = &__init_array_start; func < &__init_array_end; ++func)
+   if (exc < NUM_EXC)
    {
-      (**func)();
+      exc_table.handler = handler;
+      exc_table.data    = data;
    }
 }
-
-#if 0
-void MTL_load()
-{
-    MTL_data_and_bss();
-
-    MTL_global_construction();
-}
-#endif

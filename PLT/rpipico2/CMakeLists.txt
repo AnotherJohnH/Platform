@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2021 John D. Haughton
+#  Copyright (c) 2024 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -20,65 +20,16 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-.PHONY: clean
-clean:
-	rm -rf build_*
+add_library(PLT STATIC
+            ../Stub/Audio.cpp
+            ../Stub/Event.cpp
+            ../Stub/Frame.cpp
+            ../Stub/Image.cpp
+            ../Stub/NullBitmap.cpp
+            ../Stub/Midi.cpp
+            ../Stub/Sounder.cpp
+            ../Stub/Yield.cpp
+            ../Stub/Info.cpp
+            ../Stub/File.cpp)
 
-.PHONY: debug
-debug:
-	Platform/scripts/build.py -s -d native
-
-.PHONY: spotless
-spotless:
-	Platform/scripts/build.py -s $(targets)
-
-#-------------------------------------------------------------------------------
-# Build rules for specific targets
-
-.PHONY: native
-native:
-	Platform/scripts/build.py native
-
-.PHONY: Emscripten
-Emscripten:
-	Platform/scripts/build.py Emscripten
-
-.PHONY: microbit
-microbit:
-	Platform/scripts/build.py microbit
-
-.PHONY: microbitV1
-microbitV1:
-	Platform/scripts/build.py microbitV1
-
-.PHONY: microbitV1_32k
-microbitV1_32k:
-	Platform/scripts/build.py microbitV1_32k
-
-.PHONY: microbitV2
-microbitV2:
-	Platform/scripts/build.py microbitV2
-
-.PHONY: mbedLPC11U24
-mbedLPC11U24:
-	Platform/scripts/build.py mbedLPC11U24
-
-.PHONY: mbedLPC1768
-mbedLPC1768:
-	Platform/scripts/build.py mbedLPC1768
-
-.PHONY: LPC810
-LPC810:
-	Platform/scripts/build.py LPC810
-
-.PHONY: LPC1114
-LPC1114:
-	Platform/scripts/build.py LPC1114
-
-.PHONY: rpipico
-rpipico:
-	Platform/scripts/build.py rpipico
-
-.PHONY: rpipico2
-rpipico2:
-	Platform/scripts/build.py rpipico2
+target_link_libraries(PLT PUBLIC TNY MTL)

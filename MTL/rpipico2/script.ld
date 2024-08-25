@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2024 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,47 +20,53 @@
 // SOFTWARE.
 //----------------------------------------------------------------------------*/
 
-#include <cstdint>
-
-#include "MTL/MTL.h"
-
-//! Initialise data section and clear BSS
-void MTL_data_and_bss()
+MEMORY
 {
-   extern uint8_t __etext[];
-   extern uint8_t __data_start__[];
-   extern uint8_t __data_end__;
-   extern uint8_t __bss_start__[];
-   extern uint8_t __bss_end__;
-
-   for(signed i = 0; i < &__data_end__ - &__data_start__[0]; ++i)
-   {
-      __data_start__[i] = __etext[i];
-   }
-
-   for(signed i = 0; i < &__bss_end__ - &__bss_start__[0]; ++i)
-   {
-      __bss_start__[i] = 0;
-   }
+   FLASH (rx)  : ORIGIN = 0x10000000, LENGTH = 4M
+   RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = 512K
 }
 
-//! Call global constructors
-void MTL_global_construction()
-{
-   extern void (*__init_array_start)();
-   extern void (*__init_array_end)();
+ENTRY(vector_table_core0)
 
-   for(void (**func)() = &__init_array_start; func < &__init_array_end; ++func)
+SECTIONS
+{
+   .text :
    {
-      (**func)();
-   }
-}
+      __text_start__ = .;
+      KEEP(*(.vectors))
+      KEEP(*(.entry))
+      *(.text*)
+      __init_array_start = ALIGN(4);
+      KEEP(*(.init_array))
+      __init_array_end = .;
+      *(.rodata*)
+      __text_end__ = .;
 
-#if 0
-void MTL_load()
-{
-    MTL_data_and_bss();
+   } > FLASH
 
-    MTL_global_construction();
+   .ARM.exidx :
+   {
+      __exidx_start = .;
+      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+      __exidx_end = .;
+
+   } > FLASH
+
+   __etext = .;
+
+   .data : AT (__etext)
+   {
+      __data_start__ = .;
+      *(.data*)
+      __data_end__ = .;
+
+   } > RAM
+
+   .bss :
+   {
+      __bss_start__ = .;
+      *(.bss*)
+      __bss_end__ = .;
+
+   } > RAM
 }
-#endif

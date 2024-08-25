@@ -1,5 +1,5 @@
-/*------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+//------------------------------------------------------------------------------
+// Copyright (c) 2020 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,49 +18,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//----------------------------------------------------------------------------*/
+//------------------------------------------------------------------------------
 
-#include <cstdint>
+//! \brief Declare Cortex-M33 vector entry points
 
-#include "MTL/MTL.h"
+#pragma once
 
-//! Initialise data section and clear BSS
-void MTL_data_and_bss()
+extern "C"
 {
-   extern uint8_t __etext[];
-   extern uint8_t __data_start__[];
-   extern uint8_t __data_end__;
-   extern uint8_t __bss_start__[];
-   extern uint8_t __bss_end__;
-
-   for(signed i = 0; i < &__data_end__ - &__data_start__[0]; ++i)
-   {
-      __data_start__[i] = __etext[i];
-   }
-
-   for(signed i = 0; i < &__bss_end__ - &__bss_start__[0]; ++i)
-   {
-      __bss_start__[i] = 0;
-   }
+   void VEC_nmi();
+   void VEC_fault();
+   void VEC_svc();
+   void VEC_pendSv();
+   void VEC_sysTick();
 }
-
-//! Call global constructors
-void MTL_global_construction()
-{
-   extern void (*__init_array_start)();
-   extern void (*__init_array_end)();
-
-   for(void (**func)() = &__init_array_start; func < &__init_array_end; ++func)
-   {
-      (**func)();
-   }
-}
-
-#if 0
-void MTL_load()
-{
-    MTL_data_and_bss();
-
-    MTL_global_construction();
-}
-#endif

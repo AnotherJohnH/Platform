@@ -1,4 +1,4 @@
-/*------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Copyright (c) 2013 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,49 +18,35 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//----------------------------------------------------------------------------*/
+//------------------------------------------------------------------------------
 
-#include <cstdint>
+//! \brief Access Cortex-M33 System Control Block
 
-#include "MTL/MTL.h"
+#pragma once
 
-//! Initialise data section and clear BSS
-void MTL_data_and_bss()
+#include "MTL/Periph.h"
+
+namespace MTL {
+
+//! Cortex-M0 system timer registers
+union SysCtrlBlkReg
 {
-   extern uint8_t __etext[];
-   extern uint8_t __data_start__[];
-   extern uint8_t __data_end__;
-   extern uint8_t __bss_start__[];
-   extern uint8_t __bss_end__;
+   REG(0x00, cpuid);   //!< CPUID Register
+   REG(0x04, icsr);    //!< Interrupt Control and State Register
+   REG(0x0C, aircr);   //!< Application Interrupt Reset Control Register
+   REG(0x10, scr);     //!< System Control Register
+   REG(0x14, ccr);     //!< Configuration and Control Register
+   REG(0x1C, shpr2);   //!< System Handler Priority Register 2
+   REG(0x20, shpr3);   //!< System handler Priority Register 3
+};
 
-   for(signed i = 0; i < &__data_end__ - &__data_start__[0]; ++i)
-   {
-      __data_start__[i] = __etext[i];
-   }
-
-   for(signed i = 0; i < &__bss_end__ - &__bss_start__[0]; ++i)
-   {
-      __bss_start__[i] = 0;
-   }
-}
-
-//! Call global constructors
-void MTL_global_construction()
+//! Access Cortex-M0 system timer
+class SysCtrlBlk : public Periph<SysCtrlBlkReg,0xE000ED00>
 {
-   extern void (*__init_array_start)();
-   extern void (*__init_array_end)();
+public:
+   bool isSysTickPend() { return reg->icsr.getBit(26); }
+   void pendSysTick() { reg->icsr.setBit(26); }
+   void clearSysTick() { reg->icsr.setBit(25); }
+};
 
-   for(void (**func)() = &__init_array_start; func < &__init_array_end; ++func)
-   {
-      (**func)();
-   }
-}
-
-#if 0
-void MTL_load()
-{
-    MTL_data_and_bss();
-
-    MTL_global_construction();
-}
-#endif
+} // namespace MTL

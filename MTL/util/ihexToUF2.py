@@ -134,11 +134,13 @@ def addCRC(image):
 #-------------------------------------------------------------------------------
 # UF2 encode
 
-UF2_MAGIC1         = 0x0A324655
-UF2_MAGIC2         = 0x9E5D5157
-UF2_FLAG_FAMILY_ID = 0x00002000
-UF2_FAMILY_RP2040  = 0xE48BFF56
-UF2_FINAL_MAGIC    = 0x0AB16F30
+UF2_MAGIC1           = 0x0A324655
+UF2_MAGIC2           = 0x9E5D5157
+UF2_FLAG_FAMILY_ID   = 0x00002000
+UF2_FAMILY_RP2040    = 0xE48BFF57
+UF2_FAMILY_RP2350_S  = 0xE48BFF59
+UF2_FAMILY_RP2350_NS = 0xE48BFF5B
+UF2_FINAL_MAGIC      = 0x0AB16F30
 
 def writeUF2(filename, family_id, address, data):
    ''' Write a UF2 file '''
@@ -194,8 +196,9 @@ def parseArgs():
    parser.add_argument('-o' ,'--out', dest='out', type=str, default='out.uf2',
                        help='output file', metavar='<uf2>')
 
-   parser.add_argument('-f' ,'--family', dest='family_id', type=str,
-                       default=UF2_FAMILY_RP2040,
+   parser.add_argument('-f' ,'--family', dest='family_id',
+                       type=lambda x: int(x,0),
+                       default=UF2_FAMILY_RP2350_S,
                        help='UF2 family id', metavar='<family>')
 
    return parser.parse_args()
@@ -219,7 +222,8 @@ for record in records:
    elif record['type'] == IHEX_DATA:
       image += record['data']
 
-# Add in the CRCR32 required by the RP2040 boot ROM
-addCRC(image)
+if args.family_id == UF2_FAMILY_RP2040:
+   # Add in the CRCR32 required by the RP2040 boot ROM
+   addCRC(image)
 
 writeUF2(args.out, args.family_id, address, image)

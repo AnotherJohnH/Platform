@@ -1,5 +1,5 @@
-/*------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+//------------------------------------------------------------------------------
+// Copyright (c) 2024 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,49 +18,43 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//----------------------------------------------------------------------------*/
+//------------------------------------------------------------------------------
 
-#include <cstdint>
+// \brief RP2350 XOSC peripheral
 
-#include "MTL/MTL.h"
+#pragma once
 
-//! Initialise data section and clear BSS
-void MTL_data_and_bss()
+#include "MTL/Periph.h"
+
+namespace MTL {
+
+struct XOscReg
 {
-   extern uint8_t __etext[];
-   extern uint8_t __data_start__[];
-   extern uint8_t __data_end__;
-   extern uint8_t __bss_start__[];
-   extern uint8_t __bss_end__;
+   uint32_t ctrl;
+   uint32_t status;
+   uint32_t dormant;
+   uint32_t startup;
+   uint32_t count;
+};
 
-   for(signed i = 0; i < &__data_end__ - &__data_start__[0]; ++i)
+class XOsc : public Periph<XOscReg, 0x40048000>
+{
+public:
+   //! Start the XTAL oscillator
+   void start()
    {
-      __data_start__[i] = __etext[i];
+      reg->ctrl    = CTRL_FREQ_RANGE_1_15MHZ;
+      reg->startup = ((XTAL_FREQ_MHZ * 1000) + 128) >> 8;
+
+      // enable
+      reg->ctrl    = (0xFAB << 12) | CTRL_FREQ_RANGE_1_15MHZ;
+
+      // Wait until stable
+      while((reg->status & (1<<12)) == 0);
    }
 
-   for(signed i = 0; i < &__bss_end__ - &__bss_start__[0]; ++i)
-   {
-      __bss_start__[i] = 0;
-   }
-}
+   static const unsigned XTAL_FREQ_MHZ           = 12;
+   static const uint32_t CTRL_FREQ_RANGE_1_15MHZ = 0xAA0;
+};
 
-//! Call global constructors
-void MTL_global_construction()
-{
-   extern void (*__init_array_start)();
-   extern void (*__init_array_end)();
-
-   for(void (**func)() = &__init_array_start; func < &__init_array_end; ++func)
-   {
-      (**func)();
-   }
-}
-
-#if 0
-void MTL_load()
-{
-    MTL_data_and_bss();
-
-    MTL_global_construction();
-}
-#endif
+} // namespace MTL

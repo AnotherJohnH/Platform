@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#  Copyright (c) 2019 John D. Haughton
+#  Copyright (c) 2024 John D. Haughton
 # 
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,15 @@
 # cmake configuration for RaspberryPi Pico builds
 
 set(PLT_PREFIX  arm-none-eabi-)
-set(PLT_MACHINE armv6m)
+set(PLT_MACHINE armv8m)
 
 #-------------------------------------------------------------------------------
 # Special compile flags for this platform
 
-set(CMAKE_ASM_FLAGS "-mcpu=cortex-m0")
+set(CMAKE_ASM_FLAGS "-mcpu=cortex-m33")
 
 set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
--mcpu=cortex-m0 -mthumb -mfloat-abi=soft \
+-mcpu=cortex-m33 -mthumb \
 -fno-common -fno-builtin -fmessage-length=0 \
 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
 
@@ -57,7 +57,7 @@ set(CMAKE_SIZE                ${PLT_PREFIX}size)
 set(CMAKE_C_LINK_EXECUTABLE
     "${PLT_PREFIX}ld ${PLT_LD_FLAGS} <OBJECTS> -o <TARGET>.elf <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O ihex <TARGET>.elf <TARGET>.hex; \
-     ${CMAKE_SOURCE_DIR}/Platform/MTL/util/ihexToUF2.py <TARGET>.hex -f 0xE48BFF57 -o<TARGET>.uf2; \
+     ${CMAKE_SOURCE_DIR}/Platform/MTL/util/ihexToUF2.py <TARGET>.hex -f 0xE48BFF59 -o<TARGET>.uf2; \
      ${CMAKE_SOURCE_DIR}/Platform/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>.elf; \
      ${CMAKE_SIZE} <TARGET>.elf")
 
