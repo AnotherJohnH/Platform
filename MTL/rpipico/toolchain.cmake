@@ -30,7 +30,7 @@ set(PLT_MACHINE armv6m)
 
 set(CMAKE_ASM_FLAGS "-mcpu=cortex-m0")
 
-set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
+set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY -DMTL_RP2040 \
 -mcpu=cortex-m0 -mthumb -mfloat-abi=soft \
 -fno-common -fno-builtin -fmessage-length=0 \
 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")

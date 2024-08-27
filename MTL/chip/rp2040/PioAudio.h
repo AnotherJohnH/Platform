@@ -22,10 +22,10 @@
 
 #pragma once
 
-#include "MTL/rp2040/PioClock.h"
-#include "MTL/rp2040/PioI2S.h"
-#include "MTL/rp2040/Dma.h"
-#include "MTL/CortexM0/NVIC.h"
+#include "MTL/chip/PioClock.h"
+#include "MTL/chip/PioI2S.h"
+#include "MTL/chip/Dma.h"
+#include "MTL/core/NVIC.h"
 
 #define PIO_AUDIO_ATTACH_IRQ_0(pio_audio) \
      extern "C" { void IRQ_DMA_0() { pio_audio.irqHandler(); } }

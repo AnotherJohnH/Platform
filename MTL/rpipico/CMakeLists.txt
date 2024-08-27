@@ -21,16 +21,16 @@
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
-            MTL/rp2040/boot2.s
-            MTL/rp2040/vector_table_core0.s
-            MTL/rp2040/vector_table_core1.s
-            MTL/rp2040/Uart.cpp
-            MTL/rp2040/MTL_init.cpp 
-            MTL/rp2040/MTL_start_core.cpp
-            MTL/rp2040/MTL_console.cpp 
-            MTL/rp2040/MTL_clock.cpp
-            MTL/rp2040/MTL_mutex.cpp
-            MTL/CortexM0/MTL_excep.cpp)
+            MTL/chip/boot2.s
+            MTL/chip/vector_table_core0.s
+            MTL/chip/vector_table_core1.s
+            MTL/chip/Uart.cpp
+            MTL/chip/MTL_init.cpp 
+            MTL/chip/MTL_start_core.cpp
+            MTL/chip/MTL_console.cpp 
+            MTL/chip/MTL_clock.cpp
+            MTL/chip/MTL_mutex.cpp
+            MTL/core/MTL_excep.cpp)
 
 target_include_directories(MTL PUBLIC .)
 

@@ -28,7 +28,7 @@ add_library(MTL STATIC
             MTL/chip/MTL_init.cpp
             MTL/chip/MTL_clock.cpp
             MTL/chip/MTL_console.cpp
-            MTL/CortexM33/MTL_excep.cpp)
+            MTL/core/MTL_excep.cpp)
 
 target_include_directories(MTL PUBLIC .)
 

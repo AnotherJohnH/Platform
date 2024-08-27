@@ -24,7 +24,7 @@
 #pragma once
 
 #include "MTL/Periph.h"
-#include "MTL/CortexM0/NVIC.h"
+#include "MTL/core/NVIC.h"
 
 #include "Clocks.h"
 #include "unistd.h"
