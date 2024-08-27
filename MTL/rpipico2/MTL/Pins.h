@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "MTL/rp2350/Pins.h"
+#include "MTL/chip/Pins.h"
 
 namespace MTL {
 

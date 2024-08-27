@@ -21,10 +21,13 @@
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
-            MTL/rp2350/boot.s
-            MTL/rp2350/vector_table_core0.s
-            MTL/rp2350/vector_table_core1.s
-            MTL/rp2350/MTL_init.cpp
+            MTL/chip/boot.s
+            MTL/chip/vector_table_core0.s
+            MTL/chip/vector_table_core1.s
+            MTL/chip/Uart.cpp
+            MTL/chip/MTL_init.cpp
+            MTL/chip/MTL_clock.cpp
+            MTL/chip/MTL_console.cpp
             MTL/CortexM33/MTL_excep.cpp)
 
 target_include_directories(MTL PUBLIC .)
