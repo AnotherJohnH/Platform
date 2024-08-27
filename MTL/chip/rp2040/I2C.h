@@ -180,17 +180,17 @@ private:
     bool isTxFIFOfull()  const { return this->reg->status & (1 << 1) == 0; }
 };
 
-using I2C0_P1_P2   = I2C<0x40044000, Resets::I2C0, rp2040::IO_PIN_0,  rp2040::IO_PIN_1>;
-using I2C0_P6_P7   = I2C<0x40044000, Resets::I2C0, rp2040::IO_PIN_4,  rp2040::IO_PIN_1>;
-using I2C0_P11_P12 = I2C<0x40044000, Resets::I2C0, rp2040::IO_PIN_8,  rp2040::IO_PIN_9>;
-using I2C0_P16_P17 = I2C<0x40044000, Resets::I2C0, rp2040::IO_PIN_12, rp2040::IO_PIN_13>;
-using I2C0_P21_P22 = I2C<0x40044000, Resets::I2C0, rp2040::IO_PIN_16, rp2040::IO_PIN_17>;
-using I2C0_P26_P27 = I2C<0x40044000, Resets::I2C0, rp2040::IO_PIN_20, rp2040::IO_PIN_21>;
+using I2C0_P1_P2   = I2C<0x40044000, Resets::I2C0, IO_PIN_0,  IO_PIN_1>;
+using I2C0_P6_P7   = I2C<0x40044000, Resets::I2C0, IO_PIN_4,  IO_PIN_1>;
+using I2C0_P11_P12 = I2C<0x40044000, Resets::I2C0, IO_PIN_8,  IO_PIN_9>;
+using I2C0_P16_P17 = I2C<0x40044000, Resets::I2C0, IO_PIN_12, IO_PIN_13>;
+using I2C0_P21_P22 = I2C<0x40044000, Resets::I2C0, IO_PIN_16, IO_PIN_17>;
+using I2C0_P26_P27 = I2C<0x40044000, Resets::I2C0, IO_PIN_20, IO_PIN_21>;
 
-using I2C1_P4_P5   = I2C<0x40048000, Resets::I2C1, rp2040::IO_PIN_2,  rp2040::IO_PIN_3>;
-using I2C1_P9_P10  = I2C<0x40048000, Resets::I2C1, rp2040::IO_PIN_6,  rp2040::IO_PIN_7>;
-using I2C1_P19_P20 = I2C<0x40048000, Resets::I2C1, rp2040::IO_PIN_14, rp2040::IO_PIN_15>;
-using I2C1_P24_P25 = I2C<0x40048000, Resets::I2C1, rp2040::IO_PIN_18, rp2040::IO_PIN_19>;
-using I2C1_P31_P32 = I2C<0x40048000, Resets::I2C1, rp2040::IO_PIN_26, rp2040::IO_PIN_27>;
+using I2C1_P4_P5   = I2C<0x40048000, Resets::I2C1, IO_PIN_2,  IO_PIN_3>;
+using I2C1_P9_P10  = I2C<0x40048000, Resets::I2C1, IO_PIN_6,  IO_PIN_7>;
+using I2C1_P19_P20 = I2C<0x40048000, Resets::I2C1, IO_PIN_14, IO_PIN_15>;
+using I2C1_P24_P25 = I2C<0x40048000, Resets::I2C1, IO_PIN_18, IO_PIN_19>;
+using I2C1_P31_P32 = I2C<0x40048000, Resets::I2C1, IO_PIN_26, IO_PIN_27>;
 
 } // namespace MTL

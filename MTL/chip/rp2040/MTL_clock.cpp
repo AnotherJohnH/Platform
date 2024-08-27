@@ -22,12 +22,12 @@
 
 #include "MTL/MTL.h"
 
-#include "USTimer.h"
+#include "Timer.h"
 
 //! Return 100 Hz clock value
 uint32_t MTL_clock()
 {
-   MTL::USTimer us_timer;
+   MTL::Timer us_timer;
 
    return us_timer.read64() / 10000;
 }
@@ -35,7 +35,7 @@ uint32_t MTL_clock()
 //! Return 1 MHz clock value
 uint32_t MTL_us_clock()
 {
-   MTL::USTimer us_timer;
+   MTL::Timer us_timer;
 
    return us_timer.read32();
 }

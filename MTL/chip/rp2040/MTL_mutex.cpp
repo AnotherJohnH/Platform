@@ -22,7 +22,7 @@
 
 #include "MTL/Mutex.h"
 
-#include "MTL/rp2040/Sio.h"
+#include "Sio.h"
 
 static unsigned mutex_id{1};
 static MTL::Sio sio{};

@@ -28,7 +28,7 @@
 
 namespace MTL {
 
-struct USTimerReg
+struct TimerReg
 {
    uint32_t timehw;
    uint32_t timelw;
@@ -50,11 +50,11 @@ struct USTimerReg
 };
 
 //! 1 MHz timer
-class USTimer
-   : public Periph<USTimerReg, 0x40054000>
+class Timer
+   : public Periph<TimerReg, 0x40054000>
 {
 public:
-   USTimer() = default;
+   Timer() = default;
 
    //! Get 64-bit timer value XXX not thread safe
    uint64_t read64() const
@@ -66,7 +66,7 @@ public:
    }
 
    //! Get 32-bit timer value
-   uint64_t read32() const
+   uint32_t read32() const
    {
       return reg->timeawl;
    }
