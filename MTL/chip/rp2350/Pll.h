@@ -76,7 +76,7 @@ public:
       // 12 MHz / 1 => 12 MHz * 125 => 1500 MHz / 1 / 7 => 150 MHz
       config(/* refdiv */ 1, /* fbdiv */ 125, /* post_div1 */ 5, /* post_div2 */ 2);
 
-      freq = 191081633;
+      freq = 150000000;
    }
 
    //! Start PLL at 191.08 MHz (assumes a 12 MHz XTAL input)

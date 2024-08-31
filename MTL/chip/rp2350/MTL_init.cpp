@@ -24,6 +24,7 @@
 
 #include "Clocks.h"
 #include "Resets.h"
+#include "Ticks.h"
 
 //! Default system clock freqency 150 MHz
 //  declared weak so that applications may override
@@ -59,6 +60,9 @@ void MTL_init()
 
    // Start XOSC, PLLs and all the clock generators
    MTL::Clocks().start();
+
+   // Start all the tick generators
+   MTL::Ticks().start();
 
    // Clear resets for everything
    resets.clrReset(MTL::Resets::ALL);

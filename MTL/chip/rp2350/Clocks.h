@@ -119,11 +119,11 @@ public:
 
         // System clock
         // PLL_SYS => CLK_SYS => 150 MHz
-        configGlitchless(&reg->sys, /* PLL SYS */ 1, /* div16 */ 0x10000);
+        configGlitchless(&reg->sys, /* AUX (PLL SYS) */ 1, /* div16 */ 0x10000);
 
         // PERI clock
         // PLL_SYS => CLK_PERI => 150 MHz
-        configAux(&reg->peri, /* PLL SYS */ 0, /* div16 */ 0x10000);
+        configAux(&reg->peri, /* PLL SYS */ 1, /* div16 */ 0x10000);
 
         // USB clock
         // PLL_USB => CLK_SYS => 48 MHz
@@ -135,7 +135,7 @@ public:
 
         // HSTX clock
         // PLL_SYS => CLK_HSTX => 150 MHz
-        configAux(&reg->hstx, /* CLK SYS */ 0, /* div16 */ 0x10000);
+        configAux(&reg->hstx, /* PLL SYS */ 1, /* div16 */ 0x10000);
     }
 
 private:
