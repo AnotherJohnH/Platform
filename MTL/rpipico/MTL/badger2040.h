@@ -37,13 +37,14 @@ namespace MTL {
 
 namespace badger2040 {
 
-static const unsigned PIN_SW_DN    = rp2040::IO_PIN_11;
-static const unsigned PIN_SW_A     = rp2040::IO_PIN_12;
-static const unsigned PIN_SW_B     = rp2040::IO_PIN_13;
-static const unsigned PIN_SW_C     = rp2040::IO_PIN_14;
-static const unsigned PIN_SW_UP    = rp2040::IO_PIN_15;
-static const unsigned PIN_SW_USR   = rp2040::IO_PIN_23;
-static const unsigned PIN_USER_LED = rp2040::IO_PIN_25;
+static const unsigned PIN_ENABLE_3V3 = rp2040::IO_PIN_10;
+static const unsigned PIN_SW_DN      = rp2040::IO_PIN_11;
+static const unsigned PIN_SW_A       = rp2040::IO_PIN_12;
+static const unsigned PIN_SW_B       = rp2040::IO_PIN_13;
+static const unsigned PIN_SW_C       = rp2040::IO_PIN_14;
+static const unsigned PIN_SW_UP      = rp2040::IO_PIN_15;
+static const unsigned PIN_SW_USR     = rp2040::IO_PIN_23;
+static const unsigned PIN_USER_LED   = rp2040::IO_PIN_25;
 
 using EPaper = EPaper_UC8151</* WIDTH  */ 296,
                              /* HEIGHT */ 128,
@@ -54,6 +55,7 @@ using EPaper = EPaper_UC8151</* WIDTH  */ 296,
                              Spi0_ALT2>;
 
 using LedUser    = Gpio::Out<1, PIN_USER_LED>;
+using Enable3V3  = Gpio::Out<1, PIN_ENABLE_3V3>;
 using PwmLedUser = Pwm<PIN_USER_LED>;
 
 using SwitchUp  = Gpio::In<1, PIN_SW_UP,  PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
