@@ -57,7 +57,7 @@ set(CMAKE_SIZE                ${PLT_PREFIX}size)
 set(CMAKE_C_LINK_EXECUTABLE
     "${PLT_PREFIX}ld ${PLT_LD_FLAGS} <OBJECTS> -o <TARGET>.elf <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O ihex <TARGET>.elf <TARGET>.hex; \
-     ${CMAKE_SOURCE_DIR}/Platform/MTL/util/ihexToUF2.py <TARGET>.hex -f 0xE48BFF57 -o<TARGET>.uf2; \
+     ${CMAKE_SOURCE_DIR}/Platform/MTL/util/ihexToUF2.py <TARGET>.hex -f0xE48BFF56 -o<TARGET>.uf2; \
      ${CMAKE_SOURCE_DIR}/Platform/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>.elf; \
      ${CMAKE_SIZE} <TARGET>.elf")
 
