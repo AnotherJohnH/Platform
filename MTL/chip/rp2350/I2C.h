@@ -181,7 +181,7 @@ private:
 };
 
 using I2C0_P1_P2   = I2C<0x40090000, Resets::I2C0, IO_PIN_0,  IO_PIN_1>;
-using I2C0_P6_P7   = I2C<0x40090000, Resets::I2C0, IO_PIN_4,  IO_PIN_1>;
+using I2C0_P6_P7   = I2C<0x40090000, Resets::I2C0, IO_PIN_4,  IO_PIN_5>;
 using I2C0_P11_P12 = I2C<0x40090000, Resets::I2C0, IO_PIN_8,  IO_PIN_9>;
 using I2C0_P16_P17 = I2C<0x40090000, Resets::I2C0, IO_PIN_12, IO_PIN_13>;
 using I2C0_P21_P22 = I2C<0x40090000, Resets::I2C0, IO_PIN_16, IO_PIN_17>;
