@@ -48,7 +48,7 @@ public:
     static const uint8_t PULL_UP    = 0b00001000;
     static const uint8_t PULL_DOWN  = 0b00000100;
 
-    //! Set I/O pin as an output
+    //! Set I/O pin as a digital output
     void setOut(unsigned io_pin, uint8_t drive, bool slew_fast = false)
     {
        uint32_t bits = IE | drive;
@@ -58,7 +58,7 @@ public:
        reg->gpio[io_pin] = bits;
     }
 
-    //! Set I/O pin as an input
+    //! Set I/O pin as a digital input
     void setIn(unsigned io_pin, uint8_t pull = PULL_UP, bool schmitt_trigger = false)
     {
        uint32_t bits = OD | IE | pull;
@@ -66,6 +66,12 @@ public:
        if (schmitt_trigger) bits |= SCHMITT;
 
        reg->gpio[io_pin] = bits;
+    }
+
+    //! Set I/O pin as an analogue input
+    void setAnalogIn(unsigned io_pin)
+    {
+       reg->gpio[io_pin] = OD;
     }
 
 private:
