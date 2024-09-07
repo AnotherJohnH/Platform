@@ -49,7 +49,9 @@ public:
     static const uint8_t PULL_DOWN  = 0b00000100;
 
     //! Set I/O pin as a digital output
-    void setOut(unsigned io_pin, uint8_t drive, bool slew_fast = false)
+    void setOut(unsigned io_pin,
+                uint8_t  drive,
+                bool     slew_fast = false)
     {
        uint32_t bits = IE | drive;
 
@@ -59,7 +61,9 @@ public:
     }
 
     //! Set I/O pin as a digital input
-    void setIn(unsigned io_pin, uint8_t pull = PULL_UP, bool schmitt_trigger = false)
+    void setIn(unsigned io_pin,
+               uint8_t  pull = PULL_UP,
+               bool     schmitt_trigger = false)
     {
        uint32_t bits = OD | IE | pull;
 
@@ -75,10 +79,10 @@ public:
     }
 
 private:
-    static const uint32_t OD       = 0b10000000; //!< Output disable
-    static const uint32_t IE       = 0b01000000; //!< Input enable
-    static const uint32_t SCHMITT  = 0b00000010; //!< Enable schmitt trigger
-    static const uint32_t SLEWFAST = 0b00000001; //!< Slew rate control
+    static const uint32_t OD       = 0b010000000; //!< Output disable
+    static const uint32_t IE       = 0b001000000; //!< Input enable
+    static const uint32_t SCHMITT  = 0b000000010; //!< Enable schmitt trigger
+    static const uint32_t SLEWFAST = 0b000000001; //!< Slew rate control
 };
 
 } // namespace MTL

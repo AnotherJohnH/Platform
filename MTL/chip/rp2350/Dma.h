@@ -37,7 +37,7 @@ struct DmaReg
       uint32_t read_addr;
       uint32_t write_addr;
       uint32_t trans_count;
-      uint32_t ctrl__trig;
+      uint32_t ctrl_trig;
 
       uint32_t al1_ctrl;
       uint32_t al1_read_addr;
@@ -57,10 +57,10 @@ struct DmaReg
 
    struct Interrupt
    {
+      uint32_t intr;
       uint32_t inte;
       uint32_t intf;
       uint32_t ints;
-      uint32_t pad;
    };
 
    struct MPURange
@@ -77,7 +77,6 @@ struct DmaReg
    };
 
    Channel   ch[16];
-   uint32_t  intr;
    Interrupt irq[4];
    uint32_t  timer[4];
    uint32_t  multi_chan_trigger;
@@ -154,30 +153,23 @@ public:
 
    bool CH_isIrq(unsigned cd, unsigned irq_n) const
    {
-      return irq_n == 0 ? getBit(reg->ints0, cd)
-                        : getBit(reg->ints1, cd);
+      return getBit(reg->irq[irq_n].ints, cd);
    }
 
    void CH_clrIrq(unsigned cd, unsigned irq_n)
    {
-      if (irq_n == 0)
-         reg->ints0 = reg->ints0;
-      else
-         reg->ints1 = reg->ints1;
+      reg->irq[irq_n].ints = reg->irq[irq_n].ints;
    }
 
    void CH_enableIrq(unsigned cd, unsigned irq_n)
    {
-      if (irq_n == 0)
-         setBit(reg->inte0, cd, 1);
-      else
-         setBit(reg->inte1, cd, 1);
+      setBit(reg->irq[irq_n].inte, cd, 1);
    }
 
    //! Start a channel
    void CH_start(unsigned cd)
    {
-      setBit(reg->ch[cd].ctrl__trig, /* EN_BIT */ 0, 1);
+      setBit(reg->ch[cd].ctrl_trig, /* EN_BIT */ 0, 1);
    }
 
    //! Stop a channel
@@ -187,7 +179,7 @@ public:
    }
 
 private:
-   static const unsigned NUM_CHANNEL = 12;
+   static const unsigned NUM_CHANNEL = 16;
 
    static uint8_t free_channel;
 };
