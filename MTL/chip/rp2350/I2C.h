@@ -98,7 +98,7 @@ public:
       IoBank   io_bank;
 
       // Configure SDA pin
-      //pads_bank.setOut(SDA_PIN, PadsBank::DRIVE_2MA | PadsBank::PULL_UP);
+      //pads_bank.setIn(SDA_PIN, PadsBank::PULL_UP, /* schmitt trigger */ true);
       io_bank.setFunc( SDA_PIN, IoBank::I2C);
 
       // Configure SCL pin
@@ -110,7 +110,7 @@ public:
       // Assuming the default CON register is
       // + Master 400 KHz 7bit address
       this->reg->con = (1    << 8) |  // TX_EMPTY_CTRL
-                       (1    << 6) |  // SLAVE_DIABLE
+                       (1    << 6) |  // SLAVE_DISABLE
                        (1    << 5) |  // RESTART_EN
                        (0b10 << 1) |  // SPEED_VALUE_FAST
                        (1    << 0);   // MASTER_MODE
