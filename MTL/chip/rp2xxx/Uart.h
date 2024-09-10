@@ -92,13 +92,8 @@ public:
       PadsBank pads_bank;
       IoBank   io_bank;
 
-      // Configure TX pin
-      pads_bank.setOut(TX_PIN, PadsBank::DRIVE_2MA);
-      io_bank.setFunc(TX_PIN, IoBank::UART);
-
-      // Configure RX pin
-      pads_bank.setIn(RX_PIN);
-      io_bank.setFunc(RX_PIN, IoBank::UART);
+      io_bank.setFunc(TX_PIN, IoBank::UART, PadsBank::DRIVE_2MA);
+      io_bank.setFunc(RX_PIN, IoBank::UART, PadsBank::OD);
 
       // Setup baud rate
       uint32_t divisor = (8 * PllSys().getFreq()) / baud;

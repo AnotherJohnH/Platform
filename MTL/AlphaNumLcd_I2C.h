@@ -134,7 +134,7 @@ public:
       sendCmd(0b01000000 | ((ch & 0b111) << 3));
 
       for(unsigned r = 0; r < 8; ++r)
-         sendRam(bitmap[r], r == 7);
+         sendRam(bitmap[r], true);
 
       move(col, row);
    }

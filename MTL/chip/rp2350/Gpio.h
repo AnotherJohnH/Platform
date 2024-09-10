@@ -48,8 +48,7 @@ public:
 
       for(unsigned i = 0; i < WIDTH; ++i)
       {
-         pads_bank.setOut(PIN + i, PadsBank::DRIVE_4MA);
-         io_bank.setFunc( PIN + i, IoBank::SIO);
+         io_bank.setFunc( PIN + i, IoBank::SIO, PadsBank::DRIVE_4MA);
       }
 
       sio.reg->gpio_oe_set = MASK << PIN;

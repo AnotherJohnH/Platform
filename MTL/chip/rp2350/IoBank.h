@@ -25,6 +25,7 @@
 #pragma once
 
 #include "MTL/Periph.h"
+#include "PadsBank.h"
 
 namespace MTL {
 
@@ -59,24 +60,29 @@ class IoBank : public Periph<IoBankReg, 0x40028000>
 public:
    enum Func
    {
-       JTAG  =  0,
-       SPI   =  1,
-       UART  =  2,
-       I2C   =  3,
-       PWM   =  4,
-       SIO   =  5,
-       PIO0  =  6,
-       PIO1  =  7,
-       PIO2  =  8,
-       XIP   =  9,
-       USB   = 10,
-       NUL   = 31
+       HSTX     =  0,
+       SPI      =  1,
+       UART     =  2,
+       I2C      =  3,
+       PWM      =  4,
+       SIO      =  5,
+       PIO0     =  6,
+       PIO1     =  7,
+       PIO2     =  8,
+       MISC     =  9,
+       USB      = 10,
+       UART_ALT = 11,
+       NUL      = 31
    };
 
    //! Set the function for an I/O pin
-   void setFunc(unsigned io_pin, Func func)
+   void setFunc(unsigned io_pin, Func func, uint8_t pad_ctrl = 0)
    {
-      reg->gpio[io_pin].ctrl = (reg->gpio[io_pin].ctrl & ~0x1F) | func;
+      PadsBank pads;
+
+      pads.set(io_pin, PadsBank::IE | pad_ctrl);
+      reg->gpio[io_pin].ctrl = func;
+      pads.unisolate(io_pin);
    }
 };
 

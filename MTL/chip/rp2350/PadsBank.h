@@ -39,25 +39,28 @@ struct PadsBankReg
 class PadsBank : public Periph<PadsBankReg, 0x40038000>
 {
 public:
+    static const uint8_t OD         = 0b10000000; //!< Output disable
+    static const uint8_t IE         = 0b01000000; //!< Input enable
     static const uint8_t DRIVE_2MA  = 0;
-    static const uint8_t DRIVE_4MA  = 0b00010000;
-    static const uint8_t DRIVE_8MA  = 0b00100000;
-    static const uint8_t DRIVE_12MA = 0b00110000;
-
+    static const uint8_t DRIVE_4MA  = 0b000010000;
+    static const uint8_t DRIVE_8MA  = 0b000100000;
+    static const uint8_t DRIVE_12MA = 0b000110000;
     static const uint8_t PULL_NONE  = 0;
-    static const uint8_t PULL_UP    = 0b00001000;
-    static const uint8_t PULL_DOWN  = 0b00000100;
+    static const uint8_t PULL_UP    = 0b000001000;
+    static const uint8_t PULL_DOWN  = 0b000000100;
+    static const uint8_t SCHMITT    = 0b00000010; //!< Enable schmitt trigger
+    static const uint8_t SLEWFAST   = 0b00000001; //!< Slew rate control
 
     //! Set I/O pin as a digital output
     void setOut(unsigned io_pin,
                 uint8_t  drive,
                 bool     slew_fast = false)
     {
-       uint32_t bits = IE | drive;
+       uint8_t bits = IE | drive;
 
        if (slew_fast) bits |= SLEWFAST;
 
-       reg->gpio[io_pin] = bits;
+       set(io_pin, bits);
     }
 
     //! Set I/O pin as a digital input
@@ -65,30 +68,32 @@ public:
                uint8_t  pull = PULL_UP,
                bool     schmitt_trigger = false)
     {
-       uint32_t bits = OD | IE | pull;
+       uint8_t bits = OD | IE | pull;
 
        if (schmitt_trigger) bits |= SCHMITT;
 
-       reg->gpio[io_pin] = bits;
+       set(io_pin, bits);
     }
 
     //! Set I/O pin as an analogue input
     void setAnalogIn(unsigned io_pin)
     {
-       reg->gpio[io_pin] = OD;
+       set(io_pin, OD);
     }
 
-    void setI2C(unsigned io_pin)
+    //! Configure the pad
+    void set(unsigned io_pin, uint8_t bits)
     {
-       reg->gpio[io_pin] = PULL_UP;
+       reg->gpio[io_pin] = (reg->gpio[io_pin] & 0xFFFFFF00) | bits;
+    }
+
+    void unisolate(unsigned io_pin)
+    {
+       reg->gpio[io_pin] &= ~ISO;
     }
 
 private:
-    static const uint32_t ISO      = 0b100000000; //!< Isolate
-    static const uint32_t OD       = 0b010000000; //!< Output disable
-    static const uint32_t IE       = 0b001000000; //!< Input enable
-    static const uint32_t SCHMITT  = 0b000000010; //!< Enable schmitt trigger
-    static const uint32_t SLEWFAST = 0b000000001; //!< Slew rate control
+    static const uint32_t ISO = 1 << 8; //!< Isolate
 };
 
 } // namespace MTL

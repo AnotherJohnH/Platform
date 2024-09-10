@@ -58,29 +58,21 @@ class Spi
 public:
    Spi(unsigned freq, bool use_cs = true, bool use_miso = true)
    {
-      PadsBank pads_bank;
-      IoBank   io_bank;
-
-      // Configure CLK pin
-      pads_bank.setOut(CLK_PIN, PadsBank::DRIVE_2MA);
-      io_bank.setFunc(CLK_PIN,  IoBank::SPI);
-
-      // Configure MOSI pin
-      pads_bank.setOut(MOSI_PIN, PadsBank::DRIVE_2MA);
-      io_bank.setFunc(MOSI_PIN,  IoBank::SPI);
+      // Configure CLK and MOSI pins
+      IoBank io_bank;
+      io_bank.setFunc(CLK_PIN,  IoBank::SPI, PadsBank::DRIVE_2MA);
+      io_bank.setFunc(MOSI_PIN, IoBank::SPI, PadsBank::DRIVE_2MA);
 
       // Configure CS pin if required
       if (use_cs)
       {
-         pads_bank.setOut(CS_PIN, PadsBank::DRIVE_2MA);
-         io_bank.setFunc(CS_PIN, IoBank::SPI);
+         io_bank.setFunc(CS_PIN, IoBank::SPI, PadsBank::DRIVE_2MA);
       }
 
       // Configure MISO pin if required
       if (use_miso)
       {
-         pads_bank.setOut(MISO_PIN, PadsBank::DRIVE_2MA);
-         io_bank.setFunc(MISO_PIN,  IoBank::SPI);
+         io_bank.setFunc(MISO_PIN, IoBank::SPI, PadsBank::DRIVE_2MA);
       }
 
       unsigned divisor = PllSys().getFreq() / freq;

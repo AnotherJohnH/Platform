@@ -25,6 +25,7 @@
 #pragma once
 
 #include "MTL/Periph.h"
+#include "PadsBank.h"
 
 namespace MTL {
 
@@ -67,9 +68,12 @@ public:
    };
 
    //! Set the function for an I/O pin
-   void setFunc(unsigned io_pin, Func func)
+   void setFunc(unsigned io_pin, Func func, uint8_t pad_ctrl = 0)
    {
-      reg->gpio[io_pin].ctrl = (reg->gpio[io_pin].ctrl & ~0x1F) | func;
+      PadsBank pads;
+
+      pads.set(io_pin, PadsBank::IE | pad_ctrl);
+      reg->gpio[io_pin].ctrl = func;
    }
 };
 

@@ -94,14 +94,9 @@ public:
       resets.setReset(RESET);
       resets.clrReset(RESET);
       
-      PadsBank pads_bank;
-      IoBank   io_bank;
-
-      // Configure SDA pin
-      io_bank.setFunc(SDA_PIN, IoBank::I2C);
-
-      // Configure SCL pin
-      io_bank.setFunc(SCL_PIN, IoBank::I2C);
+      IoBank io_bank;
+      io_bank.setFunc(SDA_PIN, IoBank::I2C, PadsBank::PULL_UP);
+      io_bank.setFunc(SCL_PIN, IoBank::I2C, PadsBank::PULL_UP);
 
       this->reg->enable = 0;
 
