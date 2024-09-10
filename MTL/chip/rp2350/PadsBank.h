@@ -78,6 +78,11 @@ public:
        reg->gpio[io_pin] = OD;
     }
 
+    void setI2C(unsigned io_pin)
+    {
+       reg->gpio[io_pin] = PULL_UP;
+    }
+
 private:
     static const uint32_t ISO      = 0b100000000; //!< Isolate
     static const uint32_t OD       = 0b010000000; //!< Output disable

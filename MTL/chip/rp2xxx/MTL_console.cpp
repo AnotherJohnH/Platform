@@ -20,26 +20,28 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-// \brief RP2040/RP2350 UART peripheral
+#include "MTL/MTL.h"
 
 #include "Uart.h"
 
-#include "MTL/Digital.h"
+namespace MTL {
+//  declared weak so that applications may override
+extern const unsigned __attribute__((weak)) console_baud = 115200;
+}
 
-template <>
-MTL::UartFifo MTL::UartBuffers<0>::rx_buffer {};
+static MTL::Uart0_P1_P2 uart{MTL::console_baud, 8, MTL::UART::NONE, 1};
 
-template <>
-MTL::UartFifo MTL::UartBuffers<0>::tx_buffer {};
+void __attribute__((weak)) MTL_putch(uint8_t ch)
+{
+   uart.tx(ch);
+}
 
-template <>
-MTL::UartFifo MTL::UartBuffers<1>::rx_buffer {};
+int MTL_getch()
+{
+   return uart.rx();
+}
 
-template <>
-MTL::UartFifo MTL::UartBuffers<1>::tx_buffer {};
-
-static MTL::Uart0_P1_P2 uart0 {};
-static MTL::Uart1_P6_P7 uart1 {};
-
-extern "C" void IRQ_UART0() { uart0.irq(); }
-extern "C" void IRQ_UART1() { uart1.irq(); }
+bool MTL_getch_empty()
+{
+   return uart.empty();
+}
