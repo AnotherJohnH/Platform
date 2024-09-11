@@ -59,12 +59,8 @@ public:
    Pwm(unsigned sys_clk_div8_4_ = 0b100000000,
        unsigned period_         = 0x10000)
    {
-      PadsBank pads_bank;
-      IoBank   io_bank;
-
-      // Configure pin
-      pads_bank.setOut(PIN, PadsBank::DRIVE_2MA);
-      io_bank.setFunc(PIN,  IoBank::PWM);
+      IoBank io_bank;
+      io_bank.setFunc(PIN, IoBank::PWM, PadsBank::DRIVE_2MA);
 
       // Configure slice XXX may be shared with another PWM pin
       unsigned slice = getSlice();

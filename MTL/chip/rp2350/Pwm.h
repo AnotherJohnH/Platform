@@ -115,8 +115,13 @@ public:
    }
 
 private:
-   static unsigned getSlice() { return (PIN >> 1) & 0b1111; }
-   static unsigned getChan()  { return PIN & 1; }
+   static unsigned getSlice()
+   {
+      return ((PIN & 0b100000) >> 2) |
+             ((PIN & 0b001110) >> 1);
+   }
+
+   static unsigned getChan() { return PIN & 1; }
 };
 
 } // namespace MTL
