@@ -125,17 +125,19 @@ public:
                 DataSize       log2_data_size,
                 unsigned       dreq = DREQ_UNPACED)
    {
-      uint32_t ctrl = (dreq                 << 15) |
-                      (chain_cd             << 11) |
-                      ((write_incr ? 1 : 0) <<  5) |
+      uint32_t ctrl = (dreq                 << 17) |
+                      (chain_cd             << 13) |
+                      ((write_incr ? 1 : 0) <<  6) |
                       ((read_incr  ? 1 : 0) <<  4) |
                       (log2_data_size       <<  2) |
                       (/* EN */ 1           <<  0);
 
+      uint32_t mode = 0; // NORMAL
+
       // Setup without triggering
       reg->ch[cd].read_addr   = uint32_t(read_addr);
       reg->ch[cd].write_addr  = uint32_t(write_addr);
-      reg->ch[cd].trans_count = trans_count;
+      reg->ch[cd].trans_count = (mode << 28) | (trans_count & 0x0FFFFFFF);
       reg->ch[cd].al1_ctrl    = ctrl;
    }
 

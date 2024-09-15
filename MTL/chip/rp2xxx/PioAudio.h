@@ -25,6 +25,7 @@
 #include "MTL/chip/PioClock.h"
 #include "MTL/chip/PioI2S.h"
 #include "MTL/chip/Dma.h"
+#include "MTL/chip/Irq.h"
 #include "MTL/core/NVIC.h"
 
 #define PIO_AUDIO_ATTACH_IRQ_0(pio_audio) \
@@ -101,7 +102,7 @@ public:
       dma.CH_enableIrq(ch_ping, IRQ);
       dma.CH_enableIrq(ch_pong, IRQ);
 
-      MTL::NVIC<11 + IRQ>().enable();
+      MTL::NVIC<IRQ_DMA_0 + IRQ>().enable();
    }
 
    //! Start PIO
