@@ -19,54 +19,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //------------------------------------------------------------------------------
-//
-//   MTL::PioI2S::Format specifes the sample buffer format
-//
-//   STEREO_16         32 bit word              One 32bit word for one sample pair
-//                     +---------+---------+
-//                     | RIGHT   | LEFT    |
-//                     +---------+---------+
-//
-//   MONO_16           32 bit word              One 32bit word for two samples
-//                     +---------+---------+    Same 16-bit MONO value sent to left
-//                     | MONO-2  | MONO-1  |    and right I2S channels
-//                     +---------+---------+
-//
-//   STERO_PAIRS_16    32 bit word              Two 32bit words for two sample pairs
-//                     +---------+---------+
-//                     | LEFT-2  | LEFT-1  |
-//                     +---------+---------+
-//                     | RIGHT-2 | RIGHT-1 |
-//                     +---------+---------+
-//
-//
 
 #pragma once
 
 #include "Pio.h"
+#include "MTL/chip/rp2xxx/Audio.h"
 
 namespace MTL {
 
 class PioI2S : public PIO::Asm
 {
 public:
-   enum Format
-   {
-      STEREO_16,       //!<  Alternating L/R 16-bit samples
-      MONO_16,         //!<  Single 16-bit sample copied to L and R
-      STEREO_PAIRS_16  //!<  Alternating L/R pairs of 16-bit samples
-   };
-
-   PioI2S(Format format_ = STEREO_16, bool lsb_lrclk_msb_sclk_ = true)
+   PioI2S(Audio::Format format_ = Audio::STEREO_16, bool lsb_lrclk_msb_sclk_ = true)
    {
       S_0_1 = lsb_lrclk_msb_sclk_ ? 0b01 : 0b10;
       S_1_0 = S_0_1 ^ 0b11;
 
       switch(format_)
       {
-      case STEREO_16:       progStereo16();     break;
-      case MONO_16:         progMono16();       break;
-      case STEREO_PAIRS_16: progStereoPair16(); break;
+      case Audio::MONO_16:         progMono16();       break;
+      case Audio::STEREO_16:       progStereo16();     break;
+      case Audio::STEREO_PAIRS_16: progStereoPair16(); break;
       }
    }
 

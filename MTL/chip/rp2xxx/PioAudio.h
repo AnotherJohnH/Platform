@@ -24,30 +24,21 @@
 
 #include "MTL/chip/PioClock.h"
 #include "MTL/chip/PioI2S.h"
-#include "MTL/chip/Dma.h"
-#include "MTL/chip/Irq.h"
-#include "MTL/core/NVIC.h"
 
-#define PIO_AUDIO_ATTACH_IRQ_0(pio_audio) \
-     extern "C" { void IRQ_DMA_0() { pio_audio.irqHandler(); } }
-
-#define PIO_AUDIO_ATTACH_IRQ_1(pio_audio) \
-     extern "C" { void IRQ_DMA_1() { pio_audio.irqHandler(); } }
+#include "MTL/chip/rp2xxx/Audio.h"
 
 namespace MTL {
 
-extern void PioAudio_getSamples(uint32_t* buffer, unsigned n);
-
 //! Audio driver for Cirrus Logic CS4344/5/8 based devices
 template <typename PIO_TYPE, unsigned BUFFER_SIZE = 1024, unsigned IRQ = 0>
-class PioAudio
+class PioAudio : public Audio::Base<BUFFER_SIZE,IRQ>
 {
 public:
    PioAudio(unsigned       sample_freq,
             unsigned       pin_sd,
             unsigned       pin_lrclk_sclk,
             unsigned       pin_mclk           = PIN_IGNORE,
-            PioI2S::Format format             = PioI2S::STEREO_16,
+            Audio::Format  format             = Audio::STEREO_16,
             bool           lsb_lrclk_msb_sclk = true)
        : i2s(format, lsb_lrclk_msb_sclk)
    {
@@ -61,56 +52,11 @@ public:
       // Setup I2S for SDIN, LRCLK, SCLK
       sd_i2s = i2s.download(pio, sample_freq, pin_sd, pin_lrclk_sclk);
       if (sd_i2s < 0) return;
-
-      ch_ping = dma.allocCH();
-      if (ch_ping < 0) return;
-
-      ch_reset_ping = dma.allocCH();
-      if (ch_reset_ping < 0) return;
-
-      ch_pong = dma.allocCH();
-      if (ch_pong < 0) return;
-
-      ch_reset_pong = dma.allocCH();
-      if (ch_reset_pong < 0) return;
-
-      dma.CH_prog(ch_ping, ch_reset_ping,
-                  buf_ping,                 /* read_incr */  true,
-                  pio.SM_getTxFIFO(sd_i2s), /* write_incr */ false,
-                  BUFFER_SIZE,
-                  Dma::FOUR_BYTE,
-                  pio.SM_getTxDREQ(sd_i2s));
-
-      dma.CH_prog(ch_reset_ping, ch_pong,
-                  &buf_ping_addr,                 /* read_incr */  false,
-                  dma.CH_getReadRegAddr(ch_ping), /* write_incr */ false,
-                  1, Dma::FOUR_BYTE);
-
-      dma.CH_prog(ch_pong, ch_reset_pong,
-                  buf_pong,                 /* read_incr */  true,
-                  pio.SM_getTxFIFO(sd_i2s), /* write_incr */ false,
-                  BUFFER_SIZE,
-                  Dma::FOUR_BYTE,
-                  pio.SM_getTxDREQ(sd_i2s));
-
-      dma.CH_prog(ch_reset_pong, ch_ping,
-                  &buf_pong_addr,                 /* read_incr */  false,
-                  dma.CH_getReadRegAddr(ch_pong), /* write_incr */ false,
-                  1, Dma::FOUR_BYTE);
-
-      // Enable interrupt
-      dma.CH_enableIrq(ch_ping, IRQ);
-      dma.CH_enableIrq(ch_pong, IRQ);
-
-      MTL::NVIC<IRQ_DMA_0 + IRQ>().enable();
    }
 
-   //! Start PIO
    void start()
    {
-      // Prime both buffers starting with ping
-      PioAudio_getSamples(buf_ping, BUFFER_SIZE);
-      PioAudio_getSamples(buf_pong, BUFFER_SIZE);
+      this->startDMA(pio.SM_getTxDREQ(sd_i2s), pio.SM_getTxFIFO(sd_i2s));
 
       if (sd_clk >= 0)
       {
@@ -122,9 +68,6 @@ public:
          // Start I2S
          pio.start(1 << sd_i2s);
       }
-
-      // Start DMA ping/pong
-      dma.CH_start(ch_ping);
    }
 
    //! Manually push samples
@@ -133,36 +76,12 @@ public:
       pio.SM_push(sd_i2s, (left << 16) | right);
    }
 
-   //! Handler for DMA ping/pong
-   void irqHandler()
-   {
-      if (dma.CH_isIrq(ch_ping, IRQ))
-      {
-         dma.CH_clrIrq(ch_ping, IRQ);
-         PioAudio_getSamples(buf_ping, BUFFER_SIZE);
-      }
-      else
-      {
-         dma.CH_clrIrq(ch_pong, IRQ);
-         PioAudio_getSamples(buf_pong, BUFFER_SIZE);
-      }
-   }
-
 private:
    PIO_TYPE      pio;
    MTL::PioClock clk;
    MTL::PioI2S   i2s;
-   MTL::Dma      dma;
    signed        sd_clk{-1};
    signed        sd_i2s{-1};
-   signed        ch_ping{-1};
-   signed        ch_reset_ping{-1};
-   signed        ch_pong{-1};
-   signed        ch_reset_pong{-1};
-   uint32_t      buf_ping[BUFFER_SIZE];
-   uint32_t      buf_pong[BUFFER_SIZE];
-   uint32_t      buf_ping_addr{uint32_t(&buf_ping)};
-   uint32_t      buf_pong_addr{uint32_t(&buf_pong)};
 };
 
 } // namespace MTL

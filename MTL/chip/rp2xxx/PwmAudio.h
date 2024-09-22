@@ -20,27 +20,21 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+// NOTE: When streaming audio format should be a stereo pair of unsigned 16
+//       bit integers with max level 2^BITS - 1
+
 #pragma once
 
 #include "MTL/chip/Pll.h"
 #include "MTL/chip/Pwm.h"
-#include "MTL/chip/Dma.h"
-#include "MTL/chip/Irq.h"
-#include "MTL/core/NVIC.h"
 
-#define PWM_AUDIO_ATTACH_IRQ_0(pwm_audio) \
-     extern "C" { void IRQ_DMA_0() { pwm_audio.irqHandler(); } }
-
-#define PWM_AUDIO_ATTACH_IRQ_1(pio_audio) \
-     extern "C" { void IRQ_DMA_1() { pwm_audio.irqHandler(); } }
+#include "MTL/chip/rp2xxx/Audio.h"
 
 namespace MTL {
 
-extern void PwmAudio_getSamples(uint32_t* buffer, unsigned n);
-
 //! Audio driver for PWM audio
 template <unsigned PIN, unsigned BITS, unsigned BUFFER_SIZE = 1024, unsigned IRQ = 0>
-class PwmAudio
+class PwmAudio : public Audio::Base<BUFFER_SIZE, IRQ>
 {
 public:
    PwmAudio(unsigned sample_freq)
@@ -48,80 +42,20 @@ public:
       unsigned divider8_4 = PllSys().getFreq() / (sample_freq * (LIMIT >> 4));
 
       pwm.setSysClkDiv8_4(divider8_4);
-
-      ch_ping = dma.allocCH();
-      if (ch_ping < 0) return;
-
-      ch_reset_ping = dma.allocCH();
-      if (ch_reset_ping < 0) return;
-
-      ch_pong = dma.allocCH();
-      if (ch_pong < 0) return;
-
-      ch_reset_pong = dma.allocCH();
-      if (ch_reset_pong < 0) return;
-
-      dma.CH_prog(ch_ping, ch_reset_ping,
-                  buf_ping,                 /* read_incr */  true,
-                  pwm.getOut(),             /* write_incr */ false,
-                  BUFFER_SIZE,
-                  Dma::FOUR_BYTE,
-                  pwm.getDREQ());
-
-      dma.CH_prog(ch_reset_ping, ch_pong,
-                  &buf_ping_addr,                 /* read_incr */  false,
-                  dma.CH_getReadRegAddr(ch_ping), /* write_incr */ false,
-                  1, Dma::FOUR_BYTE);
-
-      dma.CH_prog(ch_pong, ch_reset_pong,
-                  buf_pong,                 /* read_incr */  true,
-                  pwm.getOut(),             /* write_incr */ false,
-                  BUFFER_SIZE,
-                  Dma::FOUR_BYTE,
-                  pwm.getDREQ());
-
-      dma.CH_prog(ch_reset_pong, ch_ping,
-                  &buf_pong_addr,                 /* read_incr */  false,
-                  dma.CH_getReadRegAddr(ch_pong), /* write_incr */ false,
-                  1, Dma::FOUR_BYTE);
-
-      // Enable interrupt
-      dma.CH_enableIrq(ch_ping, IRQ);
-      dma.CH_enableIrq(ch_pong, IRQ);
-
-      MTL::NVIC<IRQ_DMA_0 + IRQ>().enable();
    }
 
-   //! Start PIO
    void start()
    {
-      // Prime both buffers starting with ping
-      PwmAudio_getSamples(buf_ping, BUFFER_SIZE);
-      PwmAudio_getSamples(buf_pong, BUFFER_SIZE);
-
-      // Start DMA ping/pong
-      dma.CH_start(ch_ping);
+      this->startDMA(pwm.getDREQ(), pwm.getOut());
    }
 
    //! Manually push samples
-   void push(int16_t left, int16_t right)
+   void push(int16_t left_, int16_t right_)
    {
-      pwm = OFFSET + (left >> (16 - BITS));
-   }
+      uint32_t left  = OFFSET + (left_  >> (16 - BITS));
+      uint32_t right = OFFSET + (right_ >> (16 - BITS));
 
-   //! Handler for DMA ping/pong
-   void irqHandler()
-   {
-      if (dma.CH_isIrq(ch_ping, IRQ))
-      {
-         dma.CH_clrIrq(ch_ping, IRQ);
-         PwmAudio_getSamples(buf_ping, BUFFER_SIZE);
-      }
-      else
-      {
-         dma.CH_clrIrq(ch_pong, IRQ);
-         PwmAudio_getSamples(buf_pong, BUFFER_SIZE);
-      }
+      pwm = (right << 16) | left;
    }
 
 private:
@@ -129,15 +63,6 @@ private:
    static const uint32_t OFFSET = LIMIT / 2;
 
    Pwm<PIN,/* PAIR */ true> pwm{/* clock_div_8_4 */ 0b10000, LIMIT};
-   Dma                      dma{};
-   signed                   ch_ping{-1};
-   signed                   ch_reset_ping{-1};
-   signed                   ch_pong{-1};
-   signed                   ch_reset_pong{-1};
-   uint32_t                 buf_ping[BUFFER_SIZE];
-   uint32_t                 buf_pong[BUFFER_SIZE];
-   uint32_t                 buf_ping_addr{uint32_t(&buf_ping)};
-   uint32_t                 buf_pong_addr{uint32_t(&buf_pong)};
 };
 
 } // namespace MTL
