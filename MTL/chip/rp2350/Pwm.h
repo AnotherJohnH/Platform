@@ -54,8 +54,8 @@ struct PwmReg
 };
 
 //! PWM peripheral
-template <unsigned PIN>
-class Pwm : public Periph<PwmReg, 0x400a8000>
+template <unsigned PIN, bool PAIR = false>
+class Pwm : public Periph<PwmReg, 0x40050000>
 {
 public:
    //! Configure a single PWM output
@@ -63,7 +63,19 @@ public:
        unsigned period_         = 0x10000)
    {
       IoBank io_bank;
-      io_bank.setFunc(PIN, IoBank::PWM, PadsBank::DRIVE_2MA);
+
+      if (PAIR)
+      {
+         unsigned pin_a = PIN & 0b11110;
+         unsigned pin_b = pin_a | 1;
+
+         io_bank.setFunc(pin_a, IoBank::PWM, PadsBank::DRIVE_2MA);
+         io_bank.setFunc(pin_b, IoBank::PWM, PadsBank::DRIVE_2MA);
+      }
+      else
+      {
+         io_bank.setFunc(PIN, IoBank::PWM, PadsBank::DRIVE_2MA);
+      }
 
       // Configure slice XXX may be shared with another PWM pin
       unsigned slice = getSlice();
@@ -71,6 +83,18 @@ public:
       reg->ch[slice].div = sys_clk_div8_4_;
       reg->ch[slice].cc  = 0;
       reg->ch[slice].csr = (1 << 0); // EN
+   }
+
+   //! Get DMA req id
+   unsigned getDREQ() const
+   {
+      return DREQ_BASE + getSlice();
+   }
+
+   //! Get address of slice output register
+   volatile uint32_t* getOut() const
+   {
+      return &reg->ch[getSlice()].cc;
    }
 
    //! Set system clock divider for PWM counter clock in fixed-point 8.4
@@ -95,6 +119,12 @@ public:
       reg->ch[slice].cc = (reg->ch[slice].cc & mask) | (value_ << (16 * chan));
    }
 
+   //! Set width for both channels of a single slice
+   void setPair(uint32_t value_)
+   {
+      reg->ch[getSlice()].cc = value_;
+   }
+
    void invert()
    {
       unsigned slice = getSlice();
@@ -115,6 +145,8 @@ public:
    }
 
 private:
+   static const unsigned DREQ_BASE = 32;
+
    static unsigned getSlice()
    {
       return ((PIN & 0b100000) >> 2) |
