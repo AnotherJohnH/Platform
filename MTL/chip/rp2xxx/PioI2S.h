@@ -60,7 +60,7 @@ public:
       // Configure state machine
       pio.SM_clock(    sd, sample_freq * I2S_BITS_PER_SAMPLE * 2 * clk_mul * 2);
       pio.SM_pinOUT(   sd, pin_sd);
-      pio.SM_pinSIDE(  sd, pin_lrclk_sclk, 2);
+      pio.SM_pinSIDE(  sd, pin_lrclk_sclk);
       pio.SM_configOSR(sd, I2S_BITS_PER_SAMPLE * 2, MTL::SHIFT_LEFT,
                        auto_pull ? MTL::AUTO_PULL : MTL::MANUAL,
                        /* join_tx */ true);

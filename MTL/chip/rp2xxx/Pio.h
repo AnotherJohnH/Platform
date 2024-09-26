@@ -135,9 +135,9 @@ public:
    }
 
    //! Set state machine SIDE set pins
-   void SM_pinSIDE(unsigned sd, unsigned pin, unsigned n = 1)
+   void SM_pinSIDE(unsigned sd, unsigned pin)
    {
-      side_set(n);
+      unsigned n = getSideSetBits();
 
       configOut(pin, n);
 
@@ -146,7 +146,17 @@ public:
 
       // Configure SIDE pins
       this->setField(pinctrl, 14, 10, pin);
-      this->setField(pinctrl, 31, 29, n);
+
+      if (getSideSetEnable())
+      {
+          this->setBit(this->reg->sm[sd].execctrl, 30);
+          this->setField(pinctrl, 31, 29, n + 1);
+      }
+      else
+      {
+          this->setField(pinctrl, 31, 29, n);
+      }
+      this->setField(pinctrl, 28, 26, n);
 
       // Configure OUT pins as SIDE pins
       uint32_t tmp_pinctrl = pinctrl;
@@ -244,7 +254,7 @@ public:
    }
 
    //! Push data into TX FIFO
-   void SM_push(unsigned sd, uint32_t data)
+   void SM_push(unsigned sd, uint32_t data) const
    {
       // Block if FIFO full
       while(this->getBit(this->reg->fstat, 16 + sd) != 0);
@@ -279,6 +289,8 @@ public:
 
          this->reg->instr_mem[free_pc++] = inst;
       }
+
+      side_set(code.getSideSetBits(), code.getSideSetEnable());
 
       SM_wrap(sd, code.getWrapTarget() + start, code.getWrap() + start);
       SM_exec(sd, JMP(code.getEntry() + start).op());

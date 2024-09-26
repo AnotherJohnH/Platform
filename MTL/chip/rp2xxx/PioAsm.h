@@ -93,14 +93,17 @@ public:
    };
 
    //! Get number of side set bits
-   unsigned sideSetBits() const { return side_set_bits; }
+   unsigned getSideSetBits() const { return side_set_bits; }
+
+   //! Get side set enable
+   bool getSideSetEnable() const { return side_set_enable; }
 
    //! Set number of side set bits
-   void side_set(unsigned side_set_bits_)
+   void side_set(unsigned side_set_bits_, bool enable_ = false)
    {
        assert(pc == 0);
-
-       side_set_bits = side_set_bits_;
+       side_set_bits   = side_set_bits_;
+       side_set_enable = enable_;
    }
 
    //! Jump to address if condition is true
@@ -201,9 +204,16 @@ public:
    AsmBase& side(unsigned bits)
    {
       assert(bits < (1 << side_set_bits));
-
       uint16_t& inst = prog[pc - 1];
-      inst = inst | (bits << (13 - side_set_bits));
+
+      if (side_set_enable)
+      {
+         inst = inst | (1 << 12) | (bits << (12 - side_set_bits));
+      }
+      else
+      {
+         inst = inst | (bits << (13 - side_set_bits));
+      }
 
       return *this;
    }
@@ -228,6 +238,7 @@ protected:
 
    uint8_t  pc{0};
    uint8_t  side_set_bits{0};
+   bool     side_set_enable{false};
    bool     overwrite{false};
    uint16_t prog[SIZE];
 };

@@ -58,7 +58,7 @@ public:
       // Configure state machine
       pio.SM_clock(  sd, freq);
       pio.SM_pinOUT( sd, pin_db, 8);
-      pio.SM_pinSIDE(sd, pin_wr, 1);
+      pio.SM_pinSIDE(sd, pin_wr);
 
       return sd;
    }
