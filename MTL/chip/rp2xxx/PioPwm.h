@@ -20,6 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
+// PWM implemented using the PIO (as per the RPio darasheet example)
+// The actual PWM peripheral is most likely a better choice
+
 #pragma once
 
 #include "Pio.h"
@@ -43,12 +46,12 @@ private:
 
          wrap_target();
 
-            POP(PIO::NO_BLOCK)         .side(1);
+            POP(PIO::NO_BLOCK)         .side(0);
             MOV(PIO::X, PIO::OSR);
             MOV(PIO::Y, PIO::ISR);
          lbl(count_loop);
             JMP(PIO::X_NE_Y, no_set);
-            JMP(skip)                  .side(0);
+            JMP(skip)                  .side(1);
          lbl(no_set);
             NOP();
          lbl(skip);
