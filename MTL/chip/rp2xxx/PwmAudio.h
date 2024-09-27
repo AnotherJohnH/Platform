@@ -41,21 +41,27 @@ public:
    {
       unsigned divider8_4 = PllSys().getFreq() / (sample_freq * (LIMIT >> 4));
 
-      pwm.setSysClkDiv8_4(divider8_4);
+      rate.setSysClkDiv8_4(divider8_4);
    }
 
    void start()
    {
-      this->startDMA(pwm.getDREQ(), pwm.getOut());
+      this->startDMA(rate.getDREQ(), pwm.getOut());
+   }
+
+   //! Re-format a pair of 16-bit signed samples for the PWM
+   static uint32_t packSamples(int16_t left_, int16_t right_)
+   {
+      uint32_t left  = OFFSET + (left_  >> (16 - BITS));
+      uint32_t right = OFFSET + (right_ >> (16 - BITS));
+
+      return (right << 16) | left;
    }
 
    //! Manually push samples
    void push(int16_t left_, int16_t right_)
    {
-      uint32_t left  = OFFSET + (left_  >> (16 - BITS));
-      uint32_t right = OFFSET + (right_ >> (16 - BITS));
-
-      pwm = (right << 16) | left;
+      pwm = packSamples(left_, right_);
    }
 
 private:
@@ -63,6 +69,7 @@ private:
    static const uint32_t OFFSET = LIMIT / 2;
 
    Pwm<PIN,/* PAIR */ true> pwm{/* clock_div_8_4 */ 0b10000, LIMIT};
+   Pwm<PIN + 2>             rate{/* clock_div_8_4 */ 0b10000, LIMIT, /* dreq only */ true};
 };
 
 } // namespace MTL

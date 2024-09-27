@@ -60,7 +60,8 @@ class Pwm : public Periph<PwmReg, 0x40050000>
 public:
    //! Configure a single PWM output
    Pwm(unsigned sys_clk_div8_4_ = 0b100000000,
-       unsigned period_         = 0x10000)
+       unsigned period_         = 0x10000,
+       bool     dreq_only_      = false)
    {
       IoBank io_bank;
 
@@ -72,7 +73,7 @@ public:
          io_bank.setFunc(pin_a, IoBank::PWM, PadsBank::DRIVE_2MA);
          io_bank.setFunc(pin_b, IoBank::PWM, PadsBank::DRIVE_2MA);
       }
-      else
+      else if (not dreq_only_)
       {
          io_bank.setFunc(PIN, IoBank::PWM, PadsBank::DRIVE_2MA);
       }
