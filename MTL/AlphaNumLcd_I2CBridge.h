@@ -164,6 +164,9 @@ private:
    //! Transfer 4 bits to the LCD
    void tx(uint8_t data4, bool ram)
    {
+      static const unsigned T_SETUP_US = 600; // data setup time before E falling edge (us)
+      static const unsigned T_HOLD_US  = 600; // data hold time after E falling edge (us)
+
       static const uint8_t BIT_RS = 0b0001;
       static const uint8_t BIT_RW = 0b0010;
       static const uint8_t BIT_E  = 0b0100;
@@ -179,11 +182,11 @@ private:
 
       i2c.write(byte | BIT_E, /* stop */ true);
 
-      usleep(10);
+      usleep(T_SETUP_US);
 
       i2c.write(byte, /* stop */ true);
 
-      usleep(38);
+      usleep(T_HOLD_US);
    }
 
    //! Send command to LCD
