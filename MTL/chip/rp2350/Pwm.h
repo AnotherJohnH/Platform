@@ -79,82 +79,64 @@ public:
       }
 
       // Configure slice XXX may be shared with another PWM pin
-      unsigned slice = getSlice();
-      reg->ch[slice].top = period_ - 1;
-      reg->ch[slice].div = sys_clk_div8_4_;
-      reg->ch[slice].cc  = 0;
-      reg->ch[slice].csr = (1 << 0); // EN
+      reg->ch[SLICE].top = period_ - 1;
+      reg->ch[SLICE].div = sys_clk_div8_4_;
+      reg->ch[SLICE].cc  = 0;
+      reg->ch[SLICE].csr = (1 << 0); // EN
    }
 
    //! Get DMA req id
-   unsigned getDREQ() const
-   {
-      return DREQ_BASE + getSlice();
-   }
+   unsigned getDREQ() const { return DREQ_BASE + SLICE; }
 
    //! Get address of slice output register
-   volatile uint32_t* getOut() const
-   {
-      return &reg->ch[getSlice()].cc;
-   }
+   volatile uint32_t* getOut() const { return &reg->ch[SLICE].cc; }
 
    //! Set system clock divider for PWM counter clock in fixed-point 8.4
    void setSysClkDiv8_4(unsigned sys_clk_div8_4_)
    {
-      reg->ch[getSlice()].div = sys_clk_div8_4_;
+      reg->ch[SLICE].div = sys_clk_div8_4_;
    }
 
-   //! Set PWM period in PWM counter clock ticks
-   void setPeriod(unsigned period_)
+   //! Set PWM period in PWM counter clock ticks for a slice
+   void setPeriod(uint16_t period_)
    {
-      reg->ch[getSlice()].top = period_ - 1;
+      reg->ch[SLICE].top = period_ - 1;
    }
 
-   //! Set pulse width in PWM counter clock ticks
-   void setWidth(unsigned value_)
+   //! Set pulse width in PWM counter clock ticks for a single channel
+   void setWidth(uint16_t value_)
    {
-      unsigned slice = getSlice();
-      unsigned chan  = getChan();
-      uint32_t mask  = ~(0xFFFF << (16 * chan));
+      uint32_t mask  = ~(0xFFFF << (16 * CHAN));
 
-      reg->ch[slice].cc = (reg->ch[slice].cc & mask) | (value_ << (16 * chan));
+      reg->ch[SLICE].cc = (reg->ch[SLICE].cc & mask) | (value_ << (16 * CHAN));
    }
 
    //! Set width for both channels of a single slice
    void setPair(uint32_t value_)
    {
-      reg->ch[getSlice()].cc = value_;
+      reg->ch[SLICE].cc = value_;
    }
 
+   //! Invert a single channel
    void invert()
    {
-      unsigned slice = getSlice();
-      unsigned chan  = getChan();
-
-      reg->ch[slice].csr |= 1 << (chan + 2);
+      reg->ch[SLICE].csr |= 1 << (CHAN + 2);
    }
 
-   unsigned operator=(unsigned value_)
+   //! Set pulse width in PWM counter clock ticks for a single channel
+   uint16_t operator=(uint16_t value_)
    {
       setWidth(value_);
       return value_;
    }
 
-   unsigned getCounter() const
-   {
-      return reg->ch[getSlice()].ctr;
-   }
+   //! Get counter value for slice
+   uint32_t getCounter() const { return reg->ch[SLICE].ctr; }
 
 private:
    static const unsigned DREQ_BASE = 32;
-
-   static unsigned getSlice()
-   {
-      return ((PIN & 0b100000) >> 2) |
-             ((PIN & 0b001110) >> 1);
-   }
-
-   static unsigned getChan() { return PIN & 1; }
+   static const unsigned SLICE     = ((PIN & 0b100000) >> 2) | ((PIN & 0b001110) >> 1); //!< PWM slice (0..11)
+   static const unsigned CHAN      = PIN & 1;                                           //!< PWM channel (0..1)
 };
 
 } // namespace MTL
