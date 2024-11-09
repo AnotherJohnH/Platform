@@ -59,7 +59,7 @@ class Pwm : public Periph<PwmReg, 0x40050000>
 {
 public:
    //! Configure a single PWM output
-   Pwm(unsigned sys_clk_div8_4_ = 0b100000000,
+   Pwm(unsigned sys_clk_div8_4_ = 0b10000,
        unsigned period_         = 0x10000,
        bool     dreq_only_      = false)
    {
