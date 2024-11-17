@@ -33,7 +33,8 @@ class Interface
 public:
    Interface() = default;
 
-   Interface(MIDI::Instrument& instrument_)
+   Interface(MIDI::Instrument& instrument_, bool debug_ = false)
+      : debug(debug_)
    {
       attachInstrument(instrument_);
    }

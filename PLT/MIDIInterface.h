@@ -40,7 +40,7 @@ namespace MIDI {
 class Interface : public ::MIDI::Interface
 {
 public:
-   Interface(::MIDI::Instrument& instrument_);
+   Interface(::MIDI::Instrument& instrument_, bool debug_ = false);
 
    ~Interface();
 

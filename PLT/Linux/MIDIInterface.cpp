@@ -106,8 +106,8 @@ private:
 };
 
 
-Interface::Interface(::MIDI::Instrument& instrument_)
-   : ::MIDI::Interface(instrument_)
+Interface::Interface(::MIDI::Instrument& instrument_, bool debug_)
+   : ::MIDI::Interface(instrument_, debug_)
 {
    pimpl = new Pimpl();
 }
