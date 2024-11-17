@@ -26,6 +26,7 @@
 #pragma once
 
 #include "MTL/MTL.h"
+#include "MTL/chip/I2C.h"
 
 #include <unistd.h>
 

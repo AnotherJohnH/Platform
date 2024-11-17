@@ -23,6 +23,7 @@
 #pragma once
 
 #include "MTL/chip/Usb.h"
+#include "STB/Fifo.h"
 
 #include "USB/Device.h"
 #include "USB/Interface.h"

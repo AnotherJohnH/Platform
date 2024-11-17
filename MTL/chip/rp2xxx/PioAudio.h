@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include "MTL/Pins.h"
 #include "MTL/chip/PioClock.h"
 #include "MTL/chip/PioI2S.h"
 

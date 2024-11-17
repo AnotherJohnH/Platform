@@ -27,6 +27,7 @@
 #include <unistd.h>
 
 #include "MTL/MTL.h"
+#include "MTL/chip/I2C.h"
 
 namespace MTL {
 
