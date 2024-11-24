@@ -1,4 +1,4 @@
-/*------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Copyright (c) 2013 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -18,7 +18,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-//----------------------------------------------------------------------------*/
+//------------------------------------------------------------------------------
 
 //! \brief tiny C library implementation
 
@@ -26,9 +26,10 @@
 
 int strcmp(const char* lhs, const char* rhs)
 {
-   while(*lhs++ == *rhs++)
+   while((*lhs == *rhs) && (*rhs != '\0'))
    {
-      if (*rhs == '\0') break;
+      ++rhs;
+      ++lhs;
    }
 
    return *lhs - *rhs;

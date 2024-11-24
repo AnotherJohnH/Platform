@@ -29,17 +29,17 @@
 namespace STB {
 
 //! Small, portable, statically sized stack
-template <typename T, std::size_t N, typename INDEX = std::size_t>
+template <typename T, size_t N, typename INDEX = size_t>
 class Stack
 {
 public:
    //------------------------------------------------------------------
    // Member types
 
-   typedef T           value_type;
-   typedef T&          reference;
-   typedef const T&    const_reference;
-   typedef std::size_t size_type;
+   typedef T        value_type;
+   typedef T&       reference;
+   typedef const T& const_reference;
+   typedef size_t   size_type;
 
    //------------------------------------------------------------------
    // Element access
