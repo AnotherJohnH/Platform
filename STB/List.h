@@ -85,11 +85,13 @@ public:
    //  XXX O(n)
    TYPE* back() const
    {
-      TYPE* back;
+      for(TYPE* elem = first; elem != nullptr; elem = elem->next)
+      {
+         if (elem->next == nullptr)
+            return elem;
+      }
 
-      for(back = first; back->next != nullptr; back = back->next);
-
-      return back;
+      return nullptr;
    }
 
    //! Return an iterator for the first elem in the list
