@@ -28,3 +28,5 @@ add_library(STB STATIC
             Zlib.cpp)
 
 target_include_directories(STB PUBLIC ..)
+
+add_subdirectory(test)

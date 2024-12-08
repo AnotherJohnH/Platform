@@ -20,18 +20,21 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-add_executable(testConsoleApp testConsoleApp.cpp)
-target_link_libraries(testConsoleApp PLT)
+if(${PLT_NATIVE})
 
-add_executable(testMidiFile testMidiFile.cpp)
-target_link_libraries(testMidiFile PLT)
+   add_executable(testConsoleApp testConsoleApp.cpp)
+   target_link_libraries(testConsoleApp PLT STB)
 
-add_executable(test_stb
-               ${CMAKE_SOURCE_DIR}/Source/test/testMain.cpp
-               testEndian.cpp
-               testLicense.cpp)
+   add_executable(testMidiFile testMidiFile.cpp)
+   target_link_libraries(testMidiFile PLT STB)
 
-target_link_libraries(test_stb PLT gtest)
+   add_executable(test_STB
+                  testMain.cpp
+                  testEndian.cpp
+                  testLicense.cpp)
 
-add_test(NAME test_stb COMMAND test_stb)
+   target_link_libraries(test_STB PLT STB)
 
+   add_test(NAME test_STB COMMAND test_STB)
+
+endif()

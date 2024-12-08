@@ -50,6 +50,9 @@ def parseArgs():
    parser.add_argument('-d', '--debug', dest='debug', action='store_true',
                        help='Debug builds')
 
+   parser.add_argument('-t', '--test', dest='test', action='store_true',
+                       help='Run tests')
+
    return parser.parse_args()
 
 #-------------------------------------------------------------------------------
@@ -104,6 +107,23 @@ def build(target, cmake_opts):
    os.chdir("..")
 
 #-------------------------------------------------------------------------------
+# Test a build for the given target
+
+def test(target):
+
+   print('='*80)
+   print(f"Build for '{target}'")
+
+   build_dir="build_" + target
+
+   if os.path.exists(build_dir):
+
+      os.chdir(build_dir)
+      cmd = "ctest -V"
+      os.system(cmd)
+      os.chdir("..")
+
+#-------------------------------------------------------------------------------
 # Entry point
 
 cmake_opts = ""
@@ -130,5 +150,7 @@ for target in args.targets:
       build(target, cmake_opts)
    elif args.clean:
       clean(target)
+   elif args.test:
+      test(target)
    else:
       build(target, cmake_opts)

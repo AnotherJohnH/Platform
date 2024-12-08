@@ -22,7 +22,7 @@
 
 #include "STB/Endian.h"
 
-#include "gtest/gtest.h"
+#include "STB/Test.h"
 
 TEST(STB_Endian, Big16)
 {

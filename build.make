@@ -32,6 +32,10 @@ debug:
 spotless:
 	Platform/scripts/build.py -s $(targets)
 
+.PHONY: test
+test:
+	Platform/scripts/build.py --test ${targets}
+
 #-------------------------------------------------------------------------------
 # Build rules for specific targets
 

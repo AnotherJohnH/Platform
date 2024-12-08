@@ -20,12 +20,16 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
+cmake_minimum_required(VERSION 3.19.1)
+
 if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
 endif()
 
-set(CMAKE_CXX_STANDARD          14)
+set(CMAKE_CXX_STANDARD          17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+include(CTest)
 
 #-------------------------------------------------------------------------------
 # Introspect to determine Platform project variables...
@@ -48,6 +52,7 @@ endif()
 
 if(${PLT_TARGET} STREQUAL native)
 
+   set(PLT_NATIVE  TRUE)
    set(PLT_TARGET  ${CMAKE_HOST_SYSTEM_NAME})
    set(PLT_MACHINE ${CMAKE_HOST_SYSTEM_PROCESSOR})
 
@@ -56,6 +61,7 @@ if(${PLT_TARGET} STREQUAL native)
    endif()
 
 else()
+   set(PLT_NATIVE  FALSE)
    set(CMAKE_ASM_FLAGS_DEBUG   "")
    set(CMAKE_ASM_FLAGS_RELEASE "")
 

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2019 John D. Haughton
+// Copyright (c) 2024 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,6 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "STB/License.h"
-
 #include "STB/Test.h"
 
-TEST(STB_License, MIT)
-{
-   EXPECT_EQ(strlen(MIT_LICENSE), 1022);
-}
+TEST_MAIN
