@@ -121,7 +121,7 @@ inline bool expect_eq(TYPE_L      left_,
                       const char* file_,
                       size_t      line_)
 {
-   if (left_ == right_)
+   if (TYPE_R(left_) == right_)
       return true;
 
    error(file_, line_);
@@ -141,7 +141,7 @@ inline bool expect_ne(TYPE_L      left_,
                       const char* file_,
                       size_t      line_)
 {
-   if (left_ != right_)
+   if (TYPE_R(left_) != right_)
       return true;
 
    error(file_, line_);
