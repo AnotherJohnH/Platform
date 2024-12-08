@@ -57,7 +57,7 @@ enum DescrType : uint8_t
 
 
 //! Base class for list element descriptors
-class Descr : public STB::List<Descr>::Element
+class Descr : public STB::List<Descr>::Elem
 {
 public:
    using List = STB::List<Descr>;

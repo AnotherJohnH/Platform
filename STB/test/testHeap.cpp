@@ -38,7 +38,7 @@ TEST(STB_Heap, basic)
    Object* obj = heap.alloc();
 
    EXPECT_NE(nullptr, obj);
-   EXPECT_EQ(nullptr, obj->next);
+   EXPECT_EQ(nullptr, obj->nextElem());
 
    EXPECT_FALSE(heap.empty());
    EXPECT_EQ(1, heap.allocated());
@@ -57,7 +57,7 @@ TEST(STB_Heap, full)
    size_t  one_idx = heap.index(one);
 
    EXPECT_NE(nullptr, one);
-   EXPECT_EQ(nullptr, one->next);
+   EXPECT_EQ(nullptr, one->nextElem());
    EXPECT_FALSE(heap.empty());
    EXPECT_EQ(1, heap.allocated());
 
@@ -65,7 +65,7 @@ TEST(STB_Heap, full)
    size_t  two_idx = heap.index(two);
 
    EXPECT_NE(nullptr, two);
-   EXPECT_EQ(nullptr, two->next);
+   EXPECT_EQ(nullptr, two->nextElem());
    EXPECT_FALSE(heap.empty());
    EXPECT_EQ(2, heap.allocated());
 
@@ -73,7 +73,7 @@ TEST(STB_Heap, full)
    size_t  three_idx = heap.index(three);
 
    EXPECT_NE(nullptr, three);
-   EXPECT_EQ(nullptr, three->next);
+   EXPECT_EQ(nullptr, three->nextElem());
    EXPECT_TRUE(heap.empty());
    EXPECT_EQ(3, heap.allocated());
 

@@ -127,7 +127,7 @@ private:
 
 // TODO split out into own header ... or maybe merge with Device
 //      and only support one config
-class Config : public STB::List<Config>::Element
+class Config : public STB::List<Config>::Elem
 {
 public:
    Config(Device& device_)

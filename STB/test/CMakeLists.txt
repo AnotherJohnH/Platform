@@ -32,7 +32,8 @@ if(${PLT_NATIVE})
                   testMain.cpp
                   testEndian.cpp
                   testHeap.cpp
-                  testLicense.cpp)
+                  testLicense.cpp
+                  testList.cpp)
 
    target_link_libraries(test_STB PLT STB)
 

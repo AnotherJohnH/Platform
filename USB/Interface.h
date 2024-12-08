@@ -27,7 +27,7 @@
 
 namespace USB {
 
-class Interface : public STB::List<Interface>::Element
+class Interface : public STB::List<Interface>::Elem
 {
 public:
    using List = STB::List<Interface>;

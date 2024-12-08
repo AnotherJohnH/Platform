@@ -33,73 +33,114 @@ template <typename TYPE>
 class List
 {
 public:
-   //! Base class for list elements
-   class Element
+   //! Base class for list elems
+   class Elem
    {
    friend class List;
+
+   public:
+      TYPE* nextElem() const { return next; }
 
    private:
       TYPE* next{nullptr};
    };
 
-   //! Iterator for list elements
-   class iterator
+   template <typename T>
+   class iterator_impl
    {
    public:
-      iterator(TYPE* ptr_)
+      iterator_impl(T* ptr_)
          : ptr(ptr_)
       {}
 
-      iterator& operator++()
+      iterator_impl& operator++()
       {
          ptr = ptr->next;
          return *this;
       }
 
-      bool operator==(const iterator& other) const { return ptr == other.ptr; }
+      bool operator==(const iterator_impl& other) const { return ptr == other.ptr; }
 
-      bool operator!=(const iterator& other) const { return ptr != other.ptr; }
+      bool operator!=(const iterator_impl& other) const { return ptr != other.ptr; }
 
-      TYPE& operator*() { return *ptr; }
+      T& operator*() { return *ptr; }
 
-   private:
-      TYPE* ptr;
+      T* ptr;
    };
+
+   using iterator       = iterator_impl<TYPE>;
+   using const_iterator = iterator_impl<const TYPE>;
 
    //! Test for empty list
    bool empty() const  { return first == nullptr; }
 
+   //! Return the number of elems in the list
+   size_t size() const { return n; }
+
    //! Returns pointer to the first item in the list
    TYPE* front() const { return first; }
 
+   //! Returns pointer to the last item in the list
+   //  XXX O(n)
+   TYPE* back() const
+   {
+      TYPE* back;
 
-   //! Return an iterator for the first element in the list
-   iterator begin() {  return iterator(first); }
+      for(back = first; back->next != nullptr; back = back->next);
+
+      return back;
+   }
+
+   //! Return an iterator for the first elem in the list
+   iterator begin() { return iterator(first); }
 
    //! return an iterator for the end of the list
    iterator end() { return iterator(nullptr); }
 
+   //! Return an iterator for the first elem in the list
+   const_iterator begin() const { return const_iterator(first); }
 
-   //! Remove the first element from the list
-   void pop_front()
+   //! return an iterator for the end of the list
+   const_iterator end() const { return const_iterator(nullptr); }
+
+
+   //! Clear list to empty
+   void clear()
    {
-      assert(!empty());
-
-      first = first->next;
+      first = nullptr;
+      n     = 0;
    }
 
-   //! Remove an element from the list
+   //! Remove the first elem from the list
+   void pop_front()
+   {
+      assert(not empty());
+
+      first = first->next;
+      --n;
+   }
+
+   //! Remove the last elem from the list
+   void pop_back()
+   {
+      assert(not empty());
+
+      remove(back());
+   }
+
+   //! Remove an elem from the list
    //  XXX O(n)
-   void remove(TYPE* element)
+   void remove(TYPE* elem)
    {
       TYPE** prev = &first;
 
       for(TYPE* e = first; e; e = e->next)
       {
-         if (element == e)
+         if (elem == e)
          {
             *prev = e->next;
             e->next = nullptr;
+            --n;
             return;
          }
 
@@ -107,63 +148,38 @@ public:
       }
    }
 
-   //! Insert a new element at the front of the list
-   void push_front(TYPE* element)
+   //! Insert a new elem at the front of the list
+   void push_front(TYPE* elem)
    {
-      assert(element != first);
+      assert(elem != first);
 
-      element->next = first;
-      first = element;
+      elem->next = first;
+      first = elem;
+
+      ++n;
    }
 
-   //! Insert a new element at the back of the list
+   //! Insert a new elem at the back of the list
    //  XXX O(n)
-   void push_back(TYPE* element)
+   void push_back(TYPE* elem)
    {
+      elem->next = nullptr;
+
       if (first == nullptr)
       {
-         first = element;
+         first = elem;
       }
       else
       {
-         TYPE* prev;
-
-         for(prev = first; prev->next != nullptr; prev = prev->next);
-
-         prev->next = element;
-      }
-   }
-
-   //! Insert a new element into the list
-   //  item must not already be in the list
-   void insert(TYPE* element)
-   {
-      TYPE*  prev = nullptr;
-      TYPE*  e;
-
-      for(e = first; e; e = e->next)
-      {
-         if (*element <= *e) break;
-
-         prev = e;
+         back()->next = elem;
       }
 
-      assert(element != e);
-      element->next = e;
-
-      if (prev)
-      {
-         assert(prev != element);
-         prev->next = element;
-      }
-      else
-      {
-         first = element;
-      }
+      ++n;
    }
 
 private:
-   TYPE* first{nullptr};
+   TYPE*  first{nullptr};
+   size_t n{0};
 };
 
 } // namespace STB

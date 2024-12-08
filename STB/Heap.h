@@ -25,13 +25,12 @@
 #include <cstddef>
 #include <new>
 
+#include "STB/List.h"
+
 namespace STB {
 
 template <typename TYPE>
-struct HeapElem
-{
-   TYPE* next{nullptr};
-};
+using HeapElem = typename STB::List<TYPE>::Elem;
 
 template <typename TYPE, size_t SIZE>
 class Heap
@@ -43,36 +42,35 @@ public:
    }
 
    //! Check if heap is empty
-   bool empty() const { return free_list == nullptr; }
+   bool empty() const { return free_list.empty(); }
 
    //! Get number of objects that have been allocated
-   size_t allocated() const { return num_alloc; }
+   size_t allocated() const { return SIZE - free_list.size(); }
 
    //! Return the heap index for an element
    size_t index(const TYPE* object_) const { return object_ - heap; }
 
    //! Reset the heap to nothing allocated
+   //! destructors are not called on any active allocations
    void reset()
    {
-      free_list = nullptr;
-      num_alloc = SIZE;
+      free_list.clear();
 
       for(size_t i = 0; i < SIZE; ++i)
       {
-         free(&heap[i]);
+         free_list.push_front(&heap[i]);
       }
    }
 
    //! Allocate a new object
    TYPE* alloc()
    {
-      if (empty())
+      TYPE* object = free_list.front();
+
+      if (object == nullptr)
          return nullptr;
 
-      TYPE* object = free_list;
-      free_list    = free_list->next;
-
-      ++num_alloc;
+      free_list.pop_front();
 
       return new (object) TYPE();
    }
@@ -82,16 +80,12 @@ public:
    {
       object_->~TYPE();
 
-      object_->next = free_list;
-      free_list     = object_;
-
-      --num_alloc;
+      free_list.push_front(object_);
    }
 
 private:
-   TYPE   heap[SIZE];
-   TYPE*  free_list{};
-   size_t num_alloc{SIZE};
+   List<TYPE> free_list;
+   TYPE       heap[SIZE];
 };
 
 } // namespace STB
