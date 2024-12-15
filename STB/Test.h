@@ -167,8 +167,8 @@ inline bool expect_streq(const char* left_,
    error(file_, line_);
 
    std::cout << "Value of " << right_s_ << "\n";
-   std::cout << "  Actual: " << right_ << "\n";
-   std::cout << "Expected: " << left_  << "\n";
+   std::cout << "  Actual: \"" << right_ << "\"\n";
+   std::cout << "Expected: \"" << left_  << "\"\n";
 
    return false;
 }
@@ -182,10 +182,10 @@ inline bool expect_streq(const char* left_,
    pass_ &= TST::expect_ne(left, right, #right, __FILE__, __LINE__)
 
 #define EXPECT_TRUE(right) \
-   pass_ &= TST::expect_eq(true, right, #right, __FILE__, __LINE__)
+   pass_ &= TST::expect_eq(true, bool(right), #right, __FILE__, __LINE__)
 
 #define EXPECT_FALSE(right) \
-   pass_ &= TST::expect_eq(false, right, #right, __FILE__, __LINE__)
+   pass_ &= TST::expect_eq(false, bool(right), #right, __FILE__, __LINE__)
 
 #define EXPECT_STREQ(left, right) \
    pass_ &= TST::expect_streq(left, right, #right, __FILE__, __LINE__)

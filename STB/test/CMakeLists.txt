@@ -30,6 +30,7 @@ if(${PLT_NATIVE})
 
    add_executable(test_STB
                   testMain.cpp
+                  testBitArray.cpp
                   testEndian.cpp
                   testHeap.cpp
                   testLicense.cpp
