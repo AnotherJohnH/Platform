@@ -47,11 +47,14 @@ public:
    //! Get number of objects that have been allocated
    size_t allocated() const { return SIZE - free_list.size(); }
 
+   //! Get number of objects that could be allocated
+   size_t avail() const { return free_list.size(); }
+
    //! Return the heap index for an element
    size_t index(const TYPE* object_) const { return object_ - heap; }
 
    //! Reset the heap to nothing allocated
-   //! destructors are not called on any active allocations
+   //  destructors are not called on any active allocations
    void reset()
    {
       free_list.clear();
@@ -63,7 +66,8 @@ public:
    }
 
    //! Allocate a new object
-   TYPE* alloc()
+   template<class... ARGS>
+   TYPE* alloc(ARGS&&... args)
    {
       TYPE* object = free_list.front();
 
@@ -72,10 +76,10 @@ public:
 
       free_list.pop_front();
 
-      return new (object) TYPE();
+      return new (object) TYPE(std::forward<ARGS>(args)...);
    }
 
-   //! Deallocate an object
+   //! De-allocate an object
    void free(TYPE* object_)
    {
       object_->~TYPE();
