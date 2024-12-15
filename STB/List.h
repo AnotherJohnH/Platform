@@ -94,6 +94,21 @@ public:
       return nullptr;
    }
 
+   //! Return the nth list element
+   //  XXX O(n)
+   TYPE* operator[](size_t index_)
+   {
+      size_t i = 0;
+
+      for(TYPE* elem = first; elem != nullptr; elem = elem->next)
+      {
+         if (i++ == index_)
+            return elem;
+      }
+
+      return nullptr;
+   }
+
    //! Return an iterator for the first elem in the list
    iterator begin() { return iterator(first); }
 
