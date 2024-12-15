@@ -38,4 +38,12 @@ const TYPE& max(const TYPE& a, const TYPE& b)
    return b > a ? b : a;
 }
 
+template <typename TYPE>
+const TYPE& clamp(const TYPE& v, const TYPE& lo, const TYPE& hi)
+{
+   return v > hi ? hi
+                 : v < lo ? lo
+                          : v;
+}
+
 } // namespace std
