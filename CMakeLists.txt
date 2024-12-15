@@ -29,6 +29,9 @@ endif()
 set(CMAKE_CXX_STANDARD          17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set(CMAKE_CXX_STANDARD          17   PARENT_SCOPE)
+set(CMAKE_CXX_STANDARD_REQUIRED True PARENT_SCOPE)
+
 include(CTest)
 
 #-------------------------------------------------------------------------------
