@@ -57,9 +57,11 @@ public:
 
    // Iterators
    iterator       begin()        { return storage; }
+   const_iterator begin() const  { return storage; }
    const_iterator cbegin() const { return storage; }
 
    iterator       end()        { return storage + N; }
+   const_iterator end() const  { return storage + N; }
    const_iterator cend() const { return storage + N; }
 
    iterator       rbegin()        { return storage + N - 1; }
