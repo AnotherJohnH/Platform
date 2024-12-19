@@ -41,6 +41,9 @@ public:
       reset();
    }
 
+   //! Return pointer to raw allocation
+   TYPE* data() { return heap; }
+
    //! Check if heap is empty
    bool empty() const { return free_list.empty(); }
 
