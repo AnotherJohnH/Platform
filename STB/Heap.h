@@ -23,6 +23,7 @@
 #pragma once
 
 #include <cstddef>
+#include <algorithm>
 #include <new>
 
 #include "STB/List.h"
@@ -41,6 +42,12 @@ public:
       reset();
    }
 
+   //! Return pointer to raw allocation
+   TYPE* data() { return reinterpret_cast<TYPE*>(heap); }
+
+   //! Return pointer to raw allocation
+   const TYPE* data() const { return reinterpret_cast<const TYPE*>(heap); }
+
    //! Check if heap is empty
    bool empty() const { return free_list.empty(); }
 
@@ -51,7 +58,10 @@ public:
    size_t avail() const { return free_list.size(); }
 
    //! Return the heap index for an element
-   size_t index(const TYPE* object_) const { return object_ - heap; }
+   size_t index(const TYPE* object_) const
+   {
+      return reinterpret_cast<const Proxy*>(object_) - heap;
+   }
 
    //! Reset the heap to nothing allocated
    //  destructors are not called on any active allocations
@@ -69,14 +79,14 @@ public:
    template<class... ARGS>
    TYPE* alloc(ARGS&&... args)
    {
-      TYPE* object = free_list.front();
+      Proxy* proxy = free_list.front();
 
-      if (object == nullptr)
+      if (proxy == nullptr)
          return nullptr;
 
       free_list.pop_front();
 
-      return new (object) TYPE(std::forward<ARGS>(args)...);
+      return new (proxy) TYPE(std::forward<ARGS>(args)...);
    }
 
    //! De-allocate an object
@@ -84,12 +94,20 @@ public:
    {
       object_->~TYPE();
 
-      free_list.push_front(object_);
+      free_list.push_front(reinterpret_cast<Proxy*>(object_));
    }
 
 private:
-   List<TYPE> free_list;
-   TYPE       heap[SIZE];
+   static constexpr size_t MIN_SIZE = std::max(sizeof(uintptr_t), sizeof(TYPE));
+
+   //! Linked list type that takes the same space (or more) as TYPE
+   struct Proxy : public STB::List<Proxy>::Elem
+   {
+      uint8_t pack[MIN_SIZE - sizeof(typename STB::List<Proxy>::Elem)];
+   };
+
+   List<Proxy> free_list;
+   Proxy       heap[SIZE];
 };
 
 } // namespace STB

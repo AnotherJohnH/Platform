@@ -27,19 +27,19 @@
 namespace std {
 
 template <typename TYPE>
-const TYPE& min(const TYPE& a, const TYPE& b)
+constexpr const TYPE& min(const TYPE& a, const TYPE& b)
 {
    return b < a ? b : a;
 }
 
 template <typename TYPE>
-const TYPE& max(const TYPE& a, const TYPE& b)
+constexpr const TYPE& max(const TYPE& a, const TYPE& b)
 {
    return b > a ? b : a;
 }
 
 template <typename TYPE>
-const TYPE& clamp(const TYPE& v, const TYPE& lo, const TYPE& hi)
+constexpr const TYPE& clamp(const TYPE& v, const TYPE& lo, const TYPE& hi)
 {
    return v > hi ? hi
                  : v < lo ? lo
