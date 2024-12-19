@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <array>
 
@@ -65,7 +66,7 @@ public:
    //! Check if any bit is set
    bool any() const
    {
-      for(auto& word : data)
+      for(const auto& word : data)
          if (word) return true;
       return false;
    }
@@ -82,7 +83,7 @@ public:
    //! Check if no bits are set
    bool none() const
    {
-      for(auto& word : data)
+      for(const auto& word : data)
          if (word != 0) return false;
       return true;
    }
