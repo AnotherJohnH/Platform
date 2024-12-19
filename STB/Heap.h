@@ -59,9 +59,9 @@ public:
    {
       free_list.clear();
 
-      for(size_t i = 0; i < SIZE; ++i)
+      for(size_t i = SIZE; i > 0; --i)
       {
-         free_list.push_front(&heap[i]);
+         free_list.push_front(&heap[i - 1]);
       }
    }
 
