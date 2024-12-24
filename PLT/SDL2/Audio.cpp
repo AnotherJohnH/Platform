@@ -54,12 +54,16 @@ static void mixAudioOut(void* userdata, uint8_t* stream, int len)
 }
 
 
-IOBase::IOBase(unsigned freq_, Format format_, unsigned channels_, bool input)
+IOBase::IOBase(unsigned freq_,
+               Format   format_,
+               unsigned channels_,
+               unsigned samples_,
+               bool     input)
    : freq(freq_)
    , format(format_)
    , channels(channels_)
 {
-   if(!sdl_init)
+   if(not sdl_init)
    {
       SDL_InitSubSystem(SDL_INIT_AUDIO);
       sdl_init = true;
@@ -69,7 +73,7 @@ IOBase::IOBase(unsigned freq_, Format format_, unsigned channels_, bool input)
 
    requested.freq     = freq;
    requested.channels = channels;
-   requested.samples  = 1024;
+   requested.samples  = samples_;
 
    if(input)
       requested.userdata = (In*)this;

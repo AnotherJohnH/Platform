@@ -80,7 +80,8 @@ protected:
    //! \param format Sample format
    //! \param channels Number of audio channels (1 or 2)
    //! \param input true => input, false => output
-   IOBase(unsigned freq, Format format, unsigned channels, bool input);
+   //! \param sample Number of samples per call-back
+   IOBase(unsigned freq, Format format, unsigned channels, unsigned samples, bool input);
 
    //! Close a connection to a raw audio device
    ~IOBase();
@@ -109,8 +110,9 @@ public:
    //! \param freq Sample frequency (Hz)
    //! \param format Sample format
    //! \param channels Number of audio channels (1 or 2)
-   Out(unsigned freq, Format format, unsigned channels)
-      : IOBase(freq, format, channels, /* input */ false)
+   //! \param sample Number of samples per call-back
+   Out(unsigned freq, Format format, unsigned channels, unsigned samples = 1024)
+      : IOBase(freq, format, channels, samples, /* input */ false)
    {}
 
    //! Overide this method to supply 8-bit signed sample data
@@ -171,8 +173,9 @@ public:
    //! \param freq Sample frequency (Hz)
    //! \param format Sample format
    //! \param channels Number of audio channels (1 or 2)
-   In(unsigned freq, Format format, unsigned channels)
-      : IOBase(freq, format, channels, /* input */ true)
+   //! \param sample Number of samples per call-back
+   In(unsigned freq, Format format, unsigned channels, unsigned samples = 1024)
+      : IOBase(freq, format, channels, samples, /* input */ true)
    {}
 
    //! Overide this method to recieve 8-bit signed sample data

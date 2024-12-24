@@ -28,7 +28,11 @@ namespace PLT {
 
 namespace Audio {
 
-IOBase::IOBase(unsigned freq_, Format format_, unsigned channels_, bool input_)
+IOBase::IOBase(unsigned freq_,
+               Format   format_,
+               unsigned channels_,
+               unsigned samples_,
+               bool     input_)
 {
     handle = 0;
 }
