@@ -22,8 +22,9 @@
 
 #pragma once
 
-#include <cstddef>
 #include <algorithm>
+#include <cstddef>
+#include <cstdint>
 #include <new>
 
 #include "STB/List.h"
