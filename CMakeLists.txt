@@ -20,22 +20,24 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.19.1)
+get_directory_property(has_parent PARENT_DIRECTORY)
 
-project(Platform
-        LANGUAGES CXX C ASM
-        VERSION 0.5.0)
+if(has_parent)
+   set(CMAKE_CXX_STANDARD          17   PARENT_SCOPE)
+   set(CMAKE_CXX_STANDARD_REQUIRED True PARENT_SCOPE)
+else()
+   cmake_minimum_required(VERSION 3.19.1)
 
-if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE Release)
+   project(Platform
+           LANGUAGES CXX C ASM
+           VERSION 0.5.0)
 endif()
 
 set(CMAKE_CXX_STANDARD          17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-if (NOT PROJECT_IS_TOP_LEVEL)
-   set(CMAKE_CXX_STANDARD          17   PARENT_SCOPE)
-   set(CMAKE_CXX_STANDARD_REQUIRED True PARENT_SCOPE)
+if(NOT CMAKE_BUILD_TYPE)
+   set(CMAKE_BUILD_TYPE Release)
 endif()
 
 include(CTest)
