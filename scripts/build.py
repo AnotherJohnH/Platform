@@ -89,7 +89,8 @@ def build(target, cmake_opts):
 
         if target == "Emscripten":
             cmd = 'source ' + EMSDK_ENV + '; ' + cmd
-            os.system(cmd)
+
+        os.system(cmd)
 
     else:
         os.chdir(build_dir)
