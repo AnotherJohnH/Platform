@@ -2,3 +2,4 @@
 .DS_Store
 TermConfig.xml
 build_*
+__pycache__
