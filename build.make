@@ -22,7 +22,7 @@
 
 .PHONY: clean
 clean:
-	rm -rf build_*
+	rm -rf build
 
 .PHONY: debug
 debug:
