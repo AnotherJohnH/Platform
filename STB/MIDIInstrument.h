@@ -58,7 +58,7 @@ private:
    //! Find the voice playing with the given state
    signed findVoice(uint8_t note_) override
    {
-      for(signed voice = 0; voice < NUM_VOICES; ++voice)
+      for(unsigned voice = 0; voice < NUM_VOICES; ++voice)
       {
          if (voice_state[voice] == note_)
             return voice;
@@ -76,7 +76,7 @@ private:
          // Find the oldest GATE_OFF voice
          uint8_t max_age = 0;
 
-         for(signed i = 0; i < NUM_VOICES; ++i)
+         for(unsigned i = 0; i < NUM_VOICES; ++i)
          {
             if (voice_state[i] == GATE_OFF)
             {
@@ -95,7 +95,7 @@ private:
          // Find the oldest ON voice
          uint8_t max_age = 0;
 
-         for(signed i = 0; i < NUM_VOICES; ++i)
+         for(unsigned i = 0; i < NUM_VOICES; ++i)
          {
             uint8_t age = current_event - voice_event[i];
             if (age > max_age)
