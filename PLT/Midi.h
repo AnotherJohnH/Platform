@@ -28,7 +28,7 @@
 
 #include <cstdint>
 
-#include "STB/Midi.h"
+#include "STB/MidiDecoder.h"
 
 //! Platform abstraction layer
 namespace PLT {
