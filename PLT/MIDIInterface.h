@@ -22,8 +22,7 @@
 
 //! \brief Platform abstraction layer for access to MIDI devices
 
-#ifndef PLT_MIDI_INTERFACE_H
-#define PLT_MIDI_INTERFACE_H
+#pragma once
 
 #include <cstdint>
 
@@ -40,7 +39,7 @@ namespace MIDI {
 class Interface : public ::MIDI::Interface
 {
 public:
-   Interface(::MIDI::Instrument& instrument_, bool debug_ = false);
+   Interface(::MIDI::InstrumentBase& instrument_, bool debug_ = false);
 
    ~Interface();
 
@@ -58,5 +57,3 @@ private:
 } // namespace MIDI
 
 } // namespace PLT
-
-#endif

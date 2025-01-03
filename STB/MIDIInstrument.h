@@ -24,232 +24,120 @@
 
 #include <cstdint>
 
+#include "MIDIInstrumentBase.h"
+
 namespace MIDI {
 
-//! MIDI instrument
-class Instrument
+//! MIDI instrument with a voice allocator
+template <unsigned NUM_VOICES>
+class Instrument : public InstrumentBase
 {
 public:
-   Instrument(uint8_t num_voices_, uint8_t base_channel_ = 0)
-      : num_voices(num_voices_)
-      , base_channel(base_channel_)
+   Instrument(uint8_t base_channel_ = 0)
+      : InstrumentBase(NUM_VOICES, base_channel_)
    {
+      for(unsigned i = 0; i < NUM_VOICES; ++i)
+         setVoiceState(i, FREE);
    }
 
-   // Instrument implementation
+   bool isAnyVoiceOn() const { return getOnVoices() != 0; }
 
-   //! Allocate a voice
-   virtual signed allocVoice() const { return -1; }
+   unsigned getOnVoices() const { return on_voices; }
 
-   //! Find the vocie playing a note
-   virtual signed findVoice(uint8_t note_) const { return -1; }
-
-   //! Mute a voice
-   virtual void voiceMute(unsigned voice_) {}
-
-   //! Reset a voice
-   virtual void voiceReset(unsigned voice_) {}
-
-   //! Start a voice
-   virtual void voiceOn(unsigned voice_, uint8_t note_, uint8_t velocity_) {}
-
-   //! Stop a voice
-   virtual void voiceOff(unsigned voice_, uint8_t velocity_) {}
-
-   //! Set voice aftertouch
-   virtual void voicePressure(unsigned voice_, uint8_t level_) {}
-
-   //! Voice pitch bend
-   virtual void voicePitchBend(unsigned voice_, int16_t value_) {}
-
-   //! Control a voice
-   virtual void voiceControl(unsigned voice_, uint8_t control_, uint8_t value_) {}
-
-   //! Program change
-   virtual void voiceProgram(unsigned voice_, uint8_t prog_) {}
-
-
-   // MIDI channel messages
-
-   void noteOn(uint8_t channel_, uint8_t note_,  uint8_t level_)
+protected:
+   //! Deallocate the given voice so that it may be reallocated
+   void voiceFree(signed voice_)
    {
-      if (level_ == 0)
-         return noteOff(channel_, note_, 0);
-
-      if (not isValidChannel(channel_)) return;
-
-      signed index = poly ? allocVoice()
-                          : channel_ - base_channel;
-
-      if ((index >= 0) && (index < num_voices))
-      {
-         voiceOn(index, note_, level_);
-      }
+      setVoiceState(voice_, FREE);
    }
-
-   void noteOff(uint8_t channel_, uint8_t note_,  uint8_t velocity_)
-   {
-      if (not isValidChannel(channel_)) return;
-
-      signed index = poly ? findVoice(note_)
-                          : channel_ - base_channel;
-
-      if ((index >= 0) && (index < num_voices))
-      {
-         voiceOff(index, velocity_);
-      }
-   }
-
-   void notePressure(uint8_t channel_, uint8_t note_, uint8_t level_)
-   {
-      if (not isValidChannel(channel_)) return;
-
-      signed index = poly ? findVoice(note_)
-                          : channel_ - base_channel;
-
-      if ((index >= 0) && (index < num_voices))
-      {
-         voicePressure(index, level_);
-      }
-   }
-
-   void controlChange(uint8_t channel_, uint8_t control_, uint8_t value_)
-   {
-      if (not isValidChannel(channel_)) return;
-
-      switch (control_)
-      {
-      case 0x78:
-         for(unsigned index = 0; index < num_voices; ++index)
-         {
-            voiceMute(index);
-         }
-         break;
-
-      case 0x79:
-         for(unsigned index = 0; index < num_voices; ++index)
-         {
-            voiceReset(index);
-         }
-         break;
-
-      case 0x7A:
-         local_control = value_ == 0x7F;
-         break;
-
-      case 0x7B:
-         for(unsigned index = 0; index < num_voices; ++index)
-         {
-            voiceOff(index, /* velocity */ 0);
-         }
-         break;
-
-      case 0x7C: omni = false; return;
-      case 0x7D: omni = true;  return;
-
-      case 0x7E:
-         poly         = false;
-         num_channels = value_ == 0 ? num_voices : value_;
-         break;
-
-      case 0x7F:
-         poly         = true;
-         num_channels = 1;
-         break;
-
-      default:
-         for(unsigned index = 0; index < num_voices; ++index)
-         {
-            voiceControl(index, control_, value_);
-         }
-         break;
-      }
-   }
-
-   void programChange(uint8_t channel_, uint8_t prog_)
-   {
-      if (not isValidChannel(channel_)) return;
-
-      for(unsigned index = 0; index < num_voices; ++index)
-      {
-         voiceMute(index);
-         voiceProgram(index, prog_);
-      }
-   }
-
-   void channelPressure(uint8_t channel_, uint8_t value_)
-   {
-      if (not isValidChannel(channel_)) return;
-
-      for(unsigned index = 0; index < num_voices; ++index)
-      {
-         voicePressure(index, value_);
-      }
-   }
-
-   void channelPitchBend(uint8_t channel_, int16_t value_)
-   {
-      if (not isValidChannel(channel_)) return;
-
-      for(unsigned index = 0; index < num_voices; ++index)
-      {
-         voicePitchBend(index, value_);
-      }
-   }
-
-   // Channel mode messages
-
-   void allSoundsOff(uint8_t channel_)
-   {
-      controlChange(channel_, 0x78, 0x00);
-   }
-
-   void resetAllControllers(uint8_t channel_)
-   {
-      controlChange(channel_, 0x79, 0x00);
-   }
-
-   void localControl(uint8_t channel_, bool on_)
-   {
-      controlChange(channel_, 0x7A, on_ ? 0x7F : 0x00);
-   }
-
-   void allNotesOff(uint8_t channel_)
-   {
-      controlChange(channel_, 0x7B, 0x00);
-   }
-
-   void omniMode(uint8_t channel_, bool on_)
-   {
-      controlChange(channel_, on_ ? 0x7D : 0x7C, 0x00);
-   }
-
-   void monoMode(uint8_t channel_, uint8_t num_channels_ = 0)
-   {
-      controlChange(channel_, 0x7E, num_channels_);
-   }
-
-   void polyMode(uint8_t channel_)
-   {
-      controlChange(channel_, 0x7F, 0x00);
-   }
-
-   // System Exclusive interface
-   virtual void sysEx(uint8_t byte_) {}
 
 private:
-   bool isValidChannel(uint8_t channel_)
+   using State = uint8_t;
+   using Event = uint16_t;
+
+   //! Find the voice playing with the given state
+   signed findVoice(uint8_t note_) override
    {
-      return omni or ((channel_ >= base_channel) and
-                      (channel_ < (base_channel + num_channels)));
+      for(signed voice = 0; voice < NUM_VOICES; ++voice)
+      {
+         if (voice_state[voice] == note_)
+            return voice;
+      }
+
+      return -1;
    }
 
-   uint8_t num_voices {0};
-   uint8_t base_channel {0};
-   uint8_t num_channels {1};
-   bool    local_control {true};
-   bool    omni {true};
-   bool    poly {true};
+   //! Allocate a voice
+   signed allocVoice(uint8_t note_) override
+   {
+      signed voice = findVoice(FREE);
+      if (voice < 0)
+      {
+         // Find the oldest GATE_OFF voice
+         uint8_t max_age = 0;
+
+         for(signed i = 0; i < NUM_VOICES; ++i)
+         {
+            if (voice_state[i] == GATE_OFF)
+            {
+               uint8_t age = current_event - voice_event[i];
+               if (age > max_age)
+               {
+                  age   = max_age;
+                  voice = i;
+               }
+            }
+         }
+      }
+
+      if (voice < 0)
+      {
+         // Find the oldest ON voice
+         uint8_t max_age = 0;
+
+         for(signed i = 0; i < NUM_VOICES; ++i)
+         {
+            uint8_t age = current_event - voice_event[i];
+            if (age > max_age)
+            {
+               age   = max_age;
+               voice = i;
+            }
+         }
+      }
+
+      ++on_voices;
+      setVoiceState(voice, note_);
+      return voice;
+   }
+
+   //! Set voice state to gate off
+   signed offVoice(uint8_t note_) override
+   {
+      signed voice = findVoice(note_);
+      if (voice >= 0)
+      {
+         setVoiceState(voice, GATE_OFF);
+         --on_voices;
+      }
+
+      return voice;
+   }
+
+   void setVoiceState(signed index_, State state_)
+   {
+      voice_state[index_] = state_;
+      voice_event[index_] = current_event++;
+   }
+
+   static const State GATE_OFF = 0xFF;
+   static const State FREE     = 0xFE;
+
+   Event   current_event{1};
+   State   voice_state[NUM_VOICES] = {};  //!< Gate on note value or FREE or GATE_OFF
+   Event   voice_event[NUM_VOICES] = {};
+   uint8_t on_voices{0};
 };
+
 
 } // namespace MIDI

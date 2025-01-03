@@ -24,31 +24,35 @@
 
 #include <cstdio>
 
-#include "STB/MIDIInstrument.h"
+#include "STB/MIDIInstrumentBase.h"
 
 namespace MIDI {
 
+//! Interface between a MIDI stream and a MIDI instrument
 class Interface
 {
 public:
    Interface() = default;
 
-   Interface(MIDI::Instrument& instrument_, bool debug_ = false)
+   Interface(MIDI::InstrumentBase& instrument_, bool debug_ = false)
       : debug(debug_)
    {
       attachInstrument(instrument_);
    }
 
-   void attachInstrument(MIDI::Instrument& instrument_)
+   //! Assign an instrument to this interface
+   void attachInstrument(MIDI::InstrumentBase& instrument_)
    {
       inst = &instrument_;
    }
 
+   //! Enable console debug
    void setDebug(bool debug_ = true)
    {
       debug = debug_;
    }
 
+   //! Check MIDI stream for pending messages
    void tick()
    {
       while(not empty())
@@ -101,8 +105,13 @@ public:
    }
 
 protected:
-   virtual bool    empty() const = 0;
-   virtual uint8_t rx()          = 0;
+   // Implement MIDI stream in derived class
+
+   //! Stream is currently empty
+   virtual bool empty() const = 0;
+
+   //! Get next byte from stream
+   virtual uint8_t rx() = 0;
 
 private:
    void channelCommand(unsigned chan, unsigned cmd, uint8_t byte)
@@ -173,10 +182,10 @@ private:
       }
    }
 
-   MIDI::Instrument* inst {nullptr};
-   unsigned          cmd {0};
-   unsigned          chan {0};
-   bool              debug {false};
+   MIDI::InstrumentBase* inst {nullptr};
+   unsigned              cmd {0};
+   unsigned              chan {0};
+   bool                  debug {false};
 };
 
 } // namespace MIDI
