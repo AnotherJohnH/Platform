@@ -146,7 +146,7 @@ public:
 
    BitRef operator[](size_t pos_)
    {
-      size_t index;
+      size_t index{};
       return BitRef(getMask(pos_, index), data[index]);
    }
 
