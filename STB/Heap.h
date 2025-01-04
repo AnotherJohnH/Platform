@@ -26,6 +26,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <new>
+#include <utility>
 
 #include "STB/List.h"
 

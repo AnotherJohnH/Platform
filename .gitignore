@@ -1,5 +1,5 @@
 *.tgz
 .DS_Store
 TermConfig.xml
-build_*
+build
 __pycache__
