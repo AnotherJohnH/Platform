@@ -93,6 +93,7 @@ message("-----------------------------------------------------------------------
 add_subdirectory(GUI)
 add_subdirectory(STB)
 add_subdirectory(PLT)
+add_subdirectory(USB)
 
 #-------------------------------------------------------------------------------
 

@@ -106,7 +106,12 @@ struct JackOutDescr : public Descr
 
    uint8_t jack_idx{0};
 
+#if defined(__GNUC__) && !defined(__clang__)
+}; // XXX gcc 14 is not happy with packing this structure
+   // we assume everything is still ok?
+#else
 } __attribute__((__packed__));
+#endif
 
 
 template <unsigned N>
@@ -124,7 +129,12 @@ struct CSEndPointDescr : public Descr
    uint8_t num_emb_midi_jack{N};
    uint8_t assoc_jack_id[N] = {};
 
+#if defined(__GNUC__) && !defined(__clang__)
+}; // XXX gcc 14 is not happy with packing this structure
+   // we assume everything is still ok?
+#else
 } __attribute__((__packed__));
+#endif
 
 
 struct EndPointDescr : public Descr
