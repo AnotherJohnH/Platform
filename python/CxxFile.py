@@ -19,9 +19,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #------------------------------------------------------------------------------
+# pylint: disable=bad-indentation
 
 class CxxFile:
-   """ Class for writing C++ files """
+   """ Class to support C++ auto-generation """
 
    def __init__(self, filename, description):
 
@@ -40,16 +41,19 @@ class CxxFile:
       self.file.close()
 
    def push(self, text = '', end = '\n'):
+      """ indent """
       if text != '':
          self.p(text, end)
       self.indent += ' ' * self.indent_size
 
    def pop(self, text = '', end = '\n'):
+      """ unindent """
       self.indent = self.indent[:-self.indent_size]
       if text != '':
          self.p(text, end)
 
    def p(self, text = '', end = '\n'):
+      """ print """
 
       text += end
       if self.start_of_line:
@@ -60,6 +64,8 @@ class CxxFile:
       self.start_of_line = text[-1] == '\n'
 
    def header(self, description, year = 2024, author = 'John D. Haughton'):
+      """ print file header """
+
       self.p('//------------------------------------------------------------------------------')
       self.p(f'// Copyright (c) {year} {author}')
       self.p('//')
