@@ -87,13 +87,18 @@ public:
    Uart(unsigned     baud,
         unsigned     data_bits = 8,
         UART::Parity parity    = UART::NONE,
-        unsigned     stop_bits = 1)
+        unsigned     stop_bits = 1,
+        bool         pull_up   = false)
    {
       PadsBank pads_bank;
       IoBank   io_bank;
 
+      uint8_t rx_pad_ctrl = PadsBank::OD;
+      if (pull_up)
+         rx_pad_ctrl |= PadsBank::PULL_UP;
+
       io_bank.setFunc(TX_PIN, IoBank::UART, PadsBank::DRIVE_2MA);
-      io_bank.setFunc(RX_PIN, IoBank::UART, PadsBank::OD);
+      io_bank.setFunc(RX_PIN, IoBank::UART, rx_pad_ctrl);
 
       // Setup baud rate
       uint32_t divisor = (8 * PllSys().getFreq()) / baud;
@@ -102,11 +107,11 @@ public:
 
       // Setup format
       uint32_t lcr_h = 0;
-      this->setField(lcr_h, 6, 5, data_bits - 5);        // WLEN
-      this->setBit(  lcr_h, 4,    1);                    // FEN
-      this->setBit(  lcr_h, 3,    stop_bits - 1);        // STP2
-      this->setBit(  lcr_h, 2,    parity == UART::EVEN); // EPS
-      this->setBit(  lcr_h, 1,    parity != UART::NONE); // PEN
+      this->setField(lcr_h, 6, 5, data_bits - 5);     // WLEN
+      this->setBit(  lcr_h, 4, 1);                    // FEN
+      this->setBit(  lcr_h, 3, stop_bits - 1);        // STP2
+      this->setBit(  lcr_h, 2, parity == UART::EVEN); // EPS
+      this->setBit(  lcr_h, 1, parity != UART::NONE); // PEN
       this->reg->lcr_h = lcr_h;
 
       // Enable UART TX and RX
