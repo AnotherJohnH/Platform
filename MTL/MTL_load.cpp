@@ -56,11 +56,3 @@ void MTL_global_construction()
    }
 }
 
-#if 0
-void MTL_load()
-{
-    MTL_data_and_bss();
-
-    MTL_global_construction();
-}
-#endif

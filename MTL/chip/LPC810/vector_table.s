@@ -111,13 +111,20 @@ vector_table:
 
 VEC_reset:
 #
+# Prepare image to run
+#
+    bl   MTL_data_and_bss
+#
 # Initialise platform
+# XXX Must not use global constructors
+#     as not initialised yet
 #
     bl   MTL_init
 #
-# Initialise C/C++ runtime
+# Construct global objects
 #
-    bl   MTL_load
+    bl   MTL_global_construction
+
 #
 # Call application entry point
 #
