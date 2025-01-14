@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2025 John D. Haughton
+// Copyright (c) 2023 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,38 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#pragma once
-
 #include "MTL/MTL.h"
 
-#define CLOCK_FREQ  16000000u  //!<  16 MHz
-#define RAM_SIZE    (16*1024)  //!<  16 KiB
-#define FLASH_SIZE  (256*1024) //!< 256 KiB
+#include "Vector.h"
 
+struct Vector
+{
+   Handler  handler;
+   uint32_t data;
+};
+
+static Vector exc_table[NUM_EXC] =
+{
+   {MTL_halt, 1},
+   {MTL_halt, 2},
+   {MTL_halt, 3}
+};
+
+void VEC_bus_fault()
+{
+   (*exc_table[EXC_BUS].handler)(exc_table[EXC_BUS].data);
+}
+
+void VEC_usage_fault()
+{
+   (*exc_table[EXC_UND].handler)(exc_table[EXC_UND].data);
+}
+
+void MTL_excep(Exception exc, Handler handler, uint32_t data)
+{
+   if (exc < NUM_EXC)
+   {
+      exc_table[exc].handler = handler;
+      exc_table[exc].data    = data;
+   }
+}

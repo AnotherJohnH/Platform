@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2025 John D. Haughton
+// Copyright (c) 2013 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#pragma once
-
 #include "MTL/MTL.h"
 
-#define CLOCK_FREQ  16000000u  //!<  16 MHz
-#define RAM_SIZE    (16*1024)  //!<  16 KiB
-#define FLASH_SIZE  (256*1024) //!< 256 KiB
-
+void MTL_halt(uint32_t status)
+{
+   while(true);
+}

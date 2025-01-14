@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2025 John D. Haughton
+// Copyright (c) 2017 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,24 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#pragma once
-
 #include "MTL/MTL.h"
+#include "MTL/Config.h"
 
-#define CLOCK_FREQ  16000000u  //!<  16 MHz
-#define RAM_SIZE    (16*1024)  //!<  16 KiB
-#define FLASH_SIZE  (256*1024) //!< 256 KiB
+#include "SysTick.h"
+#include "Vector.h"
 
+static const unsigned TICK_PERIOD_MS = 10;       //!< 10 mS
+
+static MTL::SysTick tick {CLOCK_FREQ * TICK_PERIOD_MS / 1000};
+
+static volatile uint32_t ticks{0};
+
+void VEC_sysTick()
+{
+   ++ticks;
+}
+
+uint32_t MTL_clock()
+{
+   return ticks;
+}
