@@ -59,7 +59,15 @@ public:
       {
          uint8_t byte = rx();
 
-         if ((byte & 0b10000000) != 0)
+         if (in_sysex)
+         {
+            // Handling a SYSEX message
+            inst->sysEx(byte);
+
+            if (byte == 0xF7)
+               in_sysex = false;
+         }
+         else if ((byte & 0b10000000) != 0)
          {
             // New command
             cmd = byte >> 4;
@@ -67,19 +75,14 @@ public:
             if (cmd == 0xF)
             {
                // System command
-
                switch(byte)
                {
                case 0xFE:
                   break;
 
                case 0xF0:
-                  while(true)
-                  {
-                     inst->sysEx(byte);
-                     if (byte == 0xF7) break;
-                     byte = rx();
-                  }
+                  inst->sysEx(byte);
+                  in_sysex = true;
                   break;
 
                default:
@@ -90,7 +93,6 @@ public:
             else
             {
                // Instrument command
-
                chan = byte & 0xF;
 
                channelCommand(chan, cmd, rx());
@@ -185,6 +187,7 @@ private:
    MIDI::InstrumentBase* inst {nullptr};
    unsigned              cmd {0};
    unsigned              chan {0};
+   bool                  in_sysex {false};
    bool                  debug {false};
 };
 
