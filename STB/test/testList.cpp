@@ -120,3 +120,34 @@ TEST(STB_List, iteration)
    }
    EXPECT_EQ(value, factorial);
 }
+
+TEST(STB_List, insert)
+{
+   const unsigned N = 7;
+
+   STB::List<Object> list;
+   Object            heap[N];
+
+   for(unsigned i = 0; i < N; ++i)
+      heap[i].value = i;
+
+   list.push_back(heap + 1);
+   list.push_back(heap + 3);
+   list.push_back(heap + 5);
+
+   list.insert_after(nullptr,  heap + 0);
+   list.insert_after(heap + 1, heap + 2);
+   list.insert_after(heap + 3, heap + 4);
+   list.insert_after(heap + 5, heap + 6);
+
+   EXPECT_EQ(N, list.size());
+
+   Object* object = list.front();
+
+   for(unsigned i = 0; i < N; ++i)
+   {
+      EXPECT_EQ(i, object->value);
+
+      object = object->nextElem();
+   }
+}

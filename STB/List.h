@@ -195,6 +195,27 @@ public:
       ++n;
    }
 
+   //! Insert a new element into the list
+   //  item must not already be in the list
+   void insert_after(TYPE* prev, TYPE* element)
+   {
+      assert(prev != element);
+      assert(prev->next != element);
+
+      if (prev != nullptr)
+      {
+         element->next = prev->next;
+         prev->next    = element;
+      }
+      else
+      {
+         element->next = first;
+         first         = element;
+      }
+
+      ++n;
+   }
+
 private:
    TYPE*  first{nullptr};
    size_t n{0};
