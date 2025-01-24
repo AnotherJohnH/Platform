@@ -34,7 +34,7 @@ spotless:
 
 .PHONY: test
 test:
-	Platform/scripts/build.py --test ${targets}
+	Platform/scripts/build.py --test native
 
 #-------------------------------------------------------------------------------
 # Build rules for specific targets
