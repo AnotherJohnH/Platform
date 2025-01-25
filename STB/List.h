@@ -200,7 +200,7 @@ public:
    void insert_after(TYPE* prev, TYPE* element)
    {
       assert(prev != element);
-      assert(prev->next != element);
+      assert((prev == nullptr) || (prev->next != element));
 
       if (prev != nullptr)
       {
