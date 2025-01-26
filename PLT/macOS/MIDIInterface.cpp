@@ -150,6 +150,11 @@ struct Interface::Pimpl
 };
 
 
+Interface::Interface()
+{
+   pimpl = new Pimpl(/* device*/ 0);
+}
+
 Interface::Interface(::MIDI::InstrumentBase& instrument_, bool debug_)
    : ::MIDI::Interface(instrument_, debug_)
 {
@@ -182,6 +187,10 @@ uint8_t Interface::rx()
    return byte;
 }
 
+void Interface::tx(uint8_t byte)
+{
+   // TODO
+}
 
 } // namespace MIDI
 

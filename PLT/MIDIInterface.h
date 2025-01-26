@@ -39,16 +39,18 @@ namespace MIDI {
 class Interface : public ::MIDI::Interface
 {
 public:
+   Interface();
+
    Interface(::MIDI::InstrumentBase& instrument_, bool debug_ = false);
 
    ~Interface();
 
    bool connected() const;
-
-private:
    bool empty() const override;
    uint8_t rx() override;
+   void tx(uint8_t byte) override;
 
+private:
    struct Pimpl;
    Pimpl* pimpl;
 };

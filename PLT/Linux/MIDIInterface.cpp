@@ -91,11 +91,16 @@ public:
       }
    }
 
-   uint8_t get()
+   uint8_t recv()
    {
       uint8_t byte = fifo.front();
       fifo.pop();
       return byte;
+   }
+
+   void send(uint8_t byte)
+   {
+      // TODO
    }
 
 private:
@@ -105,6 +110,11 @@ private:
    std::queue<uint8_t> fifo;
 };
 
+
+Interface::Interface()
+{
+   pimpl = new Pimpl();
+}
 
 Interface::Interface(::MIDI::InstrumentBase& instrument_, bool debug_)
    : ::MIDI::Interface(instrument_, debug_)
@@ -130,7 +140,12 @@ bool Interface::empty() const
 
 uint8_t Interface::rx()
 {
-   return pimpl->get();
+   return pimpl->recv();
+}
+
+void Interface::tx(uint8_t byte)
+{
+   return pimpl->send(byte);
 }
 
 

@@ -41,6 +41,8 @@ bool Interface::empty() const { return true; }
 
 uint8_t Interface::rx() { return 0; }
 
+void Interface::tx(uint8_t byte) {}
+
 
 } // namespace MIDI
 

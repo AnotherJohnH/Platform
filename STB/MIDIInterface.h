@@ -106,14 +106,16 @@ public:
       }
    }
 
-protected:
    // Implement MIDI stream in derived class
 
    //! Stream is currently empty
    virtual bool empty() const = 0;
 
-   //! Get next byte from stream
+   //! Get next byte from in stream
    virtual uint8_t rx() = 0;
+
+   //! Sent next byte to out stream
+   virtual void tx(uint8_t byte) = 0;
 
 private:
    void channelCommand(unsigned chan, unsigned cmd, uint8_t byte)
