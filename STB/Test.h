@@ -152,6 +152,44 @@ inline bool expect_ne(TYPE_L      left_,
    return false;
 }
 
+template <typename TYPE_L,
+          typename TYPE_R>
+inline bool expect_lt(TYPE_L      left_,
+                      TYPE_R      right_,
+                      const char* right_s_,
+                      const char* file_,
+                      size_t      line_)
+{
+   if (TYPE_R(left_) < right_)
+      return true;
+
+   error(file_, line_);
+
+   std::cout << "Value of " << right_s_ << "\n";
+   std::cout << "Less or equal to: " << left_  << "\n";
+
+   return false;
+}
+
+template <typename TYPE_L,
+          typename TYPE_R>
+inline bool expect_gt(TYPE_L      left_,
+                      TYPE_R      right_,
+                      const char* right_s_,
+                      const char* file_,
+                      size_t      line_)
+{
+   if (TYPE_R(left_) > right_)
+      return true;
+
+   error(file_, line_);
+
+   std::cout << "Value of " << right_s_ << "\n";
+   std::cout << "Greater or equal to: " << left_  << "\n";
+
+   return false;
+}
+
 inline bool expect_streq(const char* left_,
                          const char* right_,
                          const char* right_s_,
@@ -180,6 +218,12 @@ inline bool expect_streq(const char* left_,
 
 #define EXPECT_NE(left, right) \
    pass_ &= TST::expect_ne(left, right, #right, __FILE__, __LINE__)
+
+#define EXPECT_LT(left, right) \
+   pass_ &= TST::expect_lt(left, right, #right, __FILE__, __LINE__)
+
+#define EXPECT_GT(left, right) \
+   pass_ &= TST::expect_gt(left, right, #right, __FILE__, __LINE__)
 
 #define EXPECT_TRUE(right) \
    pass_ &= TST::expect_eq(true, bool(right), #right, __FILE__, __LINE__)
