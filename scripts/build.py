@@ -69,6 +69,12 @@ def clean(target):
 
 #-------------------------------------------------------------------------------
 
+def ninja_available():
+    """ check for ninja on the PATH """
+    return shutil.which('ninja') is not None
+
+#-------------------------------------------------------------------------------
+
 def build(target, cmake_opts):
     """ Create a build for the given target """
 
@@ -81,11 +87,18 @@ def build(target, cmake_opts):
         print(f"EMSDK_ENV = {EMSDK_ENV}")
         print('-'*80)
 
+    if ninja_available():
+       generator  = "Ninja"
+       build_tool = "ninja"
+    else:
+       generator  = "Unix Makefiles"
+       build_tool = "make"
+
     if not os.path.exists(build_dir):
         pathlib.Path(build_dir).mkdir(parents=True, exist_ok=True)
         os.chdir(build_dir)
 
-        cmd = f"cmake -G Ninja ../.. {cmake_opts} -DPLT_TARGET={target} -DCMAKE_TOOLCHAIN_FILE=Platform/MTL/{target}/toolchain.cmake"
+        cmd = f"cmake -G \"{generator}\" ../.. {cmake_opts} -DPLT_TARGET={target} -DCMAKE_TOOLCHAIN_FILE=Platform/MTL/{target}/toolchain.cmake"
 
         if target == "Emscripten":
             cmd = 'source ' + EMSDK_ENV + '; ' + cmd
@@ -95,9 +108,10 @@ def build(target, cmake_opts):
     else:
         os.chdir(build_dir)
 
-    cmd = "ninja"
     if target == "Emscripten":
-        cmd = 'source ' + EMSDK_ENV + '; ' + cmd
+        cmd = 'source ' + EMSDK_ENV + '; ' + build_tool
+    else:
+        cmd = build_tool
 
     print('-'*80)
     os.system(cmd)
