@@ -33,6 +33,8 @@ static const char* RED   = "\e[31m";
 static const char* GREEN = "\e[32m";
 static const char* WHITE = "\e[0m";
 
+extern bool pass;
+
 struct Func;
 
 extern std::vector<Func*> test_list;
@@ -41,7 +43,7 @@ struct Func
 {
    Func(const char* suite_,
             const char* name_,
-            void (*func_)(bool&))
+            void (*func_)())
       : suite(suite_)
       , name(name_)
       , func(func_)
@@ -49,11 +51,13 @@ struct Func
       test_list.push_back(this);
    }
 
-   bool run()
+   void run()
    {
+      pass = true;
+
       std::cout << GREEN << "[ RUN      ]" << WHITE << " " << suite << "." << name << "\n";
 
-      (*func)(pass);
+      (*func)();
 
       if (pass)
          std::cout << GREEN << "[       OK ]";
@@ -62,7 +66,7 @@ struct Func
 
       std::cout << WHITE << " " << suite << "." << name << "\n";
 
-      return pass;
+      passed = pass;
    }
 
    static void run_all()
@@ -73,7 +77,9 @@ struct Func
 
       for(auto& test : test_list)
       {
-         if (test->run())
+         test->run();
+
+         if (pass)
          {
             num_pass++;
          }
@@ -91,7 +97,7 @@ struct Func
 
          for(auto& test : test_list)
          {
-            if (not test->pass)
+            if (not test->passed)
                std::cout << RED << "[  FAILED  ]" << WHITE
                          << " " << test->suite << "." << test->name << "\n";
          }
@@ -102,8 +108,8 @@ struct Func
 
    std::string suite;
    std::string name;
-   bool        pass{true};
-   void        (*func)(bool&);
+   void        (*func)();
+   bool        passed{false};
 };
 
 inline void error(const char* file_, size_t line_)
@@ -214,32 +220,33 @@ inline bool expect_streq(const char* left_,
 } // namespace Test
 
 #define EXPECT_EQ(left, right) \
-   pass_ &= TST::expect_eq(left, right, #right, __FILE__, __LINE__)
+   TST::pass &= TST::expect_eq(left, right, #right, __FILE__, __LINE__)
 
 #define EXPECT_NE(left, right) \
-   pass_ &= TST::expect_ne(left, right, #right, __FILE__, __LINE__)
+   TST::pass &= TST::expect_ne(left, right, #right, __FILE__, __LINE__)
 
 #define EXPECT_LT(left, right) \
-   pass_ &= TST::expect_lt(left, right, #right, __FILE__, __LINE__)
+   TST::pass &= TST::expect_lt(left, right, #right, __FILE__, __LINE__)
 
 #define EXPECT_GT(left, right) \
-   pass_ &= TST::expect_gt(left, right, #right, __FILE__, __LINE__)
+   TST::pass &= TST::expect_gt(left, right, #right, __FILE__, __LINE__)
 
 #define EXPECT_TRUE(right) \
-   pass_ &= TST::expect_eq(true, bool(right), #right, __FILE__, __LINE__)
+   TST::pass &= TST::expect_eq(true, bool(right), #right, __FILE__, __LINE__)
 
 #define EXPECT_FALSE(right) \
-   pass_ &= TST::expect_eq(false, bool(right), #right, __FILE__, __LINE__)
+   TST::pass &= TST::expect_eq(false, bool(right), #right, __FILE__, __LINE__)
 
 #define EXPECT_STREQ(left, right) \
-   pass_ &= TST::expect_streq(left, right, #right, __FILE__, __LINE__)
+   TST::pass &= TST::expect_streq(left, right, #right, __FILE__, __LINE__)
 
 #define TEST(suite, name) \
-   static void test_ ## suite ## _ ## name(bool& pass_); \
+   static void test_ ## suite ## _ ## name(); \
    static TST::Func func_ ## suite ## _ ## name{#suite, #name, \
       test_ ## suite ## _ ## name}; \
-   static void test_ ## suite ## _ ## name(bool& pass_)
+   static void test_ ## suite ## _ ## name()
 
 #define TEST_MAIN \
    std::vector<TST::Func*> TST::test_list{}; \
+   bool TST::pass; \
    int main() { TST::Func::run_all(); }
