@@ -86,3 +86,7 @@ rpipico:
 .PHONY: rpipico2
 rpipico2:
 	Platform/scripts/build.py rpipico2
+
+.PHONY: tiny2350
+tiny2350:
+	Platform/scripts/build.py tiny2350
