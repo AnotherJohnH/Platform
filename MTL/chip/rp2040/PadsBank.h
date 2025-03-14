@@ -75,6 +75,21 @@ public:
        reg->gpio[io_pin] = bits;
     }
 
+    //! Set I/O pin as a digital input and output
+    void setInOut(unsigned io_pin,
+                  uint8_t  drive,
+                  bool     slew_fast = false,
+                  uint8_t  pull = PULL_UP,
+                  bool     schmitt_trigger = false)
+    {
+       uint32_t bits = IE | drive | pull;
+
+       if (slew_fast)       bits |= SLEWFAST;
+       if (schmitt_trigger) bits |= SCHMITT;
+
+       reg->gpio[io_pin] = bits;
+    }
+
     //! Set I/O pin as an analogue input
     void setAnalogIn(unsigned io_pin)
     {
@@ -86,9 +101,6 @@ public:
     {
        reg->gpio[io_pin] = (reg->gpio[io_pin] & 0xFFFFFF00) | bits;
     }
-
-private:
-
 };
 
 } // namespace MTL

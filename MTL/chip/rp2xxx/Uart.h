@@ -90,8 +90,7 @@ public:
         unsigned     stop_bits = 1,
         bool         pull_up   = false)
    {
-      PadsBank pads_bank;
-      IoBank   io_bank;
+      IoBank io_bank;
 
       uint8_t rx_pad_ctrl = PadsBank::OD;
       if (pull_up)

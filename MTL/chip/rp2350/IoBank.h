@@ -76,11 +76,22 @@ public:
    };
 
    //! Set the function for an I/O pin
-   void setFunc(unsigned io_pin, Func func, uint8_t pad_ctrl = 0)
+   void setFunc(unsigned io_pin, Func func)
    {
       PadsBank pads;
 
-      pads.set(io_pin, PadsBank::IE | pad_ctrl);
+      pads.isolate(io_pin);
+      reg->gpio[io_pin].ctrl = func;
+      pads.unisolate(io_pin);
+   }
+
+   //! Set the function and pad control for an I/O pin
+   void setFunc(unsigned io_pin, Func func, uint8_t ctrl)
+   {
+      PadsBank pads;
+
+      pads.isolate(io_pin);
+      pads.set(io_pin, ctrl);
       reg->gpio[io_pin].ctrl = func;
       pads.unisolate(io_pin);
    }
