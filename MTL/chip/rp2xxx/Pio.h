@@ -224,10 +224,20 @@ public:
    {
       bits &= 0x1F;
 
-      this->reg->sm[sd].shiftctrl = ((join_tx ? 1 : 0) << 30) |
+      uint32_t mask = ( 1 << 30) |
+                      (31 << 25) |
+                      ( 1 << 19) |
+                      ( 1 << 17) |
+                      ( 1 << 15);
+
+      uint32_t shiftctrl = this->reg->sm[sd].shiftctrl & ~mask;
+
+      this->reg->sm[sd].shiftctrl = shiftctrl                 |
+                                    ((join_tx ? 1 : 0) << 30) |
                                     (bits              << 25) |
                                     (dir               << 19) |
-                                    (autopull          << 17);
+                                    (autopull          << 17) |
+                                    (0                 << 15);
    }
 
    //! Configure input shift register
@@ -239,10 +249,20 @@ public:
    {
       bits &= 0x1F;
 
-      this->reg->sm[sd].shiftctrl = ((join_rx ? 1 : 0) << 31) |
+      uint32_t mask = ( 1 << 31) |
+                      (31 << 20) |
+                      ( 1 << 18) |
+                      ( 1 << 16) |
+                      ( 1 << 14);
+
+      uint32_t shiftctrl = this->reg->sm[sd].shiftctrl & ~mask;
+
+      this->reg->sm[sd].shiftctrl = shiftctrl                 |
+                                    ((join_rx ? 1 : 0) << 31) |
                                     (bits              << 20) |
                                     (dir               << 18) |
-                                    (autopush          << 16);
+                                    (autopush          << 16) |
+                                    (0                 << 14);
    }
 
    //! Execute an instruction
@@ -329,8 +349,8 @@ private:
    {
       for(unsigned i = 0; i < n; ++i)
       {
-         pads_bank.setOut(pin + i, PadsBank::DRIVE_2MA, /* slew_fast */ true);
          io_bank.setFunc( pin + i, IO_FUNC);
+         pads_bank.setOut(pin + i, PadsBank::DRIVE_4MA, /* slew_fast */ true);
       }
    }
 
@@ -338,8 +358,8 @@ private:
    {
       for(unsigned i = 0; i < n; ++i)
       {
-         pads_bank.setIn(pin + i);
          io_bank.setFunc(pin + i, IO_FUNC);
+         pads_bank.setIn(pin + i);
       }
    }
 
