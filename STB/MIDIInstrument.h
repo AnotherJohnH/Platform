@@ -29,10 +29,12 @@
 namespace MIDI {
 
 //! MIDI instrument with a voice allocator
-template <unsigned NUM_VOICES>
+template <unsigned N>
 class Instrument : public InstrumentBase
 {
 public:
+   static const unsigned NUM_VOICES = N;
+
    Instrument(uint8_t base_channel_ = 0)
       : InstrumentBase(NUM_VOICES, base_channel_)
    {
