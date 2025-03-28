@@ -74,7 +74,7 @@ public:
       data[n]   = '\0';
    }
 
-   //! Append a character to the end of the string
+   //! Append a string to the end of the string
    void append(const char* s)
    {
       while(*s != '\0')
