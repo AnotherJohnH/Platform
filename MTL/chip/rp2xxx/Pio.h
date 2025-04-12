@@ -292,9 +292,14 @@ public:
    }
 
    //! Program a state machine
-   void SM_program(unsigned sd, PIO::Asm& code)
+   signed SM_program(unsigned sd, PIO::Asm& code)
    {
       uint8_t start = free_pc;
+
+      const unsigned MAX_INSTR = sizeof(this->reg->instr_mem) / sizeof(uint32_t);
+
+      if ((start + code.size()) > MAX_INSTR)
+         return -1;
 
       for(unsigned i = 0; i < code.size(); i++)
       {
@@ -314,6 +319,8 @@ public:
 
       SM_wrap(sd, code.getWrapTarget() + start, code.getWrap() + start);
       SM_exec(sd, JMP(code.getEntry() + start).op());
+
+      return 0;
    }
 
    //! Return TX FIFO
