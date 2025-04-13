@@ -94,7 +94,7 @@ public:
 
    //! Download program to PIO and configure a state machine
    signed download(unsigned clock_freq_,
-                   unsigned pin_dac_sd_sam1_clk_)
+                   unsigned pin_dac_clk_sd_sam1_)
    {
       // Allocate a state machine
       sd = pio.allocSM();
@@ -107,7 +107,7 @@ public:
 
       // Configure state machine
       pio.SM_clock(    sd, clock_freq_ * 2 * 4);
-      pio.SM_pinINP(   sd, pin_dac_sd_sam1_clk_, 3);
+      pio.SM_pinINP(   sd, pin_dac_clk_sd_sam1_, 3);
       pio.SM_configISR(sd, DAC_FRAME_BITS, MTL::SHIFT_RIGHT,
                        MTL::MANUAL, /* join_rx */ true);
 
@@ -158,9 +158,9 @@ private:
    static const unsigned CHANNEL_BITS   = 16;
    static const unsigned DAC_FRAME_BITS = NUM_CHAN * CHANNEL_BITS;
 
-   static const unsigned IN_SD   = 0;
-   static const unsigned IN_SAM1 = 1;
-   static const unsigned IN_CLK  = 2;
+   static const unsigned IN_SD   = 0;  // XXX must be first bit used in INP() above
+   static const unsigned IN_CLK  = 1;
+   static const unsigned IN_SAM1 = 2;
 
    PIO_TYPE pio{};
    signed   sd{-1};
