@@ -23,7 +23,7 @@
 get_directory_property(has_parent PARENT_DIRECTORY)
 
 if(has_parent)
-   set(CMAKE_CXX_STANDARD          17   PARENT_SCOPE)
+   set(CMAKE_CXX_STANDARD          20   PARENT_SCOPE)
    set(CMAKE_CXX_STANDARD_REQUIRED True PARENT_SCOPE)
 else()
    cmake_minimum_required(VERSION 3.19.1)
@@ -33,7 +33,7 @@ else()
            VERSION 0.5.0)
 endif()
 
-set(CMAKE_CXX_STANDARD          17)
+set(CMAKE_CXX_STANDARD          20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 if(NOT CMAKE_BUILD_TYPE)
