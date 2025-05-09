@@ -116,7 +116,7 @@ Interface::Interface()
    pimpl = new Pimpl();
 }
 
-Interface::Interface(::MIDI::InstrumentBase& instrument_, bool debug_)
+Interface::Interface(::MIDI::Instrument& instrument_, bool debug_)
    : ::MIDI::Interface(instrument_, debug_)
 {
    pimpl = new Pimpl();

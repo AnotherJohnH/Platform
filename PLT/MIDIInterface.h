@@ -41,7 +41,7 @@ class Interface : public ::MIDI::Interface
 public:
    Interface();
 
-   Interface(::MIDI::InstrumentBase& instrument_, bool debug_ = false);
+   Interface(::MIDI::Instrument& instrument_, bool debug_ = false);
 
    ~Interface();
 

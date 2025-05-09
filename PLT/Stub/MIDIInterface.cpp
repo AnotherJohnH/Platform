@@ -28,7 +28,7 @@ namespace PLT {
 
 namespace MIDI {
 
-Interface::Interface(::MIDI::InstrumentBase& instrument_)
+Interface::Interface(::MIDI::Instrument& instrument_)
    : ::MIDI::Interface(instrument_)
 {
 }
