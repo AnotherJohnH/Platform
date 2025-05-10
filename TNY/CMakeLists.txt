@@ -43,9 +43,7 @@ add_library(TNY STATIC
             isdigit.cpp
             isspace.cpp
             malloc.cpp
-            memcpy.cpp
             memmove.cpp
-            memset.cpp
             printf.cpp
             pure_virtual.cpp
             putchar.cpp

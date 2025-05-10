@@ -31,7 +31,9 @@ target_sources(MTL PRIVATE
                MTL_putch.cpp
                MTL_getch.cpp
                MTL_PS2KeyDecode.cpp
-               PALVideo.cpp)
+               PALVideo.cpp
+               memcpy.cpp
+               memset.cpp)
 
 # This warning seems broken in gcc 10 and later
 target_compile_options(MTL PUBLIC "$<$<COMPILE_LANGUAGE:C>:-Wno-stringop-overflow>")
