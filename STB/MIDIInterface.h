@@ -137,7 +137,7 @@ private:
       {
          MIDI::Instrument* inst = inst_map[chan];
 
-         if (inst != sent_inst)
+         if ((inst != sent_inst) && (inst != nullptr))
          {
             inst->sysEx(byte);
 
