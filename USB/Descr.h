@@ -166,9 +166,9 @@ struct EndPointDescr : public Descr
 
    // Type
    static const uint8_t CONTROL     = 0b00;
-   static const uint8_t ISOCHrONOUS = 0b00;
+   static const uint8_t ISOCHRONOUS = 0b00;
    static const uint8_t BULK        = 0b10;
-   static const uint8_t INTERRUPt   = 0b11;
+   static const uint8_t INTERRUPT   = 0b11;
  
    EndPointDescr(List& list_, uint8_t dir_, uint8_t type_)
       : Descr(list_, length)
@@ -186,5 +186,16 @@ struct EndPointDescr : public Descr
 
 } __attribute__((__packed__));
 
+
+//------------------------------------------------------------------------------
+// Mass storage definitions
+
+namespace MS {
+
+static const uint8_t SUB_CLASS_SCSI = 0x06;
+
+static const uint8_t PROTOCOL_BULK_ONLY_TRANSPORT= 0x50;
+
+}
 
 } // namespace USB
