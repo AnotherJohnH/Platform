@@ -24,8 +24,12 @@
 
 #include "MTL/chip/Usb.h"
 
+#include "STB/FileSystem.h"
+#include "STB/Endian.h"
+
 #include "USB/Device.h"
 #include "USB/Interface.h"
+#include "USB/SCSI.h"
 
 namespace MTL {
 
@@ -33,16 +37,236 @@ namespace MTL {
 class MassStorageInterface : public USB::Interface
 {
 public:
-   MassStorageInterface(List& list_)
+   MassStorageInterface(List& list_, STB::FileSystem& file_system_)
       : USB::Interface(list_,
                        USB::CLASS_MASS_STORAGE,
                        USB::MS::SUB_CLASS_SCSI,
                        USB::MS::PROTOCOL_BULK_ONLY_TRANSPORT)
+      , file_system(file_system_)
    {
+      segments_per_block = file_system.getBlockSize() / 64;
    }
 
-   USB::EndPointDescr bulk_in{ descr_list, USB::EndPointDescr::IN,  0x02};
-   USB::EndPointDescr bulk_out{descr_list, USB::EndPointDescr::OUT, 0x02};
+private:
+   template <typename TYPE>
+   void setStr(TYPE& field, const char* text_)
+   {
+      for(unsigned i = 0; i < sizeof(TYPE); ++i)
+      {
+         if (*text_ == '\0')
+            field[i] = ' ';
+         else
+            field[i] = *text_++;
+      }
+   }
+
+   void scsiCommand(const uint8_t* bytes_, unsigned len_)
+   {
+      switch(bytes_[0])
+      {
+      case SCSI::TEST:
+         printf("SCSI TEST\n");
+         break;
+
+      case SCSI::START_STOP_UNIT:
+         printf("SCSI START STOP\n");
+         break;
+
+      case SCSI::INQUIRY:
+         {
+            printf("SCSI INQUIRY\n");
+
+            SCSI::InquiryResponse response{};
+
+            response.version = 2;
+            setStr(response.vendor_id, "Platform");
+            setStr(response.product_id, "Disk Image");
+            setStr(response.product_rev, "0.0");
+
+            bulk_out.write(&response, sizeof(response));
+            bulk_out.startTx(sizeof(response));
+            to_send_count = 1;
+         }
+         break;
+
+      case SCSI::MODE_SENSE_6:
+         {
+            printf("SCSI MODE SENSE 6\n");
+
+            uint32_t response;
+
+            response = 0x43;
+
+            bulk_out.write(&response, sizeof(response));
+            bulk_out.startTx(sizeof(response));
+            to_send_count = 1;
+         }
+         break;
+
+      case SCSI::PREVENT_ALLOW_MEDIUM_REMOVAL:
+         printf("SCSI PREVENT ALLOW MEDIUM REMOVAL\n");
+         break;
+
+      case SCSI::READ_CAPACITY_10:
+         {
+            printf("SCSI READ CAPACITY 10\n");
+
+            uint32_t response[2];
+
+            response[0] = STB::endianSwap(uint32_t(file_system.getNumBlocks()));
+            response[1] = STB::endianSwap(uint32_t(file_system.getBlockSize()));
+
+            bulk_out.write(&response, sizeof(response));
+            bulk_out.startTx(sizeof(response));
+            to_send_count = 1;
+         }
+         break;
+
+      case SCSI::MODE_SENSE_10:
+         {
+            printf("SCSI MODE SENSE 10\n");
+
+            uint32_t response;
+
+            response = STB::endianSwap(uint32_t(3));
+
+            bulk_out.write(&response, sizeof(response));
+            bulk_out.startTx(sizeof(response));
+            to_send_count = 1;
+         }
+         break;
+
+      case SCSI::READ_10:
+         {
+            auto cmd = reinterpret_cast<const SCSI::Read10Command*>(bytes_);
+
+            lba           = STB::endianSwap(cmd->lba);
+            segment       = 0;
+            to_send_count = STB::endianSwap(cmd->len) * segments_per_block;
+
+            printf("SCSI READ 10: ");
+            printf("%03X+%u\n", lba, STB::endianSwap(cmd->len));
+
+            bulk_out.write(file_system.get64BytePtr(lba, segment++), 64);
+            bulk_out.startTx(64);
+         }
+         break;
+
+      case SCSI::WRITE_10:
+         {
+            auto cmd = reinterpret_cast<const SCSI::Write10Command*>(bytes_);
+
+            lba           = STB::endianSwap(cmd->lba);
+            segment       = 0;
+            to_recv_count = STB::endianSwap(cmd->len) * segments_per_block;
+
+            printf("SCSI WRITE 10: ");
+            printf("%03X-%u\n", lba, STB::endianSwap(cmd->len));
+         }
+         break;
+
+      default:
+         printf("SCSI command =");
+         for(unsigned i = 0; i < len_; ++i)
+         {
+            printf(" %02x", bytes_[i]);
+         }
+         printf("\n");
+         break;
+      }
+   }
+
+   void configured() override
+   {
+      bulk_in.startRx(64);
+   }
+
+   void buffRx(uint8_t ep_, const uint8_t* data_, unsigned length_) override
+   {
+      if (to_recv_count == 0)
+      {
+         const SCSI::CommandBlockWrapper* cbw = SCSI::CommandBlockWrapper::validate(data_, length_);
+
+         if (cbw != nullptr)
+         {
+            csw.tag = cbw->tag;
+            csw.setOk();
+
+            scsiCommand(cbw->cmd, cbw->cmd_len);
+         }
+         else
+         {
+            csw.setFailed();
+         }
+
+         if (to_recv_count != 0)
+         {
+            bulk_in.startRx(64);
+         }
+         else if (to_send_count == 0)
+         {
+            bulk_out.write(&csw, csw.LENGTH);
+            bulk_out.startTx(csw.LENGTH);
+         }
+      }
+      else
+      {
+         --to_recv_count;
+
+         if (to_recv_count == 0)
+         {
+            bulk_out.write(&csw, csw.LENGTH);
+            bulk_out.startTx(csw.LENGTH);
+         }
+         else
+         {
+            bulk_in.startRx(64);
+         }
+      }
+   }
+
+   void buffTx(uint8_t ep_) override
+   {
+      if (to_send_count > 0)
+      {
+         to_send_count--;
+
+         if (to_send_count == 0)
+         {
+            bulk_out.write(&csw, csw.LENGTH);
+            bulk_out.startTx(csw.LENGTH);
+         }
+         else
+         {
+            bulk_out.write(file_system.get64BytePtr(lba, segment++), 64);
+            bulk_out.startTx(64);
+
+            if (segment == segments_per_block)
+            {
+               segment = 0;
+               lba++;
+            }
+         }
+      }
+      else
+      {
+         bulk_in.startRx(64);
+      }
+   }
+
+   USB::EndPointDescr d_bulk_in{ descr_list, USB::EndPointDescr::OUT, USB::EndPointDescr::BULK};
+   USB::EndPointDescr d_bulk_out{descr_list, USB::EndPointDescr::IN,  USB::EndPointDescr::BULK};
+
+   MTL::Usb::EndPoint bulk_in{d_bulk_in};
+   MTL::Usb::EndPoint bulk_out{d_bulk_out};
+
+   unsigned                   segments_per_block{};
+   unsigned                   to_send_count{0};
+   unsigned                   to_recv_count{0};
+   uint32_t                   lba{0};
+   unsigned                   segment{0};
+   SCSI::CommandStatusWrapper csw{};
+   STB::FileSystem&           file_system;
 };
 
 
@@ -50,20 +274,34 @@ public:
 class USBMassStorageDevice : public USB::Device
 {
 public:
-   USBMassStorageDevice(const char* vendor_name_,
-                        uint16_t    product_id_,
-                        uint16_t    bcd_version_,
-                        const char* product_name_,
-                        const char* serial_number_)
+   USBMassStorageDevice(const char*      vendor_name_,
+                        uint16_t         product_id_,
+                        uint16_t         bcd_version_,
+                        const char*      product_name_,
+                        const char*      serial_number_,
+                        STB::FileSystem& file_system_)
+      : USB::Device(vendor_name_, product_id_, bcd_version_, product_name_, serial_number_)
+      , interface(interface_list, file_system_)
    {
-      setVendor(vendor_name_);
-      setProduct(product_id_, bcd_version_, product_name_);
-      setSerialNumber(serial_number_);
+   }
+
+   bool handleSetupReqOut(uint8_t req_, uint8_t** ptr_, unsigned* bytes_) override
+   {
+      switch(req_)
+      {
+      case 0xFE: // Get Max LUN
+         *ptr_   = &max_lun;
+         *bytes_ = 1;
+         return true;
+      }
+
+      return false;
    }
 
 private:
-   USB::Config          config{*this};
-   MassStorageInterface ms_interface{config.interface_list};
+   uint8_t              max_lun{0};        //!< Just one
+   MassStorageInterface interface;
 };
 
-}
+
+} // namespace MTL

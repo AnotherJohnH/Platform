@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2024 John D. Haughton
+// Copyright (c) 2025 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,41 +19,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //------------------------------------------------------------------------------
-// \brief Manage a USB Interface
 
-#pragma once
+#include "STB/FAT16.h"
 
-#include "USB/Descr.h"
+#include "STB/Test.h"
 
-namespace USB {
+#include <cstdio>
 
-class Interface : public STB::List<Interface>::Elem
+TEST(STB_FAT16, construct)
 {
-public:
-   using List = STB::List<Interface>;
+   STB::FAT16 fat16{"picoChippy", 128};
 
-   Interface(List&   list_,
-             uint8_t class_,
-             uint8_t sub_class_,
-             uint8_t protocol_ = 0)
-      : descr(descr_list, class_, sub_class_, protocol_)
+   const uint8_t* ptr = fat16.get64BytePtr(/* sector */ 0, /* segment */ 0);
+
+   for(unsigned i = 0; i < 64; ++i)
    {
-      list_.push_back(this);
+      printf(" %02X", ptr[i]);
+
+      if ((i % 16) == 15) putchar('\n');
    }
-
-   //! Called after USB host has set the configuration for this device
-   virtual void configured() {}
-
-   //! Called when USB host sends a packet to this device
-   virtual void buffRx(uint8_t ep_, const uint8_t* data_, unsigned len_) {}
-
-   //! Called after a packet has been sent to the USB host from this device
-   virtual void buffTx(uint8_t ep_) {}
-
-   STB::List<Descr> descr_list{};
-
-private:
-   USB::InterfaceDescr descr;
-};
-
-} // namespace USB
+}

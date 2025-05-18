@@ -28,20 +28,20 @@
 namespace STB {
 
 //! Endian swap a 16-bit value
-inline uint16_t endianSwap(uint16_t data)
+constexpr uint16_t endianSwap(uint16_t data)
 {
    return (data >> 8) | (data << 8);
 }
 
 //! Endian swap a 32-bit value
-inline uint32_t endianSwap(uint32_t data)
+constexpr  uint32_t endianSwap(uint32_t data)
 {
    return (uint32_t(endianSwap(uint16_t(data))) << 16) |
           endianSwap(uint16_t(uint32_t(data) >> 16));
 }
 
 //! Endian swap a 64-bit value
-inline uint64_t endianSwap(uint64_t data)
+constexpr uint64_t endianSwap(uint64_t data)
 {
    return (uint64_t(endianSwap(uint32_t(data))) << 32) |
           endianSwap(uint32_t(uint64_t(data) >> 32));

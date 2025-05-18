@@ -29,7 +29,7 @@ enum class Request : uint8_t
 {
    GET_STATUS     = 0x00,
    CLR_FEATURE    = 0x01,
-   SET_FEATURE    = 0x02,
+   SET_FEATURE    = 0x03,
    SET_ADDRESS    = 0x05,
    GET_DESCRIPTOR = 0x06,
    SET_DESCRIPTOR = 0x07,

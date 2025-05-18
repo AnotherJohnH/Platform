@@ -36,7 +36,16 @@ enum Class : uint8_t
    CLASS_AUDIO        = 0x01,
    CLASS_COMMS        = 0x02,
    CLASS_HID          = 0x03,
+   CLASS_PID          = 0x05,
+   CLASS_IMAGE        = 0x06,
+   CLASS_PRINTER      = 0x07,
    CLASS_MASS_STORAGE = 0x08,
+   CLASS_HUB          = 0x09,
+   CLASS_CDC_DATA     = 0x0A,
+   CLASS_SMART_CARD   = 0x0B,
+   CLASS_SECURITYR    = 0x0D,
+   CLASS_VIDEO        = 0x0E,
+   CLASS_HEALTH       = 0x0F,
    CLASS_VENDOR_SPEC  = 0xFF
 };
 

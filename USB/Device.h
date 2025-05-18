@@ -28,75 +28,57 @@
 
 namespace USB {
 
-class Config;
-
 class Device
 {
 public:
-   Device()
+   Device(const char* vendor_name_,
+          uint16_t    product_id_,
+          uint16_t    bcd_version_,
+          const char* product_name_,
+          const char* serial_number_)
    {
       // Set English (US) as the language descriptor
       addString("\x09\x04", 2);
-   }
 
-   void addConfig(Config* config_)
-   {
-      descr.num_configs++;
-      config_list.push_back(config_);
-   }
+      device_descr.vendor_idx     = addString(vendor_name_);
+      device_descr.product_id     = product_id_;
+      device_descr.device_bcd     = bcd_version_;
+      device_descr.product_idx    = addString(product_name_);
+      device_descr.serial_num_idx = addString(serial_number_);
+      device_descr.num_configs    = 1;
 
-   //! Allocate a StringDescr for a string \return index
-   uint8_t addString(const char* string_, size_t length = 0)
-   {
-      uint8_t  idx    = string_idx;
-      uint8_t* buffer = getString(idx);
-
-      if (length == 0)
-         length = strlen(string_);
-
-      buffer[0] = length;
-      memcpy(buffer + 1, string_, length);
-      string_idx += 1 + length;
-
-      return idx;
+      config_descr.attributes = 0b10100000; // USB 2.0 Bus Powered, no remote wakeup
+      config_descr.max_power  = 50;         // 100 mA
    }
 
    void setClassAndProtocol(uint8_t class_, uint8_t sub_class_, uint8_t protocol_ = 0)
    {
-      descr.clas      = class_;
-      descr.sub_class = sub_class_;
-      descr.protocol  = protocol_;
+      device_descr.clas      = class_;
+      device_descr.sub_class = sub_class_;
+      device_descr.protocol  = protocol_;
    }
 
-   void setVendor(const char* vendor_name_)
+   //! Get the USB device descriptor
+   const DeviceDescr& getDeviceDescr() const { return device_descr; }
+
+   //! Get the USB config descriptor (XXX there is only one)
+   const ConfigDescr& getConfigDescr(unsigned config_num_) const { return config_descr; }
+
+   //! Get a USB descriptor string
+   const uint8_t* getString(uint8_t idx_) const { return &string_buffer[idx_]; }
+
+   //! Get the list of interfaces for the selected config
+   STB::List<Interface>& getInterfaceList(unsigned config_num_) { return interface_list; }
+
+   virtual bool handleSetupReqIn(uint8_t req_)
    {
-      descr.vendor_idx = addString(vendor_name_);
+      return false;
    }
 
-   void setProduct(uint16_t    product_id_,
-                   uint16_t    bcd_version_,
-                   const char* product_name_)
+   virtual bool handleSetupReqOut(uint8_t req_, uint8_t** ptr_, unsigned* bytes_)
    {
-      descr.product_id  = product_id_;
-      descr.device_bcd  = bcd_version_;
-      descr.product_idx = addString(product_name_);
+      return false;
    }
-
-   void setSerialNumber(const char* serial_)
-   {
-      descr.serial_num_idx = addString(serial_);
-   }
-
-   void setBufferHandler(unsigned ep_, Interface* handler_)
-   {
-      buffer_handler[ep_] = handler_;
-   }
-
-   const DeviceDescr& getDescr() const { return descr; }
-
-   uint8_t* getString(uint8_t idx_) { return &string_buffer[idx_]; }
-
-   Config* getConfig(uint8_t number_);
 
    //! Incoming data from physical device
    void handleBuffRx(uint8_t ep, const uint8_t* buffer, unsigned length)
@@ -116,67 +98,46 @@ public:
       }
    }
 
-private:
-   DeviceDescr       descr{};
-   STB::List<Config> config_list{};
-   uint8_t           string_idx{0};
-   uint8_t           string_buffer[256];
-   Interface*        buffer_handler[16] = {};
-};
+   //! declares interfaces in the config descriptor and assigned end points
+   void linkDescriptors(unsigned config_num_);
 
-
-// TODO split out into own header ... or maybe merge with Device
-//      and only support one config
-class Config : public STB::List<Config>::Elem
-{
-public:
-   Config(Device& device_)
-   {
-      device = &device_;
-      device->addConfig(this);
-
-      descr.attributes = 0b10100000; // USB 2.0 Bus Powered, no remote wakeup
-      descr.max_power  = 50;         // 100 mA
-   }
-
-   uint8_t addString(const char* string_)
-   {
-      return device->addString(string_);
-   }
-
-   void setName(const char* name_) { descr.name_idx = addString(name_); }
-
-   void linkDescriptors();
-
-   ConfigDescr          descr{};
+protected:
    STB::List<Interface> interface_list{};
 
 private:
-   Device* device;
+   //! Allocate a StringDescr for a string \return index
+   uint8_t addString(const char* string_, size_t length = 0)
+   {
+      uint8_t  idx    = string_idx;
+      uint8_t* buffer = &string_buffer[idx];
+
+      if (length == 0)
+         length = strlen(string_);
+
+      buffer[0] = length;
+      memcpy(buffer + 1, string_, length);
+      string_idx += 1 + length;
+
+      return idx;
+   }
+
+   DeviceDescr device_descr{};
+   ConfigDescr config_descr{};  //!< XXX Just one config
+   uint8_t     string_idx{0};
+   uint8_t     string_buffer[256];
+   Interface*  buffer_handler[16] = {};
 };
 
 
-Config* Device::getConfig(uint8_t number_)
+void Device::linkDescriptors(unsigned config_num_)
 {
-   for(auto& cfg : config_list)
-   {
-      if (cfg.descr.value == number_)
-         return &cfg;
-   }
-
-   return nullptr;
-}
-
-
-void Config::linkDescriptors()
-{
-   if (descr.total_length != 0)
+   if (config_descr.total_length != 0)
       return;
 
    uint8_t ep_addr = 1;
 
-   descr.num_interfaces = 0;
-   descr.total_length   = descr.length;
+   config_descr.num_interfaces = 0;
+   config_descr.total_length   = config_descr.length;
 
    for(auto& interface : interface_list)
    {
@@ -184,14 +145,14 @@ void Config::linkDescriptors()
 
       for(auto& d : interface.descr_list)
       {
-         descr.total_length += d.getLength();
+         config_descr.total_length += d.getLength();
 
          switch(d.getType())
          {
          case TYPE_INTERFACE:
             interface_descr = (InterfaceDescr*)&d;
             interface_descr->num_endpoints = 0;
-            interface_descr->number        = descr.num_interfaces++;
+            interface_descr->number        = config_descr.num_interfaces++;
             break;
 
          case TYPE_ENDPOINT:
@@ -202,7 +163,7 @@ void Config::linkDescriptors()
                endpoint_descr->addr = (endpoint_descr->addr & 0xF0) | ep_addr;
 
                // TODO this should move to set configuration time
-               device->setBufferHandler(ep_addr, &interface);
+               buffer_handler[ep_addr] = &interface;
 
                ep_addr++;
             }
@@ -214,6 +175,7 @@ void Config::linkDescriptors()
       }
 
 #if 0
+      // Debug
       for(auto& d : interface.descr_list)
       {
          char ch;

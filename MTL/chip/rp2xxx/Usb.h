@@ -25,6 +25,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <cstdio>
 
 #include "MTL/Periph.h"
 #include "MTL/core/NVIC.h"
@@ -242,7 +243,8 @@ private:
    {
       ep0_in.setPID();
 
-      const USB::DeviceDescr& descr = device->getDescr();
+      const USB::DeviceDescr& descr = device->getDeviceDescr();
+
       unsigned bytes = ep0_in.write(&descr, descr.length);
       ep0_in.startTx(std::min(bytes, unsigned(packet->length)));
 
@@ -251,18 +253,18 @@ private:
 
    void handleGetConfigDescr(USB::SetupReq* packet)
    {
-      USB::Config* config = device->getConfig(1);
+      device->linkDescriptors(config);
 
-      config->linkDescriptors();
+      const USB::ConfigDescr& descr = device->getConfigDescr(config);
 
       buffer.clear();
-      buffer.write(&config->descr.length, config->descr.length);
+      buffer.write(&descr.length, descr.length);
 
-      if (packet->length == config->descr.total_length)
+      if (packet->length == descr.total_length)
       {
-         for(auto& interface : config->interface_list)
+         for(const auto& interface : device->getInterfaceList(config))
          {
-            for(auto& d : interface.descr_list)
+            for(const auto& d : interface.descr_list)
             {
                buffer.write(&d.getLength(), d.getLength());
             }
@@ -325,11 +327,11 @@ private:
 
    void handleSetConfig(USB::SetupReq* packet)
    {
-      USB::Config* config = device->getConfig(packet->value & 0xFF);
+      config = packet->value;
 
       dpram_offset = 0x180;
 
-      for(auto& interface : config->interface_list)
+      for(auto& interface : device->getInterfaceList(config))
       {
          for(const auto& descr : interface.descr_list)
          {
@@ -344,7 +346,17 @@ private:
          interface.configured();
       }
 
-      LOG("SET_CONFIG %u\n", packet->value);
+      LOG("SET_CONFIG %u\n", config);
+   }
+
+   void handleSetFeature(USB::SetupReq* packet)
+   {
+      LOG("SET_FEATURE %u\n", packet->value);
+   }
+
+   void handleClrFeature(USB::SetupReq* packet)
+   {
+      LOG("CLR_FEATURE %u\n", packet->value);
    }
 
    void handleSetupReq()
@@ -361,9 +373,12 @@ private:
          {
          case USB::Request::SET_ADDRESS: handleSetAddress(packet); break;
          case USB::Request::SET_CONFIG:  handleSetConfig(packet);  break;
+         case USB::Request::CLR_FEATURE: handleClrFeature(packet); break;
+         case USB::Request::SET_FEATURE: handleSetFeature(packet); break;
 
          default:
             LOG("SETUP OTHER IN %u\n", packet->request);
+            (void) device->handleSetupReqIn(uint8_t(packet->request));
             break;
          }
 
@@ -384,6 +399,16 @@ private:
 
          default:
             LOG("SETUP OTHER OUT %u\n", packet->request);
+            {
+               uint8_t* ptr{};
+               unsigned bytes{0};
+
+               if (device->handleSetupReqOut(uint8_t(packet->request), &ptr, &bytes))
+               {
+                  ep0_in.write(ptr, bytes);
+                  ep0_in.startTx(bytes);
+               }
+            }
             break;
          }
       }
@@ -490,7 +515,7 @@ private:
    EndPoint     ep0_in{};
    EndPoint     ep0_out{};
    uint32_t     dpram_offset{0x180};  // XXX what about 0x140-0x17F
-
+   uint8_t      config{};
    bool         set_address{false};
    uint8_t      address{};
    Buffer<128>  buffer{};

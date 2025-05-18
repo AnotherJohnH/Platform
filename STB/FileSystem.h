@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2024 John D. Haughton
+// Copyright (c) 2025 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,41 +19,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //------------------------------------------------------------------------------
-// \brief Manage a USB Interface
 
 #pragma once
 
-#include "USB/Descr.h"
+#include <cstdint>
 
-namespace USB {
+namespace STB {
 
-class Interface : public STB::List<Interface>::Elem
+class FileSystem
 {
 public:
-   using List = STB::List<Interface>;
+   FileSystem() = default;
 
-   Interface(List&   list_,
-             uint8_t class_,
-             uint8_t sub_class_,
-             uint8_t protocol_ = 0)
-      : descr(descr_list, class_, sub_class_, protocol_)
-   {
-      list_.push_back(this);
-   }
+   virtual unsigned getBlockSize() const = 0;
 
-   //! Called after USB host has set the configuration for this device
-   virtual void configured() {}
+   virtual unsigned getNumBlocks() const = 0;
 
-   //! Called when USB host sends a packet to this device
-   virtual void buffRx(uint8_t ep_, const uint8_t* data_, unsigned len_) {}
+   virtual const uint8_t* get64BytePtr(uint32_t block_address_, unsigned offset_) const = 0;
 
-   //! Called after a packet has been sent to the USB host from this device
-   virtual void buffTx(uint8_t ep_) {}
-
-   STB::List<Descr> descr_list{};
-
-private:
-   USB::InterfaceDescr descr;
+protected:
+   static const unsigned LOG2_SEGMENT_SIZE = 6;
+   static const unsigned SEGMENT_SIZE     = 1 << LOG2_SEGMENT_SIZE;
 };
 
-} // namespace USB
+} // namespace STB

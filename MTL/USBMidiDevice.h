@@ -67,7 +67,7 @@ public:
    }
 
 private:
-   void configured()
+   void configured() override
    {
       midi_in.startRx(64);
    }
@@ -126,25 +126,15 @@ private:
 class USBMidiDevice : public USB::Device
 {
 public:
-   USBMidiDevice(const char* vendor_name_,
-                 uint16_t    product_id_,
-                 uint16_t    bcd_version_,
-                 const char* product_name_,
-                 const char* serial_number_)
-   {
-      setVendor(vendor_name_);
-      setProduct(product_id_, bcd_version_, product_name_);
-      setSerialNumber(serial_number_);
-   }
+   using USB::Device::Device;
 
    bool empty() const { return ms_interface.empty(); }
 
    uint8_t rx() { return ms_interface.rx(); }
 
 private:
-   USB::Config            config{*this};
-   ACInterface            ac_interface{config.interface_list};
-   MIDIStreamingInterface ms_interface{config.interface_list};
+   ACInterface            ac_interface{interface_list};
+   MIDIStreamingInterface ms_interface{interface_list};
 };
 
 }
