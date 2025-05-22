@@ -32,11 +32,11 @@
 
 namespace MTL {
 
-//! Standard Audio Controller interface
-class ACInterface : public USB::Interface
+//! USB Audio Controller interface
+class USBACInterface : public USB::Interface
 {
 public:
-   ACInterface(List& list_)
+   USBACInterface(List& list_)
       : USB::Interface(list_, USB::CLASS_AUDIO, USB::AC::SUB_CLASS)
    {
    }
@@ -45,11 +45,11 @@ public:
 };
 
 
-//! MIDI Streaming interface
-class MIDIStreamingInterface : public USB::Interface
+//! USB MIDI Streaming interface
+class USBMIDIStreamingInterface : public USB::Interface
 {
 public:
-   MIDIStreamingInterface(List& list_)
+   USBMIDIStreamingInterface(List& list_)
       : USB::Interface(list_, USB::CLASS_AUDIO, USB::MS::SUB_CLASS)
    {
       // This needs to be the end-point address which will be 2
@@ -122,19 +122,23 @@ private:
 };
 
 
-//! USB-MIDI device
-class USBMidiDevice : public USB::Device
+//! USB-MIDI interface
+class USBMidiInterface
 {
 public:
-   using USB::Device::Device;
+   USBMidiInterface(USB::Device* device_)
+      : ac_interface{device_->getInterfaceList()}
+      , ms_interface{device_->getInterfaceList()}
+   {
+   }
 
    bool empty() const { return ms_interface.empty(); }
 
    uint8_t rx() { return ms_interface.rx(); }
 
 private:
-   ACInterface            ac_interface{interface_list};
-   MIDIStreamingInterface ms_interface{interface_list};
+   USBACInterface            ac_interface;
+   USBMIDIStreamingInterface ms_interface;
 };
 
 }
