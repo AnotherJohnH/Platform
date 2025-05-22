@@ -138,8 +138,8 @@ public:
       uint32_t           pid_bit{};   //!< Next PID state for buffer control
    };
 
-   Usb(USB::Device& device_)
-      : device(&device_)
+   Usb(USB::Device* device_)
+      : device(device_)
    {
        MTL::Resets resets;
 
@@ -253,16 +253,16 @@ private:
 
    void handleGetConfigDescr(USB::SetupReq* packet)
    {
-      device->linkDescriptors(config);
+      device->linkDescriptors();
 
-      const USB::ConfigDescr& descr = device->getConfigDescr(config);
+      const USB::ConfigDescr& descr = device->getConfigDescr();
 
       buffer.clear();
       buffer.write(&descr.length, descr.length);
 
       if (packet->length == descr.total_length)
       {
-         for(const auto& interface : device->getInterfaceList(config))
+         for(const auto& interface : device->getInterfaceList())
          {
             for(const auto& d : interface.descr_list)
             {
@@ -327,11 +327,13 @@ private:
 
    void handleSetConfig(USB::SetupReq* packet)
    {
-      config = packet->value;
+      unsigned config = packet->value;
+
+      device->setConfig(config);
 
       dpram_offset = 0x180;
 
-      for(auto& interface : device->getInterfaceList(config))
+      for(auto& interface : device->getInterfaceList())
       {
          for(const auto& descr : interface.descr_list)
          {
@@ -378,7 +380,7 @@ private:
 
          default:
             LOG("SETUP OTHER IN %u\n", packet->request);
-            for(auto& interface : device->getInterfaceList(config))
+            for(auto& interface : device->getInterfaceList())
             {
                if (interface.handleSetupReqIn(uint8_t(packet->request)))
                   break;
@@ -407,7 +409,7 @@ private:
                uint8_t* ptr{};
                unsigned bytes{0};
 
-               for(auto& interface : device->getInterfaceList(config))
+               for(auto& interface : device->getInterfaceList())
                {
                   if (interface.handleSetupReqOut(uint8_t(packet->request), &ptr, &bytes))
                   {
@@ -523,7 +525,6 @@ private:
    EndPoint     ep0_in{};
    EndPoint     ep0_out{};
    uint32_t     dpram_offset{0x180};  // XXX what about 0x140-0x17F
-   uint8_t      config{};
    bool         set_address{false};
    uint8_t      address{};
    Buffer<128>  buffer{};

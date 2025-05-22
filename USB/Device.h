@@ -58,17 +58,22 @@ public:
       device_descr.protocol  = protocol_;
    }
 
+   void setConfig(unsigned config_num_)
+   {
+      config_num = config_num_;
+   }
+
    //! Get the USB device descriptor
    const DeviceDescr& getDeviceDescr() const { return device_descr; }
 
    //! Get the USB config descriptor (XXX there is only one)
-   const ConfigDescr& getConfigDescr(unsigned config_num_) const { return config_descr; }
+   const ConfigDescr& getConfigDescr() const { return config_descr; }
 
    //! Get a USB descriptor string
    const uint8_t* getString(uint8_t idx_) const { return &string_buffer[idx_]; }
 
    //! Get the list of interfaces for the selected config
-   STB::List<Interface>& getInterfaceList(unsigned config_num_) { return interface_list; }
+   STB::List<Interface>& getInterfaceList() { return interface_list; }
 
    //! Incoming data from physical device
    void handleBuffRx(uint8_t ep, const uint8_t* buffer, unsigned length)
@@ -89,7 +94,7 @@ public:
    }
 
    //! declares interfaces in the config descriptor and assigned end points
-   void linkDescriptors(unsigned config_num_);
+   void linkDescriptors();
 
 protected:
    STB::List<Interface> interface_list{};
@@ -116,10 +121,11 @@ private:
    uint8_t     string_idx{0};
    uint8_t     string_buffer[256];
    Interface*  buffer_handler[16] = {};
+   unsigned    config_num{0};
 };
 
 
-void Device::linkDescriptors(unsigned config_num_)
+void Device::linkDescriptors()
 {
    if (config_descr.total_length != 0)
       return;

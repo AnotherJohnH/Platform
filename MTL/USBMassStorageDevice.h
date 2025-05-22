@@ -34,18 +34,14 @@
 namespace MTL {
 
 //! Standard Mass Stroarge interface
-class MassStorageInterface : public USB::Interface
+class USBMassStorageInterface : public USB::Interface
 {
 public:
-   MassStorageInterface(List& list_)
-      : USB::Interface(list_,
+   USBMassStorageInterface(USB::Device* device_, STB::FileSystem& file_system_)
+      : USB::Interface(device_->getInterfaceList(),
                        USB::CLASS_MASS_STORAGE,
                        USB::MS::SUB_CLASS_SCSI,
                        USB::MS::PROTOCOL_BULK_ONLY_TRANSPORT)
-   {
-   }
-
-   void setFileSystem(STB::FileSystem& file_system_)
    {
       file_system        = &file_system_;
       segments_per_block = file_system->getBlockSize() / 64;
@@ -286,22 +282,5 @@ private:
    uint8_t                    max_lun{0};   //!< Just one
    STB::FileSystem*           file_system{nullptr};
 };
-
-
-//! USB Mass Storage device
-class USBMassStorageDevice : public USB::Device
-{
-public:
-   using USB::Device::Device;
-
-   void setFileSystem(STB::FileSystem& file_system_)
-   {
-      ms_interface.setFileSystem(file_system_);
-   }
-
-private:
-   MassStorageInterface ms_interface{interface_list};
-};
-
 
 } // namespace MTL
