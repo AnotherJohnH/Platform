@@ -63,12 +63,6 @@ public:
       config_num = config_num_;
    }
 
-   //! Get the USB device descriptor
-   const DeviceDescr& getDeviceDescr() const { return device_descr; }
-
-   //! Get the USB config descriptor (XXX there is only one)
-   const ConfigDescr& getConfigDescr() const { return config_descr; }
-
    //! Get a USB descriptor string
    const uint8_t* getString(uint8_t idx_) const { return &string_buffer[idx_]; }
 
@@ -97,7 +91,10 @@ public:
    void linkDescriptors();
 
 protected:
+   DeviceDescr          device_descr{};
+   ConfigDescr          config_descr{};  //!< XXX Just one config
    STB::List<Interface> interface_list{};
+   unsigned             config_num{0};
 
 private:
    //! Allocate a StringDescr for a string \return index
@@ -116,12 +113,9 @@ private:
       return idx;
    }
 
-   DeviceDescr device_descr{};
-   ConfigDescr config_descr{};  //!< XXX Just one config
    uint8_t     string_idx{0};
    uint8_t     string_buffer[256];
    Interface*  buffer_handler[16] = {};
-   unsigned    config_num{0};
 };
 
 

@@ -22,7 +22,8 @@
 
 #pragma once
 
-#include "MTL/chip/Usb.h"
+#include "MTL/chip/USBDevice.h"
+
 #include "STB/Fifo.h"
 
 #include "USB/Device.h"
@@ -117,8 +118,8 @@ private:
    USB::MS::CSEndPointDescr<1> d_cs_midi_out{descr_list, /* jack */ 2};
 
    //! Endpoint implementation
-   MTL::Usb::EndPoint midi_in{d_midi_in};
-   MTL::Usb::EndPoint midi_out{d_midi_out};
+   MTL::USBEndPoint midi_in{d_midi_in};
+   MTL::USBEndPoint midi_out{d_midi_out};
 };
 
 

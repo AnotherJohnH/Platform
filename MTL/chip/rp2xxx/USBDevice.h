@@ -78,68 +78,80 @@ struct USBReg
    uint32_t ints;
 };
 
-//! USB Interface
-class Usb : public Periph<USBReg,0x50110000>
+//! USB endpoint
+class USBEndPoint : public USB::EndPoint
 {
 public:
-   class EndPoint : public USB::EndPoint
+   USBEndPoint() = default;
+
+   USBEndPoint(USB::Descr& descr_)
+      : USB::EndPoint(descr_)
    {
-   public:
-      EndPoint() = default;
+   }
 
-      EndPoint(USB::Descr& descr_)
-         : USB::EndPoint(descr_)
-      {
-      }
+   //! Set next PID as DATA1
+   void setPID()
+   {
+      pid_bit = BC0_PID_DATA1;
+   }
 
-      //! Set next PID as DATA1
-      void setPID()
-      {
-         pid_bit = BC0_PID_DATA1;
-      }
+   //! Start an outgoing transimission from the Device to Host
+   void startTx(unsigned len_)
+   {
+      *control = BC0_FULL | pid_bit | BC0_AVAIL | len_;
+      pid_bit ^= BC0_PID_DATA1;
+   }
 
-      //! Start an outgoing transimission from the Device to Host
-      void startTx(unsigned len_)
-      {
-         *control = BC0_FULL | pid_bit | BC0_AVAIL | len_;
-         pid_bit ^= BC0_PID_DATA1;
-      }
+   //! Start an incoming transmission from the Host to Device
+   void startRx(unsigned len_)
+   {
+      *control = pid_bit | BC0_AVAIL | len_;
+      pid_bit ^= BC0_PID_DATA1;
+   }
 
-      //! Start an incoming transmission from the Host to Device
-      void startRx(unsigned len_)
-      {
-         *control = pid_bit | BC0_AVAIL | len_;
-         pid_bit ^= BC0_PID_DATA1;
-      }
+   //! Start an acknowledge back to the host
+   void startAck()
+   {
+      startTx(0);
+   }
 
-      //! Start an acknowledge back to the host
-      void startAck()
-      {
-         startTx(0);
-      }
+   //! Write data into buffer
+   unsigned write(const void* data, unsigned length, unsigned offset = 0)
+   {
+      memcpy((void*)&buffer[offset], data, length);
+      offset += length;
+      return offset;
+   }
 
-      //! Write data into buffer
-      unsigned write(const void* data, unsigned length, unsigned offset = 0)
-      {
-         memcpy((void*)&buffer[offset], data, length);
-         offset += length;
-         return offset;
-      }
+   static const uint32_t BC0_FULL      = 1 << 15;
+   static const uint32_t BC0_LAST      = 1 << 14;
+   static const uint32_t BC0_PID_DATA1 = 1 << 13;
+   static const uint32_t BC0_RESET     = 1 << 12;
+   static const uint32_t BC0_STALL     = 1 << 11;
+   static const uint32_t BC0_AVAIL     = 1 << 10;
 
-      static const uint32_t BC0_FULL      = 1 << 15;
-      static const uint32_t BC0_LAST      = 1 << 14;
-      static const uint32_t BC0_PID_DATA1 = 1 << 13;
-      static const uint32_t BC0_RESET     = 1 << 12;
-      static const uint32_t BC0_STALL     = 1 << 11;
-      static const uint32_t BC0_AVAIL     = 1 << 10;
+   volatile uint32_t* control{};   //!< Buffer control register
+   volatile uint8_t*  buffer{};    //!< Buffer
+   uint32_t           pid_bit{};   //!< Next PID state for buffer control
+};
 
-      volatile uint32_t* control{};   //!< Buffer control register
-      volatile uint8_t*  buffer{};    //!< Buffer
-      uint32_t           pid_bit{};   //!< Next PID state for buffer control
-   };
 
-   Usb(USB::Device* device_)
-      : device(device_)
+//! USB Controller
+class USBDevice
+   : public Periph<USBReg,0x50110000>
+   , public USB::Device
+{
+public:
+   USBDevice(const char* vendor_name_,
+             uint16_t    product_id_,
+             uint16_t    bcd_version_,
+             const char* product_name_,
+             const char* serial_number_)
+      : USB::Device(vendor_name_,
+                    product_id_,
+                    bcd_version_,
+                    product_name_,
+                    serial_number_)
    {
        MTL::Resets resets;
 
@@ -205,7 +217,7 @@ private:
    Periph<DPSRamReg,0x50100000> ram;
 
    //! Initialise an end-point
-   void initEndPoint(EndPoint* endpoint_, uint8_t addr_, uint8_t type_)
+   void initEndPoint(USBEndPoint* endpoint_, uint8_t addr_, uint8_t type_)
    {
       // Compute register index
       unsigned ep_index = addr_ & 0b00001111;
@@ -243,9 +255,7 @@ private:
    {
       ep0_in.setPID();
 
-      const USB::DeviceDescr& descr = device->getDeviceDescr();
-
-      unsigned bytes = ep0_in.write(&descr, descr.length);
+      unsigned bytes = ep0_in.write(&device_descr, device_descr.length);
       ep0_in.startTx(std::min(bytes, unsigned(packet->length)));
 
       LOG("GET_DESCR DEV %u\n", packet->length);
@@ -253,16 +263,14 @@ private:
 
    void handleGetConfigDescr(USB::SetupReq* packet)
    {
-      device->linkDescriptors();
-
-      const USB::ConfigDescr& descr = device->getConfigDescr();
+      linkDescriptors();
 
       buffer.clear();
-      buffer.write(&descr.length, descr.length);
+      buffer.write(&config_descr.length, config_descr.length);
 
-      if (packet->length == descr.total_length)
+      if (packet->length == config_descr.total_length)
       {
-         for(const auto& interface : device->getInterfaceList())
+         for(const auto& interface : interface_list)
          {
             for(const auto& d : interface.descr_list)
             {
@@ -281,7 +289,7 @@ private:
    void handleGetStringDescr(USB::SetupReq* packet)
    {
       uint8_t        id     = packet->value & 0xFF;
-      const uint8_t* string = device->getString(id);
+      const uint8_t* string = getString(id);
       uint8_t        len    = *string++;
 
       buffer.clear();
@@ -327,20 +335,18 @@ private:
 
    void handleSetConfig(USB::SetupReq* packet)
    {
-      unsigned config = packet->value;
-
-      device->setConfig(config);
+      config_num = packet->value;
 
       dpram_offset = 0x180;
 
-      for(auto& interface : device->getInterfaceList())
+      for(auto& interface : interface_list)
       {
          for(const auto& descr : interface.descr_list)
          {
             if (descr.getType() == USB::TYPE_ENDPOINT)
             {
                const USB::EndPointDescr* ep_descr = (USB::EndPointDescr*)&descr;
-               EndPoint*                 ep = (EndPoint*) ep_descr->getImpl();
+               USBEndPoint*              ep = (USBEndPoint*) ep_descr->getImpl();
                initEndPoint(ep, ep_descr->addr, ep_descr->attr);
             }
          }
@@ -348,7 +354,7 @@ private:
          interface.configured();
       }
 
-      LOG("SET_CONFIG %u\n", config);
+      LOG("SET_CONFIG %u\n", config_num);
    }
 
    void handleSetFeature(USB::SetupReq* packet)
@@ -380,7 +386,7 @@ private:
 
          default:
             LOG("SETUP OTHER IN %u\n", packet->request);
-            for(auto& interface : device->getInterfaceList())
+            for(auto& interface : interface_list)
             {
                if (interface.handleSetupReqIn(uint8_t(packet->request)))
                   break;
@@ -409,7 +415,7 @@ private:
                uint8_t* ptr{};
                unsigned bytes{0};
 
-               for(auto& interface : device->getInterfaceList())
+               for(auto& interface : interface_list)
                {
                   if (interface.handleSetupReqOut(uint8_t(packet->request), &ptr, &bytes))
                   {
@@ -463,7 +469,7 @@ private:
               {
                  if (is_tx)
                  {
-                    device->handleBuffTx(ep);
+                    handleBuffTx(ep);
                  }
                  else
                  {
@@ -471,7 +477,7 @@ private:
                     unsigned       offset = ram.reg->ep_control[bit - 2] & 0xFC0;
                     const uint8_t* buffer = (const uint8_t*)(ram.reg) + offset;
 
-                    device->handleBuffRx(ep, buffer, len);
+                    handleBuffRx(ep, buffer, len);
                  }
               }
 
@@ -521,9 +527,8 @@ private:
    static const uint32_t INT_BUS_RESET   = 1 << 12;
    static const uint32_t INT_BUFF_STATUS = 1 <<  4;
 
-   USB::Device* device;
-   EndPoint     ep0_in{};
-   EndPoint     ep0_out{};
+   USBEndPoint  ep0_in{};
+   USBEndPoint  ep0_out{};
    uint32_t     dpram_offset{0x180};  // XXX what about 0x140-0x17F
    bool         set_address{false};
    uint8_t      address{};

@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "MTL/chip/Usb.h"
+#include "MTL/chip/USBDevice.h"
 
 #include "STB/FileSystem.h"
 #include "STB/Endian.h"
@@ -270,8 +270,8 @@ private:
    USB::EndPointDescr d_bulk_in{ descr_list, USB::EndPointDescr::OUT, USB::EndPointDescr::BULK};
    USB::EndPointDescr d_bulk_out{descr_list, USB::EndPointDescr::IN,  USB::EndPointDescr::BULK};
 
-   MTL::Usb::EndPoint bulk_in{d_bulk_in};
-   MTL::Usb::EndPoint bulk_out{d_bulk_out};
+   MTL::USBEndPoint bulk_in{d_bulk_in};
+   MTL::USBEndPoint bulk_out{d_bulk_out};
 
    unsigned                   segments_per_block{};
    unsigned                   to_send_count{0};
