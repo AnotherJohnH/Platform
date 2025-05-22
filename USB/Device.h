@@ -70,16 +70,6 @@ public:
    //! Get the list of interfaces for the selected config
    STB::List<Interface>& getInterfaceList(unsigned config_num_) { return interface_list; }
 
-   virtual bool handleSetupReqIn(uint8_t req_)
-   {
-      return false;
-   }
-
-   virtual bool handleSetupReqOut(uint8_t req_, uint8_t** ptr_, unsigned* bytes_)
-   {
-      return false;
-   }
-
    //! Incoming data from physical device
    void handleBuffRx(uint8_t ep, const uint8_t* buffer, unsigned length)
    {

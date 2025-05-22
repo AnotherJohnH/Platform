@@ -37,14 +37,18 @@ namespace MTL {
 class MassStorageInterface : public USB::Interface
 {
 public:
-   MassStorageInterface(List& list_, STB::FileSystem& file_system_)
+   MassStorageInterface(List& list_)
       : USB::Interface(list_,
                        USB::CLASS_MASS_STORAGE,
                        USB::MS::SUB_CLASS_SCSI,
                        USB::MS::PROTOCOL_BULK_ONLY_TRANSPORT)
-      , file_system(file_system_)
    {
-      segments_per_block = file_system.getBlockSize() / 64;
+   }
+
+   void setFileSystem(STB::FileSystem& file_system_)
+   {
+      file_system        = &file_system_;
+      segments_per_block = file_system->getBlockSize() / 64;
    }
 
 private:
@@ -113,8 +117,8 @@ private:
 
             uint32_t response[2];
 
-            response[0] = STB::endianSwap(uint32_t(file_system.getNumBlocks()));
-            response[1] = STB::endianSwap(uint32_t(file_system.getBlockSize()));
+            response[0] = STB::endianSwap(uint32_t(file_system->getNumBlocks()));
+            response[1] = STB::endianSwap(uint32_t(file_system->getBlockSize()));
 
             bulk_out.write(&response, sizeof(response));
             bulk_out.startTx(sizeof(response));
@@ -147,7 +151,7 @@ private:
             printf("SCSI READ 10: ");
             printf("%03X+%u\n", lba, STB::endianSwap(cmd->len));
 
-            bulk_out.write(file_system.get64BytePtr(lba, segment++), 64);
+            bulk_out.write(file_system->get64BytePtr(lba, segment++), 64);
             bulk_out.startTx(64);
          }
          break;
@@ -174,6 +178,19 @@ private:
          printf("\n");
          break;
       }
+   }
+
+   bool handleSetupReqOut(uint8_t req_, uint8_t** ptr_, unsigned* bytes_) override
+   {
+      switch(req_)
+      {
+      case 0xFE: // Get Max LUN
+         *ptr_   = &max_lun;
+         *bytes_ = 1;
+         return true;
+      }
+
+      return false;
    }
 
    void configured() override
@@ -238,7 +255,7 @@ private:
          }
          else
          {
-            bulk_out.write(file_system.get64BytePtr(lba, segment++), 64);
+            bulk_out.write(file_system->get64BytePtr(lba, segment++), 64);
             bulk_out.startTx(64);
 
             if (segment == segments_per_block)
@@ -266,7 +283,8 @@ private:
    uint32_t                   lba{0};
    unsigned                   segment{0};
    SCSI::CommandStatusWrapper csw{};
-   STB::FileSystem&           file_system;
+   uint8_t                    max_lun{0};   //!< Just one
+   STB::FileSystem*           file_system{nullptr};
 };
 
 
@@ -274,33 +292,15 @@ private:
 class USBMassStorageDevice : public USB::Device
 {
 public:
-   USBMassStorageDevice(const char*      vendor_name_,
-                        uint16_t         product_id_,
-                        uint16_t         bcd_version_,
-                        const char*      product_name_,
-                        const char*      serial_number_,
-                        STB::FileSystem& file_system_)
-      : USB::Device(vendor_name_, product_id_, bcd_version_, product_name_, serial_number_)
-      , interface(interface_list, file_system_)
-   {
-   }
+   using USB::Device::Device;
 
-   bool handleSetupReqOut(uint8_t req_, uint8_t** ptr_, unsigned* bytes_) override
+   void setFileSystem(STB::FileSystem& file_system_)
    {
-      switch(req_)
-      {
-      case 0xFE: // Get Max LUN
-         *ptr_   = &max_lun;
-         *bytes_ = 1;
-         return true;
-      }
-
-      return false;
+      ms_interface.setFileSystem(file_system_);
    }
 
 private:
-   uint8_t              max_lun{0};        //!< Just one
-   MassStorageInterface interface;
+   MassStorageInterface ms_interface{interface_list};
 };
 
 

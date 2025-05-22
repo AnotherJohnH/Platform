@@ -44,6 +44,18 @@ public:
    //! Called after USB host has set the configuration for this device
    virtual void configured() {}
 
+   //! Called to handle device specific setup requests
+   virtual bool handleSetupReqIn(uint8_t req_)
+   {
+      return false;
+   }
+
+   //! Called to handle device specific setup requests
+   virtual bool handleSetupReqOut(uint8_t req_, uint8_t** ptr_, unsigned* bytes_)
+   {
+      return false;
+   }
+
    //! Called when USB host sends a packet to this device
    virtual void buffRx(uint8_t ep_, const uint8_t* data_, unsigned len_) {}
 

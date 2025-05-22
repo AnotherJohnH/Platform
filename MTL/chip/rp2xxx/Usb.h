@@ -378,7 +378,11 @@ private:
 
          default:
             LOG("SETUP OTHER IN %u\n", packet->request);
-            (void) device->handleSetupReqIn(uint8_t(packet->request));
+            for(auto& interface : device->getInterfaceList(config))
+            {
+               if (interface.handleSetupReqIn(uint8_t(packet->request)))
+                  break;
+            }
             break;
          }
 
@@ -403,10 +407,14 @@ private:
                uint8_t* ptr{};
                unsigned bytes{0};
 
-               if (device->handleSetupReqOut(uint8_t(packet->request), &ptr, &bytes))
+               for(auto& interface : device->getInterfaceList(config))
                {
-                  ep0_in.write(ptr, bytes);
-                  ep0_in.startTx(bytes);
+                  if (interface.handleSetupReqOut(uint8_t(packet->request), &ptr, &bytes))
+                  {
+                     ep0_in.write(ptr, bytes);
+                     ep0_in.startTx(bytes);
+                     break;
+                  }
                }
             }
             break;
