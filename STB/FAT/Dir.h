@@ -33,7 +33,7 @@ class DirEntry
 public:
    DirEntry() = default;
 
-   bool isEmpty() const { return cluster == 0; }
+   bool isEmpty() const { return (cluster_hi == 0) && (cluster_lo == 0); }
 
    void setVolumeLabel(const char* name_)
    {
@@ -46,7 +46,7 @@ public:
       attr = ATTR_ARCHIVE | ATTR_VOLUME_LABEL;
    }
 
-   void setFile(const char* name_, uint16_t cluster_, uint32_t size_)
+   void setFile(const char* name_, uint32_t cluster_, uint32_t size_)
    {
       unsigned i;
 
@@ -65,9 +65,18 @@ public:
          else
             name[i] = *name_++;
 
-      attr     = ATTR_ARCHIVE | ATTR_READ_ONLY;
-      cluster  = cluster_;
-      size     = size_;
+      attr       = ATTR_ARCHIVE | ATTR_READ_ONLY;
+      cluster_lo = cluster_ & 0xFFFF;
+      cluster_hi = cluster_ >> 16;
+      size       = size_;
+
+      reserved           = 0;
+      create_time_tenths = 0;
+      create_time        = 0;
+      create_date        = 0;
+      access_date        = create_date;
+      mod_time           = create_time;
+      mod_date           = create_date;
    }
 
    void clear()
@@ -94,7 +103,7 @@ private:
    uint16_t cluster_hi{0};          //!< FAT32
    uint16_t mod_time{0};
    uint16_t mod_date{0};
-   uint16_t cluster{0};
+   uint16_t cluster_lo{0};
    uint32_t size{0};
 
 } __attribute__((__packed__));

@@ -31,6 +31,8 @@
 #include "USB/Interface.h"
 #include "USB/SCSI.h"
 
+#define LOG  if (0) printf
+
 namespace MTL {
 
 //! Standard Mass Stroarge interface
@@ -65,16 +67,16 @@ private:
       switch(bytes_[0])
       {
       case SCSI::TEST:
-         printf("SCSI TEST\n");
+         LOG("SCSI TEST\n");
          break;
 
       case SCSI::START_STOP_UNIT:
-         printf("SCSI START STOP\n");
+         LOG("SCSI START STOP\n");
          break;
 
       case SCSI::INQUIRY:
          {
-            printf("SCSI INQUIRY\n");
+            LOG("SCSI INQUIRY\n");
 
             SCSI::InquiryResponse response{};
 
@@ -91,7 +93,7 @@ private:
 
       case SCSI::MODE_SENSE_6:
          {
-            printf("SCSI MODE SENSE 6\n");
+            LOG("SCSI MODE SENSE 6\n");
 
             uint32_t response;
 
@@ -104,12 +106,12 @@ private:
          break;
 
       case SCSI::PREVENT_ALLOW_MEDIUM_REMOVAL:
-         printf("SCSI PREVENT ALLOW MEDIUM REMOVAL\n");
+         LOG("SCSI PREVENT ALLOW MEDIUM REMOVAL\n");
          break;
 
       case SCSI::READ_CAPACITY_10:
          {
-            printf("SCSI READ CAPACITY 10\n");
+            LOG("SCSI READ CAPACITY 10\n");
 
             uint32_t response[2];
 
@@ -124,7 +126,7 @@ private:
 
       case SCSI::MODE_SENSE_10:
          {
-            printf("SCSI MODE SENSE 10\n");
+            LOG("SCSI MODE SENSE 10\n");
 
             uint32_t response;
 
@@ -143,7 +145,7 @@ private:
             lba             = STB::endianSwap(cmd->lba);
             unsigned blocks = STB::endianSwap(cmd->len);
 
-            printf("SCSI READ 10: %03X+%u\n", lba, blocks);
+            LOG("SCSI READ 10: %03X+%u\n", lba, blocks);
 
             file_system->read(lba, /* offset */ 0, 64, bulk_out.writeBuffer());
             bulk_out.startTx(64);
@@ -161,18 +163,17 @@ private:
             segment       = 0;
             to_recv_count = STB::endianSwap(cmd->len) * segments_per_block;
 
-            printf("SCSI WRITE 10: ");
-            printf("%03X-%u\n", lba, STB::endianSwap(cmd->len));
+            LOG("SCSI WRITE 10: %03X-%u\n", lba, STB::endianSwap(cmd->len));
          }
          break;
 
       default:
-         printf("SCSI command =");
+         LOG("SCSI command =");
          for(unsigned i = 0; i < len_; ++i)
          {
-            printf(" %02x", bytes_[i]);
+            LOG(" %02x", bytes_[i]);
          }
-         printf("\n");
+         LOG("\n");
          break;
       }
    }
