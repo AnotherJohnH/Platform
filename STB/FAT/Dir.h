@@ -35,6 +35,8 @@ public:
 
    bool isEmpty() const { return (cluster_hi == 0) && (cluster_lo == 0); }
 
+   uint32_t getCluster() const { return (cluster_hi << 16) | cluster_lo; }
+
    void setVolumeLabel(const char* name_)
    {
       for(unsigned i = 0; i < sizeof(name); ++i)
@@ -129,13 +131,44 @@ public:
       ::memcpy((uint8_t*)entry + offset_, buffer_, bytes_);
    }
 
-   void addFile(const char* filename_, uint16_t cluster_, uint32_t size_)
+   signed addFile(const char* filename_, uint32_t cluster_, uint32_t size_)
    {
       signed index = alloc();
-      if (index != -1)
+      if (index >= 0)
       {
          entry[index].setFile(filename_, cluster_, size_);
       }
+      return index;
+   }
+
+   //! Find a directory entry that contains the given cluster
+   template <typename FAT>
+   bool findFile(uint32_t   search_cluster_,
+                 const FAT& fat_,
+                 unsigned&  dir_index_,
+                 unsigned&  cluster_seq_) const
+   {
+      for(unsigned i = 0; i < NUM_ENTRIES; ++i)
+      {
+         if (not entry[i].isEmpty())
+         {
+            uint32_t cluster = entry[i].getCluster();
+
+            for(unsigned j = 0; cluster < 0xFFF8; j++)
+            {
+               if (cluster == search_cluster_)
+               {
+                  dir_index_   = i;
+                  cluster_seq_ = j;
+                  return true;
+               }
+
+               cluster = fat_[cluster];
+            }
+         }
+      }
+
+      return false;
    }
 
 private:

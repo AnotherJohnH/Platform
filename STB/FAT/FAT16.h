@@ -43,14 +43,38 @@ public:
    {
    }
 
-   void addFile(const char* filename_, uint32_t size_)
+   void addFile(const char* filename_, uint32_t size_, uint8_t* raw_data_)
    {
       uint16_t cluster = fat.alloc(bytesToClusters(size_));
+      signed   index   = root_dir.addFile(filename_, cluster, size_);
 
-      root_dir.addFile(filename_, cluster, size_);
+      if (index >= 0)
+      {
+         dir_entry_data[index] = raw_data_;
+      }
    }
 
 private:
+   uint8_t* getFilePointer(uint32_t sector_, unsigned offset_) const
+   {
+      uint32_t cluster = 2 + (sector_ - LBA_DATA) / SECTORS_PER_CLUSTER;
+      unsigned dir_index;
+      unsigned cluster_seq;
+
+      if (root_dir.findFile(cluster, fat, dir_index, cluster_seq))
+      {
+         if (dir_entry_data[dir_index] != nullptr)
+         {
+            uint32_t cluster_offset = ((sector_ - LBA_DATA) % SECTORS_PER_CLUSTER) + offset_;
+            uint32_t data_offset    = cluster_offset + cluster_seq * BYTES_PER_CLUSTER;
+
+            return dir_entry_data[dir_index] + data_offset;
+         }
+      }
+
+      return nullptr;
+   }
+
    unsigned getBlockSize() const override { return BYTES_PER_SECTOR; }
 
    unsigned getNumBlocks() const override { return NUM_SECTORS; }
@@ -60,37 +84,39 @@ private:
              unsigned bytes_,
              uint8_t* buffer_) const override
    {
-      for(unsigned i = 0; i < bytes_; i += 64)
+      if (sector_ == LBA_VBR)
       {
-         if (sector_ == LBA_VBR)
-         {
-            vbr.read(offset_, 64, buffer_);
-         }
-         else if ((sector_ >= LBA_FAT1) && (sector_ < LBA_FAT2))
-         {
-            unsigned fat_offset = (sector_ - LBA_FAT1) * BYTES_PER_SECTOR + offset_;
+         vbr.read(offset_, bytes_, buffer_);
+      }
+      else if ((sector_ >= LBA_FAT1) && (sector_ < LBA_FAT2))
+      {
+         unsigned fat_offset = (sector_ - LBA_FAT1) * BYTES_PER_SECTOR + offset_;
 
-            fat.read(fat_offset, bytes_, buffer_);
-         }
-         else if ((sector_ >= LBA_FAT2) && (sector_ < LBA_ROOT_DIR))
-         {
-            unsigned fat_offset = (sector_ - LBA_FAT2) * BYTES_PER_SECTOR + offset_;
+         fat.read(fat_offset, bytes_, buffer_);
+      }
+      else if ((sector_ >= LBA_FAT2) && (sector_ < LBA_ROOT_DIR))
+      {
+         unsigned fat_offset = (sector_ - LBA_FAT2) * BYTES_PER_SECTOR + offset_;
 
-            fat.read(fat_offset, bytes_, buffer_);
-         }
-         else if (sector_ == LBA_ROOT_DIR)
-         {
-            unsigned dir_offset = (sector_ - LBA_ROOT_DIR) * BYTES_PER_SECTOR + offset_;
+         fat.read(fat_offset, bytes_, buffer_);
+      }
+      else if ((sector_ >= LBA_ROOT_DIR) && (sector_ < LBA_DATA))
+      {
+         unsigned dir_offset = (sector_ - LBA_ROOT_DIR) * BYTES_PER_SECTOR + offset_;
 
-            root_dir.read(dir_offset, bytes_, buffer_);
+         root_dir.read(dir_offset, bytes_, buffer_);
+      }
+      else
+      {
+         uint8_t* ptr = getFilePointer(sector_, offset_);
+         if (ptr != nullptr)
+         {
+            ::memcpy(buffer_, ptr, bytes_);
          }
          else
          {
             ::memset(buffer_, 0, bytes_);
          }
-
-         buffer_ += 64;
-         offset_ += 64;
       }
    }
 
@@ -99,35 +125,30 @@ private:
               unsigned       bytes_,
               const uint8_t* buffer_) override
    {
-      for(unsigned i = 0; i < bytes_; i += 64)
+      if (sector_ == LBA_VBR)
       {
-         if (sector_ == LBA_VBR)
-         {
-         }
-         else if ((sector_ >= LBA_FAT1) && (sector_ < LBA_FAT2))
-         {
-            unsigned fat_offset = (sector_ - LBA_FAT1) * BYTES_PER_SECTOR + offset_;
+         // XXX ignore writes to the VBR
+      }
+      else if ((sector_ >= LBA_FAT1) && (sector_ < LBA_FAT2))
+      {
+         unsigned fat_offset = (sector_ - LBA_FAT1) * BYTES_PER_SECTOR + offset_;
 
-            fat.write(fat_offset, bytes_, buffer_);
-         }
-         else if ((sector_ >= LBA_FAT2) && (sector_ < LBA_ROOT_DIR))
-         {
-            unsigned fat_offset = (sector_ - LBA_FAT2) * BYTES_PER_SECTOR + offset_;
+         fat.write(fat_offset, bytes_, buffer_);
+      }
+      else if ((sector_ >= LBA_FAT2) && (sector_ < LBA_ROOT_DIR))
+      {
+         unsigned fat_offset = (sector_ - LBA_FAT2) * BYTES_PER_SECTOR + offset_;
 
-            fat.write(fat_offset, bytes_, buffer_);
-         }
-         else if (sector_ == LBA_ROOT_DIR)
-         {
-            unsigned dir_offset = (sector_ - LBA_ROOT_DIR) * BYTES_PER_SECTOR + offset_;
+         fat.write(fat_offset, bytes_, buffer_);
+      }
+      else if ((sector_ >= LBA_ROOT_DIR) && (sector_ < LBA_DATA))
+      {
+         unsigned dir_offset = (sector_ - LBA_ROOT_DIR) * BYTES_PER_SECTOR + offset_;
 
-            root_dir.write(dir_offset, bytes_, buffer_);
-         }
-         else
-         {
-         }
-
-         buffer_ += 64;
-         offset_ += 64;
+         root_dir.write(dir_offset, bytes_, buffer_);
+      }
+      else
+      {
       }
    }
 
@@ -234,6 +255,7 @@ private:
    VBR                            vbr;
    FAT::Table16<NUM_CLUSTERS>     fat{};
    FAT::Dir<MAX_ROOT_DIR_ENTRIES> root_dir;
+   uint8_t*                       dir_entry_data[MAX_ROOT_DIR_ENTRIES] = {};
 };
 
 } // namespace VBR

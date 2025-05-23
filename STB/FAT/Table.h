@@ -38,6 +38,8 @@ public:
       entry[1] = 0xFFFF;
    }
 
+   uint16_t operator[](unsigned index_) const { return entry[index_]; }
+
    void read(unsigned offset_, unsigned bytes_, uint8_t* buffer_) const
    {
       ::memcpy(buffer_, (const uint8_t*)entry + offset_, bytes_);
