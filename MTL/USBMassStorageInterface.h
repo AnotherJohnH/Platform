@@ -235,6 +235,8 @@ private:
 
          if (--to_recv_count == 0)
          {
+            file_system->endOfWrite();
+
             bulk_out.write(&csw, csw.LENGTH);
             bulk_out.startTx(csw.LENGTH);
          }

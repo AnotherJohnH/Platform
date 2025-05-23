@@ -44,6 +44,8 @@ public:
                       unsigned       block_offset_,
                       unsigned       bytes_,
                       const uint8_t* buffer_) = 0;
+
+   virtual void endOfWrite() {}
 };
 
 } // namespace STB

@@ -122,10 +122,17 @@ private:
 
             root_dir.write(dir_offset, bytes_, buffer_);
          }
+         else
+         {
+         }
 
          buffer_ += 64;
          offset_ += 64;
       }
+   }
+
+   void endOfWrite() override
+   {
    }
 
    class VBR
