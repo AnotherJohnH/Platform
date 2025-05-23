@@ -33,6 +33,8 @@ class DirEntry
 public:
    DirEntry() = default;
 
+   bool isEmpty() const { return cluster == 0; }
+
    void setVolumeLabel(const char* name_)
    {
       for(unsigned i = 0; i < sizeof(name); ++i)
@@ -96,6 +98,52 @@ private:
    uint32_t size{0};
 
 } __attribute__((__packed__));
+
+
+template <unsigned NUM_ENTRIES>
+class Dir
+{
+public:
+   Dir(const char* volume_label_ = nullptr)
+   {
+      if (volume_label_ != nullptr)
+         entry[0].setVolumeLabel(volume_label_);
+   }
+
+   void read(unsigned offset_, unsigned bytes_, uint8_t* buffer_) const
+   {
+      ::memcpy(buffer_, (const uint8_t*)entry + offset_, bytes_);
+   }
+
+   void write(unsigned offset_, unsigned bytes_, const uint8_t* buffer_) const
+   {
+      ::memcpy((uint8_t*)entry + offset_, buffer_, bytes_);
+   }
+
+   void addFile(const char* filename_, uint16_t cluster_, uint32_t size_)
+   {
+      signed index = alloc();
+      if (index != -1)
+      {
+         entry[index].setFile(filename_, cluster_, size_);
+      }
+   }
+
+private:
+   //! Find an empty entry
+   signed alloc() const
+   {
+      for(unsigned i = 0; i < NUM_ENTRIES; ++i)
+      {
+         if (entry[i].isEmpty())
+            return i;
+      }
+
+      return -1;
+   }
+
+   DirEntry entry[NUM_ENTRIES];
+};
 
 } // namespace FAT
 

@@ -25,36 +25,35 @@
 #include <cstring>
 
 #include "STB/FileSystem.h"
-#include "STB/FAT/DirEntry.h"
+#include "STB/FAT/Table.h"
+#include "STB/FAT/Dir.h"
 
 namespace STB {
 
-template <unsigned SIZE_MB>
+template <unsigned SIZE_MB,
+          uint32_t BYTES_PER_SECTOR     = 512,
+          uint32_t MAX_ROOT_DIR_ENTRIES = 16,    //!< One sector
+          unsigned SECTORS_PER_CLUSTER  = 8>     //!< 4 KiB
 class FAT16 : public FileSystem
 {
 public:
    FAT16(const char* label_)
-      : vbr_head(label_, SIZE_MB)
+      : vbr(label_)
+      , root_dir(label_)
    {
-      fat[0] = 0xFFF8;
-      fat[1] = 0xFFFF;
-
-      root_dir[0].setVolumeLabel(label_);
    }
 
    void addFile(const char* filename_, uint32_t size_)
    {
-      unsigned cluster = root_dir_entries + 2;
+      uint16_t cluster = fat.alloc(bytesToClusters(size_));
 
-      fat[cluster] = 0xFFFF;
-
-      root_dir[++root_dir_entries].setFile(filename_, cluster, size_);
+      root_dir.addFile(filename_, cluster, size_);
    }
 
 private:
-   unsigned getBlockSize() const override { return VBRHead::BYTES_PER_SECTOR; }
+   unsigned getBlockSize() const override { return BYTES_PER_SECTOR; }
 
-   unsigned getNumBlocks() const override { return vbr_head.getNumSectors(); }
+   unsigned getNumBlocks() const override { return NUM_SECTORS; }
 
    void read(uint32_t sector_,
              unsigned offset_,
@@ -63,24 +62,32 @@ private:
    {
       for(unsigned i = 0; i < bytes_; i += 64)
       {
-         const uint8_t* ptr = empty;
+         if (sector_ == LBA_VBR)
+         {
+            vbr.read(offset_, 64, buffer_);
+         }
+         else if ((sector_ >= LBA_FAT1) && (sector_ < LBA_FAT2))
+         {
+            unsigned fat_offset = (sector_ - LBA_FAT1) * BYTES_PER_SECTOR + offset_;
 
-         if (sector_ == 0)
-         {
-                 if (offset_ == 0)     ptr = vbr_head.getPtr();
-            else if (offset_ == 0x1C0) ptr = vbr_tail.getPtr();
+            fat.read(fat_offset, bytes_, buffer_);
          }
-         else if ((sector_ == 1) ||
-                  (sector_ == (1 + vbr_head.sectors_per_fat)))
+         else if ((sector_ >= LBA_FAT2) && (sector_ < LBA_ROOT_DIR))
          {
-            if (offset_ == 0) ptr = (const uint8_t*)fat;
-         }
-         else if (sector_ == (1 + 2 * vbr_head.sectors_per_fat))
-         {
-            ptr = ((const uint8_t*)root_dir) + offset_;
-         }
+            unsigned fat_offset = (sector_ - LBA_FAT2) * BYTES_PER_SECTOR + offset_;
 
-         ::memcpy(buffer_, ptr, bytes_);
+            fat.read(fat_offset, bytes_, buffer_);
+         }
+         else if (sector_ == LBA_ROOT_DIR)
+         {
+            unsigned dir_offset = (sector_ - LBA_ROOT_DIR) * BYTES_PER_SECTOR + offset_;
+
+            root_dir.read(dir_offset, bytes_, buffer_);
+         }
+         else
+         {
+            ::memset(buffer_, 0, bytes_);
+         }
 
          buffer_ += 64;
          offset_ += 64;
@@ -92,32 +99,48 @@ private:
               unsigned       bytes_,
               const uint8_t* buffer_) override
    {
+      for(unsigned i = 0; i < bytes_; i += 64)
+      {
+         if (sector_ == LBA_VBR)
+         {
+         }
+         else if ((sector_ >= LBA_FAT1) && (sector_ < LBA_FAT2))
+         {
+            unsigned fat_offset = (sector_ - LBA_FAT1) * BYTES_PER_SECTOR + offset_;
+
+            fat.write(fat_offset, bytes_, buffer_);
+         }
+         else if ((sector_ >= LBA_FAT2) && (sector_ < LBA_ROOT_DIR))
+         {
+            unsigned fat_offset = (sector_ - LBA_FAT2) * BYTES_PER_SECTOR + offset_;
+
+            fat.write(fat_offset, bytes_, buffer_);
+         }
+         else if (sector_ == LBA_ROOT_DIR)
+         {
+            unsigned dir_offset = (sector_ - LBA_ROOT_DIR) * BYTES_PER_SECTOR + offset_;
+
+            root_dir.write(dir_offset, bytes_, buffer_);
+         }
+
+         buffer_ += 64;
+         offset_ += 64;
+      }
    }
 
-   class VBRHead
+   class VBR
    {
    public:
-      VBRHead(const char* label_,
-              unsigned    size_mbytes_)
+      VBR(const char* label_)
       {
-         unsigned size = size_mbytes_ * 1024 * 1024;
-
-         num_sectors = size / BYTES_PER_SECTOR;
-
-         if (num_sectors < 0x10000)
+         if (TOTAL_SECTORS < 0x10000)
          {
-            total_sectors_16 = num_sectors - 1;
-            total_sectors_32 = 0;
+            total_sectors_16 = TOTAL_SECTORS;
          }
          else
          {
-            total_sectors_16 = 0;
-            total_sectors_32 = num_sectors - 1;
+            total_sectors_32 = TOTAL_SECTORS;
          }
-
-         cluster_count          = size / BYTES_PER_CLUSTER;
-         unsigned bytes_per_fat = cluster_count * sizeof(uint16_t);
-         sectors_per_fat        = 1 + ((bytes_per_fat + BYTES_PER_SECTOR - 1) / BYTES_PER_SECTOR);
 
          for(unsigned i = 0; i < 11; ++i)
          {
@@ -128,17 +151,29 @@ private:
          }
       }
 
-      unsigned getNumSectors() const { return num_sectors; }
+      void read(unsigned offset_,
+                unsigned bytes_,
+                uint8_t* buffer_) const
+      {
+         // XXX Assumes bytes_ is 64 and offset_ is 64 byte aligned
 
-      const uint8_t* getPtr() const { return jump_inst; }
+         if (offset_ == 0)
+         {
+            ::memcpy(buffer_, jump_inst, bytes_);
+         }
+         else if (offset_ == 0x1C0)
+         {
+            ::memset(buffer_, 0, 62);
+            buffer_[62] = 0x55;
+            buffer_[63] = 0xAA;
+         }
+         else
+         {
+            ::memset(buffer_, 0, bytes_);
+         }
+      }
 
-      static const unsigned MAX_ROOT_DIR_ENTRIES = 512;
-      static const unsigned BYTES_PER_SECTOR     = 512;
-      static const unsigned SECTORS_PER_CLUSTER  = 8;
-      static const unsigned BYTES_PER_CLUSTER    = SECTORS_PER_CLUSTER * BYTES_PER_SECTOR;
-      static const unsigned VBR_SIZE             = BYTES_PER_SECTOR;
-
-   // private:
+   private:
       uint8_t  jump_inst[3] = {0xEB, 0x3C, 0x90};  // x86: jmp 0x3e; nop
       uint8_t  oem_name[8]  = {'P', 'l', 'a', 't', 'f', 'o', 'r', 'm'};
       uint16_t bytes_per_sector{BYTES_PER_SECTOR};
@@ -146,13 +181,13 @@ private:
       uint16_t reserved_sectors{1};
       uint8_t  number_of_fats{2};
       uint16_t max_root_dir_entries{MAX_ROOT_DIR_ENTRIES};
-      uint16_t total_sectors_16;
+      uint16_t total_sectors_16{0};
       uint8_t  media_descr{0xF8};
-      uint16_t sectors_per_fat;
+      uint16_t sectors_per_fat{SECTORS_PER_FAT};
       uint16_t sectors_per_track{0x01};
       uint16_t number_of_heads{0x01};
       uint32_t hidden_sectors{0x01};
-      uint32_t total_sectors_32;
+      uint32_t total_sectors_32{0};
       uint8_t  drive_number{0x00};
       uint8_t  reserved{0x00};
       uint8_t  boot_signature{0x29};
@@ -161,32 +196,37 @@ private:
       uint8_t  file_system_type[8] = {'F', 'A', 'T', '1', '6', ' ', ' ', ' '};
       uint8_t  boot_strap_code[2]  = {0xEB, 0xFE}; // x86: jmp self
 
-      unsigned num_sectors{};
-      unsigned cluster_count{};
-
    } __attribute__((__packed__));
 
-   class VBRTail
+   //! Convert a size in bytes to a whole number of sectors
+   static constexpr unsigned bytesToSectors(unsigned bytes_)
    {
-   public:
-      VBRTail()
-      {
-         byte[62] = 0x55;
-         byte[63] = 0xAA;
-      }
+      return (bytes_ + BYTES_PER_SECTOR - 1) / BYTES_PER_SECTOR;
+   }
 
-      const uint8_t* getPtr() const { return byte; }
+   //! Convert a size in bytes to a whole number of clusters
+   static constexpr unsigned bytesToClusters(unsigned bytes_)
+   {
+      return (bytes_ + BYTES_PER_CLUSTER - 1) / BYTES_PER_CLUSTER;
+   }
 
-   private:
-      uint8_t byte[64] = {};
-   };
+   static constexpr unsigned NUM_SECTORS       = SIZE_MB * 1024 * 1024 / BYTES_PER_SECTOR;
+   static constexpr unsigned TOTAL_SECTORS     = NUM_SECTORS - 1;
+   static constexpr unsigned NUM_CLUSTERS      = NUM_SECTORS / SECTORS_PER_CLUSTER;
+   static constexpr unsigned BYTES_PER_FAT     = NUM_CLUSTERS * sizeof(uint16_t);
+   static constexpr unsigned SECTORS_PER_FAT   = 1 + bytesToSectors(BYTES_PER_FAT);
+   static constexpr unsigned SECTORS_IN_ROOT   = bytesToSectors(MAX_ROOT_DIR_ENTRIES * sizeof(FAT::DirEntry));
+   static constexpr unsigned BYTES_PER_CLUSTER = BYTES_PER_SECTOR * SECTORS_PER_CLUSTER;
 
-   VBRHead       vbr_head;
-   VBRTail       vbr_tail{};
-   uint16_t      fat[32] = {};
-   unsigned      root_dir_entries{0};
-   FAT::DirEntry root_dir[16] = {};
-   uint8_t       empty[64] = {};
+   static constexpr uint32_t LBA_VBR      = 0;
+   static constexpr uint32_t LBA_FAT1     = LBA_VBR + 1;
+   static constexpr uint32_t LBA_FAT2     = LBA_FAT1 + SECTORS_PER_FAT;
+   static constexpr uint32_t LBA_ROOT_DIR = LBA_FAT2 + SECTORS_PER_FAT;
+   static constexpr uint32_t LBA_DATA     = LBA_ROOT_DIR + SECTORS_IN_ROOT;
+
+   VBR                            vbr;
+   FAT::Table16<NUM_CLUSTERS>     fat{};
+   FAT::Dir<MAX_ROOT_DIR_ENTRIES> root_dir;
 };
 
 } // namespace VBR
