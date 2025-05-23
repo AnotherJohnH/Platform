@@ -35,11 +35,15 @@ public:
 
    virtual unsigned getNumBlocks() const = 0;
 
-   virtual const uint8_t* get64BytePtr(uint32_t block_address_, unsigned offset_) const = 0;
+   virtual void read(uint32_t block_address_,
+                     unsigned block_offset_,
+                     unsigned bytes_,
+                     uint8_t* buffer_) const = 0;
 
-protected:
-   static const unsigned LOG2_SEGMENT_SIZE = 6;
-   static const unsigned SEGMENT_SIZE     = 1 << LOG2_SEGMENT_SIZE;
+   virtual void write(uint32_t       block_address_,
+                      unsigned       block_offset_,
+                      unsigned       bytes_,
+                      const uint8_t* buffer_) = 0;
 };
 
 } // namespace STB

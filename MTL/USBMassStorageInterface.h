@@ -140,15 +140,16 @@ private:
          {
             auto cmd = reinterpret_cast<const SCSI::Read10Command*>(bytes_);
 
-            lba           = STB::endianSwap(cmd->lba);
-            segment       = 0;
-            to_send_count = STB::endianSwap(cmd->len) * segments_per_block;
+            lba             = STB::endianSwap(cmd->lba);
+            unsigned blocks = STB::endianSwap(cmd->len);
 
-            printf("SCSI READ 10: ");
-            printf("%03X+%u\n", lba, STB::endianSwap(cmd->len));
+            printf("SCSI READ 10: %03X+%u\n", lba, blocks);
 
-            bulk_out.write(file_system->get64BytePtr(lba, segment++), 64);
+            file_system->read(lba, /* offset */ 0, 64, bulk_out.writeBuffer());
             bulk_out.startTx(64);
+
+            to_send_count   = blocks * segments_per_block;
+            segment         = 1;
          }
          break;
 
@@ -224,9 +225,15 @@ private:
       }
       else
       {
-         --to_recv_count;
+         file_system->write(lba, segment * 64, 64, data_);
 
-         if (to_recv_count == 0)
+         if (++segment == segments_per_block)
+         {
+            segment = 0;
+            lba++;
+         }
+
+         if (--to_recv_count == 0)
          {
             bulk_out.write(&csw, csw.LENGTH);
             bulk_out.startTx(csw.LENGTH);
@@ -251,10 +258,10 @@ private:
          }
          else
          {
-            bulk_out.write(file_system->get64BytePtr(lba, segment++), 64);
+            file_system->read(lba, segment * 64, 64, bulk_out.writeBuffer());
             bulk_out.startTx(64);
 
-            if (segment == segments_per_block)
+            if (++segment == segments_per_block)
             {
                segment = 0;
                lba++;

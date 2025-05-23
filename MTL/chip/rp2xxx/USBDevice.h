@@ -123,6 +123,8 @@ public:
       return offset;
    }
 
+   uint8_t* writeBuffer() { return (uint8_t*) buffer; };
+
    static const uint32_t BC0_FULL      = 1 << 15;
    static const uint32_t BC0_LAST      = 1 << 14;
    static const uint32_t BC0_PID_DATA1 = 1 << 13;
