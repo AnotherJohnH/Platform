@@ -54,8 +54,15 @@ public:
       }
    }
 
+   void newFileBuffer(uint8_t* buffer_, unsigned limit_)
+   {
+      write_ptr   = buffer_;
+      write_limit = limit_;
+      write_mode  = ARMED;
+   }
+
 private:
-   uint8_t* getFilePointer(uint32_t sector_, unsigned offset_) const
+   uint8_t* getFilePointer(uint32_t sector_) const
    {
       uint32_t cluster = 2 + (sector_ - LBA_DATA) / SECTORS_PER_CLUSTER;
       unsigned dir_index;
@@ -65,7 +72,7 @@ private:
       {
          if (dir_entry_data[dir_index] != nullptr)
          {
-            uint32_t cluster_offset = ((sector_ - LBA_DATA) % SECTORS_PER_CLUSTER) + offset_;
+            uint32_t cluster_offset = ((sector_ - LBA_DATA) % SECTORS_PER_CLUSTER);
             uint32_t data_offset    = cluster_offset + cluster_seq * BYTES_PER_CLUSTER;
 
             return dir_entry_data[dir_index] + data_offset;
@@ -82,7 +89,7 @@ private:
    void read(uint32_t sector_,
              unsigned offset_,
              unsigned bytes_,
-             uint8_t* buffer_) const override
+             uint8_t* buffer_) override
    {
       if (sector_ == LBA_VBR)
       {
@@ -108,16 +115,31 @@ private:
       }
       else
       {
-         uint8_t* ptr = getFilePointer(sector_, offset_);
-         if (ptr != nullptr)
+         if (read_mode == ARMED)
          {
-            ::memcpy(buffer_, ptr, bytes_);
+            read_ptr = getFilePointer(sector_);
+
+            if (read_ptr != nullptr)
+               read_mode = UPLOAD;
+            else
+               read_mode = IGNORE;
+         }
+
+         if (read_mode == UPLOAD)
+         {
+            ::memcpy(buffer_, read_ptr, bytes_);
+            read_ptr += bytes_;
          }
          else
          {
             ::memset(buffer_, 0, bytes_);
          }
       }
+   }
+
+   void endOfRead() override
+   {
+      read_mode = ARMED;
    }
 
    void write(uint32_t       sector_,
@@ -146,15 +168,74 @@ private:
          unsigned dir_offset = (sector_ - LBA_ROOT_DIR) * BYTES_PER_SECTOR + offset_;
 
          root_dir.write(dir_offset, bytes_, buffer_);
+
+         if (dir_offset == 0)
+         {
+            if (write_mode == DOWNLOAD)
+            {
+               write_mode = COMPLETE;
+            }
+            else
+            {
+               write_mode = ARMED;
+            }
+         }
       }
       else
       {
+         if (write_mode == ARMED)
+         {
+            if (isNewFileInteresting(buffer_))
+            {
+               write_file_lba = sector_;
+               write_offset   = 0;
+               write_mode     = DOWNLOAD;
+            }
+            else
+            {
+               write_mode = IGNORE;
+            }
+         }
+
+         if (write_mode == DOWNLOAD)
+         {
+            unsigned size = write_offset + bytes_;
+
+            if (size <= write_limit)
+            {
+               memcpy(write_ptr + write_offset, buffer_, bytes_);
+               write_offset = size;
+            }
+            else
+            {
+               write_mode = TOO_BIG;
+            }
+         }
       }
    }
 
    void endOfWrite() override
    {
+      if (write_mode == COMPLETE)
+      {
+         newFile(write_offset);
+
+         write_mode = ARMED;
+      }
+      else if (write_mode == TOO_BIG)
+      {
+         write_mode = ARMED;
+      }
    }
+
+   //! Override and return true with files that are interesting
+   virtual bool isNewFileInteresting(const uint8_t* buffer_)
+   {
+      return false;
+   }
+
+   //! Override to get call-back when a new file has been downloaded
+   virtual void newFile(uint32_t size_) {}
 
    class VBR
    {
@@ -238,6 +319,8 @@ private:
       return (bytes_ + BYTES_PER_CLUSTER - 1) / BYTES_PER_CLUSTER;
    }
 
+   enum FileMode { ARMED, UPLOAD, DOWNLOAD, IGNORE, COMPLETE, TOO_BIG };
+
    static constexpr unsigned NUM_SECTORS       = SIZE_MB * 1024 * 1024 / BYTES_PER_SECTOR;
    static constexpr unsigned TOTAL_SECTORS     = NUM_SECTORS - 1;
    static constexpr unsigned NUM_CLUSTERS      = NUM_SECTORS / SECTORS_PER_CLUSTER;
@@ -256,6 +339,13 @@ private:
    FAT::Table16<NUM_CLUSTERS>     fat{};
    FAT::Dir<MAX_ROOT_DIR_ENTRIES> root_dir;
    uint8_t*                       dir_entry_data[MAX_ROOT_DIR_ENTRIES] = {};
+   FileMode                       read_mode{ARMED};
+   const uint8_t*                 read_ptr{nullptr};
+   FileMode                       write_mode{IGNORE};
+   uint8_t*                       write_ptr{nullptr};
+   unsigned                       write_limit{0};
+   uint32_t                       write_file_lba{0};
+   uint32_t                       write_offset{0};
 };
 
 } // namespace VBR

@@ -37,6 +37,8 @@ public:
 
    uint32_t getCluster() const { return (cluster_hi << 16) | cluster_lo; }
 
+   uint32_t getSize() const { return size; }
+
    void setVolumeLabel(const char* name_)
    {
       for(unsigned i = 0; i < sizeof(name); ++i)
@@ -120,6 +122,8 @@ public:
       if (volume_label_ != nullptr)
          entry[0].setVolumeLabel(volume_label_);
    }
+
+   const DirEntry& operator[](unsigned index_) { return entry[index_]; }
 
    void read(unsigned offset_, unsigned bytes_, uint8_t* buffer_) const
    {

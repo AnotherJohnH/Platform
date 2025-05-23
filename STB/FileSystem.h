@@ -38,7 +38,7 @@ public:
    virtual void read(uint32_t block_address_,
                      unsigned block_offset_,
                      unsigned bytes_,
-                     uint8_t* buffer_) const = 0;
+                     uint8_t* buffer_) = 0;
 
    virtual void write(uint32_t       block_address_,
                       unsigned       block_offset_,
@@ -46,6 +46,7 @@ public:
                       const uint8_t* buffer_) = 0;
 
    virtual void endOfWrite() {}
+   virtual void endOfRead() {}
 };
 
 } // namespace STB

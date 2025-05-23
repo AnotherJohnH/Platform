@@ -256,6 +256,8 @@ private:
 
          if (to_send_count == 0)
          {
+            file_system->endOfRead();
+
             bulk_out.write(&csw, csw.LENGTH);
             bulk_out.startTx(csw.LENGTH);
          }
