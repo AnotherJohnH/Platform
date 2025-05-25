@@ -95,8 +95,8 @@ public:
       resets.clrReset(RESET);
       
       IoBank io_bank;
-      io_bank.setFunc(SDA_PIN, IoBank::I2C, PadsBank::PULL_UP);
-      io_bank.setFunc(SCL_PIN, IoBank::I2C, PadsBank::PULL_UP);
+      io_bank.setFunc(SDA_PIN, IoBank::I2C, PadsBank::IE | PadsBank::PULL_UP);
+      io_bank.setFunc(SCL_PIN, IoBank::I2C, PadsBank::IE | PadsBank::PULL_UP);
 
       this->reg->enable = 0;
 

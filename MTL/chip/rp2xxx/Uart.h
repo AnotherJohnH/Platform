@@ -92,7 +92,7 @@ public:
    {
       IoBank io_bank;
 
-      uint8_t rx_pad_ctrl = PadsBank::OD;
+      uint8_t rx_pad_ctrl = PadsBank::IE | PadsBank::OD;
       if (pull_up)
          rx_pad_ctrl |= PadsBank::PULL_UP;
 
