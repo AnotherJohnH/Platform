@@ -41,7 +41,7 @@ test:
 
 .PHONY: native
 native:
-	Platform/scripts/build.py native
+	@Platform/scripts/build.py native
 
 .PHONY: Emscripten
 Emscripten:
@@ -49,44 +49,44 @@ Emscripten:
 
 .PHONY: microbit
 microbit:
-	Platform/scripts/build.py microbit
+	@Platform/scripts/build.py microbit
 
 .PHONY: microbitV1
 microbitV1:
-	Platform/scripts/build.py microbitV1
+	@Platform/scripts/build.py microbitV1
 
 .PHONY: microbitV1_32k
 microbitV1_32k:
-	Platform/scripts/build.py microbitV1_32k
+	@Platform/scripts/build.py microbitV1_32k
 
 .PHONY: microbitV2
 microbitV2:
-	Platform/scripts/build.py microbitV2
+	@Platform/scripts/build.py microbitV2
 
 .PHONY: mbedLPC11U24
 mbedLPC11U24:
-	Platform/scripts/build.py mbedLPC11U24
+	@Platform/scripts/build.py mbedLPC11U24
 
 .PHONY: mbedLPC1768
 mbedLPC1768:
-	Platform/scripts/build.py mbedLPC1768
+	@Platform/scripts/build.py mbedLPC1768
 
 .PHONY: LPC810
 LPC810:
-	Platform/scripts/build.py LPC810
+	@Platform/scripts/build.py LPC810
 
 .PHONY: LPC1114
 LPC1114:
-	Platform/scripts/build.py LPC1114
+	@Platform/scripts/build.py LPC1114
 
 .PHONY: rpipico
 rpipico:
-	Platform/scripts/build.py rpipico
+	@Platform/scripts/build.py rpipico
 
 .PHONY: rpipico2
 rpipico2:
-	Platform/scripts/build.py rpipico2
+	@Platform/scripts/build.py rpipico2
 
 .PHONY: tiny2350
 tiny2350:
-	Platform/scripts/build.py tiny2350
+	@Platform/scripts/build.py tiny2350
