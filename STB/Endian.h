@@ -47,6 +47,22 @@ constexpr uint64_t endianSwap(uint64_t data)
           endianSwap(uint32_t(uint64_t(data) >> 32));
 }
 
+// XXX following assume running on little endian arch
+
+//! Read big-endian 16-bit value using only byte acceses
+uint16_t safeReadBig16(const void* ptr_)
+{
+   auto byte = (volatile const uint8_t*)ptr_;
+   return (byte[0] << 8) + byte[1];
+}
+
+//! Read big-endian 32-bit value using only byte acceses
+uint32_t safeReadBig32(const void* ptr_)
+{
+   auto byte = (volatile const uint8_t*)ptr_;
+   return (byte[0] << 24) + (byte[1] << 16) + (byte[2] << 8) + byte[3];
+}
+
 
 //! Base class helper for endian sensative storage of integers
 template <typename WHOLE, typename HALF, bool BIG>

@@ -31,15 +31,18 @@ namespace SCSI {
 
 struct CommandBlockWrapper
 {
-   static const unsigned LENGTH    = 31;
-   static const uint32_t SIGNATURE = 0x43425355;
-   static const uint8_t  FLAG_IN   = 0b10000000;
+   static const unsigned LENGTH  = 31;
+   static const uint8_t  FLAG_IN = 0b10000000;
 
    static const CommandBlockWrapper* validate(const uint8_t* raw_, unsigned length_)
    {
       const CommandBlockWrapper* cbw = (const CommandBlockWrapper*)raw_;
 
-      if ((length_ != LENGTH) || (cbw->signature != SIGNATURE))
+      if ((length_ != LENGTH) ||
+          (cbw->signature[0] != 'U') ||
+          (cbw->signature[1] != 'S') ||
+          (cbw->signature[2] != 'B') ||
+          (cbw->signature[3] != 'C'))
           return nullptr;
 
       return cbw;
@@ -47,7 +50,7 @@ struct CommandBlockWrapper
 
    bool isInput() const { return flags == FLAG_IN; }
 
-   uint32_t signature{SIGNATURE};
+   uint8_t  signature[4] = {'U', 'S', 'B', 'C'};
    uint32_t tag{};
    uint32_t transfer_length{};
    uint8_t  flags{};
@@ -60,19 +63,17 @@ struct CommandBlockWrapper
 
 struct CommandStatusWrapper
 {
-   static const unsigned LENGTH    = 13;
-   static const uint32_t SIGNATURE = 0x53425355;
-
-   static const uint8_t STATUS_OK          = 0x00;
-   static const uint8_t STATUS_FAILED      = 0x01;
-   static const uint8_t STATUS_PHASE_ERROR = 0x02;
+   static const unsigned LENGTH             = 13;
+   static const uint8_t  STATUS_OK          = 0x00;
+   static const uint8_t  STATUS_FAILED      = 0x01;
+   static const uint8_t  STATUS_PHASE_ERROR = 0x02;
 
    void setOk()     { status = STATUS_OK; }
    void setFailed() { status = STATUS_FAILED; }
 
-   uint32_t signature{SIGNATURE};
+   uint8_t  signature[4] = {'U', 'S', 'B', 'S'};
    uint32_t tag;
-   uint32_t data_residue{};
+   uint32_t data_residue{0};
    uint8_t  status{STATUS_OK};
 
 } __attribute__((__packed__));
@@ -97,8 +98,8 @@ struct InquiryResponse
    uint8_t peripheral_type{0x00}; //!< Direct access block type
    uint8_t removable{0x80};       //!< Default to removable
    uint8_t version{0x00};         //!< No version claimed!
-   uint8_t rdf{2};                //!< Value mandated by spec!
-   uint8_t additional_length = sizeof(InquiryResponse) - 4;
+   uint8_t rdf{0x01};             //!< Value mandated by spec!
+   uint8_t additional_length = sizeof(InquiryResponse) - 5;
    uint8_t flags1{};
    uint8_t flags2{};
    uint8_t flags3{};

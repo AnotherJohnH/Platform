@@ -31,6 +31,7 @@
 #include "USB/Interface.h"
 #include "USB/SCSI.h"
 
+#undef  LOG
 #define LOG  if (0) printf
 
 namespace MTL {
@@ -53,7 +54,7 @@ private:
    template <typename TYPE>
    void setStr(TYPE& field, const char* text_)
    {
-      for(unsigned i = 0; i < sizeof(TYPE); ++i)
+      for(unsigned i = 0; i < sizeof(field); ++i)
       {
          if (*text_ == '\0')
             field[i] = ' ';
@@ -62,21 +63,25 @@ private:
       }
    }
 
-   void scsiCommand(const uint8_t* bytes_, unsigned len_)
+   bool scsiCommand(const uint8_t* bytes_, unsigned len_)
    {
       switch(bytes_[0])
       {
       case SCSI::TEST:
-         LOG("SCSI TEST\n");
-         break;
+         LOG("TEST\n");
+         return true; // nop and acknowledge
 
       case SCSI::START_STOP_UNIT:
-         LOG("SCSI START STOP\n");
-         break;
+         LOG("START STOP LoEj=%u Start=%u\n", (bytes_[4] >> 1) & 1, bytes_[4] & 1);
+         return true; // nop and acknowledge
+
+      case SCSI::PREVENT_ALLOW_MEDIUM_REMOVAL:
+         LOG("PREVENT ALLOW MEDIUM REMOVAL prevent=%u\n", bytes_[4] & 1);
+         return true; // nop and acknowledge
 
       case SCSI::INQUIRY:
          {
-            LOG("SCSI INQUIRY\n");
+            LOG("INQUIRY\n");
 
             SCSI::InquiryResponse response{};
 
@@ -89,83 +94,83 @@ private:
             bulk_out.startTx(sizeof(response));
             to_send_count = 1;
          }
-         break;
+         return true;
 
       case SCSI::MODE_SENSE_6:
          {
-            LOG("SCSI MODE SENSE 6\n");
+            LOG("MODE SENSE 6\n");
 
-            uint32_t response;
+            uint8_t response[4] = {0x03,  // mode data length bytes
+                                   0x00,  // medium type
+                                   0x00,  // device specific (b7 WriteProt)
+                                   0x00}; // block descriptor length
 
-            response = 0x43;
-
-            bulk_out.write(&response, sizeof(response));
+            bulk_out.write(response, sizeof(response));
             bulk_out.startTx(sizeof(response));
             to_send_count = 1;
          }
-         break;
+         return true;
 
-      case SCSI::PREVENT_ALLOW_MEDIUM_REMOVAL:
-         LOG("SCSI PREVENT ALLOW MEDIUM REMOVAL\n");
-         break;
+      case SCSI::MODE_SENSE_10:
+         {
+            LOG("MODE SENSE 10\n");
+
+            uint8_t response[8] = {0x00, 0x06,              // mode data length bytes
+                                   0x00,                    // medium type
+                                   0x00,                    // device specific (b7 WriteProt)
+                                   0x00, 0x00, 0x00, 0x00}; // block descriptor length
+
+            bulk_out.write(response, sizeof(response));
+            bulk_out.startTx(sizeof(response));
+            to_send_count = 1;
+         }
+         return true;
 
       case SCSI::READ_CAPACITY_10:
          {
-            LOG("SCSI READ CAPACITY 10\n");
+            LOG("READ CAPACITY 10\n");
 
             uint32_t response[2];
 
-            response[0] = STB::endianSwap(uint32_t(file_system->getNumBlocks()));
+            response[0] = STB::endianSwap(uint32_t(file_system->getNumBlocks() - 1));
             response[1] = STB::endianSwap(uint32_t(file_system->getBlockSize()));
 
             bulk_out.write(&response, sizeof(response));
             bulk_out.startTx(sizeof(response));
             to_send_count = 1;
          }
-         break;
-
-      case SCSI::MODE_SENSE_10:
-         {
-            LOG("SCSI MODE SENSE 10\n");
-
-            uint32_t response;
-
-            response = STB::endianSwap(uint32_t(3));
-
-            bulk_out.write(&response, sizeof(response));
-            bulk_out.startTx(sizeof(response));
-            to_send_count = 1;
-         }
-         break;
+         return true;
 
       case SCSI::READ_10:
          {
             auto cmd = reinterpret_cast<const SCSI::Read10Command*>(bytes_);
 
-            lba             = STB::endianSwap(cmd->lba);
-            unsigned blocks = STB::endianSwap(cmd->len);
+            lba             = STB::safeReadBig32(&cmd->lba);
+            unsigned blocks = STB::safeReadBig16(&cmd->len);
 
-            LOG("SCSI READ 10: %03X+%u\n", lba, blocks);
+            LOG("READ 10: %03X+%u\n", lba, blocks);
 
             file_system->read(lba, /* offset */ 0, 64, bulk_out.writeBuffer());
             bulk_out.startTx(64);
 
-            to_send_count   = blocks * segments_per_block;
-            segment         = 1;
+            to_send_count = blocks * segments_per_block;
+            segment       = 1;
          }
-         break;
+         return true;
 
       case SCSI::WRITE_10:
          {
             auto cmd = reinterpret_cast<const SCSI::Write10Command*>(bytes_);
 
-            lba           = STB::endianSwap(cmd->lba);
-            segment       = 0;
-            to_recv_count = STB::endianSwap(cmd->len) * segments_per_block;
+            lba             = STB::safeReadBig32(&cmd->lba);
+            unsigned blocks = STB::safeReadBig16(&cmd->len);
 
-            LOG("SCSI WRITE 10: %03X-%u\n", lba, STB::endianSwap(cmd->len));
+            LOG("WRITE 10: %03X-%u\n", lba, blocks);
+
+            to_recv_count = blocks * segments_per_block;
+            segment       = 0;
          }
-         break;
+         return true;
 
       default:
          LOG("SCSI command =");
@@ -176,6 +181,8 @@ private:
          LOG("\n");
          break;
       }
+
+      return false;
    }
 
    bool handleSetupReqOut(uint8_t req_, uint8_t** ptr_, unsigned* bytes_) override
@@ -193,21 +200,24 @@ private:
 
    void configured() override
    {
+      // Ready to recieve first SCSI command
       bulk_in.startRx(64);
    }
 
+   //! Incomming packet event
    void buffRx(uint8_t ep_, const uint8_t* data_, unsigned length_) override
    {
       if (to_recv_count == 0)
       {
          const SCSI::CommandBlockWrapper* cbw = SCSI::CommandBlockWrapper::validate(data_, length_);
-
          if (cbw != nullptr)
          {
             csw.tag = cbw->tag;
-            csw.setOk();
 
-            scsiCommand(cbw->cmd, cbw->cmd_len);
+            if (scsiCommand(cbw->cmd, cbw->cmd_len))
+               csw.setOk();
+            else
+               csw.setFailed();
          }
          else
          {
@@ -236,10 +246,10 @@ private:
 
          if (--to_recv_count == 0)
          {
-            file_system->endOfWrite();
-
             bulk_out.write(&csw, csw.LENGTH);
             bulk_out.startTx(csw.LENGTH);
+
+            file_system->endOfWrite();
          }
          else
          {
@@ -248,6 +258,7 @@ private:
       }
    }
 
+   //! Outgoing packet just sent event
    void buffTx(uint8_t ep_) override
    {
       if (to_send_count > 0)
@@ -256,10 +267,10 @@ private:
 
          if (to_send_count == 0)
          {
-            file_system->endOfRead();
-
             bulk_out.write(&csw, csw.LENGTH);
             bulk_out.startTx(csw.LENGTH);
+
+            file_system->endOfRead();
          }
          else
          {

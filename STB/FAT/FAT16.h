@@ -272,7 +272,7 @@ private:
          }
          else if (offset_ == 0x1C0)
          {
-            ::memset(buffer_, 0, 62);
+            ::memset(buffer_, 0, 64);
             buffer_[62] = 0x55;
             buffer_[63] = 0xAA;
          }
