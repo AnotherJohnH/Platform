@@ -22,6 +22,8 @@
 
 .cpu cortex-m33
 .fpu softvfp
+.syntax unified
+.thumb
 
 .section .vectors
 .align 8
@@ -32,16 +34,16 @@ vector_table_core0:
    .word  0x20082000        @ stack pointer
    .word  VEC_reset+1
    .word  VEC_nmi+1
-   .word  VEC_fault+1
-   .word  invalid_excep+1
-   .word  invalid_excep+1
-   .word  invalid_excep+1
-   .word  invalid_excep+1
+   .word  VEC_hard_fault+1
+   .word  VEC_mem_fault+1
+   .word  VEC_bus_fault+1
+   .word  VEC_usage_fault+1
+   .word  VEC_secure_fault+1
    .word  invalid_excep+1
    .word  invalid_excep+1
    .word  invalid_excep+1
    .word  VEC_svc+1
-   .word  invalid_excep+1
+   .word  VEC_dbg_mon+1
    .word  invalid_excep+1
    .word  VEC_pendSv+1
    .word  VEC_sysTick+1
@@ -99,9 +101,9 @@ vector_table_core0:
    .word  0                  @ IRQ 50 
    .word  0                  @ IRQ 51
 
-.weak VEC_fault
 .weak VEC_nmi
 .weak VEC_svc
+.weak VEC_dbg_mon
 .weak VEC_pendSv
 .weak VEC_sysTick
 
@@ -207,12 +209,39 @@ start_cpu0:
 #
 # Fall through to unhandled exception
 #
-VEC_fault:
     bl   MTL_halt
+
+VEC_hard_fault:
+    mov    r0, #3
+    b      call_fault_handler
+
+VEC_mem_fault:
+    mov    r0, #4
+    b      call_fault_handler
+
+VEC_bus_fault:
+    mov    r0, #5
+    b      call_fault_handler
+
+VEC_usage_fault:
+    mov    r0, #6
+    b      call_fault_handler
+
+VEC_secure_fault:
+    mov    r0, #7
+    b      call_fault_handler
+
+call_fault_handler:
+    tst    lr, #4
+    ite    eq
+    mrseq  r1, MSP
+    mrsne  r1, PSP
+    b      MTL_fault
 
 # Empty handlers
 VEC_nmi:
 VEC_svc:
+VEC_dbg_mon:
 VEC_pendSv:
 VEC_sysTick:
 IRQ_TIMER0_0:

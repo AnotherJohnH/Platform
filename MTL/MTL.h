@@ -54,7 +54,7 @@ extern "C"
    int MTL_main();
 
    //! Halt platform
-   [[ noreturn ]] extern void MTL_halt(uint32_t status);
+   [[ noreturn ]] void MTL_halt(uint32_t status);
 
    //! Get current 100 Hz tick count
    uint32_t MTL_clock();
@@ -73,6 +73,9 @@ extern "C"
 
    //! Disable console buffering (avoids IRQs)
    void MTL_nobuff();
+
+   //! Fault handler
+   [[ noreturn ]] void MTL_fault(unsigned excep_num, uint32_t* fault_stack_ptr);
 
    //! Exception handling
    void MTL_excep(Exception signal, Handler handler, uint32_t data);

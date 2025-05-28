@@ -32,16 +32,16 @@ vector_table_core1:
    .word  0x20080000        @ stack pointer
    .word  VEC_reset+1
    .word  VEC_nmi+1
-   .word  VEC_fault+1
-   .word  invalid_excep+1
-   .word  invalid_excep+1
-   .word  invalid_excep+1
-   .word  invalid_excep+1
+   .word  VEC_hard_fault+1
+   .word  VEC_mem_fault+1
+   .word  VEC_bus_fault+1
+   .word  VEC_usage_fault+1
+   .word  VEC_secure_fault+1
    .word  invalid_excep+1
    .word  invalid_excep+1
    .word  invalid_excep+1
    .word  VEC_svc+1
-   .word  invalid_excep+1
+   .word  VEC_dbg_mon+1
    .word  invalid_excep+1
    .word  VEC_pendSv+1
    .word  VEC_sysTick+1
@@ -99,9 +99,14 @@ vector_table_core1:
    .word  0                  @ IRQ 50 
    .word  0                  @ IRQ 51
 
-.weak VEC_fault
 .weak VEC_nmi
+.weak VEC_hard_fault
+.weak VEC_mem_fault
+.weak VEC_bus_fault
+.weak VEC_usage_fault
+.weak VEC_secure_fault
 .weak VEC_svc
+.weak VEC_dbg_mon
 .weak VEC_pendSv
 .weak VEC_sysTick
 
@@ -185,6 +190,12 @@ VEC_fault:
 # Empty handlers
 VEC_nmi:
 VEC_svc:
+VEC_hard_fault:
+VEC_mem_fault:
+VEC_bus_fault:
+VEC_usage_fault:
+VEC_secure_fault:
+VEC_dbg_mon:
 VEC_pendSv:
 VEC_sysTick:
 IRQ_TIMER0_0:
