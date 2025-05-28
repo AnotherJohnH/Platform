@@ -71,6 +71,9 @@ extern "C"
    //! Check if character avialable from the console
    bool MTL_getch_empty();
 
+   //! Disable console buffering (avoids IRQs)
+   void MTL_nobuff();
+
    //! Exception handling
    void MTL_excep(Exception signal, Handler handler, uint32_t data);
 

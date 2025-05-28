@@ -125,6 +125,8 @@ public:
       MTL::NVIC<IRQ_UART0 + INDEX>().enable();
    }
 
+   void disableTxBuffer() { use_tx_buffer = false; }
+
    //! Check if recieve buffers are empty
    bool empty() const
    {
@@ -142,11 +144,16 @@ public:
    {
       if (this->tx_buffer.empty())
       {
-         if (not tx_fifo_full())
+         while(true)
          {
-            // push into HW FIFO
-            this->reg->dr = byte;
-            return;
+            if (not tx_fifo_full())
+            {
+               // push into HW FIFO
+               this->reg->dr = byte;
+               return;
+            }
+
+            if (use_tx_buffer) break;
          }
 
          // push into TX buffer and exanble TX FIFO low irq
@@ -227,6 +234,8 @@ private:
    // Interrupt masks
    static const uint32_t TXIM = 1 << 5;
    static const uint32_t RXIM = 1 << 4;
+
+   bool use_tx_buffer{true};
 };
 
 #if defined(MTL_RP2040)

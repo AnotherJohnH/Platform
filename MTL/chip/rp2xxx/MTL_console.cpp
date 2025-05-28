@@ -45,3 +45,8 @@ bool MTL_getch_empty()
 {
    return uart.empty();
 }
+
+void MTL_nobuff()
+{
+   uart.disableTxBuffer();
+}
