@@ -22,8 +22,10 @@
 
 #pragma once
 
-#include "Pio.h"
+#include "MTL/Pins.h"
 #include "MTL/chip/rp2xxx/Audio.h"
+
+#include "Pio.h"
 
 namespace MTL {
 

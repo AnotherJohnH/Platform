@@ -24,6 +24,8 @@
 
 #pragma once
 
+#include "MTL/Pins.h"
+
 #include "Pio.h"
 
 namespace MTL {

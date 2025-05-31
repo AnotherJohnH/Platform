@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include "MTL/Pins.h"
 #include "MTL/chip/Pio.h"
 
 namespace MTL {
