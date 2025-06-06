@@ -102,3 +102,30 @@ function(arcxx name)
                       COMMAND ${CMAKE_SOURCE_DIR}/Platform/scripts/arcxx.py -o ${CMAKE_CURRENT_BINARY_DIR}/arcxx_${name}.cpp -r media/${name} ${CMAKE_SOURCE_DIR}/media/${name}
                       DEPENDS ${CMAKE_SOURCE_DIR}/media/${name})
 endfunction()
+
+#-------------------------------------------------------------------------------
+
+function(autogen_py NAME)
+   set(INPUT_FILE "")
+   if(ARGN)
+      list(GET ARGN 0 INPUT_FILE)
+   endif()
+
+   add_custom_command(
+      COMMENT
+         "Auto-generate ${NAME}"
+      COMMAND
+         ${CMAKE_COMMAND}
+            -E env PYTHONPATH=${CMAKE_SOURCE_DIR}/Platform/python
+            python3 ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}.py ${INPUT_FILE}
+      DEPENDS
+         ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}.py
+         ${INPUT_FILE}
+      OUTPUT
+         ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.h
+         ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.cpp
+      )
+
+endfunction()
+
+#-------------------------------------------------------------------------------
