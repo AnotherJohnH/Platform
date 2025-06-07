@@ -164,6 +164,9 @@ public:
        return this->reg->data_cmd & 0xFF;
     }
 
+    static constexpr unsigned SDA = SDA_PIN;
+    static constexpr unsigned SCL = SCL_PIN;
+
 private:
     static const unsigned I2C_FREQ = 400000;
 

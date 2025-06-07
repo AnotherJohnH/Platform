@@ -218,6 +218,9 @@ public:
       }
    }
 
+   static constexpr unsigned TX = TX_PIN;
+   static constexpr unsigned RX = RX_PIN;
+
 private:
    //! Check if RX FIFO is empty
    bool rx_fifo_empty() const
