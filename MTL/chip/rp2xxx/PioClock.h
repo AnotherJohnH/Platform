@@ -26,6 +26,7 @@
 
 namespace MTL {
 
+template <typename TYPE>
 class PioClock : public PIO::Asm
 {
 public:
@@ -37,11 +38,10 @@ public:
       wrap();
    }
 
-   template <typename TYPE>
-   signed download(TYPE& pio, unsigned freq, unsigned pin)
+   signed download(unsigned freq_, unsigned pin_)
    {
       // Allocate a state machine
-      signed sd = pio.allocSM();
+      sd = pio.allocSM();
       if (sd < 0)
          return sd;
 
@@ -49,11 +49,25 @@ public:
       pio.SM_program(sd, *this);
 
       // Configure state machine
-      pio.SM_clock( sd, freq * 2);
-      pio.SM_pinSET(sd, pin);
+      setClock(freq_);
+      pio.SM_pinSET(sd, pin_);
 
       return sd;
    }
+
+   void start()
+   {
+      pio.start(1 << sd);
+   }
+
+   void setClock(unsigned freq_)
+   {
+      pio.SM_clock(sd, freq_ * 2);
+   }
+
+private:
+   signed sd{-1};
+   TYPE   pio;
 };
 
 }

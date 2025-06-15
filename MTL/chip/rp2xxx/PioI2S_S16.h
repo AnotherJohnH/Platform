@@ -70,7 +70,7 @@ public:
       wrap();
    }
 
-   signed download(unsigned clock_freq_,
+   signed download(unsigned sample_rate_hz_,
                    unsigned pin_sd_,
                    unsigned pin_sclk_lrclk_)
    {
@@ -84,10 +84,10 @@ public:
          return -1;
 
       // Configure state machine
-      pio.SM_clock(    sd, clock_freq_);
+      setSampleRate(sample_rate_hz_);
       pio.SM_pinOUT(   sd, pin_sd_);
       pio.SM_pinSIDE(  sd, pin_sclk_lrclk_);
-      pio.SM_configOSR(sd, I2S_BITS_PER_SAMPLE * 2, MTL::SHIFT_LEFT,
+      pio.SM_configOSR(sd, CHANNELS * I2S_BITS_PER_SAMPLE, MTL::SHIFT_LEFT,
                        MTL::AUTO_PULL, /* join_tx */ true);
 
       unsigned x_init = X_INIT - 2;
@@ -115,7 +115,15 @@ public:
       push(packed);
    }
 
+   void setSampleRate(unsigned sample_rate_hz_)
+   {
+      unsigned clock_freq = sample_rate_hz_ * CHANNELS * I2S_BITS_PER_SAMPLE * 2;
+
+      pio.SM_clock(sd, clock_freq);
+   }
+
 private:
+   static const unsigned CHANNELS            = 2;
    static const unsigned I2S_BITS_PER_SAMPLE = 16;
    static const unsigned X_INIT              = I2S_BITS_PER_SAMPLE - 2;
 

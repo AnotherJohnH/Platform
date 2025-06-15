@@ -95,7 +95,7 @@ public:
    }
 
    //! Download program to PIO and configure a state machine
-   signed download(unsigned clock_freq_,
+   signed download(unsigned clock_freq_hz_,
                    unsigned pin_dac_clk_sd_sam1_)
    {
       // Allocate a state machine
@@ -108,7 +108,7 @@ public:
          return -1;
 
       // Configure state machine
-      pio.SM_clock(    sd, clock_freq_ * 2 * 4);
+      setClock(clock_freq_hz_);
       pio.SM_pinINP(   sd, pin_dac_clk_sd_sam1_, 3);
       pio.SM_configISR(sd, DAC_FRAME_BITS, MTL::SHIFT_RIGHT,
                        MTL::MANUAL, /* join_rx */ true);
@@ -120,6 +120,11 @@ public:
    void start()
    {
       pio.start(1 << sd);
+   }
+
+   void setClock(unsigned clock_freq_hz_)
+   {
+      pio.SM_clock(sd, clock_freq_hz_ * 2 * 4);
    }
 
    //! Read packed 16-bit 2's complement sample pair
