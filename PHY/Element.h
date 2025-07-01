@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Copyright (c) 2013-2019 John D. Haughton
+// Copyright (c) 2013 John D. Haughton
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef ELEMENT_H
-#define ELEMENT_H
+#pragma once
 
 namespace PHY {
 
@@ -74,5 +73,3 @@ struct Argon
 };
 
 } // namespace PHY
-
-#endif
