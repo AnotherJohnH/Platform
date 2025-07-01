@@ -20,6 +20,8 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
+if(${PLT_TARGET} STREQUAL native)
+
 add_library(GUI STATIC
             BitmapPNG.cpp
             BitmapStub.cpp
@@ -32,3 +34,9 @@ add_library(GUI STATIC
             FontTeletext9.cpp)
 
 target_include_directories(GUI PUBLIC ..)
+
+target_link_libraries(GUI PUBLIC STB PLT)
+
+add_subdirectory(test)
+
+endif()
