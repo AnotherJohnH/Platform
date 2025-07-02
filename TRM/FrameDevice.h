@@ -66,7 +66,6 @@ public:
    }
 
 
-protected:
    // implement PLT::Device
 
    int ioctl(unsigned request, ...) override
@@ -211,10 +210,10 @@ protected:
       return i;
    }
 
-private:
    using Device::read;
    using Device::write;
 
+private:
    using Impl = AnsiImpl<WIDTH / MIN_FONT_WIDTH, HEIGHT / MIN_FONT_HEIGHT>;
 
    STB::Colour convertCol256ToRGB(uint8_t col, bool bg)

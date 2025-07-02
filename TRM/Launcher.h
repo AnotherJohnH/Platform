@@ -260,7 +260,7 @@ private:
       curses.mvaddstr(4, 3, "Description : "); curses.addstr(description);
       curses.mvaddstr(5, 3, "Link        : "); if (link != nullptr) curses.addstr(link);
       curses.mvaddstr(6, 3, "Author      : "); curses.addstr(author);
-      curses.mvaddstr(7, 3, "Version     : "); curses.addstr(PLT_PROJ_VERSION);
+      curses.mvaddstr(7, 3, "Version     : "); curses.addstr(PLT_VERSION);
 
       curses.mvaddstr(8, 3, "Built       : ");
       curses.addstr(__TIME__); curses.addstr(" "); curses.addstr(__DATE__);
