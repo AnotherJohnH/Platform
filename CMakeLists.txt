@@ -64,6 +64,7 @@ endif()
 if(${PLT_TARGET} STREQUAL native)
 
    set(PLT_NATIVE  TRUE PARENT_SCOPE)
+   set(PLT_NATIVE  TRUE)
    set(PLT_TARGET  ${CMAKE_HOST_SYSTEM_NAME})
    set(PLT_MACHINE ${CMAKE_HOST_SYSTEM_PROCESSOR})
 
@@ -72,6 +73,7 @@ if(${PLT_TARGET} STREQUAL native)
    endif()
 
 else()
+   set(PLT_NATIVE  FALSE PARENT_SCOPE)
    set(PLT_NATIVE  FALSE)
    set(CMAKE_ASM_FLAGS_DEBUG   "")
    set(CMAKE_ASM_FLAGS_RELEASE "")
@@ -90,10 +92,12 @@ message("-----------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 
-add_subdirectory(GUI)
 add_subdirectory(STB)
 add_subdirectory(PLT)
 add_subdirectory(USB)
+
+add_subdirectory(GUI)
+add_subdirectory(TRM)
 
 #-------------------------------------------------------------------------------
 

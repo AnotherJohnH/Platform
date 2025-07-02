@@ -20,7 +20,7 @@
 #  SOFTWARE.
 #-------------------------------------------------------------------------------
 
-if(${PLT_TARGET} STREQUAL native)
+if(${PLT_NATIVE})
 
 add_library(GUI STATIC
             BitmapPNG.cpp
