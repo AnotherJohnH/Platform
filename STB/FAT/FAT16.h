@@ -61,7 +61,6 @@ public:
       write_mode  = ARMED;
    }
 
-private:
    uint8_t* getFilePointer(uint32_t sector_) const
    {
       uint32_t cluster = 2 + (sector_ - LBA_DATA) / SECTORS_PER_CLUSTER;
@@ -137,11 +136,6 @@ private:
       }
    }
 
-   void endOfRead() override
-   {
-      read_mode = ARMED;
-   }
-
    void write(uint32_t       sector_,
               unsigned       offset_,
               unsigned       bytes_,
@@ -212,6 +206,12 @@ private:
             }
          }
       }
+   }
+
+private:
+   void endOfRead() override
+   {
+      read_mode = ARMED;
    }
 
    void endOfWrite() override

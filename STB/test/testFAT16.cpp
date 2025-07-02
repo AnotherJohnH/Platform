@@ -20,7 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "STB/FAT16.h"
+#include "STB/FAT/FAT16.h"
 
 #include "STB/Test.h"
 
@@ -28,13 +28,14 @@
 
 TEST(STB_FAT16, construct)
 {
-   STB::FAT16 fat16{"picoChippy", 128};
+   STB::FAT16<128> fat16{"picoChippy"};
+   uint8_t         block[512];
 
-   const uint8_t* ptr = fat16.get64BytePtr(/* sector */ 0, /* segment */ 0);
+   fat16.read(0, 0, sizeof(block), block);
 
    for(unsigned i = 0; i < 64; ++i)
    {
-      printf(" %02X", ptr[i]);
+      printf(" %02X", block[i]);
 
       if ((i % 16) == 15) putchar('\n');
    }
