@@ -45,16 +45,19 @@ private:
    {
       canvas.fillRect(BACKGROUND, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
+      if (set)
+      {
+         canvas.drawLine(FOREGROUND, pos.x, pos.y,     pos.x + size.x, pos.y + size.y);
+         canvas.drawLine(FOREGROUND, pos.x, pos.y + 1, pos.x + size.x - 1, pos.y + size.y);
+
+         canvas.drawLine(FOREGROUND, pos.x,     pos.y + size.y, pos.x + size.x, pos.y);
+         canvas.drawLine(FOREGROUND, pos.x + 1, pos.y + size.y, pos.x + size.x, pos.y + 1);
+      }
+
       canvas.drawLine(SHADOW,  pos.x, pos.y, pos.x + size.x, pos.y);
       canvas.drawLine(SHADOW,  pos.x, pos.y, pos.x, pos.y + size.y);
       canvas.drawLine(HILIGHT, pos.x + size.x, pos.y + size.y, pos.x + size.x, pos.y);
       canvas.drawLine(HILIGHT, pos.x + size.x, pos.y + size.y, pos.x, pos.y + size.y);
-
-      if(set)
-      {
-         canvas.drawLine(FOREGROUND, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
-         canvas.drawLine(FOREGROUND, pos.x, pos.y + size.y, pos.x + size.x, pos.y);
-      }
 
       Widget::eventDraw(canvas);
    }
@@ -90,7 +93,7 @@ private:
       raiseEvent(this, EVENT_REDRAW);
    }
 
-   static const unsigned SIZE = 8;
+   static const unsigned SIZE = 12;
 
    const unsigned code{};
    bool           set{false};

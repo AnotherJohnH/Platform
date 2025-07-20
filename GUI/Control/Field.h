@@ -38,9 +38,8 @@ public:
    Field() = default;
 
    Field(Widget* parent_, unsigned code_ = 0, const char* initial_ = "")
+      : Widget(parent_)
    {
-      setParent(parent_);
-
       // code = code_;
 
       value[COLS] = '\0';

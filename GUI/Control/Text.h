@@ -32,8 +32,8 @@ class Text : public Widget, public ColourPair
 {
 public:
    Text(Widget* parent_, const char* text_)
+      : Widget(parent_)
    {
-      setParent(parent_);
       setText(text_);
       setCols(len);
    }

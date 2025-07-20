@@ -30,8 +30,8 @@ namespace GUI {
 class Expand : public Widget
 {
 public:
-   Expand(Widget* parent)
-      : Widget(parent)
+   Expand(Widget* parent_)
+      : Widget(parent_)
    {
       setExpand();
    }

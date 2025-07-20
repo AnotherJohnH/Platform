@@ -31,14 +31,12 @@ class Row : public Widget
 {
 public:
    Row(Widget* parent_, unsigned gap_ = 0)
+      : Widget(parent_)
    {
-      setParent(parent_);
+      setRow();
       setBorderAndGap(gap_);
-      row = true;
       setShrink();
    }
-
-   Row() : Row(/* parent */ nullptr) { }
 };
 
 } // namespace GUI

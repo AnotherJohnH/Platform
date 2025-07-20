@@ -32,9 +32,9 @@ public:
    Col() = default;
 
    Col(Widget* parent_, unsigned gap_ = 0)
+      : Widget(parent_)
    {
-      setParent(parent_);
-      row = false;
+      setCol();
       setBorderAndGap(gap_);
       setShrink();
    }
