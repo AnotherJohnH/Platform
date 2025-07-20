@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_WINDOW_H
-#define GUI_CONTROL_WINDOW_H
+#pragma once
 
 #include "GUI/Frame.h"
 
@@ -197,5 +196,3 @@ private:
 };
 
 } // namespace GUI
-
-#endif

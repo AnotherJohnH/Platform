@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_FIELD_H
-#define GUI_CONTROL_FIELD_H
+#pragma once
 
 #include <cstring>
 
@@ -39,11 +38,6 @@ public:
    Field() = default;
 
    Field(Widget* parent_, unsigned code_ = 0, const char* initial_ = "")
-   {
-      init(parent_, code_, initial_);
-   }
- 
-   void init(Widget* parent_, unsigned code_, const char* initial_)
    {
       setParent(parent_);
 
@@ -71,7 +65,7 @@ public:
       value[COLS] = '\0';
    }
 
-protected:
+private:
    // Implement Widget events
    virtual void eventSize() override
    {
@@ -95,7 +89,7 @@ protected:
 
    virtual void eventBtnPress(signed x, signed y, bool select, bool down_) override
    {
-      if(down_)
+      if (down_)
       {
          raiseEvent(this, EVENT_FOCUS);
       }
@@ -103,7 +97,7 @@ protected:
 
    virtual void eventKeyPress(uint8_t key, bool down_) override
    {
-      if(down_)
+      if (down_)
       {
          unsigned n = strlen(value);
 
@@ -132,12 +126,9 @@ protected:
       }
    }
 
-private:
    const Font* font{nullptr};
    // unsigned      code;
    char        value[COLS + 1];
 };
 
 } // namespace GUI
-
-#endif

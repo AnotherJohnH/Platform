@@ -33,6 +33,19 @@ namespace GUI {
 class Font
 {
 public:
+   Font(Vector         size_,
+        uint8_t        first_,
+        uint8_t        last_,
+        uint8_t        bpp_,
+        const uint8_t* bitmaps_) 
+      : size(size_)
+      , first(first_)
+      , last(last_)
+      , bpp(bpp_)
+      , bitmaps(bitmaps_)
+   {
+   }
+
    //! Get default cell width (pixels)
    unsigned getWidth() const { return size.x; }
 
@@ -98,7 +111,6 @@ public:
    }
 
 private:
-public: // TODO make these private
    unsigned getPixelsPerByte() const
    {
       assert((bpp == 1) || (bpp == 2) || (bpp == 4) || (bpp == 8));

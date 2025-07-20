@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Frame.h
 //! \brief Platform abstraction interface for 2D rendering on a frame buffer
 
-#ifndef GUI_FRAME_H
-#define GUI_FRAME_H
+#pragma once
 
 #include "PLT/Frame.h"
 
@@ -110,5 +108,3 @@ private:
 };
 
 } // namespace GUI
-
-#endif // GUI_FRAME_H

@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_MENU_BUTTON_H
-#define GUI_CONTROL_MENU_BUTTON_H
+#pragma once
 
 #include "Colour.h"
 #include "Row.h"
@@ -42,7 +41,7 @@ public:
       setBorderAndGap(4);
    }
 
-protected:
+private:
    virtual void eventDraw(Canvas& canvas) override
    {
       STB::Colour fg_colour = isHover(this) ? STB::WHITE : STB::BLACK;
@@ -71,11 +70,8 @@ protected:
       return code != 0;
    }
 
-private:
    uint32_t code{0};
    Text     text;
 };
 
 } // namespace GUI
-
-#endif

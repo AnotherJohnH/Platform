@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_BUTTON_H
-#define GUI_CONTROL_BUTTON_H
+#pragma once
 
 #include "Colour.h"
 #include "Row.h"
@@ -31,13 +30,56 @@ namespace GUI {
 //! Button base class
 class Button : public Row
 {
+public:
+   Button(Widget* parent_, unsigned code_)
+      : Row(parent_, /* gap */ 4)
+   {
+      setCode(code_);
+   }
+
+   void setBackgroundColour(STB::Colour colour_) { bg_colour = colour_; }
+
+   void setCode(unsigned code_) { code = code_; }
+
+   void setAltCode(bool select, unsigned code_) { alt_code = code_; }
+
+   void setFlat(bool set = true) { flat = set; }
+
+   void setSelect(bool set = true) { select = set; }
+
 private:
-   STB::Colour  bg_colour{FACE};
-   uint32_t     code{0};
-   uint32_t     alt_code{0};
-   bool         down{false};
-   bool         select{false};
-   bool         flat{false};
+   // Implement Widget events
+
+   virtual void eventDraw(Canvas& canvas) override
+   {
+      STB::Colour tl = (down || select) ? SHADOW  : HILIGHT;
+      STB::Colour br = (down || select) ? HILIGHT : SHADOW;
+
+      canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+
+      if(not flat || down)
+      {
+         canvas.drawLine(tl, pos.x, pos.y, pos.x + size.x - 1, pos.y);
+         canvas.drawLine(tl, pos.x, pos.y, pos.x, pos.y + size.y - 1);
+         canvas.drawLine(br, pos.x + size.x - 1, pos.y + size.y -1, pos.x + size.x - 1, pos.y);
+         canvas.drawLine(br, pos.x + size.x - 1, pos.y + size.y -1, pos.x, pos.y + size.y - 1);
+      }
+
+      Widget::eventDraw(canvas);
+   }
+
+   virtual void eventBtnPress(signed x, signed y, bool select_, bool down_) override
+   {
+      operate(down_, isHit(x, y), select_);
+   }
+
+   virtual void eventKeyPress(uint8_t key, bool down_) override
+   {
+      if(key == ' ')
+      {
+         operate(down_, /* over */ true, /* select */ true);
+      }
+   }
 
    void operate(bool down_, bool over_, bool select_)
    {
@@ -64,68 +106,12 @@ private:
       }
    }
 
-protected:
-   // Implement Widget events
-
-   virtual void eventDraw(Canvas& canvas) override
-   {
-      STB::Colour tl = (down || select) ? SHADOW  : HILIGHT;
-      STB::Colour br = (down || select) ? HILIGHT : SHADOW;
-
-      canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
-
-      if(!flat || down)
-      {
-         canvas.drawLine(tl, pos.x, pos.y, pos.x + size.x - 1, pos.y);
-         canvas.drawLine(tl, pos.x, pos.y, pos.x, pos.y + size.y - 1);
-         canvas.drawLine(br, pos.x + size.x - 1, pos.y + size.y -1, pos.x + size.x - 1, pos.y);
-         canvas.drawLine(br, pos.x + size.x - 1, pos.y + size.y -1, pos.x, pos.y + size.y - 1);
-      }
-
-      Widget::eventDraw(canvas);
-   }
-
-   virtual void eventBtnPress(signed x, signed y, bool select_, bool down_) override
-   {
-      operate(down_, isHit(x, y), select_);
-   }
-
-   virtual void eventKeyPress(uint8_t key, bool down_) override
-   {
-      if(key == ' ')
-      {
-         operate(down_, true, true);
-      }
-   }
-
-public:
-   Button()
-   {
-      Row::setBorderAndGap(4);
-   }
-
-   Button(Widget* parent, unsigned code_)
-   {
-      init(parent, code_);
-   }
-
-   void init(Widget* parent, unsigned code_)
-   {
-      Row::init(parent, 4);
-      code = code_;
-   }
-
-   void setCode(unsigned code_) { code = code_; }
-
-   void setSelect(bool set = true) { select = set; }
-
-   void setFlat(bool set = true) { flat = set; }
-
-   void setAltCode(bool select, unsigned code_) { alt_code = code_; }
-
-   void setBackgroundColour(STB::Colour colour) { bg_colour = colour; }
+   STB::Colour bg_colour{FACE};
+   uint32_t    code{0};
+   uint32_t    alt_code{0};
+   bool        flat{false};
+   bool        down{false};
+   bool        select{false};
 };
 
 } // namespace GUI
-
-#endif

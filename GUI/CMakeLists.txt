@@ -23,15 +23,15 @@
 if(${PLT_NATIVE})
 
 add_library(GUI STATIC
-            BitmapPNG.cpp
-            BitmapStub.cpp
-            FontLED11.cpp
-            FontLED22.cpp
-            FontNew8.cpp
-            FontTeletext12.cpp
-            FontTeletext15.cpp
-            FontTeletext18.cpp
-            FontTeletext9.cpp)
+            Bitmap/BitmapPNG.cpp
+            Bitmap/BitmapStub.cpp
+            Font/FontLED11.cpp
+            Font/FontLED22.cpp
+            Font/FontNew8.cpp
+            Font/FontTeletext12.cpp
+            Font/FontTeletext15.cpp
+            Font/FontTeletext18.cpp
+            Font/FontTeletext9.cpp)
 
 target_include_directories(GUI PUBLIC ..)
 

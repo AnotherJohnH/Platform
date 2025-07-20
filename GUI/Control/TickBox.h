@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_TICK_BOX_H
-#define GUI_CONTROL_TICK_BOX_H
+#pragma once
 
 #include "Row.h"
 
@@ -30,30 +29,16 @@ namespace GUI {
 //! TickBox base class
 class TickBox : public Widget
 {
-private:
-   static const unsigned SIZE = 8;
-
-   const unsigned code{};
-   bool           set{false};
-
-   void operate(bool down_, bool over_)
+public:
+   TickBox(Widget* parent, unsigned code_)
+      : Widget(parent)
+      , code(code_)
    {
-      if(down_)
-      {
-         raiseEvent(this, EVENT_FOCUS);
-      }
-      else
-      {
-         if(over_)
-         {
-            set = !set;
-            raiseEvent(this, code);
-         }
-      }
-
-      raiseEvent(this, EVENT_REDRAW);
+      size.x = SIZE;
+      size.y = SIZE;
    }
 
+private:
    // Implement Widget events
 
    virtual void eventDraw(Canvas& canvas) override
@@ -87,16 +72,28 @@ private:
       }
    }
 
-public:
-   TickBox(Widget* parent, unsigned code_)
-      : Widget(parent)
-      , code(code_)
+   void operate(bool down_, bool over_)
    {
-      size.x = SIZE;
-      size.y = SIZE;
+      if(down_)
+      {
+         raiseEvent(this, EVENT_FOCUS);
+      }
+      else
+      {
+         if(over_)
+         {
+            set = !set;
+            raiseEvent(this, code);
+         }
+      }
+
+      raiseEvent(this, EVENT_REDRAW);
    }
+
+   static const unsigned SIZE = 8;
+
+   const unsigned code{};
+   bool           set{false};
 };
 
 } // namespace GUI
-
-#endif

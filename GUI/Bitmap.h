@@ -20,11 +20,9 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-//! \file Bitmap.h
 //! \brief Platform abstraction interface for 2D rendering on a bitmap buffer
 
-#ifndef GUI_BITMAP_H
-#define GUI_BITMAP_H
+#pragma once
 
 #include <string>
 
@@ -116,5 +114,3 @@ private:
 };
 
 } // namespace GUI
-
-#endif // GUI_BITMAP_H

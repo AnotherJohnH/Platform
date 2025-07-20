@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_EXPAND_H
-#define GUI_CONTROL_EXPAND_H
+#pragma once
 
 #include "Widget.h"
 
@@ -39,5 +38,3 @@ public:
 };
 
 } // namespace GUI
-
-#endif

@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_TEXT_BUTTON_H
-#define GUI_CONTROL_TEXT_BUTTON_H
+#pragma once
 
 #include "Button.h"
 #include "Text.h"
@@ -31,22 +30,14 @@ namespace GUI {
 class TextButton : public Button
 {
 public:
-   Text text;
-
-   TextButton() = default;
-
    TextButton(Widget* parent_, unsigned code_, const char* text_)
+      : Button(parent_, code_)
+      , text(this, text_)
    {
-      init(parent_, code_, text_);
    }
 
-   void init(Widget* parent_, unsigned code_, const char* text_)
-   {
-      Button::init(parent_, code_);
-      text.init(this, text_);
-   }
+private:
+   Text text;
 };
 
 } // namespace GUI
-
-#endif

@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_ROW_H
-#define GUI_CONTROL_ROW_H
+#pragma once
 
 #include "Widget.h"
 
@@ -31,22 +30,15 @@ namespace GUI {
 class Row : public Widget
 {
 public:
-   Row() = default;
-
-   Row(Widget* parent_, unsigned space = 0)
-   {
-      init(parent_, space);
-   }
-
-   void init(Widget* parent_, unsigned space = 0)
+   Row(Widget* parent_, unsigned gap_ = 0)
    {
       setParent(parent_);
+      setBorderAndGap(gap_);
       row = true;
-      setBorderAndGap(space);
       setShrink();
    }
+
+   Row() : Row(/* parent */ nullptr) { }
 };
 
 } // namespace GUI
-
-#endif

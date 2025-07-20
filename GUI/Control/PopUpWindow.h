@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_POP_UP_WINDOW_H
-#define GUI_CONTROL_POP_UP_WINDOW_H
+#pragma once
 
 #include "Window.h"
 
@@ -30,17 +29,15 @@ namespace GUI {
 class PopUpWindow : public Window
 {
 public:
-   PopUpWindow(Window*     parent,
+   PopUpWindow(Window*     parent_,
                const char* title_,
                unsigned    width_ = 0,
                unsigned    height_ = 0,
                uint32_t    flags_ = 0)
-      : Window(title_, width_, height_, parent->getDefaultFont(), flags_)
+      : Window(title_, width_, height_, parent_->getDefaultFont(), flags_)
    {
-      parent->addChild(this);
+      parent_->addChild(this);
    }
 };
 
 } // namespace GUI
-
-#endif

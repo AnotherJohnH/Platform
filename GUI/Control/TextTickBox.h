@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_TEXT_TICK_BOX_H
-#define GUI_CONTROL_TEXT_TICK_BOX_H
+#pragma once
 
 #include "Row.h"
 #include "Text.h"
@@ -31,10 +30,6 @@ namespace GUI {
 
 class TextTickBox : public Row
 {
-private:
-   TickBox tick_box;
-   Text    text;
-
 public:
    TextTickBox(Widget* parent_, unsigned code_, const char* text_)
       : Row(parent_)
@@ -44,8 +39,10 @@ public:
       gap        = 8;
       vert_align = Align::CENTER;
    }
+
+private:
+   TickBox tick_box;
+   Text    text;
 };
 
 } // namespace GUI
-
-#endif

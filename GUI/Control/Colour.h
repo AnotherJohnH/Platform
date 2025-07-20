@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_COLOUR_H
-#define GUI_COLOUR_H
+#pragma once
 
 #include "STB/Colour.h"
 
@@ -49,5 +48,3 @@ public:
 };
 
 } // namespace GUI
-
-#endif

@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_APP_H
-#define GUI_APP_H
+#pragma once
 
 #include "PLT/Event.h"
 
@@ -83,5 +82,3 @@ private:
 };
 
 } // namespace GUI
-
-#endif // GUI_APP_H

@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_SLIDER_H
-#define GUI_CONTROL_SLIDER_H
+#pragma once
 
 #include "Row.h"
 
@@ -29,19 +28,27 @@ namespace GUI {
 
 class Slider : public Widget
 {
+public:
+   Slider(Widget*  parent_,
+          unsigned code_,
+          unsigned length_ = LENGTH,
+          bool     vertical_ = true)
+      : Widget(parent_)
+      , code(code_)
+      , length(length_)
+      , vertical(vertical_)
+   {
+      if (vertical)
+         setSize(BORDER * 2, BORDER * 2 + length);
+      else
+         setSize(BORDER * 2 + length, BORDER * 2);
+   }
+
+   double getValue() const { return double(value) / length; }
+
+   void setValue(double value_) { changeValue(value_ * length); }
+
 private:
-   static const signed   KNOB   = 8;
-   static const unsigned BORDER = 16;
-   static const unsigned LENGTH = 100;
-
-   unsigned code;
-   bool     vertical;
-   unsigned length;
-   int      value{0};
-   bool     select{false};
-   int      ref_value{0};
-   unsigned ref{0};
-
    void transform(Vector& p, int x, int y)
    {
       p.x = pos.x + BORDER;
@@ -140,39 +147,17 @@ private:
       }
    }
 
-public:
-   Slider() = default;
+   static const signed   KNOB   = 8;
+   static const unsigned BORDER = 16;
+   static const unsigned LENGTH = 100;
 
-   Slider(Widget* parent_, unsigned code_, unsigned length_ = LENGTH, bool vertical_ = true)
-   {
-      init(parent_, code_, length_, vertical_);
-   }
-
-   void init(Widget* parent_, unsigned code_, unsigned length_ = LENGTH, bool vertical_ = true)
-   {
-      setParent(parent_);
-
-      code     = code_;
-      vertical = vertical_;
-      length   = length_;
-
-      if(vertical)
-      {
-         size.x = BORDER * 2;
-         size.y = BORDER * 2 + length;
-      }
-      else
-      {
-         size.x = BORDER * 2 + length;
-         size.y = BORDER * 2;
-      }
-   }
-
-   double getValue() const { return double(value) / length; }
-
-   void setValue(double value_) { changeValue(value_ * length); }
+   unsigned code;
+   unsigned length;
+   bool     vertical;
+   int      value{0};
+   bool     select{false};
+   int      ref_value{0};
+   unsigned ref{0};
 };
 
 } // namespace GUI
-
-#endif

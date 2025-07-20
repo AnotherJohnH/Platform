@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_WIDGET_H
-#define GUI_WIDGET_H
+#pragma once
 
 #include <algorithm>
 #include <cassert>
@@ -339,5 +338,3 @@ private:
 };
 
 } // namespace GUI
-
-#endif

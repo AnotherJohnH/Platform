@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_SCROLL_BAR_H
-#define GUI_CONTROL_SCROLL_BAR_H
+#pragma once
 
 #include "Expand.h"
 #include "TextButton.h"
@@ -36,7 +35,7 @@ public:
       : Widget(parent)
       , code(code_)
    {
-      row = !parent->isRow();
+      row = not parent->isRow();
 
       horz_fit = row ? Fit::EXPAND : Fit::SHRINK;
       vert_fit = row ? Fit::SHRINK : Fit::EXPAND;
@@ -61,19 +60,24 @@ private:
    class Symbol : public Widget
    {
    public:
-      Symbol(Widget* parent_, unsigned code_, bool vertical_, unsigned size_ = 14)
+      Symbol(Widget*  parent_,
+             unsigned code_,
+             bool     vertical_,
+             unsigned size_ = 12)
          : Widget(parent_)
          , code(code_)
       {
          setSize(size_, size_);
-         row = !vertical_;
+         row = not vertical_;
       }
 
    private:
-      const unsigned code{};
-
       virtual void eventDraw(Canvas& canvas) override
       {
+         if (code == EV_RESIZE)
+         {
+         }
+         else
          if (isRow())
          {
             signed xt = pos.x;
@@ -97,20 +101,22 @@ private:
                                 pos.x + size.x,   yb);
          }
       }
+
+      const unsigned code{};
    };
 
    //! Scroll bar buttons
    class ScrollButton : public Button
    {
-   private:
-      Symbol symbol;
-
    public:
       ScrollButton(Widget* parent_, unsigned code_)
          : Button(parent_, code_)
          , symbol(this, code_, parent->isParentRow())
       {
       }
+
+   private:
+      Symbol symbol;
    };
 
    //! Scroll bar slider
@@ -256,13 +262,6 @@ private:
       }
    };
 
-   enum Event : unsigned { EV_LESS = 1, EV_MORE, EV_CHANGE };
-
-   const unsigned code;
-   ScrollButton   btn_scroll_less{this, EV_LESS};
-   ScrollSlider   slider{this};
-   ScrollButton   btn_scroll_more{this, EV_MORE};
-
    virtual void eventDraw(Canvas& canvas) override
    {
       canvas.fillRect(LIGHT,  pos.x, pos.y, pos.x + size.x, pos.y + size.y);
@@ -289,8 +288,13 @@ private:
          Widget::raiseEvent(source_, code_);
       }
    }
+
+   enum Event : unsigned { EV_LESS = 1, EV_MORE, EV_CHANGE, EV_RESIZE };
+
+   const unsigned code;
+   ScrollButton   btn_scroll_less{this, EV_LESS};
+   ScrollSlider   slider{this};
+   ScrollButton   btn_scroll_more{this, EV_MORE};
 };
 
 } // namespace GUI
-
-#endif

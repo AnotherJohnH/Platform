@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_H
-#define GUI_H
+#pragma once
 
 #include "Control/App.h"
 #include "Control/Bar.h"
@@ -46,4 +45,3 @@
 #include "Font/New.h"
 #include "Font/Teletext.h"
 
-#endif

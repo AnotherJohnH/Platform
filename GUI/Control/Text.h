@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_TEXT_H
-#define GUI_CONTROL_TEXT_H
+#pragma once
 
 #include <cstring>
 
@@ -31,50 +30,8 @@ namespace GUI {
 
 class Text : public Widget, public ColourPair
 {
-private:
-   const Font*  font{nullptr};
-   const char*  text{nullptr};
-   uint8_t      len{0};
-   uint8_t      cols{0};
-   Align        text_align{Align::LEFT};
-
-protected:
-   // Implement Widget events
-   virtual void eventSize() override
-   {
-      if (font == nullptr)
-      {
-         font = getDefaultFont();
-      }
-
-      size.x = font->getWidth(" ") * cols;
-      size.y = font->getHeight();
-   }
-
-   virtual void eventDraw(Canvas& canvas) override
-   {
-      signed x = pos.x;
-
-      switch(text_align)
-      {
-      case Align::LEFT:   break;
-      case Align::CENTER: x += (cols - len) * font->getWidth(" ")/2; break;
-      case Align::RIGHT:  x += (cols - len) * font->getWidth(" ");   break;
-      }
-
-      canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
-      canvas.drawText(fg_colour, bg_colour, x, pos.y, font, text);
-   }
-
 public:
-   Text() = default;
-
    Text(Widget* parent_, const char* text_)
-   {
-      init(parent_, text_);
-   }
-
-   void init(Widget* parent_, const char* text_)
    {
       setParent(parent_);
       setText(text_);
@@ -103,8 +60,41 @@ public:
    {
       text_align = text_align_;
    }
+
+private:
+   // Implement Widget events
+   virtual void eventSize() override
+   {
+      if (font == nullptr)
+      {
+         font = getDefaultFont();
+      }
+
+      size.x = font->getWidth(" ") * cols;
+      size.y = font->getHeight();
+   }
+
+   virtual void eventDraw(Canvas& canvas) override
+   {
+      signed x = pos.x;
+
+      switch(text_align)
+      {
+      case Align::LEFT:   break;
+      case Align::CENTER: x += (cols - len) * font->getWidth(" ")/2; break;
+      case Align::RIGHT:  x += (cols - len) * font->getWidth(" ");   break;
+      }
+
+      canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+      canvas.drawText(fg_colour, bg_colour, x, pos.y, font, text);
+   }
+
+   const Font* font{nullptr};
+   const char* text{nullptr};
+   uint8_t     len{0};
+   uint8_t     cols{0};
+   Align       text_align{Align::LEFT};
 };
 
 } // namespace GUI
 
-#endif

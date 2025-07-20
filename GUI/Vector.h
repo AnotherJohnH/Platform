@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_VECTOR_H
-#define GUI_VECTOR_H
+#pragma once
 
 #include <cstdint>
 
@@ -35,5 +34,3 @@ using Size      = STB::Vector2<uint32_t>;
 using SmallSize = STB::Vector2<uint8_t>;
 
 } // namespace GUI
-
-#endif

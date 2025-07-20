@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_FONT_LED_H
-#define GUI_FONT_LED_H
+#pragma once
 
 #include "GUI/Font.h"
 
@@ -31,5 +30,3 @@ extern const Font font_led11;
 extern const Font font_led22;
 
 } // namespace GUI
-
-#endif

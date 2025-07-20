@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_CONTROL_COL_H
-#define GUI_CONTROL_COL_H
+#pragma once
 
 #include "Widget.h"
 
@@ -32,20 +31,13 @@ class Col : public Widget
 public:
    Col() = default;
 
-   Col(Widget* parent_, unsigned space = 0)
-   {
-      init(parent_, space);
-   }
-
-   void init(Widget* parent_, unsigned space = 0)
+   Col(Widget* parent_, unsigned gap_ = 0)
    {
       setParent(parent_);
       row = false;
-      setBorderAndGap(space);
+      setBorderAndGap(gap_);
       setShrink();
    }
 };
 
 } // namespace GUI
-
-#endif

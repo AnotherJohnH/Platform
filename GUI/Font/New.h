@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef GUI_FONT_NEW_H
-#define GUI_FONT_NEW_H
+#pragma once
 
 #include "GUI/Font.h"
 
@@ -30,5 +29,3 @@ namespace GUI {
 extern const Font font_new8;
 
 } // namespace GUI
-
-#endif
