@@ -26,7 +26,7 @@
 
 #include "PLT/Event.h"
 
-#include "Colour.h"
+#include "GUI/Colour.h"
 #include "Widget.h"
 
 namespace GUI {

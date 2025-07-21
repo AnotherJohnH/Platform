@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Colour.h"
+#include "GUI/Colour.h"
 #include "Row.h"
 #include "Text.h"
 

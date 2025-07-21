@@ -22,10 +22,10 @@
 
 #pragma once
 
+#include "GUI/Colour.h"
 #include "GUI/Frame.h"
 
 #include "Col.h"
-#include "Colour.h"
 
 namespace GUI {
 

@@ -21,7 +21,7 @@
 //------------------------------------------------------------------------------
 
 #include "GUI/Frame.h"
-#include "GUI/Control/Colour.h"
+#include "GUI/Colour.h"
 #include "GUI/Font/Teletext.h"
 
 #include "PLT/Event.h"

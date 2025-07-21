@@ -26,7 +26,6 @@
 #include "Control/Bar.h"
 #include "Control/Button.h"
 #include "Control/Col.h"
-#include "Control/Colour.h"
 #include "Control/Expand.h"
 #include "Control/Field.h"
 #include "Control/MenuBar.h"

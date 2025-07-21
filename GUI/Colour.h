@@ -38,13 +38,13 @@ const STB::Colour HILIGHT    = STB::GREY(0xF0);
 //! Background and foreground colour pair
 class ColourPair
 {
+public:
+   void setForegroundColour(STB::Colour colour_) { fg_colour = colour_; }
+   void setBackgroundColour(STB::Colour colour_) { bg_colour = colour_; }
+
 protected:
    STB::Colour fg_colour{FOREGROUND};
    STB::Colour bg_colour{FACE};
-
-public:
-   void setForegroundColour(STB::Colour colour) { fg_colour = colour; }
-   void setBackgroundColour(STB::Colour colour) { bg_colour = colour; }
 };
 
 } // namespace GUI
