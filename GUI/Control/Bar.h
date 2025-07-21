@@ -23,7 +23,7 @@
 #pragma once
 
 #include "GUI/Colour.h"
-#include "Widget.h"
+#include "GUI/Widget.h"
 
 namespace GUI {
 

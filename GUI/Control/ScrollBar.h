@@ -24,7 +24,7 @@
 
 #include "Expand.h"
 #include "TextButton.h"
-#include "Widget.h"
+#include "GUI/Widget.h"
 
 namespace GUI {
 

@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Widget.h"
+#include "GUI/Widget.h"
 
 namespace GUI {
 

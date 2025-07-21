@@ -24,7 +24,7 @@
 
 #include <cstring>
 
-#include "Widget.h"
+#include "GUI/Widget.h"
 
 namespace GUI {
 
