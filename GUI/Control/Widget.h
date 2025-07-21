@@ -26,9 +26,10 @@
 #include <cassert>
 #include <cstdint>
 
-#include "GUI/Canvas.h"
-#include "Layout.h"
 #include "STB/Tree.h"
+
+#include "GUI/Canvas.h"
+#include "GUI/Layout.h"
 
 namespace GUI {
 

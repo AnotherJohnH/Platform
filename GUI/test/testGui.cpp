@@ -22,7 +22,6 @@
 
 #include <cstdio>
 
-#include "GUI/Control/Layout.h"
 #include "GUI/GUI.h"
 
 class PopUp : public GUI::PopUpWindow
