@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include "Expand.h"
-#include "TextButton.h"
+#include "SymbolButton.h"
+
 #include "GUI/Widget.h"
 
 namespace GUI {
@@ -31,7 +31,7 @@ namespace GUI {
 class ScrollBar : public Widget
 {
 public:
-   ScrollBar(Widget* parent, unsigned code_)
+   ScrollBar(Widget* parent, unsigned code_, bool corner_ = false)
       : Widget(parent)
       , code(code_)
    {
@@ -41,6 +41,9 @@ public:
       vert_fit = row ? Fit::SHRINK : Fit::EXPAND;
 
       slider.setRow(row);
+
+      if (corner_)
+         corner.setParent(this);
    }
 
    //! Get current window size (0..1)
@@ -56,69 +59,6 @@ public:
    void setOffset(double offset_) { slider.setOffset(offset_); }
 
 private:
-   //! Scroll bar button symbols
-   class Symbol : public Widget
-   {
-   public:
-      Symbol(Widget*  parent_,
-             unsigned code_,
-             bool     vertical_,
-             unsigned size_ = 12)
-         : Widget(parent_)
-         , code(code_)
-      {
-         setSize(size_, size_);
-         row = not vertical_;
-      }
-
-   private:
-      virtual void eventDraw(Canvas& canvas) override
-      {
-         if (code == EV_RESIZE)
-         {
-         }
-         else
-         if (isRow())
-         {
-            signed xt = pos.x;
-            signed xb = pos.x + size.x;
-            if (code == EV_MORE) std::swap(xt, xb);
-
-            canvas.fillTriangle(GUI::FOREGROUND,
-                                xt, pos.y + size.y/2,
-                                xb, pos.y,
-                                xb, pos.y + size.y);
-         }
-         else
-         {
-            signed yt = pos.y;
-            signed yb = pos.y + size.y;
-            if (code == EV_MORE) std::swap(yt, yb);
-
-            canvas.fillTriangle(GUI::FOREGROUND,
-                                pos.x + size.x/2, yt,
-                                pos.x,            yb,
-                                pos.x + size.x,   yb);
-         }
-      }
-
-      const unsigned code{};
-   };
-
-   //! Scroll bar buttons
-   class ScrollButton : public Button
-   {
-   public:
-      ScrollButton(Widget* parent_, unsigned code_)
-         : Button(parent_, code_)
-         , symbol(this, code_, parent->isParentRow())
-      {
-      }
-
-   private:
-      Symbol symbol;
-   };
-
    //! Scroll bar slider
    class ScrollSlider : public Widget
    {
@@ -292,9 +232,12 @@ private:
    enum Event : unsigned { EV_LESS = 1, EV_MORE, EV_CHANGE, EV_RESIZE };
 
    const unsigned code;
-   ScrollButton   btn_scroll_less{this, EV_LESS};
+   SymbolButton   btn_scroll_less{this, EV_LESS, isParentRow() ? Symbol::LEFT
+                                                               : Symbol::UP};
    ScrollSlider   slider{this};
-   ScrollButton   btn_scroll_more{this, EV_MORE};
+   SymbolButton   btn_scroll_more{this, EV_MORE, isParentRow() ? Symbol::RIGHT
+                                                               : Symbol::DOWN};
+   Symbol         corner{nullptr, Symbol::CORNER, 19};
 };
 
 } // namespace GUI
