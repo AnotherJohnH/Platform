@@ -112,7 +112,7 @@ private:
          return row ? row_value : col_value;
       }
 
-      virtual void eventDraw(Canvas& canvas) override
+      void eventDraw(Canvas& canvas) override
       {
          canvas.fillRect(LIGHT, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
@@ -126,7 +126,7 @@ private:
          canvas.drawLine(HILIGHT, tl.x,     tl.y,     tl.x, br.y);
       }
 
-      virtual void eventKeyPress(uint8_t key, bool down_) override
+      void eventKeyPress(uint8_t key, bool down_) override
       {
          if(down_)
          {
@@ -141,7 +141,7 @@ private:
          }
       }
 
-      virtual void eventBtnPress(signed x, signed y, bool select_, bool down_) override
+      void eventBtnPress(signed x, signed y, bool select_, bool down_) override
       {
          if(down_)
          {
@@ -170,7 +170,7 @@ private:
          }
       }
 
-      virtual void eventPtrMove(unsigned x, unsigned y) override
+      void eventPtrMove(unsigned x, unsigned y) override
       {
          if(select)
          {
@@ -202,14 +202,14 @@ private:
       }
    };
 
-   virtual void eventDraw(Canvas& canvas) override
+   void eventDraw(Canvas& canvas) override
    {
       canvas.fillRect(LIGHT,  pos.x, pos.y, pos.x + size.x, pos.y + size.y);
       canvas.drawRect(SHADOW, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
    }
 
    //! Intercept events from child widgets
-   virtual void raiseEvent(Widget* source_, unsigned code_) override
+   void raiseEvent(Widget* source_, unsigned code_) override
    {
       if (code_ == EV_LESS)
       {

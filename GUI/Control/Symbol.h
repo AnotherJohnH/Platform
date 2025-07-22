@@ -38,8 +38,8 @@ public:
       setSize(size_, size_);
    }
 
-private:
-   virtual void eventDraw(Canvas& canvas) override
+protected:
+   void eventDraw(Canvas& canvas) override
    {
       switch(type)
       {
@@ -76,6 +76,7 @@ private:
       }
    }
 
+private:
    Type type;
 };
 

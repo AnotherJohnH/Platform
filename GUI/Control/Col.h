@@ -29,9 +29,7 @@ namespace GUI {
 class Col : public Widget
 {
 public:
-   Col() = default;
-
-   Col(Widget* parent_, unsigned gap_ = 0)
+   Col(Widget* parent_ = nullptr, unsigned gap_ = 0)
       : Widget(parent_)
    {
       setCol();

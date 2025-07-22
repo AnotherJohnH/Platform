@@ -30,7 +30,7 @@ namespace GUI {
 class Row : public Widget
 {
 public:
-   Row(Widget* parent_, unsigned gap_ = 0)
+   Row(Widget* parent_ = nullptr, unsigned gap_ = 0)
       : Widget(parent_)
    {
       setRow();

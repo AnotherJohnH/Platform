@@ -93,7 +93,7 @@ private:
 
    // Implement Widget events
 
-   virtual void eventDraw(Canvas& canvas) override
+   void eventDraw(Canvas& canvas) override
    {
       line(canvas, DARK, 0, 0, 0, length);
 
@@ -114,7 +114,7 @@ private:
       canvas.drawLine(DARK,  v.x + KNOB, v.y + KNOB, v.x - KNOB, v.y + KNOB);
    }
 
-   virtual void eventBtnPress(signed x, signed y, bool select_, bool down_) override
+   void eventBtnPress(signed x, signed y, bool select_, bool down_) override
    {
       if(down_)
       {
@@ -137,7 +137,7 @@ private:
       }
    }
 
-   virtual void eventPtrMove(unsigned x, unsigned y) override
+   void eventPtrMove(unsigned x, unsigned y) override
    {
       if(select)
       {

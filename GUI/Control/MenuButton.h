@@ -41,8 +41,8 @@ public:
       setBorderAndGap(4);
    }
 
-private:
-   virtual void eventDraw(Canvas& canvas) override
+protected:
+   void eventDraw(Canvas& canvas) override
    {
       STB::Colour fg_colour = isHover(this) ? STB::WHITE : STB::BLACK;
       STB::Colour bg_colour = isHover(this) ? STB::BLUE  : FACE;
@@ -53,7 +53,7 @@ private:
       text.setBackgroundColour(bg_colour);
    }
 
-   virtual void eventBtnPress(signed x, signed y, bool select_, bool down_) override
+   void eventBtnPress(signed x, signed y, bool select_, bool down_) override
    {
       if (down_)
       {
@@ -65,11 +65,12 @@ private:
       }
    }
 
-   virtual bool wantsHover() const override
+   bool wantsHover() const override
    {
       return code != 0;
    }
 
+private:
    uint32_t code{0};
    Text     text;
 };

@@ -31,29 +31,38 @@ namespace GUI {
 class Text : public Widget, public ColourPair
 {
 public:
+   Text(Widget* parent_ = nullptr)
+      : Widget(parent_)
+   {
+   }
+
    Text(Widget* parent_, const char* text_)
       : Widget(parent_)
    {
       setText(text_);
-      setCols(len);
    }
 
    void setFont(const Font* font_)
    {
       font = font_;
-      eventSize();
+      if (font == nullptr)
+      {
+         font = getDefaultFont();
+      }
    }
 
    void setText(const char* text_)
    {
       text = text_;
       len  = strlen(text);
+
+      if (cols == 0)
+         cols = len;
    }
 
    void setCols(unsigned cols_)
    {
       cols = cols_;
-      eventSize();
    }
 
    void setAlign(Align text_align_)
@@ -61,9 +70,9 @@ public:
       text_align = text_align_;
    }
 
-private:
+protected:
    // Implement Widget events
-   virtual void eventSize() override
+   void eventLayout() override
    {
       if (font == nullptr)
       {
@@ -74,7 +83,7 @@ private:
       size.y = font->getHeight();
    }
 
-   virtual void eventDraw(Canvas& canvas) override
+   void eventDraw(Canvas& canvas) override
    {
       signed x = pos.x;
 
@@ -89,6 +98,7 @@ private:
       canvas.drawText(fg_colour, bg_colour, x, pos.y, font, text);
    }
 
+private:
    const Font* font{nullptr};
    const char* text{nullptr};
    uint8_t     len{0};

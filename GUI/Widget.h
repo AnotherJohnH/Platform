@@ -104,17 +104,16 @@ public:
       }
    }
 
-
    // Event handlers that may be overriden
 
-   //! Widget has been resized
-   virtual void eventResize()
+   //! Widget is about to be layed out
+   virtual void eventLayout()
    {
       //  Default do nothing
    }
 
-   //! Update widget size
-   virtual void eventSize()
+   //! Widget has been resized
+   virtual void eventResize()
    {
       //  Default do nothing
    }
@@ -201,6 +200,8 @@ private:
       for(Widget* child = children; child != nullptr; child = child->next)
       {
          child->layoutSizeShrink();
+
+         child->eventLayout();
 
          if(row)
          {

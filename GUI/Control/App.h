@@ -61,8 +61,6 @@ public:
    }
 
 private:
-   unsigned timer_code{0};
-
    //! Callback from PLT::Event
    static void eventCallBack(const PLT::Event::Message& event, void* ptr)
    {
@@ -79,6 +77,8 @@ private:
 
       app->handleEvent(event);
    }
+
+   unsigned timer_code{0};
 };
 
 } // namespace GUI

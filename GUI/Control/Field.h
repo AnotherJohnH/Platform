@@ -35,9 +35,7 @@ template <unsigned COLS>
 class Field : public Widget, public ColourPair
 {
 public:
-   Field() = default;
-
-   Field(Widget* parent_, unsigned code_ = 0, const char* initial_ = "")
+   Field(Widget* parent_ = nullptr, unsigned code_ = 0, const char* initial_ = "")
       : Widget(parent_)
    {
       // code = code_;
@@ -47,8 +45,6 @@ public:
 
       setBackgroundColour(BACKGROUND);
       setForegroundColour(FOREGROUND);
-
-      eventSize();
    }
 
    void setValue(const char* value_)
@@ -64,9 +60,9 @@ public:
       value[COLS] = '\0';
    }
 
-private:
+protected:
    // Implement Widget events
-   virtual void eventSize() override
+   void eventLayout() override
    {
       if (font == nullptr)
       {
@@ -78,7 +74,7 @@ private:
       size.y = font->getHeight() + 4;
    }
 
-   virtual void eventDraw(Canvas& canvas) override
+   void eventDraw(Canvas& canvas) override
    {
       canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
@@ -86,7 +82,7 @@ private:
                       value);
    }
 
-   virtual void eventBtnPress(signed x, signed y, bool select, bool down_) override
+   void eventBtnPress(signed x, signed y, bool select, bool down_) override
    {
       if (down_)
       {
@@ -94,7 +90,7 @@ private:
       }
    }
 
-   virtual void eventKeyPress(uint8_t key, bool down_) override
+   void eventKeyPress(uint8_t key, bool down_) override
    {
       if (down_)
       {
@@ -125,6 +121,7 @@ private:
       }
    }
 
+private:
    const Font* font{nullptr};
    // unsigned      code;
    char        value[COLS + 1];

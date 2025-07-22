@@ -38,10 +38,10 @@ public:
       size.y = SIZE;
    }
 
-private:
+protected:
    // Implement Widget events
 
-   virtual void eventDraw(Canvas& canvas) override
+   void eventDraw(Canvas& canvas) override
    {
       canvas.fillRect(BACKGROUND, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
@@ -62,12 +62,12 @@ private:
       Widget::eventDraw(canvas);
    }
 
-   virtual void eventBtnPress(signed x, signed y, bool select, bool down_) override
+   void eventBtnPress(signed x, signed y, bool select, bool down_) override
    {
       operate(down_, isHit(x, y));
    }
 
-   virtual void eventKeyPress(uint8_t key, bool down_) override
+   void eventKeyPress(uint8_t key, bool down_) override
    {
       if(key == ' ')
       {
@@ -75,6 +75,7 @@ private:
       }
    }
 
+private:
    void operate(bool down_, bool over_)
    {
       if(down_)

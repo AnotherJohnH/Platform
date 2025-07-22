@@ -31,6 +31,8 @@ namespace GUI {
 class Button : public Row
 {
 public:
+   Button() = default;
+
    Button(Widget* parent_, unsigned code_)
       : Row(parent_, /* gap */ 4)
    {
@@ -47,33 +49,31 @@ public:
 
    void setSelect(bool set = true) { select = set; }
 
-private:
+protected:
    // Implement Widget events
 
-   virtual void eventDraw(Canvas& canvas) override
+   void eventDraw(Canvas& canvas) override
    {
       STB::Colour tl = (down || select) ? SHADOW  : HILIGHT;
       STB::Colour br = (down || select) ? HILIGHT : SHADOW;
 
       canvas.fillRect(bg_colour, pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
-      if(not flat || down)
+      if (not flat || down)
       {
          canvas.drawLine(tl, pos.x, pos.y, pos.x + size.x - 1, pos.y);
          canvas.drawLine(tl, pos.x, pos.y, pos.x, pos.y + size.y - 1);
-         canvas.drawLine(br, pos.x + size.x - 1, pos.y + size.y -1, pos.x + size.x - 1, pos.y);
-         canvas.drawLine(br, pos.x + size.x - 1, pos.y + size.y -1, pos.x, pos.y + size.y - 1);
+         canvas.drawLine(br, pos.x + size.x - 1, pos.y + size.y - 1, pos.x + size.x - 1, pos.y);
+         canvas.drawLine(br, pos.x + size.x - 1, pos.y + size.y - 1, pos.x, pos.y + size.y - 1);
       }
-
-      Widget::eventDraw(canvas);
    }
 
-   virtual void eventBtnPress(signed x, signed y, bool select_, bool down_) override
+   void eventBtnPress(signed x, signed y, bool select_, bool down_) override
    {
       operate(down_, isHit(x, y), select_);
    }
 
-   virtual void eventKeyPress(uint8_t key, bool down_) override
+   void eventKeyPress(uint8_t key, bool down_) override
    {
       if(key == ' ')
       {
@@ -81,6 +81,7 @@ private:
       }
    }
 
+private:
    void operate(bool down_, bool over_, bool select_)
    {
       if(down != down_)

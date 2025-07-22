@@ -30,14 +30,15 @@ namespace GUI {
 class TextButton : public Button
 {
 public:
+   TextButton() = default;
+
    TextButton(Widget* parent_, unsigned code_, const char* text_)
       : Button(parent_, code_)
       , text(this, text_)
    {
    }
 
-private:
-   Text text;
+   Text text{this};
 };
 
 } // namespace GUI

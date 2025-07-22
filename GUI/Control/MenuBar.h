@@ -29,7 +29,7 @@ namespace GUI {
 class MenuBar : public GUI::Row
 {
 public:
-   MenuBar(Widget* parent_) : GUI::Row(parent_, 4) {}
+   MenuBar(Widget* parent_) : GUI::Row(parent_, /* gap */ 4) {}
 };
 
 } // namespace GUI

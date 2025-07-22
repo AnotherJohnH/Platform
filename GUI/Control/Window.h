@@ -67,9 +67,9 @@ public:
       }
    }
 
-   virtual bool isHover(const Widget* that) const override { return that == hover; }
+   bool isHover(const Widget* that) const override { return that == hover; }
 
-   virtual const Font* getDefaultFont() const override { return font; }
+   const Font* getDefaultFont() const override { return font; }
 
    void addChild(Window* child)
    {
@@ -151,7 +151,7 @@ protected:
    }
 
    //! Internal notification of an event
-   virtual void raiseEvent(Widget* focus_, unsigned code_) final override
+   void raiseEvent(Widget* focus_, unsigned code_) final override
    {
       switch(code_)
       {
@@ -188,9 +188,9 @@ private:
 
    // Implement Widget
 
-   virtual void eventResize() override { Frame::resize(Widget::size.x, Widget::size.y); }
+   void eventResize() override { Frame::resize(Widget::size.x, Widget::size.y); }
 
-   virtual void eventDraw(Canvas&) override { Canvas::clear(FACE); }
+   void eventDraw(Canvas&) override { Canvas::clear(FACE); }
 
    virtual void appEvent(Widget* item_, unsigned code_) {}
 };

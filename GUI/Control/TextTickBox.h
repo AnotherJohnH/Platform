@@ -40,7 +40,6 @@ public:
       vert_align = Align::CENTER;
    }
 
-private:
    TickBox tick_box;
    Text    text;
 };

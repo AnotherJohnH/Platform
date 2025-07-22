@@ -31,10 +31,15 @@ namespace GUI {
 class Bar : public Widget
 {
 public:
-   Bar(Widget* parent_)
+   Bar(Widget* parent_= nullptr)
       : Widget(parent_)
    {
-      if(isParentRow())
+   }
+
+protected:
+   void eventLayout() override
+   {
+      if (isParentRow())
       {
          vert_fit = Fit::EXPAND;
          size.x   = 2;
@@ -46,8 +51,7 @@ public:
       }
    }
 
-private:
-   virtual void eventDraw(Canvas& canvas_) override
+   void eventDraw(Canvas& canvas_) override
    {
       if(isParentRow())
       {
