@@ -29,6 +29,17 @@ namespace GUI {
 class Slider : public Widget
 {
 public:
+   Slider(unsigned length_   = LENGTH,
+          bool     vertical_ = true)
+      : length(length_)
+      , vertical(vertical_)
+   {
+      if (vertical)
+         setSize(BORDER * 2, BORDER * 2 + length);
+      else
+         setSize(BORDER * 2 + length, BORDER * 2);
+   }
+
    Slider(Widget*  parent_,
           unsigned code_,
           unsigned length_ = LENGTH,
@@ -47,6 +58,8 @@ public:
    double getValue() const { return double(value) / length; }
 
    void setValue(double value_) { changeValue(value_ * length); }
+
+   void setCode(unsigned code_) { code = code_; }
 
 private:
    void transform(Vector& p, int x, int y)
@@ -151,9 +164,9 @@ private:
    static const unsigned BORDER = 16;
    static const unsigned LENGTH = 100;
 
-   unsigned code;
-   unsigned length;
-   bool     vertical;
+   unsigned code{};
+   unsigned length{};
+   bool     vertical{true};
    int      value{0};
    bool     select{false};
    int      ref_value{0};
