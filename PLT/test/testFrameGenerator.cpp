@@ -32,6 +32,28 @@
 template <unsigned WIDTH, unsigned HEIGHT>
 class Screen : public PLT::Frame::Generator
 {
+public:
+   Screen()
+   {
+      uint8_t ch = ' ';
+
+      for(unsigned y=0; y<ROWS; y++)
+      {
+         for(unsigned x=0; x<COLS; x++)
+         {
+            data[x + y*COLS] = ch++;
+            if (ch == 0x80) ch = ' ';
+         }
+      }
+
+      frame.setGenerator(this);
+   }
+
+   void refresh()
+   {
+      frame.refresh();
+   }
+
 private:
    static const unsigned COLS = WIDTH  / 8;
    static const unsigned ROWS = HEIGHT / 8;
@@ -81,28 +103,6 @@ private:
             break;
          }
       }
-   }
-
-public:
-   Screen()
-   {
-      uint8_t ch = ' ';
-
-      for(unsigned y=0; y<ROWS; y++)
-      {
-         for(unsigned x=0; x<COLS; x++)
-         {
-            data[x + y*COLS] = ch++;
-            if (ch == 0x80) ch = ' ';
-         }
-      }
-
-      frame.setGenerator(this);
-   }
-
-   void refresh()
-   {
-      frame.refresh();
    }
 };
 

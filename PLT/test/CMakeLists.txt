@@ -33,10 +33,10 @@ add_executable(testFrame testFrame.cpp)
 target_link_libraries(testFrame PLT)
 
 add_executable(testFrameGenerator testFrameGenerator.cpp)
-target_link_libraries(testFrameGenerator PLT)
+target_link_libraries(testFrameGenerator PLT GUI)
 
-#add_executable(testMidiIn testMidiIn.cpp)
-#target_link_libraries(testMidiIn PLT)
+add_executable(testMidiIn testMidiIn.cpp)
+target_link_libraries(testMidiIn PLT STB)
 
 add_executable(testSounder testSounder.cpp)
 target_link_libraries(testSounder PLT)
