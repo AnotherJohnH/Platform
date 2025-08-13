@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef STB_MIDI_DECODER_H
-#define STB_MIDI_DECODER_H
+#pragma once
 
 #include <cstdint>
 
@@ -153,5 +152,3 @@ extern unsigned disassemble(const uint8_t* data, unsigned length);
 } // namespace MIDI
 
 } // namespace STB
-
-#endif

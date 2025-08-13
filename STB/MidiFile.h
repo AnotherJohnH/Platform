@@ -20,8 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef STB_MIDI_FILE_H
-#define STB_MIDI_FILE_H
+#pragma once
 
 #include <cstddef>
 #include <cstdint>
@@ -228,5 +227,3 @@ private:
 } // namespace MIDI
 
 } // namespace STB
-
-#endif

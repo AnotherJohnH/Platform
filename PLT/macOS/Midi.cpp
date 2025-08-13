@@ -57,8 +57,9 @@ static bool createClient(MIDIClientRef& client)
 }
 
 
-static void midiInputCallBack(const MIDIPacketList* pkt_list, void* read_proc_ref_con,
-                              void* src_conn_ref_con)
+static void midiInputCallBack(const MIDIPacketList* pkt_list,
+                              void*                 read_proc_ref_con,
+                              void*                 src_conn_ref_con)
 {
    In* midi_in = (In*)read_proc_ref_con;
 
@@ -66,7 +67,11 @@ static void midiInputCallBack(const MIDIPacketList* pkt_list, void* read_proc_re
    {
       const MIDIPacket* pkt = &pkt_list->packet[i];
 
-      midi_in->decode((uint8_t*)pkt->data, pkt->length);
+      for(unsigned offset = 0; offset < pkt->length; )
+      {
+         offset += midi_in->decode((uint8_t*)pkt->data + offset,
+                                   pkt->length - offset);
+      }
    }
 }
 

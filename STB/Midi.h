@@ -20,10 +20,7 @@
 // SOFTWARE.
 //------------------------------------------------------------------------------
 
-#ifndef STB_MIDI_H
-#define STB_MIDI_H
+#pragma once
 
 #include "STB/MidiDecoder.h"
 #include "STB/MidiFile.h"
-
-#endif
