@@ -134,9 +134,10 @@ an Android build of SDL2 has not been achieved yet.
 ## Coding style
 
 The source is C++ but has the following non-typical for modern C++ features ...
+
 * Memory is mostly statically or stack allocated in preference to new/delete
 * Very limited STL usage
 * Use of C style stdio API
 * In some places have re-invented the wheel avoiding functionality that is in standard libraries
-* 3 space indent
+* Refer to [STYLE.md](STYLE.md) and the repository `.clang-format` for specific naming and formatting preferences.
 
