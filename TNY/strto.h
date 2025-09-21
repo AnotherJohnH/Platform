@@ -6,8 +6,7 @@
 //! \file strto.h
 //! \brief tiny C library implementation
 
-#ifndef TINYC_STRTO_H
-#define TINYC_STRTO_H
+#pragma once
 
 namespace TNY {
 
@@ -87,4 +86,3 @@ TYPE strto(const char* s, const char** endptr, unsigned base)
 
 } // namespace TNY
 
-#endif

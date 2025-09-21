@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_STACK_H
-#define STB_STACK_H
+#pragma once
 
 #include <cassert>
 #include <cstddef>
@@ -133,4 +132,3 @@ private:
 
 } // namespace STB
 
-#endif

@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SDL_HEADERS_H
-#define SDL_HEADERS_H
+#pragma once
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -22,4 +21,3 @@
 // XXX may not be the most effiicent?
 #define PIXEL_FORMAT SDL_PIXELFORMAT_ARGB8888
 
-#endif // SDL_HEADERS_H

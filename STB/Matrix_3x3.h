@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_MATRIX_3X3_H
-#define STB_MATRIX_3X3_H
+#pragma once
 
 #include <cmath>
 
@@ -71,4 +70,3 @@ public:
 
 } // namespace STB
 
-#endif

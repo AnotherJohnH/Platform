@@ -6,8 +6,7 @@
 //! \file  Yield.h
 //! \brief Real-time scheduling
 
-#ifndef PLT_YIELD_H
-#define PLT_YIELD_H
+#pragma once
 
 #include <cstdint>
 
@@ -51,4 +50,3 @@ private:
 
 } // namespace PLT
 
-#endif // PLT_YIELD_H

@@ -6,8 +6,7 @@
 // \file Gpio.h
 // \brief Stub general purpose I/O
 
-#ifndef MTL_GPIO_H
-#define MTL_GPIO_H
+#pragma once
 
 #include <atomic>
 #include <cstdint>
@@ -69,4 +68,3 @@ private:
 
 } // namespace MTL
 
-#endif // MTL_GPIO_H

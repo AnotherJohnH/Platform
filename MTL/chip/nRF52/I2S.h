@@ -12,8 +12,7 @@
 //       Clock signals working but no data tx
 //
 
-#ifndef MTL_NRF52_I2S_H
-#define MTL_NRF52_I2S_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -116,4 +115,3 @@ private:
 
 } // namespace MTL
 
-#endif

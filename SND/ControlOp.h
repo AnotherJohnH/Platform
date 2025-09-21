@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_CONTROL_OP_H
-#define SND_CONTROL_OP_H
+#pragma once
 
 #include <cstdlib>
 
@@ -55,4 +54,3 @@ private:
 
 } // namespace SND
 
-#endif

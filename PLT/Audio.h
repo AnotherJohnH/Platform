@@ -6,8 +6,7 @@
 //! \file Audio.h
 //! \brief Platform abstraction interface for raw audio hardware
 
-#ifndef PLT_AUDIO_H
-#define PLT_AUDIO_H
+#pragma once
 
 #include <cstdint>
 
@@ -194,4 +193,3 @@ public:
 
 } // namespace PLT
 
-#endif // PLT_AUDIO_H

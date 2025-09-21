@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_SIGNAL_OP_H
-#define SND_SIGNAL_OP_H
+#pragma once
 
 #include <cassert>
 #include <cmath>
@@ -184,4 +183,3 @@ class Sum : public NaryOp<N>
 
 } // namespace SND
 
-#endif

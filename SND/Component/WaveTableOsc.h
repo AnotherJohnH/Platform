@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_WAVE_TABLE_OSC_H
-#define SND_WAVE_TABLE_OSC_H
+#pragma once
 
 #include "STB/Waveform.h"
 #include "Osc.h"
@@ -145,4 +144,3 @@ public:
 
 } // namespace SND
 
-#endif

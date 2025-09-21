@@ -6,8 +6,7 @@
 //! \file  SysTick.h
 //! \brief Access to Cortex-M4 System Timer
 
-#ifndef CORTEX_M4_SYS_TICK_H
-#define CORTEX_M4_SYS_TICK_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -80,4 +79,3 @@ private:
 
 } // namespace MTL
 
-#endif // CORTEX_M4_SYS_TICK_H

@@ -7,8 +7,7 @@
 // NORDIC Semiconductor
 // nRF51
 
-#ifndef MTL_NRF51_PPI_H
-#define MTL_NRF51_PPI_H
+#pragma once
 
 #include "MTL/Periph.h"
 #include "MTL/nRF51/Irq.h"
@@ -68,4 +67,3 @@ public:
 
 } // namespace MTL
 
-#endif

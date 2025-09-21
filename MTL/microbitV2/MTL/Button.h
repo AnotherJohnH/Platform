@@ -6,8 +6,7 @@
 //! \file Button.h
 //! \brief microbit module buttons
 
-#ifndef MTL_MICROBIT_V2_BUTTON_H
-#define MTL_MICROBIT_V2_BUTTON_H
+#pragma once
 
 #include "MTL/Digital.h"
 
@@ -31,4 +30,3 @@ private:
 
 } // namespace MTL
 
-#endif // MTL_MICROBIT_V2_BUTTON_H

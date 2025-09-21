@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_FBCFILTER_H
-#define SND_FBCFILTER_H
+#pragma once
 
 #include "SND/SND.h"
 
@@ -45,4 +44,3 @@ private:
 
 } // namespace SND
 
-#endif

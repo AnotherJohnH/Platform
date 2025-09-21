@@ -5,8 +5,7 @@
 
 // nRF51
 
-#ifndef MTL_NRF51_IRQ_H
-#define MTL_NRF51_IRQ_H
+#pragma once
 
 namespace MTL {
 
@@ -42,4 +41,3 @@ enum Irq
 
 } // namespace MTL
 
-#endif

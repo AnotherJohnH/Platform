@@ -6,8 +6,7 @@
 //! \file Pin.h
 //! \brief Stub
 
-#ifndef MTL_PINS_H
-#define MTL_PINS_H
+#pragma once
 
 namespace MTL {
 
@@ -18,4 +17,3 @@ static const unsigned PIN_LED4 = 3;
 
 } // namespace MTL
 
-#endif // MTL_PINS_H

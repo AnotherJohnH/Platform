@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_COLOUR_H
-#define STB_COLOUR_H
+#pragma once
 
 #include <cstdint>
 
@@ -71,4 +70,3 @@ struct ColourDecode
 
 } // namespace STB
 
-#endif // STB_COLOUR_H

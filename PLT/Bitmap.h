@@ -6,8 +6,7 @@
 //! \file Bitmap.h
 //! \brief Platform abstraction interface for memory image buffer
 
-#ifndef PLT_BITMAP_H
-#define PLT_BITMAP_H
+#pragma once
 
 #include <stdint.h>
 
@@ -42,4 +41,3 @@ private:
 
 } // namespace PLT
 
-#endif

@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_H
-#define SND_H
+#pragma once
 
 #include "Control.h"
 #include "ControlOp.h"
@@ -30,4 +29,3 @@
 #include "Interface/Microphone.h"
 #include "Interface/Monitor.h"
 
-#endif

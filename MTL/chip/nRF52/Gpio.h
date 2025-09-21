@@ -8,8 +8,7 @@
 //
 // Data source Nordic Semiconductor "nRF52833 specification"
 
-#ifndef MTL_NRF52_GPIO_H
-#define MTL_NRF52_GPIO_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -122,4 +121,3 @@ private:
 
 } // namespace MTL
 
-#endif // MTL_NRF52_GPIO_H

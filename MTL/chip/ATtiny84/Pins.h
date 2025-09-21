@@ -8,8 +8,7 @@
 //
 // Data source Atmel document "doc8006 8-bit AVR Microcontroller ATtiny84"
 
-#ifndef ATTINY84_PINS_H
-#define ATTINY84_PINS_H
+#pragma once
 
 namespace MTL {
 
@@ -32,4 +31,3 @@ static const unsigned  PIN_LED1 = PIN_2;
 
 } // namespace MTL
 
-#endif // ATTINY84_PINS_H

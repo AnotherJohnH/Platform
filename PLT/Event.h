@@ -6,8 +6,7 @@
 //! \file Event.h
 //! \brief Platform abstraction layer for user interface events
 
-#ifndef PLT_EVENT_H
-#define PLT_EVENT_H
+#pragma once
 
 #include <cstdint>
 
@@ -96,4 +95,3 @@ void setTimer(unsigned period_ms);
 
 } // namespace PLT
 
-#endif // PLT_EVENT_H

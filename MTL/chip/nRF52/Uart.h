@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef MTL_NRF52_UART_H
-#define MTL_NRF52_UART_H
+#pragma once
 
 #include "MTL/Periph.h"
 #include "MTL/nRF52/Pins.h"
@@ -171,4 +170,3 @@ using Uart1 = UartInstance<0x40028000,PIN_RXD,PIN_TXD,PIN_CTS,PIN_RTS>;
 
 } // namespace MTL
 
-#endif

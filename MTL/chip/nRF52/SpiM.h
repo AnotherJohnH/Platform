@@ -9,8 +9,7 @@
 // SPI Master peripheral
 //
 
-#ifndef MTL_NRF52_SPI_M_H
-#define MTL_NRF52_SPI_M_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -142,4 +141,3 @@ using SpiM3 = SpiMInstance<0x4002F000,PIN_SCK,PIN_MOSI,PIN_MISO>;
 
 } // namespace MTL
 
-#endif

@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_TREE_H
-#define STB_TREE_H
+#pragma once
 
 namespace STB {
 
@@ -51,4 +50,3 @@ protected:
 
 } // namespace STB
 
-#endif

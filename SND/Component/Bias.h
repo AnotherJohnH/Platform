@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_BIAS_H
-#define SND_BIAS_H
+#pragma once
 
 #include "SND/SignalOp.h"
 
@@ -26,4 +25,3 @@ private:
 
 } // namespace SND
 
-#endif

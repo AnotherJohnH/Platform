@@ -6,8 +6,7 @@
 //! \file Http.h
 //! \brief HTTP client
 
-#ifndef STB_HTTP_H
-#define STB_HTTP_H
+#pragma once
 
 #include <cstdlib>
 #include <cstdint>
@@ -181,4 +180,3 @@ private:
 
 } // namespace PLT
 
-#endif

@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_VECTOR_OPTION_H
-#define STB_VECTOR_OPTION_H
+#pragma once
 
 #include <vector>
 
@@ -38,4 +37,3 @@ private:
 
 } // namespace STB
 
-#endif

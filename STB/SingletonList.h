@@ -5,8 +5,7 @@
 
 // \brief A list of elements that are in a singleton list
 
-#ifndef STB_SINGLETON_LIST_H
-#define STB_SINGLETON_LIST_H
+#pragma once
 
 namespace STB {
 
@@ -72,4 +71,3 @@ private:
 
 } // namespace STB
 
-#endif

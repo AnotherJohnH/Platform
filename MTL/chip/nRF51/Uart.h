@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef MTL_NRF51_UART_H
-#define MTL_NRF51_UART_H
+#pragma once
 
 #include "MTL/Periph.h"
 #include "MTL/nRF51/Gpio.h"
@@ -124,4 +123,3 @@ public:
 
 } // namespace MTL
 
-#endif

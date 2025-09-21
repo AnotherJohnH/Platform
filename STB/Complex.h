@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_COMPLEX_H
-#define STB_COMPLEX_H
+#pragma once
 
 #include <cstdio>
 #include <cmath>
@@ -94,4 +93,3 @@ inline void print(FILE* fp, const STB::Complex64& value)
 
 } // namespace STB
 
-#endif // STB_COMPLEX_H

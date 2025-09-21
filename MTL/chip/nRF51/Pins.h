@@ -8,8 +8,7 @@
 //
 // Data source Nordic Semiconductor "nRF51 Series Reference Manual Version 3.0"
 
-#ifndef MTL_NRF51_PINS_H
-#define MTL_NRF51_PINS_H
+#pragma once
 
 namespace MTL {
 
@@ -51,4 +50,3 @@ static const unsigned  PIN_30  = 0x1E;
 
 } // namespace MTL
 
-#endif // MTL_NRF51_PINS_H

@@ -6,8 +6,7 @@
 //! \file Sounder.h
 //! \brief Platform abstraction interface for simple "beep" audio hardware
 
-#ifndef PLT_SOUNDER_H
-#define PLT_SOUNDER_H
+#pragma once
 
 //! Platform abstraction layer
 namespace PLT {
@@ -30,4 +29,3 @@ public:
 
 } // namespace PLT
 
-#endif // PLT_SOUNDER_H

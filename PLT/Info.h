@@ -6,8 +6,7 @@
 //! \file Info.h
 //! \brief Platform abstraction layer for system information
 
-#ifndef PLT_INFO_H
-#define PLT_INFO_H
+#pragma once
 
 #include <cstdint>
 
@@ -36,4 +35,3 @@ int32_t get(Value type);
 
 } // namespace PLT
 
-#endif // PLT_INFO_H

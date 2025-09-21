@@ -5,8 +5,7 @@
 
 // XXX Not quite JSON no numbers or bools
 
-#ifndef STB_JSON_H
-#define STB_JSON_H
+#pragma once
 
 #include "STB/Lex.h"
 
@@ -294,4 +293,3 @@ private:
 
 } // namespace JSON
 
-#endif

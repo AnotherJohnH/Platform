@@ -10,8 +10,7 @@
 //   Pad 14 is image => 150 ohm
 //
 
-#ifndef MTL_MICROBIT_V2_PAL_VIDEO_H
-#define MTL_MICROBIT_V2_PAL_VIDEO_H
+#pragma once
 
 #include "MTL/PixelGen.h"
 #include "MTL/Digital.h"
@@ -290,4 +289,3 @@ private:
 
 } // namespace MTL
 
-#endif

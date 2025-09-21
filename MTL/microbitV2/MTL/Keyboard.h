@@ -6,8 +6,7 @@
 //! \file  Keyboard.h
 //! \brief micro::bit V2 module PS/2 keyboard interface
 
-#ifndef MTL_MICROBIT_V2_KEYBOARD_H
-#define MTL_MICROBIT_V2_KEYBOARD_H
+#pragma once
 
 #include "STB/Fifo.h"
 
@@ -110,4 +109,3 @@ private:
 
 } // namespace MTL
 
-#endif // MTL_MICROBIT_V2_KEYBOARD_H

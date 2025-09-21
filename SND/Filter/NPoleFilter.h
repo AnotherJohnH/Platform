@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_N_POLE_FILTER_H
-#define SND_N_POLE_FILTER_H
+#pragma once
 
 #include <array>
 
@@ -46,4 +45,3 @@ private:
 
 } // namespace SND
 
-#endif

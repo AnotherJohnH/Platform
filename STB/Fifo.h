@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_FIFO_H
-#define STB_FIFO_H
+#pragma once
 
 #include <cassert>
 #include <cstddef>
@@ -109,4 +108,3 @@ private:
 
 } // namespace STB
 
-#endif

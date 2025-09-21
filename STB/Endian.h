@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_ENDIAN_H
-#define STB_ENDIAN_H
+#pragma once
 
 #include <cstdint>
 
@@ -148,4 +147,3 @@ public:
 
 } // namespace STB
 
-#endif

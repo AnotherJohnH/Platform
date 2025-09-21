@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_MICROPHONE_H
-#define SND_MICROPHONE_H
+#pragma once
 
 #include <cassert>
 
@@ -64,4 +63,3 @@ private:
 
 } // namespace SND
 
-#endif

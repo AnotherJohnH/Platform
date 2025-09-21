@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_ADDITIVE_OSC_H
-#define SND_ADDITIVE_OSC_H
+#pragma once
 
 #include "WaveTableOsc.h"
 
@@ -56,4 +55,3 @@ private:
 
 } // namespace SND
 
-#endif

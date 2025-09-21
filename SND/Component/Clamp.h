@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_CLAMP_H
-#define SND_CLAMP_H
+#pragma once
 
 #include "SND/Control.h"
 #include "SND/SignalOp.h"
@@ -44,4 +43,3 @@ private:
 
 } // namespace SND
 
-#endif

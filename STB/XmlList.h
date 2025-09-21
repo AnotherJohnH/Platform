@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef XML_LIST_H
-#define XML_LIST_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -99,4 +98,3 @@ private:
 
 } // namespace XML
 
-#endif

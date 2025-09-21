@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_CSV_H
-#define STB_CSV_H
+#pragma once
 
 #include <cassert>
 #include <cstdio>
@@ -186,4 +185,3 @@ public:
 
 } // namespace STB
 
-#endif // STB_CSV_H

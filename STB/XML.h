@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef XML_H
-#define XML_H
+#pragma once
 
 #include "STB/Lex.h"
 
@@ -511,4 +510,3 @@ private:
 
 } // namespace XML
 
-#endif

@@ -9,8 +9,7 @@
 // Non-volatile memory controller
 //
 
-#ifndef MTL_NRF52_NVMC_H
-#define MTL_NRF52_NVMC_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -57,4 +56,3 @@ public:
 
 } // namespace MTL
 
-#endif

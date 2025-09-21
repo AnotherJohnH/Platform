@@ -5,8 +5,7 @@
 
 // nRF51
 
-#ifndef MTL_NRF51_SPI_SLAVE_H
-#define MTL_NRF51_SPI_SLAVE_H
+#pragma once
 
 #include "MTL/Periph.h"
 #include "MTL/Gpio.h"
@@ -122,4 +121,3 @@ public:
 
 } // namespace MTL
 
-#endif

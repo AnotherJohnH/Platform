@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_DELAY_H
-#define SND_DELAY_H
+#pragma once
 
 #include <vector>
 
@@ -62,4 +61,3 @@ private:
 
 } // namespace SND
 
-#endif

@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_PULSE_OSC_H
-#define SND_PULSE_OSC_H
+#pragma once
 
 #include "Osc.h"
 
@@ -48,4 +47,3 @@ private:
 
 } // namespace SND
 
-#endif

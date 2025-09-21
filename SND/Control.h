@@ -5,8 +5,7 @@
 
 // Control signal support
 
-#ifndef SND_CONTROL_H
-#define SND_CONTROL_H
+#pragma once
 
 
 #include <cassert>
@@ -185,4 +184,3 @@ public:
 
 } // namespace SND
 
-#endif

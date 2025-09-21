@@ -8,8 +8,7 @@
 //
 // Data source Atmel document ""
 
-#ifndef ATTINY_GPIO_H
-#define ATTINY_GPIO_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -87,4 +86,3 @@ private:
 
 } // namespace MTL
 
-#endif // ATTINY_GPIO_H

@@ -9,8 +9,7 @@
 // Timer peripheral
 //
 
-#ifndef MTL_NRF51_TIMER_H
-#define MTL_NRF51_TIMER_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -227,4 +226,3 @@ public:
 
 } // namespace MTL
 
-#endif

@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_OIL_H
-#define STB_OIL_H
+#pragma once
 
 #include <vector>
 #include <typeinfo>
@@ -278,4 +277,3 @@ private:
 #define  EOIL(C) } C ## _class;
 
 
-#endif

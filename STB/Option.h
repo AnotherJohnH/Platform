@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_OPTION_H
-#define STB_OPTION_H
+#pragma once
 
 #include <cstdio>
 #include <cstring>
@@ -180,4 +179,3 @@ private:
 
 } // namespace STB
 
-#endif

@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_DEFLATE_H
-#define STB_DEFLATE_H
+#pragma once
 
 #include <cstdint>
 #include <string>
@@ -33,4 +32,3 @@ private:
 
 } // namespace STB
 
-#endif

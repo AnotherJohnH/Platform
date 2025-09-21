@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef PLT_KEY_CODE_H
-#define PLT_KEY_CODE_H
+#pragma once
 
 #include <cstdint>
 
@@ -103,4 +102,3 @@ inline uint8_t shiftKeyCode(uint8_t base_key, bool ansi = true)
 
 } // namespace PLT
 
-#endif // PLT_KEY_CODE_H

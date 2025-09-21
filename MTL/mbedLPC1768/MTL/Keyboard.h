@@ -6,8 +6,7 @@
 // \file Keyboard.h
 // \brief
 
-#ifndef LPC1768_KEYBOARD_H
-#define LPC1768_KEYBOARD_H
+#pragma once
 
 
 #include "MTL/chip/LPC1768/SSP.h"
@@ -54,4 +53,3 @@ public:
 
 } // namespace MTL
 
-#endif // LPC1768_KEYBOARD_H

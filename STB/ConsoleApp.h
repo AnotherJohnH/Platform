@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_CONSOLE_APP_H
-#define STB_CONSOLE_APP_H
+#pragma once
 
 #include <cstdarg>
 #include <cstdio>
@@ -209,4 +208,3 @@ public:
 
 } // namespace STB
 
-#endif

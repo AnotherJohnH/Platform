@@ -9,8 +9,7 @@
 // PWM peripheral
 //
 
-#ifndef MTL_NRF52_PWM_H
-#define MTL_NRF52_PWM_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -123,4 +122,3 @@ using Pwm3 = PwmInstance<0x4002D000,IRQ_PWM_3,PIN>;
 
 } // namespace MTL
 
-#endif

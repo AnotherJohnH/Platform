@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_SMALL_LEX_H
-#define STB_SMALL_LEX_H
+#pragma once
 
 #include <cctype>
 #include <string>
@@ -269,4 +268,3 @@ private:
 
 } // namespace STB
 
-#endif

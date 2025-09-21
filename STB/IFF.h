@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_IFF_H
-#define STB_IFF_H
+#pragma once
 
 #include <cassert>
 #include <cstdint>
@@ -396,4 +395,3 @@ private:
 
 } // namespace STB
 
-#endif // STB_IFF_H

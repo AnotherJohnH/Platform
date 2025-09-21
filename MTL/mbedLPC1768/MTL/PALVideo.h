@@ -12,8 +12,7 @@
 //   Pad  6 => Pad 16  (SPI select)
 //   Pad  7 => Pad 13  (pixel clock)
 
-#ifndef LPC1768_PAL_VIDEO_H
-#define LPC1768_PAL_VIDEO_H
+#pragma once
 
 
 #include "MTL/chip/LPC1768/PWM.h"
@@ -252,4 +251,3 @@ public:
 
 } // namespace MTL
 
-#endif // LPC1768_PAL_VIDEO_H

@@ -13,8 +13,7 @@
 
 #include "MTL/Periph.h"
 
-#ifndef MTL_NRF51_GPIO_TE_H
-#define MTL_NRF51_GPIO_TE_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -69,4 +68,3 @@ public:
 
 } // namespace MTL
 
-#endif // MTL_NRF51_GPIO_TE_H

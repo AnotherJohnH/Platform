@@ -13,8 +13,7 @@
 //   SignalPort   - A signal interconnect
 
 
-#ifndef SND_SIGNAL_H
-#define SND_SIGNAL_H
+#pragma once
 
 #include <cassert>
 #include <cstdint>
@@ -234,4 +233,3 @@ inline void SignalIn::operator=(SignalPort& port)
 
 } // namespace SND
 
-#endif

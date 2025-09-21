@@ -6,8 +6,7 @@
 //! \file Frame.h
 //! \brief Platform abstraction interface for raw frame buffer
 
-#ifndef PLT_FRAME_H
-#define PLT_FRAME_H
+#pragma once
 
 #include <cstdint>
 #include <cassert>
@@ -137,4 +136,3 @@ private:
 
 } // namespace PLT
 
-#endif

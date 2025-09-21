@@ -6,8 +6,7 @@
 //! \file File.h
 //! \brief Platform abstraction interface for file I/O
 
-#ifndef PLT_FILE_H
-#define PLT_FILE_H
+#pragma once
 
 #include <cstddef>
 #include <stdarg.h>
@@ -96,4 +95,3 @@ private:
 
 } // namespace STB 
 
-#endif // PLT_FILE_H

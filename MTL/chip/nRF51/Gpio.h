@@ -8,8 +8,7 @@
 //
 // Data source Nordic Semiconductor "nRF51 Series Reference Manual Version 3.0"
 
-#ifndef MTL_NRF51_GPIO_H
-#define MTL_NRF51_GPIO_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -120,4 +119,3 @@ private:
 
 } // namespace MTL
 
-#endif // MTL_NRF51_GPIO_H

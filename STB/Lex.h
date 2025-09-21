@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_LEX_H
-#define STB_LEX_H
+#pragma once
 
 #include <string>
 #include <cstdint>
@@ -642,4 +641,3 @@ private:
 } // namsepace STB
 
 
-#endif

@@ -5,8 +5,7 @@
 
 // Functions f(t) for some common waveforms were 0.0 <= t <= 1.0
 
-#ifndef STB_WAVEFORM_H
-#define STB_WAVEFORM_H
+#pragma once
 
 #include <cmath>
 
@@ -56,4 +55,3 @@ inline double cosine(double t)
 
 } // namespace STB
 
-#endif

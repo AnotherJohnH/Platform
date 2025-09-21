@@ -6,8 +6,7 @@
 //! \file Socket.h
 //! \brief Platform abstraction interface for network I/O
 
-#ifndef PLT_SOCKET_H
-#define PLT_SOCKET_H
+#pragma once
 
 #include <cstddef>
 
@@ -81,4 +80,3 @@ private:
 
 } // namespace PLT
 
-#endif

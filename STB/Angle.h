@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_ANGLE_H
-#define STB_ANGLE_H
+#pragma once
 
 #include <cassert>
 #include <cmath>
@@ -159,4 +158,3 @@ private:
 
 } // namespace STB
 
-#endif // STB_ANGLE_H

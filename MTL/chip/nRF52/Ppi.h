@@ -9,8 +9,7 @@
 // PPI peripheral
 //
 
-#ifndef MTL_NRF52_PPI_H
-#define MTL_NRF52_PPI_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -92,4 +91,3 @@ private:
 
 } // namespace MTL
 
-#endif

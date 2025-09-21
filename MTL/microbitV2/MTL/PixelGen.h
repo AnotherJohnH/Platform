@@ -6,8 +6,7 @@
 //! \file  PixelGen.h
 //! \brief Pixel stream generator for micro::bit V2
 
-#ifndef MTL_MICROBIT_V2_PIXEL_GEN_H
-#define MTL_MICROBIT_V2_PIXEL_GEN_H
+#pragma once
 
 #include  <cstring>
 
@@ -122,4 +121,3 @@ private:
 
 } // namespace MTL
 
-#endif // MTL_MICROBIT_V2_PIXELGEN_H

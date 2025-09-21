@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef SND_MONITOR_H
-#define SND_MONITOR_H
+#pragma once
 
 #include "PLT/Audio.h"
 #include "SND/Signal.h"
@@ -62,4 +61,3 @@ private:
 
 } // namespace SND
 
-#endif

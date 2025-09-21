@@ -6,8 +6,7 @@
 //! \file  NVIC.h
 //! \brief Access to Cortex-M4 NVIC
 
-#ifndef CORTEX_M4_NVIC_H
-#define CORTEX_M4_NVIC_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -85,4 +84,3 @@ public:
 
 } // namespace MTL
 
-#endif // CORTEX_M4_NVIC_H

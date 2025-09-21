@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_ARCXX_H
-#define STB_ARCXX_H
+#pragma once
 
 #include <cstdint>
 #include <cstring>
@@ -43,4 +42,3 @@ private:
 
 } // namespace STB
 
-#endif

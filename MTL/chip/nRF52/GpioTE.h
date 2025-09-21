@@ -9,8 +9,7 @@
 // GPIO-TE peripheral
 //
 
-#ifndef MTL_NRF52_GPIO_TE_H
-#define MTL_NRF52_GPIO_TE_H
+#pragma once
 
 #include "MTL/Periph.h"
 #include "MTL/nRF52/Irq.h"
@@ -120,4 +119,3 @@ private:
 
 } // namespace MTL
 
-#endif

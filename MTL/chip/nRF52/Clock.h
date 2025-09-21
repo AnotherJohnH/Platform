@@ -9,8 +9,7 @@
 // Clock control
 //
 
-#ifndef MTL_NRF52_CLOCK_H
-#define MTL_NRF52_CLOCK_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -68,4 +67,3 @@ private:
 
 } // namespace MTL
 
-#endif

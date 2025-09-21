@@ -9,8 +9,7 @@
 // Timer peripheral
 //
 
-#ifndef MTL_NRF52_TIMER_H
-#define MTL_NRF52_TIMER_H
+#pragma once
 
 #include "MTL/Periph.h"
 
@@ -236,4 +235,3 @@ using Timer4 = TimerInstance<0x4001B000,IRQ_TIMER_4>;
 
 } // namespace MTL
 
-#endif

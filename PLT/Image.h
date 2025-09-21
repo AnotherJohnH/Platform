@@ -6,8 +6,7 @@
 //! \file Image.h
 //! \brief Platform specific bitmap image representation
 
-#ifndef PLT_IMAGE_H
-#define PLT_IMAGE_H
+#pragma once
 
 #include <cstdint>
 #include <cassert>
@@ -178,4 +177,3 @@ protected:
 
 } // namespace PLT
 
-#endif

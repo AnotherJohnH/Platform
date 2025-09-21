@@ -6,8 +6,7 @@
 //! \file Rtc.h
 //! \brief Platform abstraction layer for real-time clock
 
-#ifndef PLT_RTC_H
-#define PLT_RTC_H
+#pragma once
 
 #include <cstdint>
 
@@ -42,4 +41,3 @@ bool getEpocTime(Time& epoc_time);
 
 } // namespace PLT
 
-#endif // PLT_RTC_H

@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#ifndef STB_NET_H
-#define STB_NET_H
+#pragma once
 
 namespace STB {
 
@@ -71,4 +70,3 @@ private:
 
 } // namespace STB
 
-#endif

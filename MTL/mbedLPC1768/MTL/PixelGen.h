@@ -6,8 +6,7 @@
 // \file PixelGen.h
 // \brief NXP LPC1768 Generates a stream of pixels using GP DMA and the I2S
 
-#ifndef LPC1768_PIXEL_GEN_H
-#define LPC1768_PIXEL_GEN_H
+#pragma once
 
 #include  <cassert>
 
@@ -186,4 +185,3 @@ public:
 
 } // namespace MTL
 
-#endif // LPC1768_PIXEL_GEN_H
