@@ -18,4 +18,8 @@ target_compile_options(PLT PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:-Werror>")
 
 target_include_directories(PLT PUBLIC ${PLT_TARGET} ..)
 
+if(${PLT_NATIVE})
+
 add_subdirectory(test)
+
+endif()
