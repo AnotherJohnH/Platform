@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #-------------------------------------------------------------------------------
 # Copyright (c) 2023 John D. Haughton
 # SPDX-License-Identifier: MIT
