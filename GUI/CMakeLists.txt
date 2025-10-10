@@ -3,11 +3,7 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-
-if(${PLT_NATIVE})
-
 add_library(GUI STATIC
-            Bitmap/BitmapPNG.cpp
             Bitmap/BitmapStub.cpp
             Font/FontLED11.cpp
             Font/FontLED22.cpp
@@ -21,6 +17,7 @@ target_include_directories(GUI PUBLIC ..)
 
 target_link_libraries(GUI PUBLIC STB PLT)
 
-add_subdirectory(test)
-
+if(${PLT_NATIVE})
+    target_sources(GUI PRIVATE Bitmap/BitmapPNG.cpp)
+    add_subdirectory(test)
 endif()
