@@ -132,7 +132,7 @@ public:
        this->reg->data_cmd = data_cmd;
 
        // Wait for TX_EMPTY
-       while(this->reg->raw_intr_stat & (1 << 4) == 0);
+       while((this->reg->raw_intr_stat & (1 << 4)) == 0);
     }
 
     uint8_t read(bool stop)
@@ -154,10 +154,10 @@ public:
 private:
     static const unsigned I2C_FREQ = 400000;
 
-    bool isRxFIFOfull()  const { return this->reg->status & (1 << 4) != 0; }
-    bool isRxFIFOempty() const { return this->reg->status & (1 << 3) == 0; }
-    bool isTxFIFOempty() const { return this->reg->status & (1 << 2) != 0; }
-    bool isTxFIFOfull()  const { return this->reg->status & (1 << 1) == 0; }
+    bool isRxFIFOfull()  const { return (this->reg->status & (1 << 4)) != 0; }
+    bool isRxFIFOempty() const { return (this->reg->status & (1 << 3)) == 0; }
+    bool isTxFIFOempty() const { return (this->reg->status & (1 << 2)) != 0; }
+    bool isTxFIFOfull()  const { return (this->reg->status & (1 << 1)) == 0; }
 };
 
 #if defined(MTL_RP2040)
