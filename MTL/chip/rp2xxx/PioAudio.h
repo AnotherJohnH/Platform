@@ -29,7 +29,7 @@ public:
       if (pin_mclk != PIN_IGNORE)
       {
           // Setup MCLK
-          sd_clk = clk.download(pio, sample_freq * 256, pin_mclk);
+          sd_clk = clk.download(sample_freq * 256, pin_mclk);
           if (sd_clk < 0) return;
       }
 
@@ -61,11 +61,11 @@ public:
    }
 
 private:
-   PIO_TYPE      pio;
-   MTL::PioClock clk;
-   MTL::PioI2S   i2s;
-   signed        sd_clk{-1};
-   signed        sd_i2s{-1};
+   PIO_TYPE                pio;
+   MTL::PioClock<PIO_TYPE> clk;
+   MTL::PioI2S             i2s;
+   signed                  sd_clk{-1};
+   signed                  sd_i2s{-1};
 };
 
 } // namespace MTL
