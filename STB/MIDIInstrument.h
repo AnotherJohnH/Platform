@@ -9,6 +9,8 @@
 
 namespace MIDI {
 
+class Interface;
+
 //! MIDI instrument base class
 class Instrument
 {
@@ -19,6 +21,11 @@ public:
    {
       for(unsigned i = 0; i < num_voices; ++i)
          setVoiceState(i, FREE);
+   }
+
+   void setInterface(Interface* interface_)
+   {
+      interface = interface_;
    }
 
    bool isAnyVoiceOn() const { return getOnVoices() != 0; }
@@ -298,7 +305,8 @@ protected:
       setVoiceState(voice_, FREE);
    }
 
-   uint8_t num_voices;
+   Interface* interface{};
+   uint8_t    num_voices;
 
 private:
    using State = uint8_t;

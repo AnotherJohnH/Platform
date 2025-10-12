@@ -11,7 +11,7 @@
 
 namespace MIDI {
 
-//! Interface between a MIDI stream and a MIDI instrument
+//! Interface between a MIDI stream and MIDI instruments
 class Interface
 {
 public:
@@ -26,8 +26,10 @@ public:
    //! Assign an instrument to all channels in this interface
    void attachInstrument(MIDI::Instrument& instrument_)
    {
-      for(unsigned chan = 0; chan < NUM_CHAN; ++chan)
-         inst_map[chan] = &instrument_;
+      for(unsigned chan = 1; chan <= NUM_CHAN; ++chan)
+      {
+         attachInstrument(chan, instrument_);
+      }
    }
 
    //! Assign an instrument to a specific channel in this interface
@@ -37,6 +39,8 @@ public:
          return;
 
       inst_map[chan_ - 1] = &instrument_;
+
+      instrument_.setInterface(this);
    }
 
    //! Enable console debug
@@ -109,6 +113,15 @@ public:
 
    //! Sent next byte to out stream
    virtual void tx(uint8_t byte) = 0;
+
+   //! Insert a control change message
+   void controlChange(unsigned chan_, uint8_t ctrl_, uint8_t value_)
+   {
+      MIDI::Instrument* inst = inst_map[chan_ - 1];
+
+      if (inst != nullptr)
+         inst->controlChange(chan_, ctrl_, value_);
+   }
 
 private:
    //! Broadcast SYSEX byte
