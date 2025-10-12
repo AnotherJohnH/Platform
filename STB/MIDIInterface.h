@@ -7,6 +7,7 @@
 
 #include <cstdio>
 
+#include "STB/MIDIconst.h"
 #include "STB/MIDIInstrument.h"
 
 namespace MIDI {
@@ -148,7 +149,7 @@ private:
 
       switch(cmd)
       {
-      case 0x8:
+      case CMD_NOTE_ON:
          {
             uint8_t note     = byte;
             uint8_t velocity = rx();
@@ -158,7 +159,7 @@ private:
          }
          break;
 
-      case 0x9:
+      case CMD_NOTE_OFF:
          {
             uint8_t note     = byte;
             uint8_t velocity = rx();
@@ -168,7 +169,7 @@ private:
          }
          break;
 
-      case 0xA:
+      case CMD_NOTE_PRESSURE:
          {
             uint8_t note  = byte;
             uint8_t level = rx();
@@ -178,7 +179,7 @@ private:
          }
          break;
 
-      case 0xB:
+      case CMD_CONTROL:
          {
             uint8_t ctrl  = byte;
             uint8_t value = rx();
@@ -188,7 +189,7 @@ private:
          }
          break;
 
-      case 0xC:
+      case CMD_PROGRAM:
          {
             uint8_t prog = byte;
             if (debug) printf("CH%u PROG     %3u\n", chan + 1, prog);
@@ -197,7 +198,7 @@ private:
          }
          break;
 
-      case 0xD:
+      case CMD_PRESSURE:
          {
             uint8_t level = byte;
             if (debug) printf("CH%u PRES     %3u\n", chan + 1, level);
@@ -206,7 +207,7 @@ private:
          }
          break;
 
-      case 0xE:
+      case CMD_PITCH_BEND:
          {
             uint8_t lsb   = byte;
             uint8_t msb   = rx();
@@ -222,10 +223,10 @@ private:
    static const unsigned NUM_CHAN = 16;
 
    MIDI::Instrument* inst_map[NUM_CHAN] = {nullptr};
-   unsigned          cmd {0};
-   unsigned          chan {0};
-   bool              in_sysex {false};
-   bool              debug {false};
+   unsigned          cmd{0};
+   unsigned          chan{0};
+   bool              in_sysex{false};
+   bool              debug{false};
 };
 
 } // namespace MIDI
