@@ -13,18 +13,20 @@ MTL::Config::Config()
 {
    MTL::Config& self = *this;
 
+   pin(1, ">(Debug) TX UART");
+
    for(unsigned p = 3; p < NUM_PINS; p += 5)
    {
       pin(p, "gnd");
    }
 
-   pin(30, "run");
+   pin(30, "<run");
    pin(33, "agnd");
-   pin(35, "adc-vref");
-   pin(36, "3v3");
-   pin(37, "3v3-en");
-   pin(39, "vsys");
-   pin(40, "vbus +5v");
+   pin(35, "<adc-vref");
+   pin(36, ">3v3");
+   pin(37, "<3v3-en");
+   pin(39, "<vsys");
+   pin(40, "=vbus +5v");
 }
 
 unsigned MTL::Config::gpioToPin(unsigned gpio_)

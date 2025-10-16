@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <cstring>
 #include <cstdio>
+#include <cstring>
 
 namespace MTL {
 
@@ -34,13 +34,13 @@ public:
    size_t format(char* buffer_, size_t size_) const
    {
       unsigned left_max = 0;
-
       for(unsigned row = 1; row <= (NUM_PINS / 2); ++row)
       {
-          unsigned left_pin = row;
-          size_t len = strlen(get(left_pin));
-          if (len > left_max)
-             left_max = len;
+         unsigned    left_pin = row;
+         const char* dir;
+         size_t      len = strlen(get(left_pin, /* left */ true, dir));
+         if (len > left_max)
+            left_max = len;
       }
 
       char* s     = buffer_;
@@ -48,21 +48,26 @@ public:
 
       s += snprintf(s, end_s - s, "\n");
 
+      writeSpace(s, end_s, left_max);
+      s += snprintf(s, end_s - s, "    +-----------+\n");
+
       for(unsigned row = 1; row <= (NUM_PINS / 2); ++row)
       {
-          unsigned left_pin  = row;
-          unsigned right_pin = NUM_PINS - row + 1;
+         unsigned    lft_pin = row;
+         unsigned    rgt_pin = NUM_PINS - row + 1;
+         const char* lft_dir;
+         const char* rgt_dir;
+         const char* lft_label = get(lft_pin, /* left */ true,  lft_dir);
+         const char* rgt_label = get(rgt_pin, /* left */ false, rgt_dir);
 
-          const char* label = get(left_pin);
-          for(unsigned i = 0; i < (left_max - strlen(label)); ++i)
-          {
-             if (s < end_s)
-                *s++ = ' ';
-          }
+         writeSpace(s, end_s, left_max - strlen(lft_label));
 
-          s += snprintf(s, end_s - s, "%s | %2u     %2u | %s\n",
-                        label, left_pin, right_pin, get(right_pin));
+         s += snprintf(s, end_s - s, "%s %s | %2u     %2u | %s %s\n",
+                       lft_label, lft_dir, lft_pin, rgt_pin, rgt_dir, rgt_label);
       }
+
+      writeSpace(s, end_s, left_max);
+      s += snprintf(s, end_s - s, "    +-----------+\n");
 
       return s - buffer_;
    }
@@ -84,20 +89,43 @@ protected:
    }
 
    //! Get the label for the given pin
-   const char* get(unsigned pin_) const
+   const char* get(unsigned pin_, bool left_is_out_, const char*& dir_) const
    {
+      dir_ = "  ";
+
       if ((pin_ < 1) || (pin_ > NUM_PINS))
          return "";
 
-      if (label[pin_] == nullptr)
+      const char* lbl = label[pin_];
+
+      if (lbl == nullptr)
          return "";
 
-      return label[pin_];
+      switch(lbl[0])
+      {
+      case '<': lbl++; dir_ = left_is_out_ ? "->" : "<-"; break;
+      case '>': lbl++; dir_ = left_is_out_ ? "<-" : "->"; break;
+      case '=': lbl++; dir_ = "<>"; break;
+      default: break;
+      }
+ 
+      return lbl;
    }
 
    static constexpr unsigned NUM_PINS = PINS;
 
 private:
+   static void writeSpace(char*& s_, const char* end_s_, unsigned n_)
+   {
+      for(unsigned i = 0; i < n_; ++i)
+      {
+         if (s_ >= end_s_)
+            break;
+
+         *s_++ = ' ';
+      }
+   }
+
    const char* label[NUM_PINS];
 };
 
