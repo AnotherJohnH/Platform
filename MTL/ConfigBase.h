@@ -106,6 +106,7 @@ protected:
       case '<': lbl++; dir_ = left_is_out_ ? "->" : "<-"; break;
       case '>': lbl++; dir_ = left_is_out_ ? "<-" : "->"; break;
       case '=': lbl++; dir_ = "<>"; break;
+      case '#': lbl++; dir_ = "##"; break;
       default: break;
       }
  
