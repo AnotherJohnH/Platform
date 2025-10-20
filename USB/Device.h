@@ -72,7 +72,78 @@ public:
    }
 
    //! declares interfaces in the config descriptor and assigned end points
-   void linkDescriptors();
+   void linkDescriptors()
+   {
+      if (config_descr.total_length != 0)
+         return;
+
+      uint8_t ep_addr = 1;
+
+      config_descr.num_interfaces = 0;
+      config_descr.total_length   = config_descr.length;
+
+      for(auto& interface : interface_list)
+      {
+         InterfaceDescr* interface_descr{nullptr};
+
+         for(auto& d : interface.descr_list)
+         {
+            config_descr.total_length += d.getLength();
+
+            switch(d.getType())
+            {
+            case TYPE_INTERFACE:
+               interface_descr = (InterfaceDescr*)&d;
+               interface_descr->num_endpoints = 0;
+               interface_descr->number        = config_descr.num_interfaces++;
+               break;
+
+            case TYPE_ENDPOINT:
+               if (interface_descr != nullptr)
+               {
+                  interface_descr->num_endpoints++;
+                  EndPointDescr* endpoint_descr = (EndPointDescr*)&d;
+                  endpoint_descr->addr = (endpoint_descr->addr & 0xF0) | ep_addr;
+
+                  // TODO this should move to set configuration time
+                  buffer_handler[ep_addr] = &interface;
+
+                  ep_addr++;
+               }
+               break;
+
+            default:
+               break;
+            }
+         }
+
+#if 0
+         // Debug
+         for(auto& d : interface.descr_list)
+         {
+            char ch;
+
+            switch(d.getType())
+            {
+            case TYPE_INTERFACE:    ch = 'I'; break;
+            case TYPE_CS_INTERFACE: ch = 'i'; break;
+            case TYPE_ENDPOINT:     ch = 'E'; break;
+            case TYPE_CS_ENDPOINT:  ch = 'e'; break;
+            default:                ch = '?'; break;
+            }
+
+            putchar(ch);
+
+            const uint8_t* r = d.getRaw();
+            for(unsigned i = 0; i < r[0]; ++i)
+            {
+               printf(" %02x", r[i]);
+            }
+            printf("\n");
+         }
+#endif
+      }
+   }
 
 protected:
    DeviceDescr          device_descr{};
@@ -101,79 +172,5 @@ private:
    uint8_t     string_buffer[256];
    Interface*  buffer_handler[16] = {};
 };
-
-
-void Device::linkDescriptors()
-{
-   if (config_descr.total_length != 0)
-      return;
-
-   uint8_t ep_addr = 1;
-
-   config_descr.num_interfaces = 0;
-   config_descr.total_length   = config_descr.length;
-
-   for(auto& interface : interface_list)
-   {
-      InterfaceDescr* interface_descr{nullptr};
-
-      for(auto& d : interface.descr_list)
-      {
-         config_descr.total_length += d.getLength();
-
-         switch(d.getType())
-         {
-         case TYPE_INTERFACE:
-            interface_descr = (InterfaceDescr*)&d;
-            interface_descr->num_endpoints = 0;
-            interface_descr->number        = config_descr.num_interfaces++;
-            break;
-
-         case TYPE_ENDPOINT:
-            if (interface_descr != nullptr)
-            {
-               interface_descr->num_endpoints++;
-               EndPointDescr* endpoint_descr = (EndPointDescr*)&d;
-               endpoint_descr->addr = (endpoint_descr->addr & 0xF0) | ep_addr;
-
-               // TODO this should move to set configuration time
-               buffer_handler[ep_addr] = &interface;
-
-               ep_addr++;
-            }
-            break;
-
-         default:
-            break;
-         }
-      }
-
-#if 0
-      // Debug
-      for(auto& d : interface.descr_list)
-      {
-         char ch;
-
-         switch(d.getType())
-         {
-         case TYPE_INTERFACE:    ch = 'I'; break;
-         case TYPE_CS_INTERFACE: ch = 'i'; break;
-         case TYPE_ENDPOINT:     ch = 'E'; break;
-         case TYPE_CS_ENDPOINT:  ch = 'e'; break;
-         default:                ch = '?'; break;
-         }
-
-         putchar(ch);
-
-         const uint8_t* r = d.getRaw();
-         for(unsigned i = 0; i < r[0]; ++i)
-         {
-            printf(" %02x", r[i]);
-         }
-         printf("\n");
-      }
-#endif
-   }
-}
 
 } // namespace USB

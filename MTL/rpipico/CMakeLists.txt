@@ -8,6 +8,7 @@ add_library(MTL STATIC
             MTL/chip/vector_table_core0.s
             MTL/chip/vector_table_core1.s
             MTL/chip/fault_handler.cpp
+            MTL/chip/Dma.cpp
             MTL/chip/Uart.cpp
             MTL/chip/MTL_init.cpp
             MTL/chip/MTL_start_core.cpp

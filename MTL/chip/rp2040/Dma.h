@@ -163,6 +163,4 @@ private:
    static uint8_t free_channel;
 };
 
-uint8_t Dma::free_channel = 0;
-
 } // namespace MTL
