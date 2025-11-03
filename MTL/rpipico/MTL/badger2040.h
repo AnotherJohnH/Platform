@@ -30,6 +30,10 @@ static const unsigned PIN_SW_UP      = rp2040::IO_PIN_15;
 static const unsigned PIN_SW_USR     = rp2040::IO_PIN_23;
 static const unsigned PIN_USER_LED   = rp2040::IO_PIN_25;
 static const unsigned PIN_VREF_PWR   = rp2040::IO_PIN_27;
+static const unsigned PIN_EPAPER_DC  = rp2040::IO_PIN_20;
+static const unsigned PIN_EPAPER_CS  = rp2040::IO_PIN_17;
+static const unsigned PIN_EPAPER_RST = rp2040::IO_PIN_21;
+static const unsigned PIN_EPAPER_BSY = rp2040::IO_PIN_26;
 
 static const unsigned ADC_CHAN_VREF  = 2;
 static const unsigned ADC_CHAN_VBAT  = 3;
@@ -37,13 +41,15 @@ static const unsigned ADC_CHAN_VBAT  = 3;
 static const unsigned VREF_MILLIVOLT = 1240;
 static const unsigned VBAT_SCALE     = 3;
 
+using EPAPER_SPI = Spi0_ALT2;
+
 using EPaper = EPaper_UC8151</* WIDTH  */ 296,
                              /* HEIGHT */ 128,
-                             /* DC  */ rp2040::IO_PIN_20,
-                             /* CS  */ rp2040::IO_PIN_17,
-                             /* RST */ rp2040::IO_PIN_21,
-                             /* BSY */ rp2040::IO_PIN_26,
-                             Spi0_ALT2>;
+                             /* DC  */ PIN_EPAPER_DC,
+                             /* CS  */ PIN_EPAPER_CS,
+                             /* RST */ PIN_EPAPER_RST,
+                             /* BSY */ PIN_EPAPER_BSY,
+                             EPAPER_SPI>;
 
 using LedUser    = Gpio::Out<1, PIN_USER_LED>;
 using Enable3V3  = Gpio::Out<1, PIN_ENABLE_3V3>;

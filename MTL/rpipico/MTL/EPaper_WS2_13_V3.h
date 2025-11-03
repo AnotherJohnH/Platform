@@ -22,6 +22,13 @@ class EPaper_WS2_13_V3
 public:
    using Canvas = CanvasMono1<EPaper_WS2_13_V3, /* SWAP_XY */ true>;
 
+   static const unsigned PIN_DC  = MTL::PIN_11;
+   static const unsigned PIN_CS  = MTL::PIN_12;
+   static const unsigned PIN_RST = MTL::PIN_16;
+   static const unsigned PIN_BSY = MTL::PIN_17;
+
+   using SPI = Spi1;
+
    EPaper_WS2_13_V3()
    {
       pin_cs  = 1;
@@ -344,11 +351,11 @@ private:
 
    static const unsigned SPI_CLOCK = 4000000; // 4 MHz
 
-   MTL::Digital::Out<MTL::PIN_11> pin_dc;
-   MTL::Digital::Out<MTL::PIN_12> pin_cs;
-   MTL::Digital::Out<MTL::PIN_16> pin_rst;
-   MTL::Digital::In<MTL::PIN_17>  pin_busy;
-   MTL::Spi1                      spi{SPI_CLOCK, /* use_cs */ false, /* use_miso */ false};
+   Digital::Out<PIN_DC>  pin_dc;
+   Digital::Out<PIN_CS>  pin_cs;
+   Digital::Out<PIN_RST> pin_rst;
+   Digital::In<PIN_BSY>  pin_busy;
+   SPI                   spi{SPI_CLOCK, /* use_cs */ false, /* use_miso */ false};
 };
 
-}
+} // namespace MTL

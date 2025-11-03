@@ -40,6 +40,11 @@ class Spi
    : public Periph<SpiReg, BASE_ADDRESS>
 {
 public:
+   static constexpr unsigned PIN_CS   = CS_PIN;
+   static constexpr unsigned PIN_CLK  = CLK_PIN;
+   static constexpr unsigned PIN_MOSI = MOSI_PIN;
+   static constexpr unsigned PIN_MISO = MISO_PIN;
+
    Spi(unsigned freq, bool use_cs = true, bool use_miso = true)
    {
       PadsBank pads_bank;
