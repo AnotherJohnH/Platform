@@ -5,6 +5,7 @@
 
 add_library(GUI STATIC
             Bitmap/BitmapStub.cpp
+            Font/FontLcd.cpp
             Font/FontLED11.cpp
             Font/FontLED22.cpp
             Font/FontNew8.cpp
