@@ -243,12 +243,12 @@ private:
       command(RASET, {b[1], b[0], b[3], b[2]});
 
       // Memory Data Access control
-      static const uint8_t MADCTL_MY  = 0b10000000;
-      static const uint8_t MADCTL_MX  = 0b01000000;
-      static const uint8_t MADCTL_MV  = 0b00100000;
-      static const uint8_t MADCTL_ML  = 0b00010000;
-      static const uint8_t MADCTL_RGB = 0b00001000;
-      static const uint8_t MADCTL_MH  = 0b00000100;
+      const uint8_t MADCTL_MY  = 0b10000000;
+      //const uint8_t MADCTL_MX  = 0b01000000;
+      const uint8_t MADCTL_MV  = 0b00100000;
+      const uint8_t MADCTL_ML  = 0b00010000;
+      //const uint8_t MADCTL_RGB = 0b00001000;
+      //const uint8_t MADCTL_MH  = 0b00000100;
 
       // Swap XY and reverse page and line address order
       command(MADCTL, {MADCTL_MY | MADCTL_MV | MADCTL_ML});

@@ -12,6 +12,7 @@
 #include "MTL/rp2040/Adc.h"
 #include "MTL/rp2040/Pwm.h"
 #include "MTL/rp2040/Gpio.h"
+#include "MTL/rp2040/I2C.h"
 
 #include "MTL/Lcd_ST7789V.h"
 
@@ -24,10 +25,13 @@ static const unsigned PIN_SW_A       = rp2040::IO_PIN_7;
 static const unsigned PIN_SW_B       = rp2040::IO_PIN_8;
 static const unsigned PIN_SW_C       = rp2040::IO_PIN_9;
 static const unsigned PIN_SW_UP      = rp2040::IO_PIN_22;
+static const unsigned PIN_SW_USR     = rp2040::IO_PIN_23;
 static const unsigned PIN_USER_LED   = rp2040::IO_PIN_25;
 static const unsigned PIN_SENSOR_PWR = rp2040::IO_PIN_27;
 
-static const unsigned ADC_CHAN_LUX = 0;
+static const unsigned ADC_CHAN_LUX  = 0;
+static const unsigned ADC_CHAN_VREF = 2;
+static const unsigned ADC_CHAN_VBAT = 3;
 
 using Lcd = Lcd_ST7789V</* CS */ rp2040::IO_PIN_10,
                         /* DC */ rp2040::IO_PIN_11,
@@ -40,11 +44,17 @@ using LedUser    = Gpio::Out<1, PIN_USER_LED>;
 using PwrLux     = Gpio::Out<1, PIN_SENSOR_PWR>;
 using PwmLedUser = Pwm<PIN_USER_LED>;
 
-using SwitchUp = Gpio::In<1, PIN_SW_UP, PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
-using SwitchDn = Gpio::In<1, PIN_SW_DN, PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
-using SwitchA  = Gpio::In<1, PIN_SW_A,  PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
-using SwitchB  = Gpio::In<1, PIN_SW_B,  PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
-using SwitchC  = Gpio::In<1, PIN_SW_C,  PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
+using SwitchUp  = Gpio::In<1, PIN_SW_UP,  PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
+using SwitchDn  = Gpio::In<1, PIN_SW_DN,  PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
+using SwitchA   = Gpio::In<1, PIN_SW_A,   PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
+using SwitchB   = Gpio::In<1, PIN_SW_B,   PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
+using SwitchC   = Gpio::In<1, PIN_SW_C,   PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
+using SwitchUsr = Gpio::In<1, PIN_SW_USR, PadsBank::PULL_DOWN, /* schmitt trigger */ true>;
+
+using AdcVRef = Adc<ADC_CHAN_VREF>;
+using AdcVBat = Adc<ADC_CHAN_VBAT>;
+
+using I2C_QwSt = I2C0_P6_P7;
 
 } // namespace tufty2040
 
