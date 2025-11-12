@@ -9,6 +9,9 @@
 
 #include "MTL/Periph.h"
 
+#include "MTL/core/NVIC.h"
+
+#include "Irq.h"
 #include "IoBank.h"
 #include "PadsBank.h"
 #include "Sio.h"
@@ -75,7 +78,7 @@ template <unsigned WIDTH,
 class In
 {
 public:
-   In()
+   In(bool enable_irq_ = false)
    {
       PadsBank pads_bank;
       IoBank   io_bank;
@@ -86,13 +89,32 @@ public:
       {
          io_bank.setFunc(PIN + i, IoBank::SIO);
 
+         if (enable_irq_)
+            io_bank.enableIRQ(PIN + i);
+
          pads_bank.setIn(PIN + i, PULL, SCHMITT_TRIGGER);
       }
+
+       if (enable_irq_)
+       {
+          // Enable IO_BANK0 interrupt
+          MTL::NVIC<IRQ_IO_BANK0>().enable();
+       }
    }
 
    operator uint32_t() const
    {
       return (sio.reg->gpio_in >> PIN) & MASK;
+   }
+
+   void ackIRQ()
+   {
+      IoBank io_bank;
+
+      for(unsigned i = 0; i < WIDTH; ++i)
+      {
+         io_bank.ackIRQ(PIN + i);
+      }
    }
 
 private:

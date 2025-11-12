@@ -78,6 +78,18 @@ public:
       reg->gpio[io_pin].ctrl = func;
       pads.unisolate(io_pin);
    }
+
+   //! Enable edge low and edge high interrupts
+   void enableIRQ(unsigned io_pin)
+   {
+      reg->proc0_inte[io_pin / 8] = 0b1100 << (io_pin * 4);
+   }
+
+   //! Acknoweldge edge low and edge high interrupts
+   void ackIRQ(unsigned io_pin)
+   {
+      reg->intr[io_pin / 8] = 0b1100 << (io_pin * 4);
+   }
 };
 
 } // namespace MTL

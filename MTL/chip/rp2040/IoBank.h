@@ -58,6 +58,26 @@ public:
       pads.set(io_pin, PadsBank::IE | pad_ctrl);
       reg->gpio[io_pin].ctrl = func;
    }
+
+   //! Enable edge low and edge high interrupts
+   void enableIRQ(unsigned io_pin)
+   {
+      unsigned shift = (io_pin % 8) * 4;
+      unsigned index = io_pin / 8;
+      uint32_t mask  = ~(0b1111 << shift);
+
+      reg->proc0_inte[index] = (reg->proc0_inte[index] & mask) | (0b1100 << shift);
+   }
+
+   //! Acknoweldge edge low and edge high interrupts
+   void ackIRQ(unsigned io_pin)
+   {
+      unsigned shift = (io_pin % 8) * 4;
+      unsigned index = io_pin / 8;
+      uint32_t mask  = ~(0b1111 << shift);
+
+      reg->intr[index] = (reg->intr[index] & mask) | (0b1100 << shift);
+   }
 };
 
 } // namespace MTL
