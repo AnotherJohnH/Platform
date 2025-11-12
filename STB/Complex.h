@@ -14,7 +14,7 @@ template <class TYPE>
 class Complex
 {
 private:
-   typedef Complex<TYPE> This;
+   using This = Complex<TYPE>;
 
    TYPE  r, i;
 
@@ -83,8 +83,8 @@ public:
    }
 };
 
-typedef Complex<float>   Complex32;
-typedef Complex<double>  Complex64;
+using Complex32 = Complex<float>;
+using Complex64 = Complex<double>;
 
 inline void print(FILE* fp, const STB::Complex64& value)
 {

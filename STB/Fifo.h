@@ -19,10 +19,10 @@ public:
    //------------------------------------------------------------------
    // Member types
 
-   typedef T        value_type;
-   typedef T&       reference;
-   typedef const T& const_reference;
-   typedef size_t   size_type;
+   using value_type      = T;
+   using reference       = T&;
+   using const_reference = const T&;
+   using size_type       = size_t;
 
    //------------------------------------------------------------------
    // Element access
