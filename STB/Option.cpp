@@ -28,6 +28,25 @@ const char* Option<bool>::getValueDescription() const
    return nullptr;
 }
 
+template <>
+bool Option<unsigned>::set(const char* arg_)
+{
+   if(arg_ != nullptr) value = unsigned(strtoul(arg_, nullptr, 0));
+   return true;
+}
+
+template <> void Option<unsigned>::showDefault() const
+{
+   printf(" [%u]", value);
+}
+
+template <>
+const char* Option<unsigned>::getValueDescription() const
+{
+   return "<unsigned>";
+}
+
+
 
 template <>
 bool Option<int32_t>::set(const char* arg_)
@@ -104,25 +123,6 @@ template <>
 const char* Option<uint16_t>::getValueDescription() const
 {
    return "<uint16>";
-}
-
-
-template <>
-bool Option<uint32_t>::set(const char* arg_)
-{
-   if(arg_ != nullptr) value = uint32_t(strtoul(arg_, nullptr, 0));
-   return true;
-}
-
-template <> void Option<uint32_t>::showDefault() const
-{
-   printf(" [%" PRIu32 "]", value);
-}
-
-template <>
-const char* Option<uint32_t>::getValueDescription() const
-{
-   return "<unsigned>";
 }
 
 
