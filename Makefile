@@ -1,5 +1,5 @@
 
-targets = native # rpipico2 rpipico
+targets = native # rp2040 rp2350
 
 all: $(targets)
 

@@ -62,13 +62,13 @@ LPC810:
 LPC1114:
 	@Platform/scripts/build.py LPC1114
 
-.PHONY: rpipico
-rpipico:
-	@Platform/scripts/build.py rpipico
+.PHONY: rp2040
+rp2040:
+	@Platform/scripts/build.py rp2040
 
-.PHONY: rpipico2
-rpipico2:
-	@Platform/scripts/build.py rpipico2
+.PHONY: rp2350
+rp2350:
+	@Platform/scripts/build.py rp2350
 
 .PHONY: tiny2350
 tiny2350:
