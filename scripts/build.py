@@ -80,7 +80,7 @@ def build(target, cmake_opts):
         pathlib.Path(build_dir).mkdir(parents=True, exist_ok=True)
         os.chdir(build_dir)
 
-        cmd = f"cmake -G \"{generator}\" ../.. {cmake_opts} -DPLT_TARGET={target} -DCMAKE_TOOLCHAIN_FILE=Platform/MTL/{target}/toolchain.cmake"
+        cmd = f"cmake -G \"{generator}\" ../.. {cmake_opts} -DPLT_TARGET={target} -DCMAKE_TOOLCHAIN_FILE=Platform/MTL/{target}/target/toolchain.cmake"
 
         if target == "Emscripten":
             cmd = 'source ' + EMSDK_ENV + '; ' + cmd

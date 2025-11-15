@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include "MTL/Pins.h"
-#include "MTL/Gpio.h"
+#include "MTL/chip/Gpio.h"
 
 //! Bare metal layer
 namespace MTL {
