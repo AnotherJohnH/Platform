@@ -10,7 +10,7 @@
 #pragma once
 
 #include "MTL/Periph.h"
-#include "MTL/Pins.h"
+#include "MTL/LPC1768/Pins.h"
 
 namespace MTL {
 

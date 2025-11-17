@@ -13,7 +13,7 @@ static const unsigned TICK_PERIOD_MS = 10;       //!< 10 mS
 
 static MTL::SysTick tick {CLOCK_FREQ * TICK_PERIOD_MS / 1000};
 
-static uint32_t ticks{0};
+static volatile uint32_t ticks{0};
 
 void VEC_sysTick()
 {

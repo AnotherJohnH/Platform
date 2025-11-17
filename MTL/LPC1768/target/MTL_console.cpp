@@ -5,7 +5,7 @@
 
 #include "MTL/MTL.h"
 
-#include "UART.h"
+#include "MTL/LPC1768/UART.h"
 
 static MTL::UART0 uart(MTL::UART::BAUD_9600);
 

@@ -15,7 +15,7 @@
 #pragma once
 
 
-#include "MTL/chip/LPC1768/PWM.h"
+#include "MTL/LPC1768/PWM.h"
 #include "PixelGen.h"
 
 

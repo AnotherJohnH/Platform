@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
-#include "MTL/Config.h"
+#include "MTL/chip/Config.h"
 
 #include "SysTick.h"
 #include "Vector.h"
@@ -23,4 +23,9 @@ void VEC_sysTick()
 uint32_t MTL_clock()
 {
    return ticks;
+}
+
+uint32_t MTL_us_clock()
+{
+   return ticks * 10000;
 }

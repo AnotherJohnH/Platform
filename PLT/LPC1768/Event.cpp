@@ -7,7 +7,7 @@
 
 #include "PLT/Event.h"
 
-#include "MTL/Keyboard.h"
+#include "MTL/LPC1768/Keyboard.h"
 
 namespace PLT {
 

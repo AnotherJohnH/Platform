@@ -3,13 +3,9 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-// \file Keyboard.h
-// \brief
-
 #pragma once
 
-
-#include "MTL/chip/LPC1768/SSP.h"
+#include "MTL/LPC1768/SSP.h"
 #include "MTL/PS2KeyDecode.h"
 
 namespace MTL {
@@ -50,6 +46,4 @@ public:
    }
 };
 
-
 } // namespace MTL
-

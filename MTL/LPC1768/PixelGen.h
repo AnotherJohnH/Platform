@@ -10,8 +10,8 @@
 
 #include  <cassert>
 
-#include "MTL/chip/LPC1768/I2S.h"
-#include "MTL/chip/LPC1768/GPDMA.h"
+#include "MTL/LPC1768/I2S.h"
+#include "MTL/LPC1768/GPDMA.h"
 
 namespace MTL {
 

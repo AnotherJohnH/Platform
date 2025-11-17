@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "MTL/chip/LPC1768/Pins.h"
+#include "MTL/LPC1768/Pins.h"
 
 namespace MTL {
 

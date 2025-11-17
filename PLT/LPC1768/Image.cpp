@@ -9,7 +9,7 @@
 
 #include "PLT/Image.h"
 
-#include "MTL/PALVideo.h"
+#include "MTL/LPC1768/PALVideo.h"
 
 namespace PLT {
 

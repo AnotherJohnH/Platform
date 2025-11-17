@@ -7,7 +7,7 @@
 
 #include "PLT/Frame.h"
 
-#include "MTL/PALVideo.h"
+#include "MTL/LPC1768/PALVideo.h"
 #include "MTL/LPC1768/RAM.h"
 
 #include <cstring>
