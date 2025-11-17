@@ -46,10 +46,6 @@ microbitV1_32k:
 microbitV2:
 	@Platform/scripts/build.py microbitV2
 
-.PHONY: mbedLPC11U24
-mbedLPC11U24:
-	@Platform/scripts/build.py mbedLPC11U24
-
 .PHONY: mbedLPC1768
 mbedLPC1768:
 	@Platform/scripts/build.py mbedLPC1768
@@ -61,6 +57,10 @@ LPC810:
 .PHONY: LPC1114
 LPC1114:
 	@Platform/scripts/build.py LPC1114
+
+.PHONY: LPC11U24
+LPC11U24:
+	@Platform/scripts/build.py LPC11U24
 
 .PHONY: rp2040
 rp2040:

@@ -1,20 +1,13 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2023 John D. Haughton
+// Copyright (c) 2014 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
 
-#include "USART.h"
+#include "MTL/LPC11U24/SysCon.h"
 
-static MTL::USART uart(MTL::USART::BAUD_9600);
-
-void MTL_putch(uint8_t ch)
+void MTL_init()
 {
-   uart.tx(ch);
-}
-
-int MTL_getch()
-{
-   return uart.rx();
+   MTL::SysCon().init();
 }

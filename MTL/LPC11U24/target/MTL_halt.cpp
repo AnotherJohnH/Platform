@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
+#include "MTL/LPC11U24/module/mbed.h"
 #include "MTL/Digital.h"
 
 void MTL_halt(uint32_t status)

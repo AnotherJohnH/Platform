@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "MTL/chip/LPC11U24/Pins.h"
+#include "MTL/LPC11U24/Pins.h"
 
 namespace MTL {
 
