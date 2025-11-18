@@ -4,10 +4,10 @@
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
-            MTL/LPC1114/vector_table.s
-            MTL/LPC1114/MTL_init.cpp
-            MTL/CortexM0/MTL_clock.cpp
-            MTL/CortexM0/MTL_excep.cpp)
+            vector_table.s
+            MTL_init.cpp
+            MTL/core/CortexM0/MTL_clock.cpp
+            MTL/core/CortexM0/MTL_excep.cpp)
 
 target_include_directories(MTL PUBLIC .)
 
