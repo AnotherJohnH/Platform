@@ -6,7 +6,7 @@
 #pragma once
 
 #include "MTL/MTL.h"
-#include "MTL/Pins.h"
+#include "MTL/nRF51/module/microbit.h"
 #include "MTL/nRF51/Gpio.h"
 #include "MTL/nRF51/Timer.h"
 

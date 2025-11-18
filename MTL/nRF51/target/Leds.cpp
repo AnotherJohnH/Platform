@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include "MTL/Leds.h"
+#include "MTL/chip/Leds.h"
 
 const uint8_t MTL::Leds::map[5][5] =
 {

@@ -24,7 +24,7 @@ set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
 
 set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS}")
 
-set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/Platform/MTL/${PLT_TARGET}/script_${PLT_RAM_SIZE}.ld")
+set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/Platform/MTL/${PLT_TARGET}/target/script_${PLT_RAM_SIZE}.ld")
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools

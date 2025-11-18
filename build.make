@@ -30,22 +30,6 @@ native:
 Emscripten:
 	Platform/scripts/build.py Emscripten
 
-.PHONY: microbit
-microbit:
-	@Platform/scripts/build.py microbit
-
-.PHONY: microbitV1
-microbitV1:
-	@Platform/scripts/build.py microbitV1
-
-.PHONY: microbitV1_32k
-microbitV1_32k:
-	@Platform/scripts/build.py microbitV1_32k
-
-.PHONY: microbitV2
-microbitV2:
-	@Platform/scripts/build.py microbitV2
-
 .PHONY: LPC810
 LPC810:
 	@Platform/scripts/build.py LPC810
@@ -61,6 +45,14 @@ LPC11U24:
 .PHONY: LPC1768
 LPC1768:
 	@Platform/scripts/build.py LPC1768
+
+.PHONY: nRF51
+nRF51:
+	@Platform/scripts/build.py nRF51
+
+.PHONY: nRF52
+nRF52:
+	@Platform/scripts/build.py nRF52
 
 .PHONY: rp2040
 rp2040:
