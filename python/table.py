@@ -23,6 +23,10 @@ def signed_max(bits):
    """ Return the maximum signed integer that can be represented by the given number of bits """
    return unsigned_max(bits - 1)
 
+def signed_min(bits):
+   """ Return the minimum signed integer that can be represented by the given number of bits """
+   return -(1 << (bits - 1))
+
 #-------------------------------------------------------------------------------
 
 def hex_fmt(bits):

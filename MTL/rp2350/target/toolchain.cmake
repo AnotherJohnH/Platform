@@ -16,10 +16,9 @@ set(CMAKE_ASM_FLAGS "-mcpu=cortex-m33")
 set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY -DMTL_RP2350 \
 -mcpu=cortex-m33 -mthumb \
 -fno-common -fno-builtin -fmessage-length=0 \
--fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections \
--Wno-volatile")
+-fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
 
-set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti -Wno-volatile ${CMAKE_C_FLAGS}")
 
 set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/Platform/MTL/${PLT_TARGET}/target/script.ld")
 
