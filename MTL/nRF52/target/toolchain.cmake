@@ -16,11 +16,12 @@ set(CMAKE_ASM_FLAGS "-mcpu=cortex-m4")
 set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
 -mcpu=cortex-m4 -mthumb -mfloat-abi=soft \
 -fno-common -fno-builtin -fmessage-length=0 \
--fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
+-fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections \
+-Wno-volatile")
 
 set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS}")
 
-set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/Platform/MTL/${PLT_TARGET}/script_${PLT_RAM_SIZE}.ld")
+set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/Platform/MTL/${PLT_TARGET}/target/script_${PLT_RAM_SIZE}.ld")
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools

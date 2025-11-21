@@ -3,5 +3,5 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-add_executable(testDigital testDigital.cpp)
-target_link_libraries(testDigital PLT)
+#add_executable(testDigital testDigital.cpp)
+#target_link_libraries(testDigital PLT)

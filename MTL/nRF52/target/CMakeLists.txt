@@ -4,11 +4,11 @@
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
+            vector_table.s
+            MTL_init.cpp
             MTL_halt.cpp
-            MTL/nRF52/vector_table.s
-            MTL/nRF52/MTL_init.cpp
-            MTL/CortexM4/MTL_excep.cpp
-            MTL/CortexM4/MTL_clock.cpp)
+            MTL/core/MTL_excep.cpp
+            MTL/core/MTL_clock.cpp)
 
 target_include_directories(MTL PUBLIC .)
 
