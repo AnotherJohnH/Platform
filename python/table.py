@@ -52,7 +52,8 @@ def gen(name,
         log2_size = None,
         size      = None,
         include   = "<cstdint>",
-        fmt       = 'd'):
+        fmt       = 'd',
+        is_const  = True):
    """ Generate a lookup table for the given function """
 
    header      = 'Table_' + name + '.h'
@@ -60,6 +61,9 @@ def gen(name,
    symbol      = 'table_' + name
    symbol_size = 'TABLE_' + name.upper() + '_SIZE'
    symbol_mask = 'TABLE_' + name.upper() + '_MASK'
+
+   if is_const:
+      typename = 'const ' + typename
 
    if log2_size:
       size = 1 << log2_size
@@ -80,7 +84,7 @@ def gen(name,
       f.p(f'static const unsigned {symbol_size}      = {size};')
 
    f.p()
-   f.p(f'extern const {typename} {symbol}[{symbol_size}];')
+   f.p(f'extern {typename} {symbol}[{symbol_size}];')
 
 #-------------------------------------------------------------------------------
 # Write module
@@ -89,7 +93,7 @@ def gen(name,
 
    f.p(f'#include "{header}"')
    f.p()
-   f.p(f'const {typename} {symbol}[{symbol_size}] =')
+   f.p(f'{typename} {symbol}[{symbol_size}] =')
    f.p('{', end = '')
 
    for i in range(0, size):

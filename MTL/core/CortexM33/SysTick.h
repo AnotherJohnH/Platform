@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief Access Cortex-M0 system timer
+//! \brief Access Cortex-M33 system timer
 
 // XXX: This private peripheral is optional
 
