@@ -5,6 +5,8 @@
 
 #include "MTL/MTL.h"
 
+#include "MTL/core/CortexM33/SysCtrlBlk.h"
+
 #include "MTL/rp2350/Clocks.h"
 #include "MTL/rp2350/Resets.h"
 #include "MTL/rp2350/Ticks.h"
@@ -17,6 +19,10 @@ Clocks::SysFreq __attribute__((weak)) clocks_sys_freq = Clocks::SYS_FREQ_150_00_
 
 void MTL_init()
 {
+   MTL::SysCtrlBlk scb;
+
+   scb.enableFP();
+
    // Resets for essential peripherals
    const uint32_t ESSENTIAL_RESETS = MTL::Resets::USBCTRL   |
                                      MTL::Resets::PLL_USB   |

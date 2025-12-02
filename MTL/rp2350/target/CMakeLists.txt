@@ -16,7 +16,7 @@ add_library(MTL STATIC
             ../../core/CortexM33/MTL_excep.cpp
             Config.cpp)
 
-execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=cortex-m33 -print-file-name=libgcc.a OUTPUT_VARIABLE gcc_lib)
+execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -mfloat-abi=hard -print-file-name=libgcc.a OUTPUT_VARIABLE gcc_lib)
 string(STRIP ${gcc_lib} gcc_lib)
 
 target_include_directories(MTL PUBLIC .)

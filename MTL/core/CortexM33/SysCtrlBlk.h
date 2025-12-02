@@ -11,16 +11,18 @@
 
 namespace MTL {
 
-//! Cortex-M0 system timer registers
+//! Cortex-M33 system timer registers
 union SysCtrlBlkReg
 {
-   REG(0x00, cpuid);   //!< CPUID Register
-   REG(0x04, icsr);    //!< Interrupt Control and State Register
-   REG(0x0C, aircr);   //!< Application Interrupt Reset Control Register
-   REG(0x10, scr);     //!< System Control Register
-   REG(0x14, ccr);     //!< Configuration and Control Register
-   REG(0x1C, shpr2);   //!< System Handler Priority Register 2
-   REG(0x20, shpr3);   //!< System handler Priority Register 3
+   REG(0x00, cpuid);   //!< CPUID 
+   REG(0x04, icsr);    //!< Interrupt Control and State 
+   REG(0x08, vtor);    //!< Vector Table Offset
+   REG(0x0C, aircr);   //!< Application Interrupt Reset Control
+   REG(0x10, scr);     //!< System Control
+   REG(0x14, ccr);     //!< Configuration and Control
+   REG(0x1C, shpr2);   //!< System Handler Priority 2
+   REG(0x20, shpr3);   //!< System handler Priority 3
+   REG(0x88, cpacr);   //!< Coprocessor Access Control
 };
 
 //! Access Cortex-M0 system timer
@@ -30,6 +32,15 @@ public:
    bool isSysTickPend() { return reg->icsr.getBit(26); }
    void pendSysTick() { reg->icsr.setBit(26); }
    void clearSysTick() { reg->icsr.setBit(25); }
+
+   void enableFP()
+   {
+       // Set full access in CP11 and CP10
+       reg->cpacr = reg->cpacr | (0b11 << 22) | (0b11 << 20);
+
+       asm("dsb");
+       asm("isb");
+   }
 };
 
 } // namespace MTL

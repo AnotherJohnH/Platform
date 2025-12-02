@@ -14,7 +14,7 @@ set(PLT_MACHINE armv8m)
 set(CMAKE_ASM_FLAGS "-mcpu=cortex-m33")
 
 set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY -DMTL_RP2350 \
--mcpu=cortex-m33 -mthumb \
+-mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb \
 -fno-common -fno-builtin -fmessage-length=0 \
 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
 
