@@ -10,6 +10,8 @@ add_library(TNY STATIC
             atoi.cpp
             atol.cpp
             atoll.cpp
+            cos.c
+            cosf.c
             clock.cpp
             delete.cpp
             exit.cpp
@@ -27,12 +29,17 @@ add_library(TNY STATIC
             isspace.cpp
             malloc.cpp
             memmove.cpp
+            pow.c
+            powf.c
             printf.cpp
             pure_virtual.cpp
             putchar.cpp
             puts.cpp
             rand.cpp
             sin.c
+            sinf.c
+            sqrt.c
+            sqrtf.c
             scanf.cpp
             sleep.cpp
             snprintf.cpp
