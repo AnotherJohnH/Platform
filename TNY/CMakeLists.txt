@@ -15,6 +15,7 @@ add_library(TNY STATIC
             clock.cpp
             delete.cpp
             exit.cpp
+            expf.cpp
             fprintf.cpp
             feof.cpp
             fgetc.cpp

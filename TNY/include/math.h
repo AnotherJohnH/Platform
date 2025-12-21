@@ -29,6 +29,7 @@ float sinf(float);
 float cosf(float);
 float powf(float, float);
 float sqrtf(float);
+float expf(float);
 
 #ifdef __cplusplus
 }
