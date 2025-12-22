@@ -162,6 +162,25 @@ inline bool expect_lt(TYPE_L      left_,
 
 template <typename TYPE_L,
           typename TYPE_R>
+inline bool expect_le(TYPE_L      left_,
+                      TYPE_R      right_,
+                      const char* right_s_,
+                      const char* file_,
+                      size_t      line_)
+{
+   if (TYPE_R(left_) <= right_)
+      return true;
+
+   error(file_, line_);
+
+   std::cout << "Value of " << right_s_ << "\n";
+   std::cout << "Less than: " << left_  << "\n";
+
+   return false;
+}
+
+template <typename TYPE_L,
+          typename TYPE_R>
 inline bool expect_gt(TYPE_L      left_,
                       TYPE_R      right_,
                       const char* right_s_,
@@ -175,6 +194,25 @@ inline bool expect_gt(TYPE_L      left_,
 
    std::cout << "Value of " << right_s_ << "\n";
    std::cout << "Greater or equal to: " << left_  << "\n";
+
+   return false;
+}
+
+template <typename TYPE_L,
+          typename TYPE_R>
+inline bool expect_ge(TYPE_L      left_,
+                      TYPE_R      right_,
+                      const char* right_s_,
+                      const char* file_,
+                      size_t      line_)
+{
+   if (TYPE_R(left_) >= right_)
+      return true;
+
+   error(file_, line_);
+
+   std::cout << "Value of " << right_s_ << "\n";
+   std::cout << "Less than: " << left_  << "\n";
 
    return false;
 }
@@ -211,8 +249,14 @@ inline bool expect_streq(const char* left_,
 #define EXPECT_LT(left, right) \
    TST::pass &= TST::expect_lt(left, right, #right, __FILE__, __LINE__)
 
+#define EXPECT_LE(left, right) \
+   TST::pass &= TST::expect_le(left, right, #right, __FILE__, __LINE__)
+
 #define EXPECT_GT(left, right) \
    TST::pass &= TST::expect_gt(left, right, #right, __FILE__, __LINE__)
+
+#define EXPECT_GE(left, right) \
+   TST::pass &= TST::expect_ge(left, right, #right, __FILE__, __LINE__)
 
 #define EXPECT_TRUE(right) \
    TST::pass &= TST::expect_eq(true, bool(right), #right, __FILE__, __LINE__)
