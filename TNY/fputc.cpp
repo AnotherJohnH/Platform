@@ -9,12 +9,16 @@
 
 #include "MTL/MTL.h"
 
-int fputc(int c, FILE* fp)
+int fputc(int ch, FILE* fp)
 {
-   if (fp == stdout)
+   if ((fp == stdout) || (fp == stderr))
    {
-      MTL_putch(uint8_t(c));
-      return 0;
+      if (ch == '\n')
+      {
+         MTL_putch(uint8_t('\r'));
+      }
+      MTL_putch(uint8_t(ch));
+      return ch;
    }
 
    return -1;

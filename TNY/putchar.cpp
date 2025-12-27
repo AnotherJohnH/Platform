@@ -7,10 +7,12 @@
 
 #include <stdio.h>
 
-#include "MTL/MTL.h"
-
 int putchar(int ch)
 {
+   if (ch == '\n')
+   {
+      MTL_putch(uint8_t('\r'));
+   }
    MTL_putch(uint8_t(ch));
-   return 0;
+   return ch;
 }
