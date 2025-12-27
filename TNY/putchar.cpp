@@ -5,12 +5,17 @@
 
 //! \brief tiny C library implementation
 
-#include <stdio.h>
+#include <cstdio>
+#include <cstdint>
 
 #include "MTL/MTL.h"
 
 int putchar(int ch)
 {
+   if (ch == '\n')
+   {
+      MTL_putch(uint8_t('\r'));
+   }
    MTL_putch(uint8_t(ch));
-   return 0;
+   return ch;
 }
