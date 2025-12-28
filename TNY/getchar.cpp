@@ -5,11 +5,14 @@
 
 //! \brief tiny C library implementation
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "MTL/MTL.h"
 
 int getchar()
 {
-   return MTL_getch();
+   uint8_t ch = MTL_getch();
+   if (ch == '\r')
+      ch = '\n';
+   return ch;
 }

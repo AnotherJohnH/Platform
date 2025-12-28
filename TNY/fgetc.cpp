@@ -5,14 +5,12 @@
 
 //! \brief tiny C library implementation
 
-#include <stdio.h>
-
-#include "MTL/MTL.h"
+#include <cstdio>
 
 int fgetc(FILE* fp)
 {
    if (fp == stdin)
-      return MTL_getch();
+      return getchar();
    
    return -1;
 }

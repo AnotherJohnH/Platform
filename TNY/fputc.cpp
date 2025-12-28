@@ -5,19 +5,13 @@
 
 //! \brief tiny C library implementation
 
-#include <stdio.h>
-
-#include "MTL/MTL.h"
+#include <cstdio>
 
 int fputc(int ch, FILE* fp)
 {
    if ((fp == stdout) || (fp == stderr))
    {
-      if (ch == '\n')
-      {
-         MTL_putch(uint8_t('\r'));
-      }
-      MTL_putch(uint8_t(ch));
+      putchar(ch);
       return ch;
    }
 
