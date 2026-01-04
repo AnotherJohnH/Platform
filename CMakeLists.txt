@@ -66,22 +66,6 @@ else()
 
 endif()
 
-message("--------------------------------------------------------------------------------")
-message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
-message("PLT_COMMIT       = ${PLT_COMMIT}")
-message("PLT_TARGET       = ${PLT_TARGET}")
-message("PLT_MACHINE      = ${PLT_MACHINE}")
-message("--------------------------------------------------------------------------------")
-
-#-------------------------------------------------------------------------------
-
-add_subdirectory(STB)
-add_subdirectory(PLT)
-add_subdirectory(USB)
-
-add_subdirectory(GUI)
-add_subdirectory(TRM)
-
 #-------------------------------------------------------------------------------
 
 function(arcxx name)
@@ -116,3 +100,21 @@ function(autogen_py NAME)
 endfunction()
 
 #-------------------------------------------------------------------------------
+
+message("--------------------------------------------------------------------------------")
+message("CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
+message("PLT_COMMIT       = ${PLT_COMMIT}")
+message("PLT_TARGET       = ${PLT_TARGET}")
+message("PLT_MACHINE      = ${PLT_MACHINE}")
+message("--------------------------------------------------------------------------------")
+
+#-------------------------------------------------------------------------------
+
+add_subdirectory(STB)
+add_subdirectory(PLT)
+add_subdirectory(USB)
+add_subdirectory(SIG)
+
+add_subdirectory(GUI)
+add_subdirectory(TRM)
+
