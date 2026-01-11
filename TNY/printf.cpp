@@ -50,8 +50,7 @@ static void print_i(int value, unsigned base, int width=10, char pad = ' ')
    print_u(value, base, width, pad);
 }
 
-#ifdef FLOAT
-static void print_f(double value, int width, unsigned places)
+static void print_f(float value, int width, unsigned places)
 {
    print_i((int)value, 10, width - places - 1, ' ');
 
@@ -68,7 +67,6 @@ static void print_f(double value, int width, unsigned places)
       print_u(frac, 10, places, '0');
    }
 }
-#endif
 
 int vprintf(const char* format, va_list ap)
 {
@@ -137,11 +135,9 @@ int vprintf(const char* format, va_list ap)
                print_i(va_arg(ap, unsigned), 10, field_width, pad);
                break;
 
-#ifdef FLOAT
             case 'f':
-               print_f(va_arg(ap, double), field_width, places);
+               print_f(float(va_arg(ap, double)), field_width, places);
                break;
-#endif
 
             case 'p':
                print_u((unsigned)va_arg(ap, void*), 16, 8, '0');
