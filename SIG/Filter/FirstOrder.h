@@ -41,7 +41,7 @@ public:
    Signal operator()(Signal x_)
    {
       x[0] = x_;
-      y[0] = b[0] * x[0] + b[1] * x[1] + a[1] * y[1];
+      y[0] = b[0] * x[0] + b[1] * x[1] - a[1] * y[1];
 
       x[1] = x[0];
       y[1] = y[0];
@@ -68,15 +68,15 @@ private:
          break;
 
       case LOPASS:
-         a[1] = alpha;
+         a[1] = -alpha;
          b[0] = 1.0 - alpha;
          b[1] = 0.0;
          break;
 
       case HIPASS:
          a[1] = -alpha;
-         b[0] = alpha;
-         b[1] = -alpha;
+         b[0] = (1.0f + alpha) / 2.0f;
+         b[1] = -b[0];
          break;
       }
    }
