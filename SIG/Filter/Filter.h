@@ -5,7 +5,8 @@
    
 #pragma once
 
+#include "FirstOrder.h"
 #include "BiQuad.h"
+#include "DualBiQuad.h"
 #include "FBComb.h"
 #include "FFComb.h"
-#include "FirstOrder.h"
