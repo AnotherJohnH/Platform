@@ -77,9 +77,9 @@ endfunction()
 #-------------------------------------------------------------------------------
 
 function(autogen_py NAME)
-   set(INPUT_FILE "")
+   set(ARG "")
    if(ARGN)
-      list(GET ARGN 0 INPUT_FILE)
+      list(GET ARGN 0 ARG)
    endif()
 
    add_custom_command(
@@ -88,7 +88,7 @@ function(autogen_py NAME)
       COMMAND
          ${CMAKE_COMMAND}
             -E env PYTHONPATH=${CMAKE_SOURCE_DIR}/Platform/python
-            python3 ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}.py ${INPUT_FILE}
+            python3 ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}.py ${ARG}
       DEPENDS
          ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}.py
          ${INPUT_FILE}

@@ -6,9 +6,10 @@
 # pylint: disable=bad-indentation
 
 import math
+import sys
 import table
 
-SAMPLE_RATE = 48000  # XXX Must match the value in Sample.h
+SAMPLE_RATE = float(sys.argv[1])
 
 def index2freq(index, freq_frac_bits):
    """ Convert table index to freq (Hz) """

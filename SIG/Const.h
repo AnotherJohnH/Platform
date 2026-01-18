@@ -12,10 +12,10 @@ namespace SIG {
 static const SPhase SPHASE_MAX{0x7FFFFFFF};
 static const UPhase UPHASE_MAX{0xFFFFFFFF};
 
-#if defined(SIG_44_1KHz)
-static const Rate SAMPLE_RATE{44100};   //!< 44.1 kHz
+#if defined(SIG_SAMPLE_RATE)
+static const Rate SAMPLE_RATE{SIG_SAMPLE_RATE};
 #else
-static const Rate SAMPLE_RATE{48000};   //!< 48 kHz
+static const Rate SAMPLE_RATE{48000};   //!< 48.0 kHz
 #endif
 
 } // namespace SIG
