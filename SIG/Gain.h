@@ -15,17 +15,17 @@ namespace SIG {
 class Gain
 {
 public:
-   Gain(Signal value_ = 1.0) : value(value_) {}
+   Gain(Signal value_ = 1.0f) : value(value_) {}
 
    //! Set attenuation in dB
    void setAtten_dB(float atten_)
    {
-      signed index = 0x7FFF * atten_ / 60.0;
+      signed index = 0x7FFF * atten_ / 60.0f;
 
       if (index < 0)
-         value = 1.0;
+         value = 1.0f;
       else if (index > 0x7FFF)
-         value = 0.0;
+         value = 0.0f;
       else
          value = table_atten15[index];
    }
@@ -33,7 +33,7 @@ public:
    //! Set gain using a sine panning function [0..1] => [0..1]
    void setPan(Signal pan_)
    {
-      value = sinf(pan_ * float(M_PI) / 2.0f);
+      value = sinf(pan_ * Float(M_PI) / 2.0f);
    }
 
    operator Signal() const { return value; }
@@ -43,7 +43,7 @@ public:
    Signal operator()(Signal in_) { return in_ * value; }
 
 private:
-   Signal value{1.0};
+   Signal value{1.0f};
 };
 
 } // namespace SIG

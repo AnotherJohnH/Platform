@@ -31,9 +31,9 @@ public:
    }
 
    //! Set frequency
-   void setFreq(float freq_hz_)
+   void setFreq(float freq_hz_, unsigned step_freq_ = SAMPLE_RATE)
    {
-      float ratio = freq_hz_ / SAMPLE_RATE;
+      float ratio = freq_hz_ / step_freq_;
 
       setDelta(signal2uphase(ratio * 2.0));
    }

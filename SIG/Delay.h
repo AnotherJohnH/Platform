@@ -9,16 +9,33 @@
 
 namespace SIG {
 
-template <unsigned LENGTH>
 class Delay
 {
 public:
    Delay() = default;
 
-   Signal operator()() const
+   Signal operator()() const { return prev; }
+
+   void operator=(Signal x_) { prev = x_; }
+
+   Signal operator()(Signal x_)
    {
-      return buffer[index];
+      Signal y = prev;
+      prev = x_;
+      return y;
    }
+
+private:
+   Signal prev{0.0f};
+};
+
+template <unsigned LENGTH>
+class DelayN
+{
+public:
+   DelayN() = default;
+
+   Signal operator()() const { return buffer[index]; }
 
    void operator=(Signal x_)
    {
@@ -38,8 +55,8 @@ public:
    }
 
 private:
-   unsigned index{};
-   Signal   buffer[LENGTH];
+   unsigned index{0};
+   Signal   buffer[LENGTH] = {};
 };
 
 } // namespace SIG

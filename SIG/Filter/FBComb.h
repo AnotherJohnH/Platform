@@ -27,7 +27,7 @@ public:
    Gain alpha{};
 
 private:
-   Delay<1> delay;
+   Delay delay;
 };
 
 } // namespace SIG

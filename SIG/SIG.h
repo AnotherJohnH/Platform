@@ -12,4 +12,6 @@
 #include "Env/Env.h"
 #include "Filter/Filter.h"
 #include "Gain.h"
+#include "ExpSlew.h"
+#include "LinSlew.h"
 #include "Osc/Osc.h"
