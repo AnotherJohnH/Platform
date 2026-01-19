@@ -53,11 +53,17 @@ public:
    }
 
    //! Set exponential frequency detune relatine to MIDI note
-   void setDetune(float detune_)
+   void setDetune(Float detune_)
    {
       exp_freq_detune = signed(detune_ * EXP_FREQ_SCALE);
       updateExpFreq();
    }
+
+   //! Get the current phase
+   UPhase getPhase() const { return phase; }
+
+   //! Set the current phase
+   void setPhase(UPhase phase_) { phase = phase_; }
 
 protected:
    //! Calculate delta for a frequency modulation input

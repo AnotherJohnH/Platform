@@ -12,7 +12,10 @@ namespace SIG {
 class LinSlew
 {
 public:
-   LinSlew() = default;
+   LinSlew(unsigned rate_ = SAMPLE_RATE)
+   {
+      setUpdateRate(rate_);
+   }
 
    //! Set rate of target updates (Hz)
    void setUpdateRate(unsigned rate_)
@@ -45,6 +48,12 @@ public:
    {
       value += delta;
       return value;
+   }
+
+   //! Multiply by current value
+   Signal operator()(Signal in_)
+   {
+      return in_ * operator()();
    }
 
 private:

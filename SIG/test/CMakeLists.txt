@@ -3,11 +3,12 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-if(${PLT_TARGET} STREQUAL native)
+if(${PLT_NATIVE})
 
    add_executable(testSIG
                   testMain.cpp
-                  testOsc.cpp)
+                  testOsc.cpp
+                  testEnv.cpp)
 
    target_link_libraries(testSIG SIG STB)
 

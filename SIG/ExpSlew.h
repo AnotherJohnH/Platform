@@ -14,10 +14,13 @@ namespace SIG {
 class ExpSlew
 {
 public:
-   ExpSlew() = default;
+   ExpSlew(Float tc_ = 1.0f)
+   {
+      setTimeConst(tc_);
+   }
 
    //! Set time constant (s)
-   void setTimeConst(float time_)
+   void setTimeConst(Float time_)
    {
       alpha = 1.0f - expf(-1.0f / (time_ * SAMPLE_RATE));
    }
@@ -46,6 +49,12 @@ public:
    {
       value += alpha * (target - value);
       return value;
+   }
+
+   //! Multiply by current value
+   Signal operator()(Signal in_)
+   {
+      return in_ * operator()();
    }
 
 private:

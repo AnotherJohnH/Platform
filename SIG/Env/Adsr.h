@@ -5,11 +5,9 @@
    
 #pragma once
 
-#include "Table_amp15.h"
-
 #include "SIG/Types.h"
 
-namespace SIG {
+namespace SIG::Env {
 
 class Adsr
 {
@@ -102,18 +100,22 @@ public:
 
       if (rate <= 0)
       {
-         if (level >= target)
-            return table_amp15[level >> 8];
+         if (level < target)
+         {
+            level = target;
+            setPhase(EnvPhase(phase + 1));
+         }
       }
       else
       {
-         if (level < target)
-            return table_amp15[level >> 8];
+         if (level >= target)
+         {
+            level = target;
+            setPhase(EnvPhase(phase + 1));
+         }
       }
 
-      level = target;
-      setPhase(EnvPhase(phase + 1));
-      return table_amp15[level >> 8];
+      return dBatten15_2signal(0x7FFF - (level >> 8));
    }
 
 private:
@@ -149,4 +151,4 @@ private:
    int32_t  phase_samples[NUM_PHASES] = {};
 };
 
-} // namespace SIG
+} // namespace SIG::Env
