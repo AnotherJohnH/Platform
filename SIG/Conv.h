@@ -2,7 +2,7 @@
 // Copyright (c) 2025 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
-   
+
 #pragma once
 
 #include <cmath>
@@ -10,7 +10,7 @@
 #include "SIG/Types.h"
 #include "SIG/Const.h"
 
-#include "Table_atten15.h"
+#include "Table_gain.h"
 
 namespace SIG {
 
@@ -32,36 +32,48 @@ inline Phase uphase2float(UPhase uphase_)
    return Phase(uphase_ >> 1) / 0x80000000;
 }
 
+//! Convert a 15-bit signed integer gain dB to a linear value
+//! -0x6000 => is  -inf dB    0.0         Hard mute
+//! -0x5FFF => is ~ -60 dB   ~0.001
+//! -0x4000 => is   -40 dB    0.01
+//! -0x2000 => is   -20 dB    0.1
+//!  0x0000 => is     0 dB    1.0
+//!  0x1FFF => is ~ +20 dB  ~10.0
+inline Signal dBGainLookup_15(signed gain15_)
+{
+   constexpr Float    TABLE_STEP_PER_DB = TABLE_GAIN_SIZE / (GAIN_MAX_DB - GAIN_MIN_DB);
+   constexpr signed   INDEX_ZERO_DB     = -GAIN_MIN_DB * TABLE_STEP_PER_DB;
+   constexpr unsigned GAIN_SHIFT        = 15 - LOG2_TABLE_GAIN_SIZE;
+
+   signed index = INDEX_ZERO_DB + (gain15_ >> GAIN_SHIFT);
+
+   if (index < 0)
+      index = 0;
+   else if (index >= TABLE_GAIN_SIZE)
+      index = TABLE_GAIN_SIZE - 1;
+
+   return table_gain[index];
+}
+
+//! Convert a gain -60..0..+20 (dB) to a linear value 0.001..1.0..10.0
+inline Signal dBGainLookup(Float gain_)
+{
+   constexpr Float GAIN15_STEP_PER_DB = (1 << 15) / (GAIN_MAX_DB - GAIN_MIN_DB);
+
+   signed gain15 = signed(gain_ * GAIN15_STEP_PER_DB + 0.5f);
+
+   return dBGainLookup_15(gain15);
+}
+
 //! Convert a 7-bit integer attenuation (dB) to a linear value
-//! 0x00 =>    0 dB   ( 1.0)
-//! 0x7E =>  -60 dB   (~0.0)
-//! 0x7F => -inf dB   ( 0.0)
-inline Signal dBatten7_2signal(uint8_t atten7_)
+//! 0x00 =>     0 dB   ( 1.000)
+//! 0x7E => ~ -60 dB   (~0.001)
+//! 0x7F =>  -inf dB   ( 0.000)
+inline Signal dBAttenLookup_7(uint8_t atten7_)
 {
-   return table_atten15[(atten7_ << 8) | (atten7_ << 1) | (atten7_ >> 6)];
-}
+   signed gain15 = -atten7_ * (GAIN15_60_DB / 0x7E); // Fudged to make 0x7F -> 0.0
 
-//! Convert a 15-bit integer attenuation to a linear value
-//! 0x0000 =>    0 dB   ( 1.0)
-//! 0x7FFE =>  -60 dB   (~0.0)
-//! 0x7FFF => -inf dB   ( 0.0)
-inline Signal dBatten15_2signal(unsigned atten15_)
-{
-   return table_atten15[atten15_];
-}
-
-//! Convert an attenuation (dB) to a linear value
-//! Any atten_ above 60 dB will be infinity e.g. return 0.0
-inline Signal dBatten2signal(Float atten_)
-{
-   signed index15 = 0x7FFF * atten_ / 60.0f;
-
-   if (index15 < 0)
-      return 1.0f;
-   else if (index15 > 0x7FFF)
-      return 0.0f;
-
-   return dBatten15_2signal(index15);
+   return dBGainLookup_15(gain15);
 }
 
 //! Convert a pan to signal using a sine panning function

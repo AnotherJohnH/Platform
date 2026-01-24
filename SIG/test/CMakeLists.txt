@@ -7,6 +7,7 @@ if(${PLT_NATIVE})
 
    add_executable(testSIG
                   testMain.cpp
+                  testConv.cpp
                   testOsc.cpp
                   testEnv.cpp)
 

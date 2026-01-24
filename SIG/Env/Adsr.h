@@ -115,17 +115,17 @@ public:
          }
       }
 
-      return dBatten15_2signal(0x7FFF - (level >> 8));
+      return dBGainLookup_15((level - MAX) >> 8);
    }
 
 private:
-   static constexpr int32_t MAX = 0x7FFFFF;
+   static constexpr int32_t MAX = 0x5FFFFF;
 
    enum EnvPhase { OFF, ATTACK, DECAY, SUSTAIN, RELEASE, NUM_PHASES };
 
    static int32_t scaleLevel(uint8_t level7_)
    {
-      return (level7_ << 16) | (level7_ << 9) | (level7_ << 2) | (level7_ >> 5);
+      return level7_ * MAX / 0x7F;
    }
 
    void setPhase(EnvPhase phase_)
