@@ -29,7 +29,7 @@ def delta_fn32(i, _):
    ratio = index2freq(i, FREQ_FRAC_BITS) / SAMPLE_RATE
    return int(ratio * (1 << 32) + 0.5)
 
-table.gen('delta14_7',
+table.gen('note',
           func      = delta_fn32,
           typename  = 'uint32_t',
           log2_size = 14,

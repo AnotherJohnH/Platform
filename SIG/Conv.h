@@ -11,6 +11,7 @@
 #include "SIG/Const.h"
 
 #include "Table_gain.h"
+#include "Table_note.h"
 
 namespace SIG {
 
@@ -31,6 +32,26 @@ inline Phase uphase2float(UPhase uphase_)
 {
    return Phase(uphase_ >> 1) / 0x80000000;
 }
+
+
+//! Convert MIDI note with 7 bit frac to a phase increment for the current SIG::SAMPLE_RATE
+//!   0.0 C-2 =>     8.18 Hz
+//!  69.0 A4  =>   440.00 Hz
+//! 127.0 G9  => 12543.85 Hz
+inline UPhase noteLookup_7(unsigned note_7_)
+{
+   return table_note[note_7_];
+}
+
+//! Convert MIDI note to a phase increment for the current SIG::SAMPLE_RATE
+//!   0 C-2 =>     8.18 Hz
+//!  69 A4  =>   440.00 Hz
+//! 127 G9  => 12543.85 Hz
+inline UPhase noteLookup(uint8_t note_, uint8_t frac7_ = 0)
+{
+   return noteLookup_7((note_ << 7) | frac7_);
+}
+
 
 //! Convert a 15-bit signed integer gain dB to a linear value
 //! -0x6000 => is  -inf dB    0.0         Hard mute

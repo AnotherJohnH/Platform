@@ -7,8 +7,6 @@
 
 #include "SIG/Types.h"
 
-#include "Table_delta14_7.h"
-
 namespace SIG {
 
 namespace Osc {
@@ -28,6 +26,13 @@ public:
    void sync()
    {
       phase = 0;
+   }
+
+   //! Set phase increment delta
+   void setDelta(UPhase delta_)
+   {
+      delta = delta_;
+      dt    = uphase2float(delta_);
    }
 
    //! Set frequency
@@ -69,13 +74,7 @@ protected:
    //! Calculate delta for a frequency modulation input
    uint32_t modDelta(Signal mod_)
    {
-      return table_delta14_7[exp_freq + signed(EXP_FREQ_SCALE * mod_)];
-   }
-
-   void setDelta(UPhase delta_)
-   {
-      delta = delta_;
-      dt    = uphase2float(delta_);
+      return noteLookup_7(exp_freq + signed(EXP_FREQ_SCALE * mod_));
    }
 
    //! Polynomial to pre-filter hard edges in waveforms in the range [-dt, dt]
@@ -105,7 +104,7 @@ private:
    void updateExpFreq()
    {
       exp_freq = (midi_note << EXP_FREQ_FRAC_BITS) + exp_freq_detune;
-      setDelta(table_delta14_7[exp_freq]);
+      setDelta(noteLookup_7(exp_freq));
    }
 
    static const unsigned EXP_FREQ_FRAC_BITS = 7;
