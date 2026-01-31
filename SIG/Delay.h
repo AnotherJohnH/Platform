@@ -41,7 +41,7 @@ public:
    {
       buffer[index] = x_;
 
-      if (++index > LENGTH)
+      if (++index >= LENGTH)
          index = 0;
    }
 
