@@ -25,6 +25,7 @@ double cos(double);
 double pow(double, double);
 double sqrt(double);
 
+float fabsf(float);
 float sinf(float);
 float cosf(float);
 float powf(float, float);

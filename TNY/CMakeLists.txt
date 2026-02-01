@@ -16,6 +16,7 @@ add_library(TNY STATIC
             delete.cpp
             exit.cpp
             expf.cpp
+            fabsf.cpp
             fprintf.cpp
             feof.cpp
             fgetc.cpp
