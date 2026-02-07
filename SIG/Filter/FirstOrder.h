@@ -40,8 +40,10 @@ public:
 
    Signal operator()(Signal x_)
    {
+      const Coef& c = coef[ping_pong];
+
       x[0] = x_;
-      y[0] = b[0] * x[0] + b[1] * x[1] - a[1] * y[1];
+      y[0] = c.b0 * x[0] + c.b1 * x[1] - c.a1 * y[1];
 
       x[1] = x[0];
       y[1] = y[0];
@@ -52,50 +54,62 @@ public:
 private:
    void computeCoef()
    {
+      unsigned next = ping_pong ^ 1;
+      Coef&    c    = coef[next];
+
       switch(type)
       {
       default:
       case OFF:
-         a[1] = 0;
-         b[0] = 0;
-         b[1] = 0;
+         c.a1 = 0.0f;
+         c.b0 = 0.0f;
+         c.b1 = 0.0f;
          break;
 
       case BYPASS:
-         a[1] = 0;
-         b[0] = 1;
-         b[1] = 0;
+         c.a1 = 0.0f;
+         c.b0 = 1.0f;
+         c.b1 = 0.0f;
          break;
 
       case LOPASS:
-         a[1] = -alpha;
-         b[0] = 1.0 - alpha;
-         b[1] = 0.0;
+         c.a1 = -alpha;
+         c.b0 = 1.0f - alpha;
+         c.b1 = 0.0f;
          break;
 
       case HIPASS:
-         a[1] = -alpha;
-         b[0] = (1.0f + alpha) / 2.0f;
-         b[1] = -b[0];
+         c.a1 = -alpha;
+         c.b0 = (1.0f + alpha) / 2.0f;
+         c.b1 = -c.b0;
          break;
       }
+
+      ping_pong = next;
    }
 
+   struct Coef
+   {
+      Float a1{};
+      Float b0{};
+      Float b1{};
+   };
+
    const float W0_1HZ{2 * M_PI / SAMPLE_RATE};  //!< Angular frequency for 1Hz
+
+   // Signal pipeline
+   Signal x[2] = {}; //!< Input
+   Signal y[2] = {}; //!< Output
+
+   // Coefficients
+   Coef             coef[2];
+   volatile uint8_t ping_pong{0};
 
    // Configuration
    Type type{OFF};
 
    // Derived configuration
    float alpha{};
-
-   // Coefficients
-   float a[2] = {};
-   float b[2] = {};
-
-   // Signal pipeline
-   Signal x[2] = {}; //!< Input
-   Signal y[2] = {}; //!< Output
 };
 
 } // namespace Filter
