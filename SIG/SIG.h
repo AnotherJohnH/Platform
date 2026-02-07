@@ -9,6 +9,7 @@
 #include "Const.h"
 #include "Conv.h"
 #include "Delay.h"
+#include "DelayV.h"
 #include "Env/Env.h"
 #include "Filter/Filter.h"
 #include "Gain.h"
