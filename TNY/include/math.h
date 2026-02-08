@@ -24,6 +24,7 @@ double sin(double);
 double cos(double);
 double pow(double, double);
 double sqrt(double);
+double tanh(double);
 
 float fabsf(float);
 float sinf(float);
@@ -31,6 +32,7 @@ float cosf(float);
 float powf(float, float);
 float sqrtf(float);
 float expf(float);
+float tanhf(float);
 
 #ifdef __cplusplus
 }

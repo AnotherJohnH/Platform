@@ -6,6 +6,7 @@
 #pragma once
 
 #include "Types.h"
+#include "Clip/Clip.h"
 #include "Const.h"
 #include "Conv.h"
 #include "Delay.h"

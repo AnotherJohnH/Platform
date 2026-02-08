@@ -60,6 +60,7 @@ add_library(TNY STATIC
             strtoul.cpp
             strtoull.cpp
             system.cpp
+            tanhf.c
             time.cpp
             usleep.cpp
             vfprintf.cpp

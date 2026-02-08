@@ -21,7 +21,7 @@ public:
 
    Signal operator()()
    {
-      float theta = uphase2signal(phase) * M_PI;
+      float theta = uphase2signal(phase) * float(M_PI);
 
       phase += delta;
 
@@ -30,7 +30,7 @@ public:
 
    Signal operator()(Signal mod_)
    {
-      float theta = uphase2signal(phase) * M_PI;
+      float theta = uphase2signal(phase) * float(M_PI);
 
       phase += modDelta(mod_);
 

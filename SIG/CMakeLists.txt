@@ -11,10 +11,12 @@ message("SIG_GAIN_LOG2_SIZE = ${SIG_GAIN_LOG2_SIZE}")
 
 autogen_py(Table_note ${SIG_SAMPLE_RATE})
 autogen_py(Table_gain ${SIG_GAIN_LOG2_SIZE})
+autogen_py(Table_clip_tanh)
 
 add_library(SIG STATIC
             Table_note.cpp
-            Table_gain.cpp)
+            Table_gain.cpp
+            Table_clip_tanh.cpp)
 
 target_include_directories(SIG PUBLIC .. ${CMAKE_CURRENT_BINARY_DIR})
 
