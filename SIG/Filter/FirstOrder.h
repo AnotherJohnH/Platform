@@ -20,6 +20,7 @@ public:
    FirstOrder(Type type_ = BYPASS)
    {
       setType(type_);
+      zero();
    }
 
    void setType(Type type_)
@@ -36,6 +37,12 @@ public:
       alpha = expf(-w0);
 
       computeCoef();
+   }
+
+   //! Reset filter state to zero
+   void zero()
+   {
+      x[1] = y[1] = 0.f;
    }
 
    Signal operator()(Signal x_)
@@ -61,26 +68,26 @@ private:
       {
       default:
       case OFF:
-         c.a1 = 0.0f;
-         c.b0 = 0.0f;
-         c.b1 = 0.0f;
+         c.a1 = 0.f;
+         c.b0 = 0.f;
+         c.b1 = 0.f;
          break;
 
       case BYPASS:
-         c.a1 = 0.0f;
-         c.b0 = 1.0f;
-         c.b1 = 0.0f;
+         c.a1 = 0.f;
+         c.b0 = 1.f;
+         c.b1 = 0.f;
          break;
 
       case LOPASS:
          c.a1 = -alpha;
-         c.b0 = 1.0f - alpha;
-         c.b1 = 0.0f;
+         c.b0 = 1.f - alpha;
+         c.b1 = 0.f;
          break;
 
       case HIPASS:
          c.a1 = -alpha;
-         c.b0 = (1.0f + alpha) / 2.0f;
+         c.b0 = (1.f + alpha) / 2.f;
          c.b1 = -c.b0;
          break;
       }
@@ -95,7 +102,7 @@ private:
       Float b1{};
    };
 
-   const float W0_1HZ{2 * M_PI / SAMPLE_RATE};  //!< Angular frequency for 1Hz
+   const float W0_1HZ{2.f * M_PI / SAMPLE_RATE};  //!< Angular frequency for 1Hz
 
    // Signal pipeline
    Signal x[2] = {}; //!< Input

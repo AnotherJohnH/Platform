@@ -94,8 +94,8 @@ protected:
       return 0.0f;
    }
 
-   UPhase phase{0}; //!< UPhase     (x2pi) Q0.32
-   UPhase delta{0}; //!< UPhase inc (x2pi) Q0.32
+   volatile UPhase phase{0}; //!< UPhase     (x2pi) Q0.32
+   volatile UPhase delta{0}; //!< UPhase inc (x2pi) Q0.32
 
    static const UPhase UPHASE_QUARTER = 0x40000000;
    static const UPhase UPHASE_HALF    = UPHASE_QUARTER * 2;

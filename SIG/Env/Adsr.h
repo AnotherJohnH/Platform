@@ -14,8 +14,8 @@ class Adsr
 public:
    Adsr()
    {
-      phase_rate[OFF]      = 0;
-      phase_level[OFF]     = 0;
+      phase_rate[MUTE]     = 0;
+      phase_level[MUTE]    = 0;
 
       phase_rate[ATTACK]   = MAX;
       phase_level[ATTACK]  = MAX;
@@ -30,7 +30,7 @@ public:
       phase_level[RELEASE] = 0;
    }
 
-   bool isOff() const { return phase == OFF; }
+   bool isOff() const { return (phase == MUTE) || (phase == RELEASE); }
 
    void setAttack_mS(unsigned time_ms_)
    {
@@ -91,7 +91,7 @@ public:
    //! Gate off
    void off() { setPhase(RELEASE); }
 
-   void mute() { setPhase(OFF); }
+   void mute() { setPhase(MUTE); }
 
    //! Return next envelope sample
    Signal operator()()
@@ -118,10 +118,16 @@ public:
       return dBGainLookup_15((level - MAX) >> 8);
    }
 
+   //! Apply envelope to a signal
+   Signal operator()(Signal in_)
+   {
+      return operator()() * in_;
+   }
+
 private:
    static constexpr int32_t MAX = 0x5FFFFF;
 
-   enum EnvPhase { OFF, ATTACK, DECAY, SUSTAIN, RELEASE, NUM_PHASES };
+   enum EnvPhase { MUTE, ATTACK, DECAY, SUSTAIN, RELEASE, NUM_PHASES };
 
    static int32_t scaleLevel(uint8_t level7_)
    {
@@ -132,7 +138,7 @@ private:
    {
       if (phase_ == NUM_PHASES)
       {
-         phase_ = OFF;
+         phase_ = MUTE;
       }
 
       phase   = phase_;
@@ -141,7 +147,7 @@ private:
       samples = phase_samples[phase];
    }
 
-   EnvPhase phase{OFF};
+   EnvPhase phase{MUTE};
    int32_t  level{0};
    int32_t  rate{0};
    int32_t  target{0};
