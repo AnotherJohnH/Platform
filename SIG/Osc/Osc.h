@@ -9,6 +9,7 @@
 #include "Pulse.h"
 #include "Pwm.h"
 #include "Ramp.h"
+#include "Random.h"
 #include "Sine.h"
 #include "Square.h"
 #include "Triangle.h"

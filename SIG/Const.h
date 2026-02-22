@@ -9,21 +9,24 @@
 
 namespace SIG {
 
-static const SPhase SPHASE_MAX{0x7FFFFFFF};
-static const UPhase UPHASE_MAX{0xFFFFFFFF};
+inline constexpr SPhase SPHASE_MAX{0x7FFFFFFF};
+inline constexpr UPhase UPHASE_MAX{0xFFFFFFFF};
+
+inline constexpr UPhase UPHASE_QUARTER{0x40000000};
+inline constexpr UPhase UPHASE_HALF{UPHASE_QUARTER * 2};
 
 #if defined(SIG_SAMPLE_RATE)
-static const Rate SAMPLE_RATE{SIG_SAMPLE_RATE};
+inline constexpr Rate SAMPLE_RATE{SIG_SAMPLE_RATE};
 #else
-static const Rate SAMPLE_RATE{48000};   //!< 48.0 kHz
+inline constexpr Rate SAMPLE_RATE{48000};   //!< 48.0 kHz
 #endif
 
-constexpr Float GAIN_MAX_DB = +20.0f;
-constexpr Float GAIN_MIN_DB = -60.0f;
+inline constexpr Float GAIN_MAX_DB = +20.0f;
+inline constexpr Float GAIN_MIN_DB = -60.0f;
 
-constexpr signed GAIN15_60_DB = 0x6000;
-constexpr signed GAIN15_40_DB = 0x4000;
-constexpr signed GAIN15_20_DB = 0x2000;
-constexpr signed GAIN15_0_DB  = 0x0000;
+inline constexpr signed GAIN15_60_DB = 0x6000;
+inline constexpr signed GAIN15_40_DB = 0x4000;
+inline constexpr signed GAIN15_20_DB = 0x2000;
+inline constexpr signed GAIN15_0_DB  = 0x0000;
 
 } // namespace SIG
