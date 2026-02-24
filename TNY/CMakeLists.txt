@@ -29,10 +29,11 @@ add_library(TNY STATIC
             isalpha.cpp
             isdigit.cpp
             isspace.cpp
+            logf.cpp
             malloc.cpp
             memmove.cpp
             pow.c
-            powf.c
+            powf.cpp
             printf.cpp
             pure_virtual.cpp
             putchar.cpp

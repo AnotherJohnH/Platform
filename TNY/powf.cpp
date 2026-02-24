@@ -7,7 +7,10 @@
 
 #include <math.h>
 
-float powf(float x_, float y_)
+float powf(float x, float y)
 {
-   return 0.0;
+   if (x <= 0.0f)
+       return 0.0f;
+
+   return expf(y * logf(x));
 }
