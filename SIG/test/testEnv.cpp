@@ -15,7 +15,7 @@ TEST(SIG_env, adsr)
 
    env.setAttack_mS(5);
    env.setDecay_mS(10);
-   env.setSustain(0x40);
+   env.setSustain(uint8_t(0x40));
    env.setRelease_mS(15);
 
    env.on();

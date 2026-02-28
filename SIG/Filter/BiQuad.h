@@ -2,6 +2,14 @@
 // Copyright (c) 2025 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
+
+// Transfer function...
+//
+//                     -1      -2
+//            b0 + b1.z  + b2.z
+//   H(z) = ----------------------
+//                     -1      -2
+//             1 + a1.z  + a2.z
    
 #pragma once
 
@@ -157,6 +165,7 @@ private:
 
    struct Coef
    {
+      // Float a0{}; has been normalized away to 1
       Float a1{};
       Float a2{};
       Float b0{};

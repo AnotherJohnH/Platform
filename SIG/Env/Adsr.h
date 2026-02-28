@@ -56,16 +56,12 @@ public:
 
    void setSustain(uint8_t level7_)
    {
-      phase_level[DECAY] = phase_level[SUSTAIN] = scaleLevel(level7_);
+      setSustain(scaleLevel(level7_));
+   }
 
-      if (phase == DECAY)
-      {
-         target = phase_level[SUSTAIN];
-      }
-      else if (phase == SUSTAIN)
-      {
-         level = target = phase_level[SUSTAIN];
-      }
+   void setSustain(SIG::Float level_)
+   {
+      setSustain(int32_t(level_ * MAX));
    }
 
    void setSustain_mS(unsigned time_ms_)
@@ -128,6 +124,20 @@ private:
    static constexpr int32_t MAX = 0x5FFFFF;
 
    enum EnvPhase { MUTE, ATTACK, DECAY, SUSTAIN, RELEASE, NUM_PHASES };
+
+   void setSustain(int32_t level_)
+   {
+      phase_level[DECAY] = phase_level[SUSTAIN] = level_;
+
+      if (phase == DECAY)
+      {
+         target = phase_level[SUSTAIN];
+      }
+      else if (phase == SUSTAIN)
+      {
+         level = target = phase_level[SUSTAIN];
+      }
+   }
 
    static int32_t scaleLevel(uint8_t level7_)
    {

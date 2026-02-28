@@ -14,10 +14,10 @@ namespace SIG {
 
 namespace Filter {
 
-class FirstOrder
+class OnePole
 {
 public:
-   FirstOrder(Type type_ = BYPASS)
+   OnePole(Type type_ = BYPASS)
    {
       setType(type_);
       zero();
