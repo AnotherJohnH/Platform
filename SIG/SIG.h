@@ -15,5 +15,6 @@
 #include "Filter/Filter.h"
 #include "Gain.h"
 #include "ExpSlew.h"
+#include "LogPot.h"
 #include "LinSlew.h"
 #include "Osc/Osc.h"
