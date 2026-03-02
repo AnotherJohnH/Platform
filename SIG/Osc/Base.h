@@ -64,6 +64,13 @@ public:
       updateExpFreq();
    }
 
+   //! Set CV 1V/oct (0.0 => midi note 0)
+   void setCV(Float cv_)
+   {
+      uint32_t ef = cv_ * (12 << EXP_FREQ_FRAC_BITS);
+      setDelta(noteLookup_7(ef));
+   }
+
    //! Get the current phase
    UPhase getPhase() const { return phase; }
 
