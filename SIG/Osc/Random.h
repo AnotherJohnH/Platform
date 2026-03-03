@@ -22,9 +22,9 @@ public:
       if (phase < last_phase)
          nextSample();
 
-      phase += delta;
-
       last_phase = phase;
+
+      phase += delta;
 
       return gain(signal);
    }
@@ -36,9 +36,9 @@ public:
 
       setDelta(modDelta(mod_));
 
-      phase += delta;
-
       last_phase = phase;
+
+      phase += delta;
 
       return gain(signal);
    }
