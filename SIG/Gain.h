@@ -18,7 +18,7 @@ public:
 
    Signal operator=(Signal value_) { return value = value_; }
 
-   Signal operator()(Signal in_) { return in_ * value; }
+   Signal operator()(Signal in_) const { return in_ * value; }
 
 private:
    Signal value{1.0f};
