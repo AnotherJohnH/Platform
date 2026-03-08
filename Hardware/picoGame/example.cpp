@@ -13,7 +13,7 @@
 #include "Hardware/FilePortal.h"
 
 static hw::FilePortal file_portal{"picoGame",
-                          "https://github.com/AnotherJohnH/Hardware/blob/main/picoGame"};
+                          "https://github.com/SloeComputers/Hardware/blob/main/picoGame"};
 
 static hw::Led             led;
 static hw::Buttons         buttons{/* enable_irq */ true};

@@ -33,7 +33,7 @@ public:
    UsbFileMidi(uint16_t         device_id_,
                const char*      device_name_,
                STB::FileSystem& file_system_)
-      : MTL::USBDevice("https://github.com/AnotherJohnH",
+      : MTL::USBDevice("https://github.com/SloeComputers",
                        device_id_, PLT_BCD_VERSION, device_name_,
                        PLT_COMMIT)
       , storage_if{this, file_system_}

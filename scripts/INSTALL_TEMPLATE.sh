@@ -31,11 +31,11 @@ installFile()
 def_project_dir=`cd ..; pwd`
 def_year=`date +%Y`
 def_author="John D. Haughton"
-def_username="AnotherJohnH"
+def_username="SloeComputers"
 def_application=`echo $def_project_dir | sed 's/.*\///'`
 def_version="0.0.0"
 def_description="Empty application"
-def_link="https://github.com/AnotherJohnH/"
+def_link="https://github.com/SloeComputers/"
 def_binary=`echo $def_application | tr '[:upper:]' '[:lower:]'`
 def_source=consoleApp.cpp
 

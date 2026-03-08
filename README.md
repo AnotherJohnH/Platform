@@ -20,14 +20,14 @@ The intended deployment of Platform is as a submodule inside other projects.
 mkdir MyProject
 cd MyProject
 git init .
-git submodule add https://github.com/AnotherJohnH/Platform.git
+git submodule add https://github.com/SloeComputers/Platform.git
 cd Platform
 make template
 
 Project dir [/Users/fred/MyProjects/Foo] : <project root directory>
 Copyright owner [John D. Haughton] : <copyright owner>
 Copyright year [2017] : <copyright year>
-User name [AnotherJohnH] : <GitHub user id>
+User name [SloeComputers] : <GitHub user id>
 Application [Foo] : <name of application>
 Version [0.0.0] : <initial version>
 Description [Empty application] : <application purpose>
@@ -53,13 +53,13 @@ make
 ```
 
 The following small projects are using Platform...
-* [MineSweeper](https://github.com/AnotherJohnH/MineSweeper/)
-* [Sternhalma](https://github.com/AnotherJohnH/Sternhalma/)
-* [Zif](https://github.com/AnotherJohnH/Zif/)
+* [MineSweeper](https://github.com/SloeComputers/MineSweeper/)
+* [Sternhalma](https://github.com/SloeComputers/Sternhalma/)
+* [Zif](https://github.com/SloeComputers/Zif/)
 
 ## Status
 
-[![Build Status](https://github.com/AnotherJohnH/Platform/actions/workflows/build_on_push.yml/badge.svg)](https://github.com/AnotherJohnH/Platform/actions/workflows/build_on_push.yml)
+[![Build Status](https://github.com/SloeComputers/Platform/actions/workflows/build_on_push.yml/badge.svg)](https://github.com/SloeComputers/Platform/actions/workflows/build_on_push.yml)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13938/badge.svg)](https://scan.coverity.com/projects/anotherjohnh-platform)
 
 ### Linux

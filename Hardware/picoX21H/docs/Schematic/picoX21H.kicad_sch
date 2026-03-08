@@ -8,7 +8,7 @@
     (title "picoX21H")
     (date "2025-04-13")
     (rev "0.02")
-    (company "https://github.com/AnotherJohnH/picoX21H")
+    (company "https://github.com/SloeComputers/picoX21H")
   )
 
   (lib_symbols

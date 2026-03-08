@@ -7,7 +7,7 @@
 
 #define  PROGRAM         "MyApp"
 #define  DESCRIPTION     "A test"
-#define  LINK            "https://github.com/AnotherJohnH/Platform"
+#define  LINK            "https://github.com/SloeComputers/Platform"
 #define  AUTHOR          "John D. Haughton"
 #define  COPYRIGHT_YEAR  "2017"
 

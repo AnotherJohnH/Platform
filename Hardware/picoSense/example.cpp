@@ -13,7 +13,7 @@
 #include "Hardware/FilePortal.h"
 
 static hw::FilePortal file_portal{"picoSense",
-                          "https://github.com/AnotherJohnH/Hardware/blob/main/picoSense"};
+                          "https://github.com/SloeComputers/Hardware/blob/main/picoSense"};
 
 inline const STB::Colour WHITE = STB::RGB(0xC0, 0xC0, 0xC0);
 

@@ -15,15 +15,15 @@
 This repo uses git sub-modules, so checkout using --recurse-submodules to clone
 all the dependent source...
 
-    git clone --recurse-submodules https://github.com/AnotherJohnH/Hardware.git
+    git clone --recurse-submodules https://github.com/SloeComputers/Hardware.git
 
 or
 
-    git clone --recurse-submodules ssh://git@github.com/AnotherJohnH/Hardware.git
+    git clone --recurse-submodules ssh://git@github.com/SloeComputers/Hardware.git
 
 ## Software dependencies
 
-+ https://github.com/AnotherJohnH/Platform
++ https://github.com/SloeComputers/Platform
 + arm-none-eabi-gcc
 + cmake via UNIX make or auto detection of ninja if installed
 + Python3
@@ -35,7 +35,7 @@ or
 mkdir MyProject
 cd MyProject
 git init .
-git submodule add git@github.com:AnotherJohnH/Hardware.git
+git submodule add git@github.com:SloeComputers/Hardware.git
 git submodule update --init --recursive
 ```
 

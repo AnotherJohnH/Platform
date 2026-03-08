@@ -23,7 +23,7 @@ extern "C" void IRQ_USBCTRL()
 inline NOINLINE void testUsbFileMidi(TestPhase phase_)
 {  
    static hw::FilePortal file_portal{"HW_TEST",
-                                     "https://github.com/AnotherJohnH/Hardware/"};
+                                     "https://github.com/SloeComputers/Hardware/"};
    
    static hw::UsbFileMidi usb{0x91C0, "test_hw", file_portal};
    
