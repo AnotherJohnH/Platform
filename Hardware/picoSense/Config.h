@@ -23,8 +23,8 @@
 #define HW_TEMP_SENSE_P21_P22_MCP9808
 #define HW_LED               MTL::PIN_LED1
 #define HW_RTC
-#define HW_BUTTONS_GPIO
-#define HW_BUTTONS_GPIO_PIN  MTL::PIN_4
+#define HW_BUTTONS      1
+#define HW_BUTTONS_PIN  MTL::PIN_4
 
 //------------------------------------------------------------------------------
 #elif defined(HW_BADGER2040)
@@ -40,6 +40,9 @@
 #define HW_RTC
 #define HW_BUTTONS_BADGER2040
 
+#define HW_BUTTONS      5
+#define HW_BUTTONS_PIN  MTL::badger2040::PIN_SW_DN
+
 //------------------------------------------------------------------------------
 #elif defined(HW_TUFTY2040)
 
@@ -54,6 +57,9 @@
 #define HW_RTC
 #define HW_BUTTONS_TUFTY2040
 
+#define HW_BUTTONS      5
+#define HW_BUTTONS_PIN  MTL::tufty2040::PIN_SW_DN
+
 //------------------------------------------------------------------------------
 #elif defined(HW_NATIVE)
 
@@ -67,6 +73,8 @@
 #define HW_LED_NATIVE
 #define HW_RTC_NATIVE
 #define HW_BUTTONS_NATIVE
+
+#define HW_BUTTONS      1
 
 //------------------------------------------------------------------------------
 #else
