@@ -43,7 +43,7 @@ function(add_picoGame_executable target_name)
         add_executable(${target} ${sources})
         target_include_directories(${target} PUBLIC  ${CMAKE_CURRENT_BINARY_DIR})
         target_compile_definitions(${target} PRIVATE HW_${hw_config})
-        target_link_libraries(     ${target} PRIVATE ${libs} HW)
+        target_link_libraries(     ${target} PRIVATE ${libs} GUI HW)
 
         set_target_properties(${target} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
