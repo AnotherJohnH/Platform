@@ -38,6 +38,7 @@ public:
 #else
       s += snprintf(s, end_s - s, "Compiler : %s\n", __VERSION__);
 #endif
+      s += snprintf(s, end_s - s, "Target   : %s %s\n", PLT_TARGET, PLT_MACHINE);
 
 #if not defined(HW_NATIVE)
       s += MTL::config.format(s, end_s - s);

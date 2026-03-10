@@ -25,6 +25,8 @@ target_compile_options(MTL PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:-Wno-stringop-overf
 target_compile_definitions(MTL PUBLIC MTL_TARGET=1)
 target_compile_definitions(MTL PUBLIC MTL_${PLT_TARGET}=1)
 target_compile_definitions(MTL PUBLIC PLT_VERSION="${PROJECT_VERSION}")
+target_compile_definitions(MTL PUBLIC PLT_TARGET="${PLT_TARGET}")
+target_compile_definitions(MTL PUBLIC PLT_MACHINE="${PLT_MACHINE}")
 target_compile_definitions(MTL PUBLIC PLT_COMMIT="${PLT_COMMIT}")
 
 target_include_directories(MTL PUBLIC ..)
