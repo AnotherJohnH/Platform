@@ -34,7 +34,7 @@ enum Class : uint8_t
 };
 
 // Got to use something!
-static const uint16_t DUMMY_VENDOR_ID = 0xC0DE;
+static const uint16_t DUMMY_VENDOR_ID = 0x510E;
 
 // Descriptor type codes
 enum DescrType : uint8_t
