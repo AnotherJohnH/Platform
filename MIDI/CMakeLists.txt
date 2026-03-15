@@ -4,6 +4,8 @@
 #-------------------------------------------------------------------------------
 
 add_library(MIDI STATIC
+            Controller/Akai_MIDImix.cpp
+            Controller/Akai_MPKmini.cpp
             Decoder.cpp)
 
 target_include_directories(MIDI PUBLIC ..)
