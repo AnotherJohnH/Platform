@@ -29,5 +29,6 @@ target_include_directories(PLT
     PRIVATE ${SDL2_INCLUDE_DIRS})
 
 target_link_libraries(PLT
+    PUBLIC MIDI
     PRIVATE ${SDL2_LIBRARIES}
     INTERFACE "-framework CoreMIDI" "-framework CoreFoundation")

@@ -8,9 +8,6 @@ if(${PLT_NATIVE})
    add_executable(testConsoleApp testConsoleApp.cpp)
    target_link_libraries(testConsoleApp PLT STB)
 
-   add_executable(testMidiFile testMidiFile.cpp)
-   target_link_libraries(testMidiFile PLT STB)
-
    add_executable(test_STB
                   testMain.cpp
                   testFAT16.cpp

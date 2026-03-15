@@ -5,5 +5,5 @@
 
 #pragma once
 
-#include "STB/MidiDecoder.h"
-#include "STB/MidiFile.h"
+#include "MIDI/MidiDecoder.h"
+#include "MIDI/MidiFile.h"

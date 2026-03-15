@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "STB/Endian.h"
-#include "STB/MidiDecoder.h"
+#include "MIDI/MidiDecoder.h"
 
 namespace STB {
 

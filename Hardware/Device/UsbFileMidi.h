@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "STB/MIDIInterface.h"
+#include "MIDI/MIDIInterface.h"
 
 #if defined(HW_USB_DEVICE)
 

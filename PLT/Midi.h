@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-#include "STB/MidiDecoder.h"
+#include "MIDI/MidiDecoder.h"
 
 //! Platform abstraction layer
 namespace PLT {

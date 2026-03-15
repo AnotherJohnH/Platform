@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "STB/Midi.h"
+#include "MIDI/Midi.h"
 
 class MidiFile : public STB::MIDI::File
 {

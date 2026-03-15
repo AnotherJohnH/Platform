@@ -114,7 +114,7 @@ add_subdirectory(STB)
 add_subdirectory(PLT)
 add_subdirectory(USB)
 add_subdirectory(SIG)
-
+add_subdirectory(MIDI)
 add_subdirectory(GUI)
 add_subdirectory(TRM)
 

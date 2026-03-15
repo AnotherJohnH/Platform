@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "STB/Midi.h"
+#include "MIDI/Midi.h"
 
 namespace STB {
 
