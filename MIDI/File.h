@@ -13,9 +13,7 @@
 #include <vector>
 
 #include "STB/Endian.h"
-#include "MIDI/MidiDecoder.h"
-
-namespace STB {
+#include "MIDI/Decoder.h"
 
 namespace MIDI {
 
@@ -208,5 +206,3 @@ private:
 };
 
 } // namespace MIDI
-
-} // namespace STB

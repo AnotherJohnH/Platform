@@ -6,7 +6,7 @@
 if(${PLT_NATIVE})
 
    add_executable(testConsoleApp testConsoleApp.cpp)
-   target_link_libraries(testConsoleApp PLT STB)
+   target_link_libraries(testConsoleApp PLT)
 
    add_executable(test_STB
                   testMain.cpp
@@ -17,7 +17,7 @@ if(${PLT_NATIVE})
                   testLicense.cpp
                   testList.cpp)
 
-   target_link_libraries(test_STB PLT STB)
+   target_link_libraries(test_STB STB)
 
    add_test(NAME test_STB COMMAND test_STB)
 

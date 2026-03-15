@@ -9,7 +9,7 @@
 
 #include <cstdint>
 
-#include "MIDI/MIDIInterface.h"
+#include "MIDI/Interface.h"
 
 
 //! Platform abstraction layer

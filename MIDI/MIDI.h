@@ -5,5 +5,8 @@
 
 #pragma once
 
-#include "MIDI/MidiDecoder.h"
-#include "MIDI/MidiFile.h"
+#include "Const.h"
+#include "Decoder.h"
+#include "File.h"
+#include "Instrument.h"
+#include "Interface.h"

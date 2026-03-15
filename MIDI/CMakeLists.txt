@@ -4,7 +4,7 @@
 #-------------------------------------------------------------------------------
 
 add_library(MIDI STATIC
-            MidiDecoder.cpp)
+            Decoder.cpp)
 
 target_include_directories(MIDI PUBLIC ..)
 

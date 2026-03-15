@@ -7,9 +7,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "MIDI/Midi.h"
-
-namespace STB {
+#include "MIDI/MIDI.h"
 
 namespace MIDI {
 
@@ -280,7 +278,7 @@ private:
       printf("CH%u PROGRAM  %3u\n", channel, index);
    }
 
-   virtual void textEvent(STB::MIDI::TextEvent event, const char* s, unsigned length) override
+   virtual void textEvent(TextEvent event, const char* s, unsigned length) override
    {
       printf("TEXT %u ", unsigned(event));
       for(unsigned i = 0; i < length; i++)
@@ -354,5 +352,3 @@ unsigned disassemble(const uint8_t* data, unsigned length)
 
 
 } // namespace MIDI
-
-} // namespace STB

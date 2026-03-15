@@ -7,10 +7,7 @@
 
 #include <cstdint>
 
-namespace STB {
-
 namespace MIDI {
-
 
 // MIDI event types
 static const uint8_t NOTE_OFF          = 0x80;
@@ -91,7 +88,7 @@ public:
    unsigned decodeDeltaT(const uint8_t* ptr)
    {
       uint32_t delta_t;
-      unsigned n = STB::MIDI::Decoder::decodeVarLength(ptr, delta_t);
+      unsigned n = decodeVarLength(ptr, delta_t);
       state.t += delta_t;
       return n;
    }
@@ -133,5 +130,3 @@ protected:
 extern unsigned disassemble(const uint8_t* data, unsigned length);
 
 } // namespace MIDI
-
-} // namespace STB

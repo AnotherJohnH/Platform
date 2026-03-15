@@ -12,7 +12,7 @@ class TestMidiIn : public PLT::MIDI::In
 private:
    virtual unsigned decode(const uint8_t* data, unsigned length) override
    {
-      return STB::MIDI::disassemble(data, length);
+      return ::MIDI::disassemble(data, length);
    }
 };
 

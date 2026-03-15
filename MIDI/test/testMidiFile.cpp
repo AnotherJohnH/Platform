@@ -7,9 +7,9 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "MIDI/Midi.h"
+#include "MIDI/MIDI.h"
 
-class MidiFile : public STB::MIDI::File
+class MidiFile : public MIDI::File
 {
 public:
    void dump()
@@ -28,7 +28,7 @@ private:
    {
       printf("TRACK %u\n", i);
 
-      STB::MIDI::TrackPtr tp;
+      MIDI::TrackPtr tp;
 
       getTrackData(i, &tp);
 
@@ -39,10 +39,10 @@ private:
          uint32_t delta_t;
 
          const uint8_t* start = tp.ptr;
-         const uint8_t* event = start + STB::MIDI::Decoder::decodeVarLength(start, delta_t);
+         const uint8_t* event = start + MIDI::Decoder::decodeVarLength(start, delta_t);
 
          printf("%06X : dt=%05u ", unsigned(start - raw), delta_t);
-         tp.ptr = event + STB::MIDI::disassemble(event, tp.end - event);
+         tp.ptr = event + MIDI::disassemble(event, tp.end - event);
       }
    }
 };

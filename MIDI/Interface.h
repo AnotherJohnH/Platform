@@ -7,8 +7,8 @@
 
 #include <cstdio>
 
-#include "MIDI/MIDIconst.h"
-#include "MIDI/MIDIInstrument.h"
+#include "MIDI/Const.h"
+#include "MIDI/Instrument.h"
 
 namespace MIDI {
 

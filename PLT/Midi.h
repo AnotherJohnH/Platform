@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-#include "MIDI/MidiDecoder.h"
+#include "MIDI/Decoder.h"
 
 //! Platform abstraction layer
 namespace PLT {
@@ -33,7 +33,7 @@ protected:
 
 //! MIDI input stream
 class In : public IOBase
-         , public STB::MIDI::Decoder
+         , public ::MIDI::Decoder
 {
 public:
    //! Open MIDI input stream

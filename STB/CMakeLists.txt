@@ -5,7 +5,6 @@
 
 add_library(STB STATIC
             Deflate.cpp
-            MidiDecoder.cpp
             Oil.cpp
             Option.cpp
             Zlib.cpp)

@@ -6,6 +6,6 @@
 if(${PLT_NATIVE})
 
    add_executable(testMidiFile testMidiFile.cpp)
-   target_link_libraries(testMidiFile PLT STB)
+   target_link_libraries(testMidiFile MIDI)
 
 endif()
