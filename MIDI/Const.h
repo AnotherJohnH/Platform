@@ -24,4 +24,6 @@ inline constexpr uint8_t CTRL_PORTAMENTO = 0x05;
 inline constexpr uint8_t CTRL_VOLUME     = 0x07;
 inline constexpr uint8_t CTRL_PAN        = 0x08;
 
+inline constexpr unsigned NONE = 128;
+
 } // namespace MIDI
