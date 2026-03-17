@@ -35,14 +35,6 @@ unsigned Decoder::decodeCommand(const uint8_t* data, unsigned length)
 
    switch(message)
    {
-   case NOTE_OFF:
-      noteOff(channel, data[0], data[1]);
-      return 2;
-
-   case POLY_KEY_PRESSURE:
-      notePressure(channel, data[0], data[1]);
-      return 2;
-
    case NOTE_ON:
       if(data[1] != 0)
       {
@@ -52,6 +44,14 @@ unsigned Decoder::decodeCommand(const uint8_t* data, unsigned length)
       {
          noteOff(channel, data[0], data[1]);
       }
+      return 2;
+
+   case NOTE_OFF:
+      noteOff(channel, data[0], data[1]);
+      return 2;
+
+   case POLY_KEY_PRESSURE:
+      notePressure(channel, data[0], data[1]);
       return 2;
 
    case CHANNEL_PRESSURE:

@@ -305,7 +305,7 @@ protected:
       setVoiceState(voice_, FREE);
    }
 
-   Interface* interface{};
+   Interface* interface{}; //!< Interface attached to this instrument
    uint8_t    num_voices;
 
 private:
