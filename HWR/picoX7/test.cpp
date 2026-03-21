@@ -6,16 +6,17 @@
 #include <cstdio>
 #include <unistd.h>
 
-#include "Hardware/picoX21H/Config.h"
+#include "HWR/picoX7/Config.h"
 
 #include "Table_sine.h"
 
-#include "Hardware/Device/Test/TestLed.h"
-#include "Hardware/Device/Test/TestLcd.h"
-#include "Hardware/Device/Test/TestPhysMidi.h"
-#include "Hardware/Device/Test/TestUsbFileMidi.h"
-#include "Hardware/Device/Test/TestDac.h"
-#include "Hardware/Device/Test/TestYM2151.h"
+#include "HWR/Device/Test/TestLed.h"
+#include "HWR/Device/Test/TestLcd.h"
+#include "HWR/Device/Test/TestPhysMidi.h"
+#include "HWR/Device/Test/TestUsbFileMidi.h"
+#include "HWR/Device/Test/TestLed7Seg.h"
+#include "HWR/Device/Test/TestAudio.h"
+#include "HWR/Device/Test/TestButtons.h"
 
 static void test(hw::TestPhase phase_)
 {
@@ -23,8 +24,9 @@ static void test(hw::TestPhase phase_)
    if (1) hw::testLcd(phase_);
    if (1) hw::testPhysMidi(phase_);
    if (1) hw::testUsbFileMidi(phase_);
-   if (1) hw::testDac(phase_);
-   if (1) hw::testYM2151(phase_);
+   if (1) hw::testLed7Seg(phase_);
+   if (1) hw::testAudio(phase_);
+   if (1) hw::testButtons(phase_);
 }
 
 static void consoleReport()
@@ -34,7 +36,7 @@ static void consoleReport()
 
    printf("HARDWARE TEST\n");
    printf("\n");
-   printf("Program  : Test picoX21H (%s)\n", HW_DESCR);
+   printf("Program  : Test picoX7 (%s)\n", HW_DESCR);
    printf("Author   : Copyright (c) 2025 John D. Haughton\n");
    printf("License  : MIT\n");
    printf("Version  : %s\n", PLT_VERSION);

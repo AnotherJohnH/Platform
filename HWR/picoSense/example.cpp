@@ -9,11 +9,11 @@
 #include "GUI/Font/Teletext.h"
 #include "STB/Colour.h"
 
-#include "Hardware/picoSense/Config.h"
-#include "Hardware/FilePortal.h"
+#include "HWR/picoSense/Config.h"
+#include "HWR/FilePortal.h"
 
 static hw::FilePortal file_portal{"picoSense",
-                          "https://github.com/SloeComputers/Hardware/blob/main/picoSense"};
+                          "https://github.com/SloeComputers/HWR/blob/main/picoSense"};
 
 inline const STB::Colour WHITE = STB::RGB(0xC0, 0xC0, 0xC0);
 

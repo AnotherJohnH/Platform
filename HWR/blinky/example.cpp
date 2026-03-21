@@ -5,7 +5,7 @@
 
 #include <unistd.h>
 
-#include "Hardware/blinky/Config.h"
+#include "HWR/blinky/Config.h"
 
 static hw::Led led;
 

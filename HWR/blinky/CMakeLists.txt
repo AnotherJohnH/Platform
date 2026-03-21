@@ -5,47 +5,47 @@
 
 if(${PLT_TARGET} STREQUAL rp2040)
 
-   set(hw_blinky_config_list
+   set(hwr_blinky_config_variants
        BADGER2040
        TUFTY2040
        RPIPICO
-       CACHE INTERNAL "blinky config Variations")
+       CACHE INTERNAL "blinky configVariants")
 
 elseif(${PLT_TARGET} STREQUAL rp2350)
 
-   set(hw_blinky_config_list
+   set(hwr_blinky_config_variants
        RPIPICO
-       CACHE INTERNAL "blinky config Variations")
+       CACHE INTERNAL "blinky configVariants")
 
 elseif(${PLT_TARGET} STREQUAL LPC11U24)
 
-   set(hw_blinky_config_list
+   set(hwr_blinky_config_variants
        MBED
-       CACHE INTERNAL "blinky config Variations")
+       CACHE INTERNAL "blinky configVariants")
 
 elseif(${PLT_TARGET} STREQUAL LPC1768)
 
-   set(hw_blinky_config_list
+   set(hwr_blinky_config_variants
        MBED
-       CACHE INTERNAL "blinky config Variations")
+       CACHE INTERNAL "blinky configVariants")
 
 elseif(${PLT_TARGET} STREQUAL nRF51)
 
-   set(hw_blinky_config_list
+   set(hwr_blinky_config_variants
        MICROBIT
-       CACHE INTERNAL "blinky config Variations")
+       CACHE INTERNAL "blinky configVariants")
 
 elseif(${PLT_TARGET} STREQUAL nRF52)
 
-   set(hw_blinky_config_list
+   set(hwr_blinky_config_variants
        MICROBIT
-       CACHE INTERNAL "blinky config Variations")
+       CACHE INTERNAL "blinky configVariants")
 
-elseif(${PLT_TARGET} STREQUAL native)
+elseif(${PLT_NATIVE})
 
-   set(hw_blinky_config_list
+   set(hwr_blinky_config_variants
        NATIVE
-       CACHE INTERNAL "blinky config Variations")
+       CACHE INTERNAL "blinky configVariants")
 
 endif()
 
@@ -54,9 +54,9 @@ endif()
 
 function(add_blinky_executable target_name)
 
-    foreach(hw_config ${hw_blinky_config_list})
+    foreach(variant ${hwr_blinky_config_variants})
 
-        set(target ${target_name}_${hw_config})
+        set(target ${target_name}_${variant})
 
         set(sources "")
         set(libs "")
@@ -74,8 +74,8 @@ function(add_blinky_executable target_name)
 
         add_executable(${target} ${sources})
         target_include_directories(${target} PUBLIC  ${CMAKE_CURRENT_BINARY_DIR})
-        target_compile_definitions(${target} PRIVATE HW_${hw_config})
-        target_link_libraries(     ${target} PRIVATE ${libs} HW)
+        target_compile_definitions(${target} PRIVATE HW_${variant})
+        target_link_libraries(     ${target} PRIVATE ${libs} HWR)
 
         set_target_properties(${target} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")

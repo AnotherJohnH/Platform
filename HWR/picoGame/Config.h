@@ -45,7 +45,7 @@
 
 //==============================================================================
 
-#include "Hardware/Device/Display.h"
-#include "Hardware/Device/Led.h"
-#include "Hardware/Device/UsbFile.h"
-#include "Hardware/Device/Buttons.h"
+#include "HWR/Device/Display.h"
+#include "HWR/Device/Led.h"
+#include "HWR/Device/UsbFile.h"
+#include "HWR/Device/Buttons.h"

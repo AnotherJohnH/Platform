@@ -5,28 +5,28 @@
 
 if(${PLT_TARGET} STREQUAL rp2040)
 
-   set(hw_picoX7_config_list
+   set(hwr_picoX7_config_variants
        RPIPICO_I2S_DAC
        RPIPICO_PWM_DAC
        RPIPICO_WAVESHARE_I2S_DAC_REV2_1
        RPIPICO_PIMORONI_PICO_AUDIO
        PIMORONI_VGA_DEMO
-       CACHE INTERNAL "picoX7 config Variations")
+       CACHE INTERNAL "picoX7 configVariants")
 
 elseif(${PLT_TARGET} STREQUAL rp2350)
 
-   set(hw_picoX7_config_list
+   set(hwr_picoX7_config_variants
        RPIPICO_I2S_DAC
        RPIPICO_PWM_DAC
        RPIPICO_WAVESHARE_I2S_DAC_REV2_1
        RPIPICO_PIMORONI_PICO_AUDIO
-       CACHE INTERNAL "picoX7 config Variations")
+       CACHE INTERNAL "picoX7 configVariants")
 
-elseif(${PLT_TARGET} STREQUAL native)
+elseif(${PLT_NATIVE})
 
-   set(hw_picoX7_config_list
+   set(hwr_picoX7_config_variants
        NATIVE
-       CACHE INTERNAL "picoX7 config Variations")
+       CACHE INTERNAL "picoX7 configVariants")
 
 endif()
 
@@ -35,9 +35,9 @@ endif()
 
 function(add_picoX7_executable target_name)
 
-    foreach(hw_config ${hw_picoX7_config_list})
+    foreach(variant ${hwr_picoX7_config_variants})
 
-        set(target ${target_name}_${hw_config})
+        set(target ${target_name}_${variant})
 
         set(sources "")
         set(libs "")
@@ -55,8 +55,8 @@ function(add_picoX7_executable target_name)
 
         add_executable(${target} ${sources})
         target_include_directories(${target} PUBLIC  ${CMAKE_CURRENT_BINARY_DIR})
-        target_compile_definitions(${target} PRIVATE HW_${hw_config})
-        target_link_libraries(     ${target} PRIVATE ${libs} HW)
+        target_compile_definitions(${target} PRIVATE HW_${variant})
+        target_link_libraries(     ${target} PRIVATE ${libs} HWR)
 
         set_target_properties(${target} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")

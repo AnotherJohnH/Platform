@@ -6,7 +6,7 @@
 #include <cstdio>
 
 #include "Test.h"
-#include "Hardware/FilePortal.h"
+#include "HWR/FilePortal.h"
 
 namespace hw {
 
@@ -23,7 +23,7 @@ extern "C" void IRQ_USBCTRL()
 inline NOINLINE void testUsbFileMidi(TestPhase phase_)
 {  
    static hw::FilePortal file_portal{"HW_TEST",
-                                     "https://github.com/SloeComputers/Hardware/"};
+                                     "https://github.com/SloeComputers/HWR/"};
    
    static hw::UsbFileMidi usb{0x91C0, "test_hw", file_portal};
    

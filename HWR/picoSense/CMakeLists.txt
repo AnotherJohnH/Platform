@@ -5,26 +5,33 @@
 
 if(${PLT_TARGET} STREQUAL rp2040)
 
-   set(hw_picoGame_config_list
+   set(hwr_picoSense_config_variants
+       RPIPICO_WAVESHARE_EPAPER
+       BADGER2040
        TUFTY2040
-       CACHE INTERNAL "picoGame config Variations")
+       CACHE INTERNAL "picoSense configVariants")
 
-elseif(${PLT_TARGET} STREQUAL native)
+elseif(${PLT_TARGET} STREQUAL rp2350)
 
-   set(hw_picoGame_config_list
+   set(hwr_picoSense_config_variants
+       CACHE INTERNAL "picoSense configVariants")
+
+elseif(${PLT_NATIVE})
+
+   set(hwr_picoSense_config_variants
        NATIVE
-       CACHE INTERNAL "picoGame config Variations")
+       CACHE INTERNAL "picoSense configVariants")
 
 endif()
 
 #-------------------------------------------------------------------------------
 # Helper function for building binaries for each hardware config
 
-function(add_picoGame_executable target_name)
+function(add_picoSense_executable target_name)
 
-    foreach(hw_config ${hw_picoGame_config_list})
+    foreach(variant ${hwr_picoSense_config_variants})
 
-        set(target ${target_name}_${hw_config})
+        set(target ${target_name}_${variant})
 
         set(sources "")
         set(libs "")
@@ -42,8 +49,8 @@ function(add_picoGame_executable target_name)
 
         add_executable(${target} ${sources})
         target_include_directories(${target} PUBLIC  ${CMAKE_CURRENT_BINARY_DIR})
-        target_compile_definitions(${target} PRIVATE HW_${hw_config})
-        target_link_libraries(     ${target} PRIVATE ${libs} GUI HW)
+        target_compile_definitions(${target} PRIVATE HW_${variant})
+        target_link_libraries(     ${target} PRIVATE ${libs} GUI HWR)
 
         set_target_properties(${target} PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
@@ -55,5 +62,5 @@ endfunction()
 #-------------------------------------------------------------------------------
 # Test
 
-add_picoGame_executable(picoGameTest test.cpp)
-add_picoGame_executable(picoGameEx   example.cpp)
+add_picoSense_executable(picoSenseTest test.cpp)
+add_picoSense_executable(picoSenseEx   example.cpp)

@@ -8,6 +8,7 @@ set(SIG_GAIN_LOG2_SIZE "15"    CACHE STRING "SIG library log2(gain_table_size)")
 
 message("SIG_SAMPLE_RATE    = ${SIG_SAMPLE_RATE} Hz")
 message("SIG_GAIN_LOG2_SIZE = ${SIG_GAIN_LOG2_SIZE}")
+message("--------------------------------------------------------------------------------")
 
 autogen_py(Table_note ${SIG_SAMPLE_RATE})
 autogen_py(Table_gain ${SIG_GAIN_LOG2_SIZE})

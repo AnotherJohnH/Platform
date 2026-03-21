@@ -9,11 +9,11 @@
 #include "GUI/Font/Teletext.h"
 #include "STB/Colour.h"
 
-#include "Hardware/picoGame/Config.h"
-#include "Hardware/FilePortal.h"
+#include "HWR/picoGame/Config.h"
+#include "HWR/FilePortal.h"
 
 static hw::FilePortal file_portal{"picoGame",
-                          "https://github.com/SloeComputers/Hardware/blob/main/picoGame"};
+                          "https://github.com/SloeComputers/HWR/blob/main/picoGame"};
 
 static hw::Led             led;
 static hw::Buttons         buttons{/* enable_irq */ true};

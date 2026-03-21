@@ -6,26 +6,18 @@
 #include <cstdio>
 #include <unistd.h>
 
-#include "Hardware/picoX7/Config.h"
+#include "HWR/picoSense/Config.h"
 
-#include "Table_sine.h"
-
-#include "Hardware/Device/Test/TestLed.h"
-#include "Hardware/Device/Test/TestLcd.h"
-#include "Hardware/Device/Test/TestPhysMidi.h"
-#include "Hardware/Device/Test/TestUsbFileMidi.h"
-#include "Hardware/Device/Test/TestLed7Seg.h"
-#include "Hardware/Device/Test/TestAudio.h"
-#include "Hardware/Device/Test/TestButtons.h"
+#include "HWR/Device/Test/TestLed.h"
+#include "HWR/Device/Test/TestDisplay.h"
+#include "HWR/Device/Test/TestUsbFile.h"
+#include "HWR/Device/Test/TestButtons.h"
 
 static void test(hw::TestPhase phase_)
 {
    if (1) hw::testLed(phase_);
-   if (1) hw::testLcd(phase_);
-   if (1) hw::testPhysMidi(phase_);
-   if (1) hw::testUsbFileMidi(phase_);
-   if (1) hw::testLed7Seg(phase_);
-   if (1) hw::testAudio(phase_);
+   if (1) hw::testDisplay(phase_);
+   if (1) hw::testUsbFile(phase_);
    if (1) hw::testButtons(phase_);
 }
 
@@ -36,7 +28,7 @@ static void consoleReport()
 
    printf("HARDWARE TEST\n");
    printf("\n");
-   printf("Program  : Test picoX7 (%s)\n", HW_DESCR);
+   printf("Program  : Test picoSense (%s)\n", HW_DESCR);
    printf("Author   : Copyright (c) 2025 John D. Haughton\n");
    printf("License  : MIT\n");
    printf("Version  : %s\n", PLT_VERSION);

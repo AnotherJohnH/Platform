@@ -6,12 +6,12 @@
 #include <cstdio>
 #include <unistd.h>
 
-#include "Hardware/picoGame/Config.h"
+#include "HWR/picoGame/Config.h"
 
-#include "Hardware/Device/Test/TestLed.h"
-#include "Hardware/Device/Test/TestDisplay.h"
-#include "Hardware/Device/Test/TestUsbFile.h"
-#include "Hardware/Device/Test/TestButtons.h"
+#include "HWR/Device/Test/TestLed.h"
+#include "HWR/Device/Test/TestDisplay.h"
+#include "HWR/Device/Test/TestUsbFile.h"
+#include "HWR/Device/Test/TestButtons.h"
 
 static void test(hw::TestPhase phase_)
 {
