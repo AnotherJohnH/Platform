@@ -117,4 +117,5 @@ add_subdirectory(SIG)
 add_subdirectory(MIDI)
 add_subdirectory(GUI)
 add_subdirectory(TRM)
+add_subdirectory(Hardware)
 
