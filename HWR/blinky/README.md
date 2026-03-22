@@ -4,6 +4,8 @@ Hardware config for projects based around a single LED.
 
 Useful as a "Hello, world!" test for new targets and variants.
 
+See the example project [https://github.com/SloeComputers/Blinky](https://github.com/SloeComputers/Blinky)
+
 ## blinky config variations
 
 | PLT_TARGET | Variant    | Description |
@@ -14,8 +16,8 @@ Useful as a "Hello, world!" test for new targets and variants.
 | rp2350     | RPIPICO    | Raspberry-Pi pico2 module |
 | LPC11U24   | MBED       | mbed module |
 | LPC1768    | MBED       | mbed module |
-| nrF51      | MICROBIT   | microbit board |
-| nrF52      | MICROBIT   | microbit board |
+| nRF51      | MICROBIT   | microbit board |
+| nRF52      | MICROBIT   | microbit board |
 | macOS      | NATIVE     | Host OS |
 | Linux      | NATIVE     | Host OS |
 
@@ -43,4 +45,20 @@ int main()
 
    return 0;
 }
+```
+
+built with...
+
+```cmake
+cmake_minimum_required(VERSION 3.20)
+
+project(blinky
+        LANGUAGES CXX C ASM
+        VERSION 0.1)
+
+set(HWR_CONFIG blinky)
+
+add_subdirectory(Platform)
+
+add_blinky_executable(blinky blinky.cpp)
 ```

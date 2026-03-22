@@ -2,7 +2,7 @@
 
 The HWR library enables projects with similar hardware requirements to share common C++ APIs, allowing rapid development of new projects and portability of a project codebase between different hardware variants.
 
-The library also supports native variants for macOS or Linux targets, where physical hardware I/O is simulated for debugging and quick evaluation.
+The library also supports native variants for macOS and Linux targets, where physical hardware I/O is simulated for debugging and quick evaluation.
 
 ## Configs
 
