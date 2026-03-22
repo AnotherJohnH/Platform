@@ -7,12 +7,12 @@
 
 #include <cstdio>
 
-namespace hw {
+namespace HWR {
 
 inline NOINLINE void testYM2151(TestPhase phase_)
 {
 #if !defined(HW_NATIVE)
-   static hw::YM2151<> ym2151{};
+   static HWR::YM2151<> ym2151{};
 #endif
 
    switch(phase_)
@@ -32,4 +32,4 @@ inline NOINLINE void testYM2151(TestPhase phase_)
    }
 }
 
-} // namespace hw
+} // namespace HWR

@@ -7,11 +7,11 @@
 
 #include <cstdio>
 
-namespace hw {
+namespace HWR {
 
 inline NOINLINE void testLcd(TestPhase phase_)
 {
-   static hw::Lcd lcd{};
+   static HWR::Lcd lcd{};
 
    switch(phase_)
    {
@@ -60,4 +60,4 @@ inline NOINLINE void testLcd(TestPhase phase_)
    }
 }
 
-} // namespace hw
+} // namespace HWR

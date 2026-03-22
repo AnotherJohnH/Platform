@@ -17,7 +17,7 @@
 
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_LED)
 
@@ -33,4 +33,4 @@ using Led = bool;
 
 #endif
 
-} // namespace hw
+} // namespace HWR

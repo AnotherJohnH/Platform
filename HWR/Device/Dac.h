@@ -21,7 +21,7 @@
 #error "DAC config not set"
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_DAC_I2S_GENERIC)
 
@@ -157,4 +157,4 @@ private:
 
 #endif
 
-} // namespace hw
+} // namespace HWR

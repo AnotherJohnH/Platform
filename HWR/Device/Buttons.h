@@ -25,7 +25,7 @@
 
 #include "STB/Keypad.h"
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_BADGER2040)
 
@@ -194,4 +194,4 @@ private:
 
 #endif
 
-} // namespace hw
+} // namespace HWR

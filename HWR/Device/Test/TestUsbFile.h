@@ -8,9 +8,9 @@
 #include "Test.h"
 #include "HWR/FilePortal.h"
 
-namespace hw {
+namespace HWR {
 
-static hw::UsbFile* usb_ptr{nullptr};
+static HWR::UsbFile* usb_ptr{nullptr};
 
 extern "C" void IRQ_USBCTRL()
 {
@@ -22,10 +22,10 @@ extern "C" void IRQ_USBCTRL()
    
 inline NOINLINE void testUsbFile(TestPhase phase_)
 {  
-   static hw::FilePortal file_portal{"HW_TEST",
+   static HWR::FilePortal file_portal{"HW_TEST",
                                      "https://github.com/SloeComputers/HWR/"};
    
-   static hw::UsbFile usb{0x91C0, "test_hw", file_portal};
+   static HWR::UsbFile usb{0x91C0, "test_hw", file_portal};
    
    switch(phase_)
    {
@@ -38,7 +38,7 @@ inline NOINLINE void testUsbFile(TestPhase phase_)
       break;
 
    case START:
-      file_portal.addREADME("Test hw::UsbFile");
+      file_portal.addREADME("Test HWR::UsbFile");
       break;
 
    case RUN:
@@ -46,4 +46,4 @@ inline NOINLINE void testUsbFile(TestPhase phase_)
    }
 } 
 
-} // namespace hw
+} // namespace HWR

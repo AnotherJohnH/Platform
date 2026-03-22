@@ -12,14 +12,14 @@
 #include "HWR/picoGame/Config.h"
 #include "HWR/FilePortal.h"
 
-static hw::FilePortal file_portal{"picoGame",
+static HWR::FilePortal file_portal{"picoGame",
                           "https://github.com/SloeComputers/HWR/blob/main/picoGame"};
 
-static hw::Led             led;
-static hw::Buttons         buttons{/* enable_irq */ true};
-static hw::Display         display{};
-static hw::Display::Canvas canvas{};
-static hw::UsbFile         usb{0x91C0, "picoGame", file_portal};
+static HWR::Led             led;
+static HWR::Buttons         buttons{/* enable_irq */ true};
+static HWR::Display         display{};
+static HWR::Display::Canvas canvas{};
+static HWR::UsbFile         usb{0x91C0, "picoGame", file_portal};
 
 extern "C" void IRQ_IO_BANK0() { buttons.irq(); }
 extern "C" void IRQ_USBCTRL()  { usb.irq(); }

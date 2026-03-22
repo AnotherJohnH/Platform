@@ -9,7 +9,7 @@
 
 #define NOINLINE __attribute__((noinline))
 
-namespace hw {
+namespace HWR {
 
 enum TestPhase { DECL, INFO, START, RUN };
 

@@ -17,7 +17,7 @@
 
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_MIDI_IN_UART)
 
@@ -76,4 +76,4 @@ private:
 
 #endif
 
-} // namespace hw
+} // namespace HWR

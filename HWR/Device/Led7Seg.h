@@ -17,7 +17,7 @@
 
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_LED_7_SEG)
 
@@ -52,4 +52,4 @@ public:
 
 #endif
 
-} // namespace hw
+} // namespace HWR

@@ -20,7 +20,7 @@
 
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_USB_DEVICE)
 
@@ -71,4 +71,4 @@ public:
 
 #endif
 
-} // namespace hw
+} // namespace HWR

@@ -21,7 +21,7 @@
 
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_LCD_I2C)
 
@@ -59,4 +59,4 @@ public:
 
 #endif
 
-} // namespace hw
+} // namespace HWR

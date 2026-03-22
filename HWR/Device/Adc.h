@@ -13,10 +13,10 @@
 #define HW_ADC_NONE
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_ADC)
 using Adc = MTL::Adc;
 #endif
 
-} // namespace hw
+} // namespace HWR

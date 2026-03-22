@@ -7,11 +7,11 @@
 
 #include <cstdio>
 
-namespace hw {
+namespace HWR {
 
 inline NOINLINE void testLed(TestPhase phase_)
 {
-   static hw::Led led{};
+   static HWR::Led led{};
 
    switch(phase_)
    {
@@ -30,4 +30,4 @@ inline NOINLINE void testLed(TestPhase phase_)
    }
 }
 
-} // namespace hw
+} // namespace HWR

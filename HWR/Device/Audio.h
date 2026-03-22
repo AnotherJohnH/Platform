@@ -22,7 +22,7 @@
 
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_DAC_I2S_GENERIC)
 
@@ -123,4 +123,4 @@ protected:
 
 #endif
 
-} // namespace hw
+} // namespace HWR

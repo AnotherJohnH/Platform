@@ -7,11 +7,11 @@
 
 #include <cstdio>
 
-namespace hw {
+namespace HWR {
 
 inline NOINLINE void testPhysMidi(TestPhase phase_)
 {
-   static hw::PhysMidi phys_midi{};
+   static HWR::PhysMidi phys_midi{};
    
    switch(phase_)
    {
@@ -32,4 +32,4 @@ inline NOINLINE void testPhysMidi(TestPhase phase_)
    }
 }
 
-} // namespace hw
+} // namespace HWR

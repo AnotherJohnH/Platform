@@ -17,7 +17,7 @@
 
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_RTC)
 
@@ -29,4 +29,4 @@ using Rtc = Rtc<7*24*60>;
 
 #endif
 
-} // namespace hw
+} // namespace HWR

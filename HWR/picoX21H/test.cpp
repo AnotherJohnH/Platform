@@ -17,14 +17,14 @@
 #include "HWR/Device/Test/TestDac.h"
 #include "HWR/Device/Test/TestYM2151.h"
 
-static void test(hw::TestPhase phase_)
+static void test(HWR::TestPhase phase_)
 {
-   if (1) hw::testLed(phase_);
-   if (1) hw::testLcd(phase_);
-   if (1) hw::testPhysMidi(phase_);
-   if (1) hw::testUsbFileMidi(phase_);
-   if (1) hw::testDac(phase_);
-   if (1) hw::testYM2151(phase_);
+   if (1) HWR::testLed(phase_);
+   if (1) HWR::testLcd(phase_);
+   if (1) HWR::testPhysMidi(phase_);
+   if (1) HWR::testUsbFileMidi(phase_);
+   if (1) HWR::testDac(phase_);
+   if (1) HWR::testYM2151(phase_);
 }
 
 static void consoleReport()
@@ -51,23 +51,23 @@ static void consoleReport()
 
 int main()
 {
-   test(hw::DECL);
+   test(HWR::DECL);
 
    consoleReport();
 
    printf("INFO\n\n");
 
-   test(hw::INFO);
+   test(HWR::INFO);
 
    printf("\nSTART\n");
 
-   test(hw::START);
+   test(HWR::START);
 
    printf("RUN\n\n");
 
    while(true)
    {
-      test(hw::RUN);
+      test(HWR::RUN);
 
       usleep(500000);
    }

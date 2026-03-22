@@ -15,7 +15,7 @@
 #include "MTL/chip/PioClock.h"
 #include "MTL/chip/PioYMDAC.h"
 
-namespace hw {
+namespace HWR {
 
 template <typename PIO_SYNTH = MTL::Pio0,
           typename PIO_DAC   = MTL::Pio1,
@@ -186,6 +186,6 @@ private:
    MTL::PioYMDAC<PIO_DAC>   dac_in{};
 };
 
-} // namespace hw
+} // namespace HWR
 
 #endif

@@ -7,14 +7,14 @@
 
 #include <cstdio>
 
-namespace hw {
+namespace HWR {
 
 const unsigned SAMPLE_RATE = 48000;
 const unsigned FREQ        = 440;
 const uint32_t PHASE_INC   = ((FREQ << 22) / SAMPLE_RATE) << 10;
 const unsigned FRAC_BITS   = 32 - LOG2_TABLE_SINE_SIZE;
 
-static hw::Dac* dac_ptr{nullptr};
+static HWR::Dac* dac_ptr{nullptr};
 
 #if !defined(HW_NATIVE)
 static void runDAC()
@@ -46,7 +46,7 @@ static void runDAC()
 
 inline NOINLINE void testDac(TestPhase phase_)
 {
-   static hw::Dac dac{SAMPLE_RATE};
+   static HWR::Dac dac{SAMPLE_RATE};
 
    switch(phase_)
    {
@@ -72,4 +72,4 @@ inline NOINLINE void testDac(TestPhase phase_)
    }
 }
 
-} // namespace hw
+} // namespace HWR

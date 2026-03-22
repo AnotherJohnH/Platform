@@ -7,14 +7,14 @@
 
 #include <cstdio>
 
-namespace hw {
+namespace HWR {
 
 inline NOINLINE void testDisplay(TestPhase phase_)
 {
    static const STB::Colour WHITE = STB::RGB(0xC0, 0xC0, 0xC0);
    static const STB::Colour BLACK = STB::RGB(0x00, 0x00, 0x00);
 
-   static hw::Display::Canvas canvas{};
+   static HWR::Display::Canvas canvas{};
 
    switch(phase_)
    {
@@ -37,4 +37,4 @@ inline NOINLINE void testDisplay(TestPhase phase_)
    }
 }
 
-} // namespace hw
+} // namespace HWR

@@ -1,17 +1,14 @@
-//-------------------------------------------------------------------------------
-// Copyright (c) 2025 John D. Haughton
-// SPDX-License-Identifier: MIT
-//-------------------------------------------------------------------------------
+// Flash LED at ~1 Hz
 
 #include <unistd.h>
 
 #include "HWR/blinky/Config.h"
 
-static hw::Led led;
+static HWR::Led led;
 
 int main()
 {
-   led = true;
+   led = false;
 
    while(true)
    {

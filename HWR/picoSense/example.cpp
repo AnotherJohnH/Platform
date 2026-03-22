@@ -12,17 +12,17 @@
 #include "HWR/picoSense/Config.h"
 #include "HWR/FilePortal.h"
 
-static hw::FilePortal file_portal{"picoSense",
+static HWR::FilePortal file_portal{"picoSense",
                           "https://github.com/SloeComputers/HWR/blob/main/picoSense"};
 
 inline const STB::Colour WHITE = STB::RGB(0xC0, 0xC0, 0xC0);
 
-static hw::Led             led;
-static hw::Buttons         buttons{/* enable_irq */ true};
-static hw::Display         display{};
-static hw::Display::Canvas canvas{};
-static hw::UsbFile         usb{0x91C0, "picoSense", file_portal};
-static hw::TempSense       sensor;
+static HWR::Led             led;
+static HWR::Buttons         buttons{/* enable_irq */ true};
+static HWR::Display         display{};
+static HWR::Display::Canvas canvas{};
+static HWR::UsbFile         usb{0x91C0, "picoSense", file_portal};
+static HWR::TempSense       sensor;
 
 extern "C" void IRQ_IO_BANK0() { buttons.irq(); }
 extern "C" void IRQ_USBCTRL()  { usb.irq(); }

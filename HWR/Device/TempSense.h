@@ -26,7 +26,7 @@
 
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_TEMP_SENSE_P21_P22_MCP9808)
 
@@ -74,4 +74,4 @@ public:
 
 #endif
 
-} // namespace hw
+} // namespace HWR

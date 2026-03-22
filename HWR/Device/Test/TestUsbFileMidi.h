@@ -8,9 +8,9 @@
 #include "Test.h"
 #include "HWR/FilePortal.h"
 
-namespace hw {
+namespace HWR {
 
-static hw::UsbFileMidi* usb_ptr{nullptr};
+static HWR::UsbFileMidi* usb_ptr{nullptr};
 
 extern "C" void IRQ_USBCTRL()
 {
@@ -22,10 +22,10 @@ extern "C" void IRQ_USBCTRL()
    
 inline NOINLINE void testUsbFileMidi(TestPhase phase_)
 {  
-   static hw::FilePortal file_portal{"HW_TEST",
+   static HWR::FilePortal file_portal{"HW_TEST",
                                      "https://github.com/SloeComputers/HWR/"};
    
-   static hw::UsbFileMidi usb{0x91C0, "test_hw", file_portal};
+   static HWR::UsbFileMidi usb{0x91C0, "test_hw", file_portal};
    
    switch(phase_)
    {
@@ -40,7 +40,7 @@ inline NOINLINE void testUsbFileMidi(TestPhase phase_)
 
    case START:
       usb.setDebug(true);
-      file_portal.addREADME("Test hw::UsbFileMidi");
+      file_portal.addREADME("Test HWR::UsbFileMidi");
       break;
 
    case RUN:
@@ -49,4 +49,4 @@ inline NOINLINE void testUsbFileMidi(TestPhase phase_)
    }
 } 
 
-} // namespace hw
+} // namespace HWR

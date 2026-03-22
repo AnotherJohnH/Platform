@@ -1,6 +1,6 @@
 # HWR config blinky
 
-Hardware config for platforms that support a single LED.
+Hardware config for projects based around a single LED.
 
 Useful as a "Hello, world!" test for new targets and variants.
 
@@ -18,3 +18,29 @@ Useful as a "Hello, world!" test for new targets and variants.
 | nrF52      | MICROBIT   | microbit board |
 | macOS      | NATIVE     | Host OS |
 | Linux      | NATIVE     | Host OS |
+
+## Example
+
+```cpp
+// Flash LED at ~1 Hz
+
+#include <unistd.h>
+
+#include "HWR/blinky/Config.h"
+
+static HWR::Led led;
+
+int main()
+{
+   led = false;
+
+   while(true)
+   {
+      led = not led;
+
+      usleep(500000);
+   }
+
+   return 0;
+}
+```

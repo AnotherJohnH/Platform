@@ -28,7 +28,7 @@ const unsigned RAM_SIZE   = 100;
 
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_PROFILER)
 
@@ -120,4 +120,4 @@ public:
 
 #endif
 
-} // namespace hw
+} // namespace HWR

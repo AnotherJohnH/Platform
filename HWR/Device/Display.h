@@ -21,7 +21,7 @@
 
 #endif
 
-namespace hw {
+namespace HWR {
 
 #if defined(HW_DISPLAY_WAVESHARE_EPAPER)
 
@@ -110,4 +110,4 @@ public:
 
 #endif
 
-} // namespace hw
+} // namespace HWR

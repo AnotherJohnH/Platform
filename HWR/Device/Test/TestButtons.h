@@ -7,9 +7,9 @@
 
 #include <cstdio>
 
-namespace hw {
+namespace HWR {
 
-static hw::Buttons* buttons_ptr{nullptr};
+static HWR::Buttons* buttons_ptr{nullptr};
 
 extern "C" void IRQ_IO_BANK0()
 {
@@ -21,7 +21,7 @@ extern "C" void IRQ_IO_BANK0()
 
 inline NOINLINE void testButtons(TestPhase phase_)
 {
-   static hw::Buttons buttons{};
+   static HWR::Buttons buttons{};
 
    switch(phase_)
    {
@@ -50,4 +50,4 @@ inline NOINLINE void testButtons(TestPhase phase_)
    }
 }
 
-} // namespace hw
+} // namespace HWR

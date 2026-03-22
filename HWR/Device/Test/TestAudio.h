@@ -31,7 +31,7 @@ static int16_t oscRight()
    return sample;
 }
 
-static hw::Audio<SAMPLES_PER_TICK>* audio_ptr{nullptr};
+static HWR::Audio<SAMPLES_PER_TICK>* audio_ptr{nullptr};
 
 extern "C" void IRQ_DMA_0()
 {
@@ -64,7 +64,7 @@ void MTL::Audio::getSamples(uint32_t* buffer, unsigned n)
 #else
 
 template<>
-void hw::Audio<SAMPLES_PER_TICK>::getSamples(int16_t* buffer, unsigned n)
+void HWR::Audio<SAMPLES_PER_TICK>::getSamples(int16_t* buffer, unsigned n)
 {
    for(unsigned i = 0; i < n; i += 2)
    {
@@ -75,11 +75,11 @@ void hw::Audio<SAMPLES_PER_TICK>::getSamples(int16_t* buffer, unsigned n)
 
 #endif
 
-namespace hw {
+namespace HWR {
 
 inline NOINLINE void testAudio(TestPhase phase_)
 {
-   static hw::Audio<SAMPLES_PER_TICK> audio{SAMPLE_RATE};
+   static HWR::Audio<SAMPLES_PER_TICK> audio{SAMPLE_RATE};
 
    switch(phase_)
    {
@@ -101,4 +101,4 @@ inline NOINLINE void testAudio(TestPhase phase_)
    }
 }
 
-} // namespace hw
+} // namespace HWR
