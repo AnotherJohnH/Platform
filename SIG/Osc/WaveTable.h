@@ -1,0 +1,107 @@
+//-------------------------------------------------------------------------------
+// Copyright (c) 2025 John D. Haughton
+// SPDX-License-Identifier: MIT
+//-------------------------------------------------------------------------------
+   
+#pragma once
+
+#include "SIG/Osc/Base.h"
+#include "SIG/Gain.h"
+
+namespace SIG {
+
+namespace Osc {
+
+class WaveTable : public Base
+{
+public:
+   WaveTable() = default;
+
+   Signal operator()()
+   {
+      unsigned index = phase >> SHIFT;
+
+      phase += delta;
+
+      return gain(table[index]);
+   }
+
+   Signal operator()(Signal mod_)
+   {
+      unsigned index = phase >> SHIFT;
+
+      phase += modDelta(mod_);
+
+      return gain(table[index]);
+   }
+
+   void computeWave(Signal (*func)(Signal))
+   {
+      Signal local[SIZE];
+
+      for(unsigned i = 0; i < SIZE; ++i)
+      {
+         local[i] = func(Signal(i) / SIZE);
+      }
+
+      updateWave(local);
+   }
+
+   void computeWave(Signal (*func)(Signal, void*), void* data)
+   {
+      Signal local[SIZE];
+
+      for(unsigned i = 0; i < SIZE; ++i)
+      {
+         local[i] = func(double(i) / SIZE, data);
+      }
+
+      updateWave(local);
+   }
+
+   const Signal* getTable(size_t& size) const
+   {
+      size = SIZE;
+      return table;
+   }
+
+   Gain gain{};
+
+private:
+   //! Rewrite wave tabel with new data
+   void updateWave(Signal* data)
+   {
+      Signal min = +1.0;
+      Signal max = -1.0;
+
+      for(unsigned i = 0; i < SIZE; ++i)
+      {
+         Signal value = data[i];
+
+         if(value > max) max = value;
+         if(value < min) min = value;
+      }
+
+      // Rescale to -1..+1
+      for(unsigned i = 0; i < SIZE; ++i)
+      {
+         data[i] = (2.0 * (data[i] - min) / (max - min)) - 1.0;
+      }
+
+      // Final copy to live wave table
+      for(unsigned i = 0; i < SIZE; ++i)
+      {
+         table[i] = data[i];
+      }
+   }
+
+   static constexpr unsigned LOG2_SIZE = 10;
+   static constexpr unsigned SIZE      = 1 << LOG2_SIZE;
+   static constexpr unsigned SHIFT     = sizeof(Phase) * 8 - LOG2_SIZE;
+
+   Signal table[SIZE];
+};
+
+} // namespace Osc
+
+} // namespace SIG

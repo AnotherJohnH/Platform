@@ -5,6 +5,7 @@
    
 #pragma once
 
+#include "Additive.h"
 #include "Noise.h"
 #include "Pulse.h"
 #include "Pwm.h"
@@ -13,3 +14,4 @@
 #include "Sine.h"
 #include "Square.h"
 #include "Triangle.h"
+#include "WaveTable.h"
