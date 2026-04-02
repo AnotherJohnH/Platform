@@ -12,6 +12,7 @@ namespace SIG {
 
 namespace Osc {
 
+template <unsigned LOG2_SIZE = 10>
 class WaveTable : public Base
 {
 public:
@@ -35,25 +36,13 @@ public:
       return gain(table[index]);
    }
 
-   void computeWave(Signal (*func)(Signal))
+   void computeWave()
    {
       Signal local[SIZE];
 
       for(unsigned i = 0; i < SIZE; ++i)
       {
-         local[i] = func(Signal(i) / SIZE);
-      }
-
-      updateWave(local);
-   }
-
-   void computeWave(Signal (*func)(Signal, void*), void* data)
-   {
-      Signal local[SIZE];
-
-      for(unsigned i = 0; i < SIZE; ++i)
-      {
-         local[i] = func(double(i) / SIZE, data);
+         local[i] = wavetableSample(Float(i) / SIZE);
       }
 
       updateWave(local);
@@ -66,6 +55,9 @@ public:
    }
 
    Gain gain{};
+
+protected:
+   virtual Signal wavetableSample(Float t) = 0;
 
 private:
    //! Rewrite wave tabel with new data
@@ -95,7 +87,6 @@ private:
       }
    }
 
-   static constexpr unsigned LOG2_SIZE = 10;
    static constexpr unsigned SIZE      = 1 << LOG2_SIZE;
    static constexpr unsigned SHIFT     = sizeof(Phase) * 8 - LOG2_SIZE;
 

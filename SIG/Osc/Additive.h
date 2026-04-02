@@ -14,22 +14,16 @@ namespace SIG {
 namespace Osc {
 
 template <unsigned N>
-class Additive : public WaveTable
+class Additive : public WaveTable<>
 {
 public:
    Additive() = default;
-
-   void compute()
-   {
-      computeWave(thunk, this);
-   }
 
    Float a[N + 1] = {};
    Float b[N + 1] = {};
 
 private:
-   // TODO convert back to Lambda when embedded builds allow
-   Signal func(Signal t)
+   Signal wavetableSample(Float t) override
    {
       Signal value = a[0] / 2.0;
 
@@ -40,12 +34,6 @@ private:
       }
 
       return value;
-   }
-
-   static Signal thunk(Signal t, void* that)
-   {
-      Additive* osc = (Additive*)that;
-      return osc->func(t);
    }
 };
 
