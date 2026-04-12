@@ -6,7 +6,6 @@
 #pragma once
 
 #include "Types.h"
-#include "Clip/Clip.h"
 #include "Const.h"
 #include "Conv.h"
 #include "Delay.h"
@@ -19,3 +18,4 @@
 #include "LogPot.h"
 #include "LinSlew.h"
 #include "Osc/Osc.h"
+#include "clip/clip.h"

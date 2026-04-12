@@ -5,24 +5,25 @@
 
 #pragma once
 
-#include <cmath>
-
 #include "SIG/Types.h"
 
 namespace SIG {
 
-namespace Clip {
+namespace clip {
 
-//! Tanh clip signal to -1.0...+1.0
-class Tanh
+//! Hard clip signal to -1.0...+1.0
+class Hard
 {
 public:
-   inline Signal operator()(Signal x, Float drive = 3.0f)
+   inline Signal operator()(Signal x_)
    {
-      return tanhf(x * drive);
+           if (x_ > Signal(+1.0)) return Signal(+1.0);
+      else if (x_ < Signal(-1.0)) return Signal(-1.0);
+
+      return x_;
    }
 };
 
-} // namespace Clip
+} // namespace clip
 
 } // namespace SIG

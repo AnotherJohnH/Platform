@@ -6,7 +6,7 @@
 #include "SIG/Gain.h"
 
 #include "STB/Test.h"
-#include "Round.h"
+#include "round.h"
 
 using namespace SIG;
 

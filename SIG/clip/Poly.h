@@ -9,21 +9,21 @@
 
 namespace SIG {
 
-namespace Clip {
+namespace clip {
 
-//! Hard clip signal to -1.0...+1.0
-class Hard
+//! Poly clip signal to -1.0...+1.0
+class Poly
 {
 public:
-   inline Signal operator()(Signal x_)
+   inline Signal operator()(Signal x)
    {
-           if (x_ > +1.0f) return +1.0f;
-      else if (x_ < -1.0f) return -1.0f;
+           if (x > Signal(+1.0)) return Signal(+1.0);
+      else if (x < Signal(-1.0)) return Signal(-1.0);
 
-      return x_;
+      return Signal(1.5) * x - Signal(0.5) * (x * x * x);
    }
 };
 
-} // namespace Clip
+} // namespace clip
 
 } // namespace SIG

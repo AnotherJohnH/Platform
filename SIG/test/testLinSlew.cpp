@@ -6,7 +6,7 @@
 #include "SIG/LinSlew.h"
 
 #include "STB/Test.h"
-#include "Round.h"
+#include "round.h"
 
 using namespace SIG;
 

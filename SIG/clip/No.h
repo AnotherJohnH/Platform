@@ -9,7 +9,7 @@
 
 namespace SIG {
 
-namespace Clip {
+namespace clip {
 
 //! No clip pass thru
 class No
@@ -21,6 +21,6 @@ public:
    }
 };
 
-} // namespace Clip
+} // namespace clip
 
 } // namespace SIG
