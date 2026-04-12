@@ -5,7 +5,7 @@
    
 #pragma once
 
-#include "SIG/Types.h"
+#include "Types.h"
 
 namespace SIG {
 
@@ -21,8 +21,8 @@ inline constexpr Rate SAMPLE_RATE{SIG_SAMPLE_RATE};
 inline constexpr Rate SAMPLE_RATE{48000};   //!< 48.0 kHz
 #endif
 
-inline constexpr Float GAIN_MAX_DB = +20.0f;
-inline constexpr Float GAIN_MIN_DB = -60.0f;
+inline constexpr Float GAIN_MAX_DB = Float{+20.0};
+inline constexpr Float GAIN_MIN_DB = Float{-60.0};
 
 inline constexpr signed GAIN15_60_DB = 0x6000;
 inline constexpr signed GAIN15_40_DB = 0x4000;

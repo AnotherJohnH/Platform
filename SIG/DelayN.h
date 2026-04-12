@@ -9,17 +9,24 @@
 
 namespace SIG {
 
-//! Single sample delay
-class Delay
+//! Fixed length sample delay
+template <unsigned LENGTH>
+class DelayN
 {
+   static_assert(LENGTH != 0);
+
 public:
-   Delay() = default;
+   DelayN() = default;
 
    //! \return the size of the delay (samples)
-   unsigned size() const { return 1; }
+   unsigned size() const { return LENGTH; }
 
    //! Reset the delay to default state
-   void reset() { buffer = Signal{}; }
+   void reset()
+   {
+      for(unsigned i = 0; i < size(); ++i)
+         buffer[i] = Signal{};
+   }
 
    //! Read the current output sample
    Signal operator()() const { return read(); }
@@ -32,10 +39,16 @@ public:
 
 private:
    //! Read the current output sample
-   Signal read() const { return buffer; }
+   Signal read() const { return buffer[index]; }
 
    //! Provide the next input sample
-   void write(Signal x_) { buffer = x_; }
+   void write(Signal x_)
+   {
+      buffer[index] = x_;
+
+      if (++index >= LENGTH)
+         index = 0;
+   }
 
    //! Provide the next input sample and return the current output sample
    Signal process(Signal x_)
@@ -45,7 +58,8 @@ private:
       return y;
    }
 
-   Signal buffer{};
+   unsigned index{0};
+   Signal   buffer[LENGTH] = {};
 };
 
 } // namespace SIG

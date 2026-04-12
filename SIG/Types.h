@@ -11,8 +11,12 @@ namespace SIG {
 
 #if defined(SIG_FP64)
 using Float = double;
-#else
+#elif defined(SIG_FP32)
 using Float = float;
+#elif defined(SIG_I32)
+using Float = int32_t;
+#else
+#error "Float type must be defined e.g. -DSIG_FP32"
 #endif
 
 using Signal = Float;

@@ -14,13 +14,25 @@ autogen_py(Table_note ${SIG_SAMPLE_RATE})
 autogen_py(Table_gain ${SIG_GAIN_LOG2_SIZE})
 autogen_py(Table_clip_tanh)
 
-add_library(SIG STATIC
-            Table_note.cpp
-            Table_gain.cpp
-            Table_clip_tanh.cpp)
+set(SIG_VARIANTS
+    FP32
+    FP64)
 
-target_include_directories(SIG PUBLIC .. ${CMAKE_CURRENT_BINARY_DIR})
+foreach(variant IN LISTS SIG_VARIANTS)
 
-target_compile_definitions(SIG PUBLIC SIG_SAMPLE_RATE=${SIG_SAMPLE_RATE})
+   set(lib SIG_${variant})
+
+   add_library(${lib} STATIC
+               Table_note.cpp
+               Table_gain.cpp
+               Table_clip_tanh.cpp)
+
+   target_compile_definitions(${lib} PUBLIC ${lib})
+
+   target_include_directories(${lib} PUBLIC .. ${CMAKE_CURRENT_BINARY_DIR})
+
+   target_compile_definitions(${lib} PUBLIC SIG_SAMPLE_RATE=${SIG_SAMPLE_RATE})
+
+endforeach()
 
 add_subdirectory(test)

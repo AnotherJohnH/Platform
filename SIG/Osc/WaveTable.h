@@ -88,7 +88,7 @@ private:
    }
 
    static constexpr unsigned SIZE      = 1 << LOG2_SIZE;
-   static constexpr unsigned SHIFT     = sizeof(Phase) * 8 - LOG2_SIZE;
+   static constexpr unsigned SHIFT     = sizeof(UPhase) * 8 - LOG2_SIZE;
 
    Signal table[SIZE];
 };

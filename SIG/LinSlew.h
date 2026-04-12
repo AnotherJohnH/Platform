@@ -5,7 +5,8 @@
    
 #pragma once
 
-#include "SIG.h"
+#include "Const.h"
+#include "Types.h"
 
 namespace SIG {
 
@@ -27,7 +28,7 @@ public:
    void set(Signal value_)
    {
       value = value_;
-      delta = 0.0f;
+      delta = Signal{0.0};
    }
 
    //! Set next target
@@ -57,9 +58,9 @@ public:
    }
 
 private:
-   Signal value{0.0f};
-   Signal delta{0.0f};
-   Float  recip_steps{0.0f};
+   Signal value{0.0};
+   Signal delta{0.0};
+   Float  recip_steps{0.0};
 };
 
 } // namespace SIG

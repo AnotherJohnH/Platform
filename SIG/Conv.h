@@ -7,8 +7,8 @@
 
 #include <cmath>
 
-#include "SIG/Types.h"
-#include "SIG/Const.h"
+#include "Types.h"
+#include "Const.h"
 
 #include "Table_gain.h"
 #include "Table_note.h"

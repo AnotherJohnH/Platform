@@ -60,7 +60,7 @@ private:
    UPhase limit{UPHASE_HALF};
 };
 
-using Pwm = PwmShift<+1.0f,-1.0f>;
+using Pwm = PwmShift<Signal{+1.0},Signal{-1.0}>;
 
 } // namespace Osc
 

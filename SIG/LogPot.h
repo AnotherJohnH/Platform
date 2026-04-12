@@ -10,24 +10,24 @@
 
 #pragma once
 
-#include "SIG.h"
+#include "Types.h"
 
 namespace SIG {
 
 class LogPot
 {
 public:
-   LogPot(SIG::Float max_x, SIG::Float mid_y)
+   LogPot(Float max_x, Float mid_y)
    {
       config(max_x, mid_y);
    }
 
-   void config(SIG::Float max_x, SIG::Float mid_y)
+   void config(Float max_x, Float mid_y)
    {
-      bp = max_x * 0.5f;
+      bp = max_x * Float{0.5};
       m1 = mid_y / bp;
-      m2 = (1.0f - mid_y) / bp;
-      k2 = 1.0f - m2 * max_x;
+      m2 = (Float{1.0} - mid_y) / bp;
+      k2 = Float{1.0} - m2 * max_x;
    }
 
    Signal operator()(Signal x) const
@@ -37,10 +37,10 @@ public:
    }
 
 private:
-   SIG::Float bp{0.5f};
-   SIG::Float m1{1.0f};
-   SIG::Float m2{1.0f};
-   SIG::Float k2{0.0f};
+   Float bp{0.5};
+   Float m1{1.0};
+   Float m2{1.0};
+   Float k2{0.0};
 };
 
 } // namespace SIG

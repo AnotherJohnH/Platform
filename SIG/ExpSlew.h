@@ -5,7 +5,8 @@
    
 #pragma once
 
-#include "SIG.h"
+#include "Const.h"
+#include "Types.h"
 
 #include <cmath>
 
@@ -14,7 +15,7 @@ namespace SIG {
 class ExpSlew
 {
 public:
-   ExpSlew(Float tc_ = 1.0f)
+   ExpSlew(Float tc_ = Float{1.0f})
    {
       setTimeConst(tc_);
    }
@@ -22,7 +23,11 @@ public:
    //! Set time constant (s)
    void setTimeConst(Float time_)
    {
+#if defined(SIG_FP32)
       alpha = 1.0f - expf(-1.0f / (time_ * SAMPLE_RATE));
+#elif defined(SIG_FP64)
+      alpha = 1.0 - exp(-1.0 / (time_ * SAMPLE_RATE));
+#endif
    }
 
    //! Set output to constant value (no slew)
@@ -58,9 +63,9 @@ public:
    }
 
 private:
-   Signal value{0.0f};
-   Signal target{0.0f};
-   Float  alpha{0.0f};
+   Signal value{};
+   Signal target{};
+   Float  alpha{};
 };
 
 } // namespace SIG
