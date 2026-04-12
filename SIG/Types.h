@@ -9,14 +9,14 @@
 
 namespace SIG {
 
-#if defined(SIG_FP64)
+#if defined(SIG_FL64)
 using Float = double;
-#elif defined(SIG_FP32)
+#elif defined(SIG_FL32)
 using Float = float;
-#elif defined(SIG_I32)
+#elif defined(SIG_FX32)
 using Float = int32_t;
 #else
-#error "Float type must be defined e.g. -DSIG_FP32"
+#error "Float type must be defined e.g. -DSIG_FL32"
 #endif
 
 using Signal = Float;

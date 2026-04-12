@@ -23,9 +23,9 @@ public:
    //! Set time constant (s)
    void setTimeConst(Float time_)
    {
-#if defined(SIG_FP32)
+#if defined(SIG_FL32)
       alpha = 1.0f - expf(-1.0f / (time_ * SAMPLE_RATE));
-#elif defined(SIG_FP64)
+#elif defined(SIG_FL64)
       alpha = 1.0 - exp(-1.0 / (time_ * SAMPLE_RATE));
 #endif
    }

@@ -15,8 +15,8 @@ autogen_py(Table_gain ${SIG_GAIN_LOG2_SIZE})
 autogen_py(Table_clip_tanh)
 
 set(SIG_VARIANTS
-    FP32
-    FP64)
+    FL32
+    FL64)
 
 foreach(variant IN LISTS SIG_VARIANTS)
 
