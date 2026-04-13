@@ -8,7 +8,7 @@
 #include "SIG/Delay.h"
 #include "SIG/Gain.h"
 
-namespace SIG {
+namespace SIG::filter {
 
 class FFComb
 {
@@ -26,4 +26,4 @@ private:
    Delay delay;
 };
 
-} // namespace SIG
+} // namespace SIG::filter

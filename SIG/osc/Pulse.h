@@ -5,11 +5,9 @@
    
 #pragma once
 
-#include "SIG/Osc/Base.h"
+#include "Base.h"
 
-namespace SIG {
-
-namespace Osc {
+namespace SIG::osc {
 
 class Pulse : public Base
 {
@@ -90,8 +88,6 @@ public:
       return gain(signal);
    }
 
-   Gain gain{};
-
 private:
    static const unsigned LOG2_PATTERN_LENGTH = 5;
    static const uint64_t PATTERN_LENGTH      = 1 << LOG2_PATTERN_LENGTH;
@@ -100,6 +96,4 @@ private:
    bool delay[3];
 };
 
-} // namespace Osc
-
-} // namespace SIG
+} // namespace SIG::osc

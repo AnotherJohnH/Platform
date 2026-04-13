@@ -5,9 +5,7 @@
    
 #pragma once
 
-namespace SIG {
-
-namespace Filter {
+namespace SIG::filter {
 
 enum Type
 {
@@ -19,6 +17,4 @@ enum Type
    HISHELF
 };
 
-} // namespacde Filter
-
-} // namespacde SIG
+} // namespacde SIG::filter

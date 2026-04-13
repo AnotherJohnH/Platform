@@ -5,9 +5,11 @@
    
 #pragma once
 
+#include "SIG/Const.h"
+#include "SIG/Conv.h"
 #include "SIG/Types.h"
 
-namespace SIG::Env {
+namespace SIG::env {
 
 class Adsr
 {
@@ -167,4 +169,4 @@ private:
    int32_t  phase_samples[NUM_PHASES] = {};
 };
 
-} // namespace SIG::Env
+} // namespace SIG::env

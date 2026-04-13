@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include "SIG/SIG.h"
+#include "SIG/env/Adsr.h"
 
 #include "STB/Test.h"
 
@@ -11,7 +11,7 @@ using namespace SIG;
 
 TEST(SIG_env, adsr)
 {
-   Env::Adsr env{};
+   env::Adsr env{};
 
    env.setAttack_mS(5);
    env.setDecay_mS(10);
@@ -29,6 +29,6 @@ TEST(SIG_env, adsr)
       if (i == TEST_SAMPLE_OFF)
          env.off();
 
-      printf("%5u: %f\n", i, env());
+      // printf("%5u: %f\n", i, env());
    }
 }

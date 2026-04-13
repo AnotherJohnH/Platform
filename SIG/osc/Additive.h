@@ -7,11 +7,9 @@
 
 #include <cmath>
 
-#include "SIG/Osc/WaveTable.h"
+#include "WaveTable.h"
 
-namespace SIG {
-
-namespace Osc {
+namespace SIG::osc {
 
 template <unsigned N>
 class Additive : public WaveTable<>
@@ -29,14 +27,17 @@ private:
 
       for(size_t n = 1; n <= N; n++)
       {
+#if defined(SIG_FL32)
          value += a[n] * sinf(n * t * float(2 * M_PI));
          value += b[n] * cosf(n * t * float(2 * M_PI));
+#elif defined(SIG_FL64)
+         value += a[n] * sin(n * t * 2 * M_PI);
+         value += b[n] * cos(n * t * 2 * M_PI);
+#endif
       }
 
       return value;
    }
 };
 
-} // namespace Osc
-
-} // namespace SIG
+} // namespace SIG::osc

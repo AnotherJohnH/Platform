@@ -5,12 +5,9 @@
    
 #pragma once
 
-#include "SIG/Osc/Base.h"
-#include "SIG/Gain.h"
+#include "Base.h"
 
-namespace SIG {
-
-namespace Osc {
+namespace SIG::osc {
 
 template <unsigned LOG2_SIZE = 10>
 class WaveTable : public Base
@@ -54,8 +51,6 @@ public:
       return table;
    }
 
-   Gain gain{};
-
 protected:
    virtual Signal wavetableSample(Float t) = 0;
 
@@ -93,6 +88,4 @@ private:
    Signal table[SIZE];
 };
 
-} // namespace Osc
-
-} // namespace SIG
+} // namespace SIG::osc

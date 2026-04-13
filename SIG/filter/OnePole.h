@@ -8,11 +8,9 @@
 #include <cmath>
 
 #include "SIG/Types.h"
-#include "SIG/Filter/Type.h"
+#include "Type.h"
 
-namespace SIG {
-
-namespace Filter {
+namespace SIG::filter {
 
 class OnePole
 {
@@ -119,6 +117,4 @@ private:
    float alpha{};
 };
 
-} // namespace Filter
-
-} // namespace SIG
+} // namespace SIG::filter

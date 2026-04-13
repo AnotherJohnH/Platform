@@ -5,11 +5,12 @@
    
 #pragma once
 
+#include "SIG/Const.h"
+#include "SIG/Conv.h"
+#include "SIG/Gain.h"
 #include "SIG/Types.h"
 
-namespace SIG {
-
-namespace Osc {
+namespace SIG::osc {
 
 class Base
 {
@@ -77,6 +78,8 @@ public:
    //! Set the current phase
    void setPhase(UPhase phase_) { phase = phase_; }
 
+   Gain gain{};
+
 protected:
    //! Calculate delta for a frequency modulation input
    uint32_t modDelta(Signal mod_)
@@ -120,6 +123,4 @@ private:
    float    dt{};
 };
 
-} // namespace Osc
-
-} // namespace SIG
+} // namespace SIG::osc

@@ -5,7 +5,7 @@
    
 #pragma once
 
-namespace SIG {
+namespace SIG::env {
 
 class LfoEnv
 {
@@ -75,4 +75,4 @@ private:
    Signal   attack_rate{0.0};
 };
 
-} // namespace SIG
+} // namespace SIG::env

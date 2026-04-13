@@ -5,12 +5,9 @@
    
 #pragma once
 
-#include "SIG/Osc/Base.h"
-#include "SIG/Gain.h"
+#include "Base.h"
 
-namespace SIG {
-
-namespace Osc {
+namespace SIG::osc {
 
 class Triangle : public Base
 {
@@ -44,10 +41,6 @@ public:
 
       return gain(signal);
    }
-
-   Gain gain{};
 };
 
-} // namespace Osc
-
-} // namespace SIG
+} // namespace SIG::osc

@@ -2,30 +2,20 @@
 // Copyright (c) 2025 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
-
-// Transfer function...
-//
-//                     -1      -2
-//            b0 + b1.z  + b2.z
-//   H(z) = ----------------------
-//                     -1      -2
-//             1 + a1.z  + a2.z
    
 #pragma once
 
 #include <cmath>
 
 #include "SIG/Types.h"
-#include "SIG/Filter/Type.h"
+#include "Type.h"
 
-namespace SIG {
+namespace SIG::filter {
 
-namespace Filter {
-
-class BiQuad
+class DualBiQuad
 {
 public:
-   BiQuad(Type type_ = BYPASS)
+   DualBiQuad(Type type_ = BYPASS)
    {
       setType(type_);
       zero();
@@ -76,6 +66,7 @@ public:
    void zero()
    {
       x[1] = x[2] = 0.f;
+      m[1] = m[2] = 0.f;
       y[1] = y[2] = 0.f;
    }
 
@@ -84,12 +75,17 @@ public:
       const Coef& c = coef[ping_pong];
 
       x[0] = x_;
-
-      y[0] = c.b0 * x[0] + c.b1 * x[1] + c.b2 * x[2]
-                         - c.a1 * y[1] - c.a2 * y[2];
+      m[0] = c.b0 * x[0] + c.b1 * x[1] + c.b2 * x[2]
+                         - c.a1 * m[1] - c.a2 * m[2];
 
       x[2] = x[1];
       x[1] = x[0];
+
+      y[0] = c.b0 * m[0] + c.b1 * m[1] + c.b2 * m[2]
+                         - c.a1 * y[1] - c.a2 * y[2];
+
+      m[2] = m[1];
+      m[1] = m[0];
 
       y[2] = y[1];
       y[1] = y[0];
@@ -165,7 +161,6 @@ private:
 
    struct Coef
    {
-      // Float a0{}; has been normalized away to 1
       Float a1{};
       Float a2{};
       Float b0{};
@@ -177,6 +172,7 @@ private:
 
    // Signal pipeline
    Signal x[3] = {}; //!< Input
+   Signal m[3] = {}; //!< Internal
    Signal y[3] = {}; //!< Output
 
    // Coefficients
@@ -196,6 +192,4 @@ private:
    Float two_sqrt_A{};
 };
 
-} // namespace Filter
-
-} // namespace SIG
+} // namespace SIG::filter

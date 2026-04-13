@@ -7,12 +7,9 @@
 
 #include <cmath>
 
-#include "SIG/Osc/Base.h"
-#include "SIG/Gain.h"
+#include "Base.h"
 
-namespace SIG {
-
-namespace Osc {
+namespace SIG::osc {
 
 class Sine : public Base
 {
@@ -25,7 +22,11 @@ public:
 
       phase += delta;
 
+#if defined(SIG_FL32)
       return gain(sinf(theta));
+#elif defined(SIG_FL64)
+      return gain(sin(theta));
+#endif
    }
 
    Signal operator()(Signal mod_)
@@ -34,12 +35,12 @@ public:
 
       phase += modDelta(mod_);
 
+#if defined(SIG_FL32)
       return gain(sinf(theta));
+#elif defined(SIG_FL64)
+      return gain(sin(theta));
+#endif
    }
-
-   Gain gain{};
 };
 
-} // namespace Osc
-
-} // namespace SIG
+} // namespace SIG::osc

@@ -20,13 +20,14 @@ if(${PLT_NATIVE})
                       testGain.cpp
                       testLinSlew.cpp
                       testLogPot.cpp
+                      test_envAdsr.cpp
                       test_clipHard.cpp
                       test_clipNo.cpp
                       test_clipPoly.cpp
                       test_clipPoly5.cpp
                       test_clipTanh.cpp
-                      testOsc.cpp
-                      testEnv.cpp)
+                      test_oscPulse.cpp
+                      test_oscSquare.cpp)
 
        target_link_libraries(${test} ${lib} STB)
 

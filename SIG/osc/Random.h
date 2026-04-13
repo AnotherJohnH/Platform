@@ -5,12 +5,9 @@
    
 #pragma once
 
-#include "SIG/Osc/Base.h"
-#include "SIG/Gain.h"
+#include "Base.h"
 
-namespace SIG {
-
-namespace Osc {
+namespace SIG::osc {
 
 class Random : public Base
 {
@@ -43,8 +40,6 @@ public:
       return gain(signal);
    }
 
-   Gain gain{};
-
 private:
    void nextSample()
    {
@@ -60,6 +55,4 @@ private:
    UPhase   last_phase{UPHASE_MAX};
 };
 
-} // namespace Osc
-
-} // namespace SIG
+} // namespace SIG::osc

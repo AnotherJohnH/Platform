@@ -5,25 +5,29 @@
    
 #pragma once
 
-#include "SIG/Osc/Base.h"
-#include "SIG/Gain.h"
+#include "Base.h"
 
-namespace SIG {
+namespace SIG::osc {
 
-namespace Osc {
-
-class Square : public Base
+template <Signal HIGH, Signal LOW>
+class PwmShift : public Base
 {
 public:
-   Square() = default;
+   PwmShift() = default;
+
+   //! Set pulse width 0.0 => square
+   void setWidth(Signal width_)
+   {
+      limit = UPHASE_HALF + signal2uphase(width_);
+   }
 
    Signal operator()()
    {
-      Signal signal = phase < UPHASE_HALF ? +1.0f : -1.0f;
+      Signal signal = phase < limit ? HIGH : LOW;
 
       float t = uphase2float(phase);
       signal += polyBLEP(t);
-      t = uphase2float(phase - UPHASE_HALF);
+      t = uphase2float(phase - limit);
       signal -= polyBLEP(t);
 
       phase += delta;
@@ -35,11 +39,11 @@ public:
    {
       setDelta(modDelta(mod_));
 
-      Signal signal = phase < UPHASE_HALF ? +1.0f : -1.0f;
+      Signal signal = phase < limit ? HIGH : LOW;
 
       float t = uphase2float(phase);
       signal += polyBLEP(t);
-      t = uphase2float(phase - UPHASE_HALF);
+      t = uphase2float(phase - limit);
       signal -= polyBLEP(t);
 
       phase += delta;
@@ -47,9 +51,10 @@ public:
       return gain(signal);
    }
 
-   Gain gain{};
+private:
+   UPhase limit{UPHASE_HALF};
 };
 
-} // namespace Osc
+using Pwm = PwmShift<Signal{+1.0},Signal{-1.0}>;
 
-} // namespace SIG
+} // namespace SIG::osc
