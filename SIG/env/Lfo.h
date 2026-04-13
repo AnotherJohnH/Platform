@@ -7,10 +7,10 @@
 
 namespace SIG::env {
 
-class LfoEnv
+class Lfo
 {
 public:
-   LfoEnv() = default;
+   Lfo() = default;
 
    //! Set LFO delay (s)
    void setDelay(float delay_s_)
@@ -27,7 +27,7 @@ public:
    void setAttack(float attack_s_)
    {
       attack_samples = (attack_s_ * SAMPLE_RATE) + 1;
-      attack_rate    = 1.0 / attack_samples;
+      attack_rate    = Signal{1.0} / attack_samples;
    }
 
    //! Gate on
@@ -55,7 +55,7 @@ public:
          else
          {
             phase = SUSTAIN;
-            level = 1.0;
+            level = Signal{1.0};
             rate  = 0;
          }
       }
