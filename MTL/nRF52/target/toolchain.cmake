@@ -21,7 +21,7 @@ set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
 
 set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS}")
 
-set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/Platform/MTL/${PLT_TARGET}/target/script_${PLT_RAM_SIZE}.ld")
+set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/MTL/${PLT_TARGET}/target/script_${PLT_RAM_SIZE}.ld")
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
@@ -41,7 +41,7 @@ set(CMAKE_SIZE                ${PLT_PREFIX}size)
 set(CMAKE_C_LINK_EXECUTABLE
     "${PLT_PREFIX}ld ${PLT_LD_FLAGS} <OBJECTS> -o <TARGET>.elf <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O ihex <TARGET>.elf <TARGET>.hex; \
-     ${CMAKE_SOURCE_DIR}/Platform/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>.elf; \
+     ${CMAKE_SOURCE_DIR}/PDK/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>.elf; \
      ${CMAKE_SIZE} <TARGET>.elf")
 
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})

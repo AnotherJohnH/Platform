@@ -26,7 +26,7 @@ endif()
 include(CTest)
 
 #-------------------------------------------------------------------------------
-# Introspect to determine Platform project variables...
+# Introspect to determine PDK project variables...
 #    PLT_TARGET
 #    PLT_MACHINE
 #    PLT_COMMIT
@@ -70,7 +70,7 @@ endif()
 
 function(arcxx name)
    add_custom_command(OUTPUT  arcxx_${name}.cpp
-                      COMMAND ${CMAKE_SOURCE_DIR}/Platform/scripts/arcxx.py -o ${CMAKE_CURRENT_BINARY_DIR}/arcxx_${name}.cpp -r media/${name} ${CMAKE_SOURCE_DIR}/media/${name}
+                      COMMAND ${CMAKE_SOURCE_DIR}/PDK/scripts/arcxx.py -o ${CMAKE_CURRENT_BINARY_DIR}/arcxx_${name}.cpp -r media/${name} ${CMAKE_SOURCE_DIR}/media/${name}
                       DEPENDS ${CMAKE_SOURCE_DIR}/media/${name})
 endfunction()
 
@@ -87,7 +87,7 @@ function(autogen_py NAME)
          "Auto-generate ${NAME}"
       COMMAND
          ${CMAKE_COMMAND}
-            -E env PYTHONPATH=${CMAKE_SOURCE_DIR}/Platform/python
+            -E env PYTHONPATH=${CMAKE_SOURCE_DIR}/PDK/python
             python3 ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}.py ${ARG}
       DEPENDS
          ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}.py

@@ -4,9 +4,9 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "Platform"
+PROJECT_NAME           = "PDK"
 PROJECT_NUMBER         =
-PROJECT_BRIEF          = "A platform abstraction layer for building portable applications"
+PROJECT_BRIEF          = "Portable Application Development Kit"
 PROJECT_LOGO           =
 OUTPUT_DIRECTORY       = docs
 CREATE_SUBDIRS         = NO

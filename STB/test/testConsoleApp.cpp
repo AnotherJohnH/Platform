@@ -10,7 +10,7 @@
 
 #define  PROGRAM         "HelloWorld"
 #define  DESCRIPTION     "Confidence test for development environment"
-#define  LINK            "https://github.com/SloeComputers/Platform"
+#define  LINK            "https://github.com/SloeComputers/PDK"
 #define  AUTHOR          "John D. Haughton"
 #define  COPYRIGHT_YEAR  "2017"
 

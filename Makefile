@@ -11,4 +11,4 @@ template:
 docs:
 	doxygen scripts/Doxyfile
 
-include Platform/build.make
+include PDK/build.make

@@ -3,4 +3,4 @@ targets = native
 
 all: $(targets)
 
-include Platform/build.make
+include PDK/build.make

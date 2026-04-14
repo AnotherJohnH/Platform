@@ -58,7 +58,7 @@ project(blinky
 
 set(HWR_CONFIG blinky)
 
-add_subdirectory(Platform)
+add_subdirectory(PDK)
 
 add_blinky_executable(blinky blinky.cpp)
 ```

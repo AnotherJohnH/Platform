@@ -9,7 +9,7 @@ project(APPLICATION
         LANGUAGES CXX C ASM
         `VERSION' VERSION)
 
-add_subdirectory(Platform)
+add_subdirectory(PDK)
 
 add_executable(BINARY Source/BINARY.cpp)
 

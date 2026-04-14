@@ -16,12 +16,12 @@ The library also supports native variants for macOS and Linux targets, where phy
 
 ## Usage
 
-The hardware config for a project is selected in the top level `CMakeLists.txt` before the `Platform` sub-directory is added.
+The hardware config for a project is selected in the top level `CMakeLists.txt` before the `PDK` sub-directory is added.
 
 ```cmake
 set(HWR_CONFIG picoX7)
 
-add_subdirectory(Platform)
+add_subdirectory(PDK)
 ```
 
 the C++ APIs are then accessible in the project source with:

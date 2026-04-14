@@ -69,7 +69,7 @@ private:
             SCSI::InquiryResponse response{};
 
             response.version = 2;
-            setStr(response.vendor_id, "Platform");
+            setStr(response.vendor_id, "PDK");
             setStr(response.product_id, "Disk Image");
             setStr(response.product_rev, "0.0");
 

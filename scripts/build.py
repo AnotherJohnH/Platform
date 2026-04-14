@@ -23,7 +23,7 @@ def parseArgs():
                         help='Pull latest source before build')
 
     parser.add_argument('-P', '--platform-pull', dest='platform_pull', action='store_true',
-                        help='Pull latest Platform source before build')
+                        help='Pull latest PDK source before build')
 
     parser.add_argument('-s', '--spotless', dest='spotless', action='store_true',
                         help='Erase all build state and build again')
@@ -80,7 +80,7 @@ def build(target, cmake_opts):
         pathlib.Path(build_dir).mkdir(parents=True, exist_ok=True)
         os.chdir(build_dir)
 
-        cmd = f"cmake -G \"{generator}\" ../.. {cmake_opts} -DPLT_TARGET={target} -DCMAKE_TOOLCHAIN_FILE=Platform/MTL/{target}/target/toolchain.cmake"
+        cmd = f"cmake -G \"{generator}\" ../.. {cmake_opts} -DPLT_TARGET={target} -DCMAKE_TOOLCHAIN_FILE=PDK/MTL/{target}/target/toolchain.cmake"
 
         if target == "Emscripten":
             cmd = 'source ' + EMSDK_ENV + '; ' + cmd
@@ -120,7 +120,7 @@ args       = parseArgs()
 cmake_opts = ""
 
 if args.platform_pull:
-    os.chdir("Platform")
+    os.chdir("PDK")
     os.system("git pull --rebase")
     os.chdir("..")
 

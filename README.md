@@ -1,6 +1,6 @@
-# Platform
+# PDK
 
-A platform abstraction layer for building portable applications.
+Software Development Kit for portable applications.
 
 Provides APIs for...
 * Low-level 2D rendering
@@ -12,16 +12,16 @@ Provides APIs for...
   * A light-weight curses API
 * Some static data structures suitable for an embedded or limited memory enviornment
 
-The intended deployment of Platform is as a submodule inside other projects.
+The intended deployment of the PDK is as a submodule inside other projects.
 
-## Starting a new project using Platform
+## Starting a new project using the PDK
 
 ```
 mkdir MyProject
 cd MyProject
 git init .
-git submodule add https://github.com/SloeComputers/Platform.git
-cd Platform
+git submodule add https://github.com/SloeComputers/PDK.git
+cd PDK
 make template
 
 Project dir [/Users/fred/MyProjects/Foo] : <project root directory>
@@ -52,14 +52,14 @@ cmake ..
 make
 ```
 
-The following small projects are using Platform...
+The following small projects are using the PDK...
 * [MineSweeper](https://github.com/SloeComputers/MineSweeper/)
 * [Sternhalma](https://github.com/SloeComputers/Sternhalma/)
 * [Zif](https://github.com/SloeComputers/Zif/)
 
 ## Status
 
-[![Build Status](https://github.com/SloeComputers/Platform/actions/workflows/build_on_push.yml/badge.svg)](https://github.com/SloeComputers/Platform/actions/workflows/build_on_push.yml)
+[![Build Status](https://github.com/SloeComputers/PDK/actions/workflows/build_on_push.yml/badge.svg)](https://github.com/SloeComputers/PDK/actions/workflows/build_on_push.yml)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13938/badge.svg)](https://scan.coverity.com/projects/anotherjohnh-platform)
 
 ### Linux

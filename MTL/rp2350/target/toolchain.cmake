@@ -20,7 +20,7 @@ set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY -DMTL_RP2350 \
 
 set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti -Wno-volatile ${CMAKE_C_FLAGS}")
 
-set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/Platform/MTL/${PLT_TARGET}/target/script.ld")
+set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/MTL/${PLT_TARGET}/target/script.ld")
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
@@ -40,8 +40,8 @@ set(CMAKE_SIZE                ${PLT_PREFIX}size)
 set(CMAKE_C_LINK_EXECUTABLE
     "${PLT_PREFIX}ld ${PLT_LD_FLAGS} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O ihex <TARGET> <TARGET>.hex; \
-     ${CMAKE_SOURCE_DIR}/Platform/MTL/util/ihexToUF2.py <TARGET>.hex -f 0xE48BFF59 -o<TARGET>.uf2; \
-     ${CMAKE_SOURCE_DIR}/Platform/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>; \
+     ${CMAKE_SOURCE_DIR}/PDK/MTL/util/ihexToUF2.py <TARGET>.hex -f 0xE48BFF59 -o<TARGET>.uf2; \
+     ${CMAKE_SOURCE_DIR}/PDK/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>; \
      ${CMAKE_SIZE} <TARGET>")
 
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
