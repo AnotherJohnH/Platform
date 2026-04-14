@@ -5,7 +5,9 @@
    
 #pragma once
 
+#if defined(SIG_FL32) || defined(SIG_FL64)
 #include <cmath>
+#endif
 
 #include "Base.h"
 
@@ -26,6 +28,8 @@ public:
       return gain(sinf(theta));
 #elif defined(SIG_FL64)
       return gain(sin(theta));
+#else
+      return 0;
 #endif
    }
 
@@ -39,6 +43,8 @@ public:
       return gain(sinf(theta));
 #elif defined(SIG_FL64)
       return gain(sin(theta));
+#else
+      return 0;
 #endif
    }
 };

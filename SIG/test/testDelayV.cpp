@@ -15,15 +15,15 @@ TEST(SIG_DelayV, default_length)
 
    EXPECT_EQ(3, delay.size());
 
-   EXPECT_EQ(0.0f, delay());
+   EXPECT_EQ(0.0, delay());
 
-   EXPECT_EQ(0.0f, delay(1.0f));
-   EXPECT_EQ(0.0f, delay(2.0f));
-   EXPECT_EQ(0.0f, delay(3.0f));
+   EXPECT_EQ(0.0, delay(1.0));
+   EXPECT_EQ(0.0, delay(2.0));
+   EXPECT_EQ(0.0, delay(3.0));
 
-   EXPECT_EQ(1.0f, delay(4.0f));
-   EXPECT_EQ(2.0f, delay(5.0f));
-   EXPECT_EQ(3.0f, delay(6.0f));
+   EXPECT_EQ(1.0, delay(4.0));
+   EXPECT_EQ(2.0, delay(5.0));
+   EXPECT_EQ(3.0, delay(6.0));
 }
 
 TEST(SIG_DelayV, length_change_applies_on_wrap)
@@ -36,18 +36,18 @@ TEST(SIG_DelayV, length_change_applies_on_wrap)
 
    EXPECT_EQ(4, delay.size());
 
-   EXPECT_EQ(0.0f, delay(1.0f));
-   EXPECT_EQ(0.0f, delay(2.0f));
-   EXPECT_EQ(0.0f, delay(3.0f));
-   EXPECT_EQ(0.0f, delay(4.0f));
+   EXPECT_EQ(0.0, delay(1.0));
+   EXPECT_EQ(0.0, delay(2.0));
+   EXPECT_EQ(0.0, delay(3.0));
+   EXPECT_EQ(0.0, delay(4.0));
 
    EXPECT_EQ(2, delay.size());
 
-   EXPECT_EQ(1.0f, delay());
-   EXPECT_EQ(1.0f, delay(5.0f));
-   EXPECT_EQ(2.0f, delay(6.0f));
-   EXPECT_EQ(5.0f, delay(7.0f));
-   EXPECT_EQ(6.0f, delay(8.0f));
+   EXPECT_EQ(1.0, delay());
+   EXPECT_EQ(1.0, delay(5.0));
+   EXPECT_EQ(2.0, delay(6.0));
+   EXPECT_EQ(5.0, delay(7.0));
+   EXPECT_EQ(6.0, delay(8.0));
 }
 
 TEST(SIG_DelayV, zero_length_clamps_to_one)
@@ -58,16 +58,16 @@ TEST(SIG_DelayV, zero_length_clamps_to_one)
 
    EXPECT_EQ(4, delay.size());
 
-   EXPECT_EQ(0.0f, delay(1.0f));
-   EXPECT_EQ(0.0f, delay(2.0f));
-   EXPECT_EQ(0.0f, delay(3.0f));
-   EXPECT_EQ(0.0f, delay(4.0f));
+   EXPECT_EQ(0.0, delay(1.0));
+   EXPECT_EQ(0.0, delay(2.0));
+   EXPECT_EQ(0.0, delay(3.0));
+   EXPECT_EQ(0.0, delay(4.0));
 
    EXPECT_EQ(1, delay.size());
 
-   EXPECT_EQ(1.0f, delay());
-   EXPECT_EQ(1.0f, delay(5.0f));
-   EXPECT_EQ(5.0f, delay(6.0f));
+   EXPECT_EQ(1.0, delay());
+   EXPECT_EQ(1.0, delay(5.0));
+   EXPECT_EQ(5.0, delay(6.0));
 }
 
 TEST(SIG_DelayV, reset_restores_default_state)
@@ -76,20 +76,20 @@ TEST(SIG_DelayV, reset_restores_default_state)
 
    delay.setLength(2);
 
-   EXPECT_EQ(0.0f, delay(1.0f));
-   EXPECT_EQ(0.0f, delay(2.0f));
-   EXPECT_EQ(0.0f, delay(3.0f));
-   EXPECT_EQ(0.0f, delay(4.0f));
+   EXPECT_EQ(0.0, delay(1.0));
+   EXPECT_EQ(0.0, delay(2.0));
+   EXPECT_EQ(0.0, delay(3.0));
+   EXPECT_EQ(0.0, delay(4.0));
 
    EXPECT_EQ(2, delay.size());
 
    delay.reset();
 
    EXPECT_EQ(4, delay.size());
-   EXPECT_EQ(0.0f, delay());
-   EXPECT_EQ(0.0f, delay(5.0f));
-   EXPECT_EQ(0.0f, delay(6.0f));
-   EXPECT_EQ(0.0f, delay(7.0f));
-   EXPECT_EQ(0.0f, delay(8.0f));
-   EXPECT_EQ(5.0f, delay(9.0f));
+   EXPECT_EQ(0.0, delay());
+   EXPECT_EQ(0.0, delay(5.0));
+   EXPECT_EQ(0.0, delay(6.0));
+   EXPECT_EQ(0.0, delay(7.0));
+   EXPECT_EQ(0.0, delay(8.0));
+   EXPECT_EQ(5.0, delay(9.0));
 }

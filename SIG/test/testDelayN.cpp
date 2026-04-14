@@ -15,29 +15,29 @@ TEST(SIG_DelayN, usage)
 
    EXPECT_EQ(3, delay.size());
 
-   EXPECT_EQ(0.0f, delay());
+   EXPECT_EQ(0.0, delay());
 
-   EXPECT_EQ(0.0f, delay(1.0f));
-   EXPECT_EQ(0.0f, delay(2.0f));
-   EXPECT_EQ(0.0f, delay(3.0f));
+   EXPECT_EQ(0.0, delay(1.0));
+   EXPECT_EQ(0.0, delay(2.0));
+   EXPECT_EQ(0.0, delay(3.0));
 
-   EXPECT_EQ(1.0f, delay(4.0f));
-   EXPECT_EQ(2.0f, delay(5.0f));
-   EXPECT_EQ(3.0f, delay(6.0f));
+   EXPECT_EQ(1.0, delay(4.0));
+   EXPECT_EQ(2.0, delay(5.0));
+   EXPECT_EQ(3.0, delay(6.0));
 
-   delay = 7.0f;
-   delay = 8.0f;
-   delay = 9.0f;
+   delay = 7.0;
+   delay = 8.0;
+   delay = 9.0;
 
-   EXPECT_EQ(7.0f, delay());
-   EXPECT_EQ(7.0f, delay(10.0f));
-   EXPECT_EQ(8.0f, delay(11.0f));
-   EXPECT_EQ(9.0f, delay(12.0f));
+   EXPECT_EQ(7.0, delay());
+   EXPECT_EQ(7.0, delay(10.0));
+   EXPECT_EQ(8.0, delay(11.0));
+   EXPECT_EQ(9.0, delay(12.0));
 
     delay.reset();
-    EXPECT_EQ(0.0f, delay());
-    EXPECT_EQ(0.0f, delay(13.0f));
-    EXPECT_EQ(0.0f, delay(14.0f));
-    EXPECT_EQ(0.0f, delay(15.0f));
-    EXPECT_EQ(13.0f, delay(16.0f));
+    EXPECT_EQ(0.0, delay());
+    EXPECT_EQ(0.0, delay(13.0));
+    EXPECT_EQ(0.0, delay(14.0));
+    EXPECT_EQ(0.0, delay(15.0));
+    EXPECT_EQ(13.0, delay(16.0));
 }

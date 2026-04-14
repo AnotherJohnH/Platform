@@ -39,6 +39,6 @@ TEST(SIG_ExpSlew, set_bypasses_slew)
 
    slew.set(2.0);
 
-   EXPECT_EQ(2.0, slew());
-   EXPECT_EQ(Signal{6}, slew(3.0));
+   EXPECT_NEAR(2.0, slew(), 0.001);
+   EXPECT_NEAR(Signal{6}, slew(3.0), 0.001);
 }

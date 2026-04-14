@@ -6,4 +6,4 @@
 #pragma once
 
 #include "Adsr.h"
-#include "LfoEnv.h"
+#include "Lfo.h"

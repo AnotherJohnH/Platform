@@ -6,7 +6,6 @@
 #include "SIG/LogPot.h"
 
 #include "STB/Test.h"
-#include "round.h"
 
 using namespace SIG;
 
@@ -14,11 +13,11 @@ TEST(SIG_LogPot, usage)
 {
    LogPot pot{10.0, 0.1};
 
-   EXPECT_EQ(round3(0.0),  round3(pot(0.0)));
-   EXPECT_EQ(round3(0.05), round3(pot(2.5)));
-   EXPECT_EQ(round3(0.1),  round3(pot(5.0)));   // Half-way point
-   EXPECT_EQ(round3(0.55), round3(pot(7.5)));
-   EXPECT_EQ(round3(1.0),  round3(pot(10.0)));
+   EXPECT_NEAR(0.0,  pot(0.0), 0.0001);
+   EXPECT_NEAR(0.05, pot(2.5), 0.0001);
+   EXPECT_NEAR(0.1,  pot(5.0), 0.0001);   // Half-way point
+   EXPECT_NEAR(0.55, pot(7.5), 0.0001);
+   EXPECT_NEAR(1.0,  pot(10.0), 0.0001);
 }
 
 TEST(SIG_LogPot, re_configure)
@@ -27,9 +26,9 @@ TEST(SIG_LogPot, re_configure)
 
    pot.config(4.0, 0.25);
 
-   EXPECT_EQ(round3(0.0),   round3(pot(0.0)));
-   EXPECT_EQ(round3(0.125), round3(pot(1.0)));
-   EXPECT_EQ(round3(0.25),  round3(pot(2.0)));   // Half-way point
-   EXPECT_EQ(round3(0.625), round3(pot(3.0)));
-   EXPECT_EQ(round3(1.0),   round3(pot(4.0)));
+   EXPECT_EQ(0.0,   pot(0.0));
+   EXPECT_EQ(0.125, pot(1.0));
+   EXPECT_EQ(0.25,  pot(2.0));   // Half-way point
+   EXPECT_EQ(0.625, pot(3.0));
+   EXPECT_EQ(1.0,   pot(4.0));
 }

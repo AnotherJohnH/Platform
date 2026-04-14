@@ -6,7 +6,6 @@
 #include "SIG/LinSlew.h"
 
 #include "STB/Test.h"
-#include "round.h"
 
 using namespace SIG;
 
@@ -15,12 +14,14 @@ TEST(SIG_LinSlew, steps_linearly_to_target)
    LinSlew slew{SAMPLE_RATE / 4};
 
    slew.set(0.0);
+   EXPECT_NEAR(0.0, slew(), 0.0001);
+
    slew = Signal{1.0};
 
-   EXPECT_EQ(round2(0.25), round2(slew()));
-   EXPECT_EQ(round2(0.50), round2(slew()));
-   EXPECT_EQ(round2(0.75), round2(slew()));
-   EXPECT_EQ(round2(1.00), round2(slew()));
+   EXPECT_NEAR(0.25, slew(), 0.0001);
+   EXPECT_NEAR(0.50, slew(), 0.0001);
+   EXPECT_NEAR(0.75, slew(), 0.0001);
+   EXPECT_NEAR(1.00, slew(), 0.0001);
 }
 
 TEST(SIG_LinSlew, set_bypasses_slew)
@@ -29,6 +30,6 @@ TEST(SIG_LinSlew, set_bypasses_slew)
 
    slew.set(2.0);
 
-   EXPECT_EQ(round2(2.0), round2(slew()));
-   EXPECT_EQ(round2(6.0), round2(slew(3.0)));
+   EXPECT_NEAR(2.0, slew(), 0.0001);
+   EXPECT_NEAR(6.0, slew(3.0), 0.0001);
 }

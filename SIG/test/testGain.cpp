@@ -6,7 +6,6 @@
 #include "SIG/Gain.h"
 
 #include "STB/Test.h"
-#include "round.h"
 
 using namespace SIG;
 
@@ -14,12 +13,12 @@ TEST(SIG_Gain, usage)
 {
    Gain gain{};
 
-   EXPECT_EQ(round2(1.0), round2(Signal(gain)));
-   EXPECT_EQ(round2(2.0), round2(gain(2.0)));
+   EXPECT_NEAR(1.0, Signal(gain), 0.0001);
+   EXPECT_NEAR(2.0, gain(2.0), 0.0001);
 
    gain = 0.5;
 
-   EXPECT_EQ(round2(0.5),  round2(Signal(gain)));
-   EXPECT_EQ(round2(1.0),  round2(gain(2.0)));
-   EXPECT_EQ(round2(-1.5), round2(gain(-3.0)));
+   EXPECT_NEAR(0.5,  Signal(gain), 0.0001);
+   EXPECT_NEAR(1.0,  gain(2.0), 0.0001);
+   EXPECT_NEAR(-1.5, gain(-3.0), 0.0001);
 }

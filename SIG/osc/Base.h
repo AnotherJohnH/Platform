@@ -68,7 +68,7 @@ public:
    //! Set CV 1V/oct (0.0 => midi note 0)
    void setCV(Float cv_)
    {
-      uint32_t ef = cv_ * (12 << EXP_FREQ_FRAC_BITS);
+      int32_t ef = cv_ * (12 << EXP_FREQ_FRAC_BITS);
       setDelta(noteLookup_7(ef));
    }
 
@@ -84,7 +84,7 @@ protected:
    //! Calculate delta for a frequency modulation input
    uint32_t modDelta(Signal mod_)
    {
-      return noteLookup_7(exp_freq + signed(EXP_FREQ_SCALE * mod_));
+      return noteLookup_7(exp_freq + signed(mod_ * EXP_FREQ_SCALE));
    }
 
    //! Polynomial to pre-filter hard edges in waveforms in the range [-dt, dt]

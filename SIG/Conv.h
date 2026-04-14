@@ -62,7 +62,7 @@ inline UPhase noteLookup(uint8_t note_, uint8_t frac7_ = 0)
 //!  0x1FFF => is ~ +20 dB  ~10.0
 inline Signal dBGainLookup_15(signed gain15_)
 {
-   constexpr Float    TABLE_STEP_PER_DB = TABLE_GAIN_SIZE / (GAIN_MAX_DB - GAIN_MIN_DB);
+   constexpr Float    TABLE_STEP_PER_DB = Float(TABLE_GAIN_SIZE) / (GAIN_MAX_DB - GAIN_MIN_DB);
    constexpr signed   INDEX_ZERO_DB     = -GAIN_MIN_DB * TABLE_STEP_PER_DB;
    constexpr unsigned GAIN_SHIFT        = 15 - LOG2_TABLE_GAIN_SIZE;
 
@@ -79,7 +79,7 @@ inline Signal dBGainLookup_15(signed gain15_)
 //! Convert a gain -60..0..+20 (dB) to a linear value 0.001..1.0..10.0
 inline Signal dBGainLookup(Float gain_)
 {
-   constexpr Float GAIN15_STEP_PER_DB = (1 << 15) / (GAIN_MAX_DB - GAIN_MIN_DB);
+   constexpr Float GAIN15_STEP_PER_DB = Float(1 << 15) / (GAIN_MAX_DB - GAIN_MIN_DB);
 
    signed gain15 = signed(gain_ * GAIN15_STEP_PER_DB + 0.5f);
 

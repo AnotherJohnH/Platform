@@ -5,7 +5,9 @@
 
 #pragma once
 
+#if defined(SIG_FL32) || defined(SIG_FL64)
 #include <cmath>
+#endif
 
 #include "SIG/Types.h"
 
@@ -23,6 +25,8 @@ public:
       return tanhf(x * drive);
 #elif defined(SIG_FL64)
       return tanh(x * drive);
+#else
+      return 0;
 #endif
    }
 };

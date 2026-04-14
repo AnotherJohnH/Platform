@@ -21,7 +21,7 @@ public:
    //! Set rate of target updates (Hz)
    void setUpdateRate(unsigned rate_)
    {
-      recip_steps = rate_ / Float(SAMPLE_RATE);
+      recip_steps = Float(rate_) / SAMPLE_RATE;
    }
 
    //! Set output to constant value (no slew)

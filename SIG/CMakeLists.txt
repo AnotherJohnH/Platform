@@ -16,7 +16,8 @@ autogen_py(Table_clip_tanh)
 
 set(SIG_VARIANTS
     FL32
-    FL64)
+    FL64
+    FX32)
 
 foreach(variant IN LISTS SIG_VARIANTS)
 
