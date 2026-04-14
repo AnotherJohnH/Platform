@@ -47,7 +47,7 @@ private:
       noise_state ^= noise_state >> 17;
       noise_state ^= noise_state << 5;
 
-      signal = Signal(int32_t(noise_state)) / 0x7FFFFFFF;
+      signal = Signal(int32_t(noise_state)) / Signal(0x7FFFFFFF);
    }
 
    uint32_t noise_state{1};

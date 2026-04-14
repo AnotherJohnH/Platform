@@ -24,7 +24,7 @@ inline Signal uphase2signal(UPhase uphase_)
 //! Convert floating point sample -1.0..1.0 to 32-bit unsigned phase
 inline UPhase signal2uphase(Signal signal_)
 {
-   return UPhase(SPhase(signal_ * SPHASE_MAX));
+   return UPhase(SPhase(signal_ * Float(SPHASE_MAX)));
 }
 
 //! Convert 32-bit unsigned phase to floating-point 0.0..1.0 (2pi)
