@@ -8,17 +8,19 @@ if(${PLT_NATIVE})
    add_executable(testConsoleApp testConsoleApp.cpp)
    target_link_libraries(testConsoleApp PLT)
 
-   add_executable(test_STB
+   add_executable(testSTB
                   testMain.cpp
                   testFAT16.cpp
+                  testFixP.cpp
                   testBitArray.cpp
                   testEndian.cpp
                   testHeap.cpp
                   testLicense.cpp
-                  testList.cpp)
+                  testList.cpp
+                  testUFixP.cpp)
 
-   target_link_libraries(test_STB STB)
+   target_link_libraries(testSTB STB)
 
-   add_test(NAME test_STB COMMAND test_STB)
+   add_test(NAME testSTB COMMAND testSTB)
 
 endif()

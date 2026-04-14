@@ -6,6 +6,7 @@
 #pragma once
 
 #include <iostream>
+#include <cmath>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -217,6 +218,28 @@ inline bool expect_ge(TYPE_L      left_,
    return false;
 }
 
+template <typename TYPE_L,
+          typename TYPE_R,
+          typename TYPE_E>
+inline bool expect_near(TYPE_L      left_,
+                        TYPE_R      right_,
+                        TYPE_E      error_,
+                        const char* right_s_,
+                        const char* file_,
+                        size_t      line_)
+{
+   if (fabs(TYPE_E(TYPE_R(left_) - right_)) <= error_)
+      return true;
+
+   error(file_, line_);
+
+   std::cout << "Value of " << right_s_ << "\n";
+   std::cout << "  Actual: " << right_ << "\n";
+   std::cout << "Not near: " << left_  << "\n";
+
+   return false;
+}
+
 inline bool expect_streq(const char* left_,
                          const char* right_,
                          const char* right_s_,
@@ -257,6 +280,9 @@ inline bool expect_streq(const char* left_,
 
 #define EXPECT_GE(left, right) \
    TST::pass &= TST::expect_ge(left, right, #right, __FILE__, __LINE__)
+
+#define EXPECT_NEAR(left, right, error) \
+   TST::pass &= TST::expect_near(left, right, error, #right, __FILE__, __LINE__)
 
 #define EXPECT_TRUE(right) \
    TST::pass &= TST::expect_eq(true, bool(right), #right, __FILE__, __LINE__)
