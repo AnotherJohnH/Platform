@@ -11,7 +11,7 @@ if(has_parent)
 else()
    cmake_minimum_required(VERSION 3.19.1)
 
-   project(Platform
+   project(PDK
            LANGUAGES CXX C ASM
            VERSION 0.5.0)
 endif()
