@@ -608,7 +608,7 @@ protected:
    //! Set a horizontal row of pixels in the frame buffer
    virtual void canvasSpan(STB::Colour colour, int32_t x1, int32_t y, int32_t x2)
    {
-      assert(x1 < x2);
+      assert(x1 <= x2);
 
       for(int32_t x = x1; x < x2; x++)
       {

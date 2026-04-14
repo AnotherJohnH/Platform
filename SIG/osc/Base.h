@@ -69,6 +69,7 @@ public:
    void setCV(Float cv_)
    {
       int32_t ef = cv_ * (12 << EXP_FREQ_FRAC_BITS);
+      if (ef < 0) ef = 0;
       setDelta(noteLookup_7(ef));
    }
 
