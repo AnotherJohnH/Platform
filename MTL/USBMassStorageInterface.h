@@ -50,23 +50,23 @@ private:
    {
       switch(bytes_[0])
       {
-      case SCSI::TEST:
+      case USB::SCSI::TEST:
          LOG("TEST\n");
          return true; // nop and acknowledge
 
-      case SCSI::START_STOP_UNIT:
+      case USB::SCSI::START_STOP_UNIT:
          LOG("START STOP LoEj=%u Start=%u\n", (bytes_[4] >> 1) & 1, bytes_[4] & 1);
          return true; // nop and acknowledge
 
-      case SCSI::PREVENT_ALLOW_MEDIUM_REMOVAL:
+      case USB::SCSI::PREVENT_ALLOW_MEDIUM_REMOVAL:
          LOG("PREVENT ALLOW MEDIUM REMOVAL prevent=%u\n", bytes_[4] & 1);
          return true; // nop and acknowledge
 
-      case SCSI::INQUIRY:
+      case USB::SCSI::INQUIRY:
          {
             LOG("INQUIRY\n");
 
-            SCSI::InquiryResponse response{};
+            USB::SCSI::InquiryResponse response{};
 
             response.version = 2;
             setStr(response.vendor_id, "PDK");
@@ -79,7 +79,7 @@ private:
          }
          return true;
 
-      case SCSI::MODE_SENSE_6:
+      case USB::SCSI::MODE_SENSE_6:
          {
             LOG("MODE SENSE 6\n");
 
@@ -94,7 +94,7 @@ private:
          }
          return true;
 
-      case SCSI::MODE_SENSE_10:
+      case USB::SCSI::MODE_SENSE_10:
          {
             LOG("MODE SENSE 10\n");
 
@@ -109,7 +109,7 @@ private:
          }
          return true;
 
-      case SCSI::READ_CAPACITY_10:
+      case USB::SCSI::READ_CAPACITY_10:
          {
             LOG("READ CAPACITY 10\n");
 
@@ -124,9 +124,9 @@ private:
          }
          return true;
 
-      case SCSI::READ_10:
+      case USB::SCSI::READ_10:
          {
-            auto cmd = reinterpret_cast<const SCSI::Read10Command*>(bytes_);
+            auto cmd = reinterpret_cast<const USB::SCSI::Read10Command*>(bytes_);
 
             lba             = STB::safeReadBig32(&cmd->lba);
             unsigned blocks = STB::safeReadBig16(&cmd->len);
@@ -141,9 +141,9 @@ private:
          }
          return true;
 
-      case SCSI::WRITE_10:
+      case USB::SCSI::WRITE_10:
          {
-            auto cmd = reinterpret_cast<const SCSI::Write10Command*>(bytes_);
+            auto cmd = reinterpret_cast<const USB::SCSI::Write10Command*>(bytes_);
 
             lba             = STB::safeReadBig32(&cmd->lba);
             unsigned blocks = STB::safeReadBig16(&cmd->len);
@@ -192,7 +192,7 @@ private:
    {
       if (to_recv_count == 0)
       {
-         const SCSI::CommandBlockWrapper* cbw = SCSI::CommandBlockWrapper::validate(data_, length_);
+         const USB::SCSI::CommandBlockWrapper* cbw = USB::SCSI::CommandBlockWrapper::validate(data_, length_);
          if (cbw != nullptr)
          {
             csw.tag = cbw->tag;
@@ -279,14 +279,14 @@ private:
    MTL::USBEndPoint bulk_in{d_bulk_in};
    MTL::USBEndPoint bulk_out{d_bulk_out};
 
-   unsigned                   segments_per_block{};
-   unsigned                   to_send_count{0};
-   unsigned                   to_recv_count{0};
-   uint32_t                   lba{0};
-   unsigned                   segment{0};
-   SCSI::CommandStatusWrapper csw{};
-   uint8_t                    max_lun{0};   //!< Just one
-   STB::FileSystem*           file_system{nullptr};
+   unsigned                        segments_per_block{};
+   unsigned                        to_send_count{0};
+   unsigned                        to_recv_count{0};
+   uint32_t                        lba{0};
+   unsigned                        segment{0};
+   USB::SCSI::CommandStatusWrapper csw{};
+   uint8_t                         max_lun{0};   //!< Just one
+   STB::FileSystem*                file_system{nullptr};
 };
 
 } // namespace MTL

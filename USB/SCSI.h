@@ -9,7 +9,7 @@
 
 #include <cstdint>
 
-namespace SCSI {
+namespace USB::SCSI {
 
 
 struct CommandBlockWrapper
@@ -117,4 +117,4 @@ struct Write10Command
 } __attribute__((__packed__));
 
 
-} // namespace SCSI
+} // namespace USB::SCSI
