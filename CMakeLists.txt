@@ -9,7 +9,7 @@ if(has_parent)
    set(CMAKE_CXX_STANDARD          20   PARENT_SCOPE)
    set(CMAKE_CXX_STANDARD_REQUIRED True PARENT_SCOPE)
 else()
-   cmake_minimum_required(VERSION 3.19.1)
+   cmake_minimum_required(VERSION 3.20)
 
    project(PDK
            LANGUAGES CXX C ASM
@@ -38,25 +38,32 @@ execute_process(COMMAND git log --pretty=format:%H -n 1
 
 if(NOT PDK_TARGET)
    if(DEFINED ENV{PDK_TARGET})
-      set(PDK_TARGET ${ENV{PLAT_TARGET})
+      set(PDK_TARGET $ENV{PDK_TARGET})
    else()
       set(PDK_TARGET native)
    endif()
 endif()
 
-if(${PDK_TARGET} STREQUAL native)
+if("${PDK_TARGET}" STREQUAL "native")
 
-   set(PDK_NATIVE  TRUE PARENT_SCOPE)
+   if(has_parent)
+      set(PDK_NATIVE TRUE PARENT_SCOPE)
+   endif()
+
    set(PDK_NATIVE  TRUE)
    set(PDK_TARGET  ${CMAKE_HOST_SYSTEM_NAME})
    set(PDK_MACHINE ${CMAKE_HOST_SYSTEM_PROCESSOR})
 
-   if(${PDK_TARGET} STREQUAL Darwin)
+   if("${PDK_TARGET}" STREQUAL "Darwin")
       set(PDK_TARGET macOS)
    endif()
 
 else()
-   set(PDK_NATIVE  FALSE PARENT_SCOPE)
+
+   if(has_parent)
+      set(PDK_NATIVE FALSE PARENT_SCOPE)
+   endif()
+
    set(PDK_NATIVE  FALSE)
    set(CMAKE_ASM_FLAGS_DEBUG   "")
    set(CMAKE_ASM_FLAGS_RELEASE "")
@@ -69,14 +76,25 @@ endif()
 #-------------------------------------------------------------------------------
 
 function(arcxx name)
-   add_custom_command(OUTPUT  arcxx_${name}.cpp
-                      COMMAND ${CMAKE_SOURCE_DIR}/PDK/scripts/arcxx.py -o ${CMAKE_CURRENT_BINARY_DIR}/arcxx_${name}.cpp -r media/${name} ${CMAKE_SOURCE_DIR}/media/${name}
-                      DEPENDS ${CMAKE_SOURCE_DIR}/media/${name})
+
+   add_custom_command(
+      COMMENT
+         "Create C++ archive ${name}"
+      COMMAND
+         ${CMAKE_SOURCE_DIR}/PDK/scripts/arcxx.py
+             -o ${CMAKE_CURRENT_BINARY_DIR}/arcxx_${name}.cpp
+             -r media/${name} ${CMAKE_SOURCE_DIR}/media/${name}
+      DEPENDS
+         ${CMAKE_SOURCE_DIR}/media/${name}
+      OUTPUT
+         ${CMAKE_CURRENT_BINARY_DIR}/arcxx_${name}.cpp
+      )
+
 endfunction()
 
 #-------------------------------------------------------------------------------
 
-function(autogen_py NAME)
+function(autogen_py name)
    set(ARG "")
    if(ARGN)
       list(GET ARGN 0 ARG)
@@ -84,17 +102,17 @@ function(autogen_py NAME)
 
    add_custom_command(
       COMMENT
-         "Auto-generate ${NAME}"
+         "Auto-generate ${name}"
       COMMAND
          ${CMAKE_COMMAND}
             -E env PYTHONPATH=${CMAKE_SOURCE_DIR}/PDK/python
-            python3 ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}.py ${ARG}
+            python3 ${CMAKE_CURRENT_SOURCE_DIR}/${name}.py ${ARG}
       DEPENDS
-         ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}.py
+         ${CMAKE_CURRENT_SOURCE_DIR}/${name}.py
          ${INPUT_FILE}
       OUTPUT
-         ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.h
-         ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.cpp
+         ${CMAKE_CURRENT_BINARY_DIR}/${name}.h
+         ${CMAKE_CURRENT_BINARY_DIR}/${name}.cpp
       )
 
 endfunction()
@@ -110,12 +128,12 @@ message("-----------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 
-add_subdirectory(STB)
-add_subdirectory(PLT)
-add_subdirectory(USB)
-add_subdirectory(SIG)
-add_subdirectory(MIDI)
-add_subdirectory(GUI)
-add_subdirectory(TRM)
 add_subdirectory(HWR)
+add_subdirectory(GUI)
+add_subdirectory(MIDI)
+add_subdirectory(PLT)
+add_subdirectory(SIG)
+add_subdirectory(STB)
+add_subdirectory(TRM)
+add_subdirectory(USB)
 
