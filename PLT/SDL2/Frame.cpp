@@ -12,7 +12,7 @@
 
 static PLT::Frame::Generator*  generator{nullptr};
 
-#ifdef PLT_TARGET_Emscripten
+#ifdef PDK_TARGET_Emscripten
 static unsigned high_dpi_scale{1};
 #else
 static unsigned high_dpi_scale{2};
@@ -48,7 +48,7 @@ public:
    {
       Uint32 sdl_flags = 0;
 
-#ifndef PLT_TARGET_Emscripten
+#ifndef PDK_TARGET_Emscripten
       // Always try for high DPI
       sdl_flags |= SDL_WINDOW_ALLOW_HIGHDPI;
 
@@ -94,7 +94,7 @@ public:
 
       createSurface(width_, height_);
 
-#ifdef PLT_TARGET_macOS
+#ifdef PDK_TARGET_macOS
       // XXX Fix for use with SDL2.0.8 on macOS 10.14. Not required on older
       // macOS or other SDL2 targets. This seems to sink three window events
       // that are necessary before refresh() will function correctly.
@@ -112,13 +112,13 @@ public:
    {
       destroySurface();
 
-#ifndef PLT_TARGET_Emscripten
+#ifndef PDK_TARGET_Emscripten
       SDL_DestroyRenderer(renderer);
 #endif
 
       SDL_DestroyWindow(window);
 
-#ifndef PLT_TARGET_Emscripten
+#ifndef PDK_TARGET_Emscripten
       // TODO is this the right thing to do? what if more than one Frame is in use?
       SDL_Quit();
 #endif
@@ -216,7 +216,7 @@ private:
 #endif
 
 // TODO understand what's going on here!
-#ifdef PLT_TARGET_Emscripten
+#ifdef PDK_TARGET_Emscripten
       texture = SDL_CreateTextureFromSurface(renderer, surface);
 #else
       texture = SDL_CreateTexture(renderer,

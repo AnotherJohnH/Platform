@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-if(${PLT_TARGET} STREQUAL rp2040)
+if(${PDK_TARGET} STREQUAL rp2040)
 
    set(hwr_blinky_config_variants
        BADGER2040
@@ -11,37 +11,37 @@ if(${PLT_TARGET} STREQUAL rp2040)
        RPIPICO
        CACHE INTERNAL "blinky configVariants")
 
-elseif(${PLT_TARGET} STREQUAL rp2350)
+elseif(${PDK_TARGET} STREQUAL rp2350)
 
    set(hwr_blinky_config_variants
        RPIPICO
        CACHE INTERNAL "blinky configVariants")
 
-elseif(${PLT_TARGET} STREQUAL LPC11U24)
+elseif(${PDK_TARGET} STREQUAL LPC11U24)
 
    set(hwr_blinky_config_variants
        MBED
        CACHE INTERNAL "blinky configVariants")
 
-elseif(${PLT_TARGET} STREQUAL LPC1768)
+elseif(${PDK_TARGET} STREQUAL LPC1768)
 
    set(hwr_blinky_config_variants
        MBED
        CACHE INTERNAL "blinky configVariants")
 
-elseif(${PLT_TARGET} STREQUAL nRF51)
+elseif(${PDK_TARGET} STREQUAL nRF51)
 
    set(hwr_blinky_config_variants
        MICROBIT
        CACHE INTERNAL "blinky configVariants")
 
-elseif(${PLT_TARGET} STREQUAL nRF52)
+elseif(${PDK_TARGET} STREQUAL nRF52)
 
    set(hwr_blinky_config_variants
        MICROBIT
        CACHE INTERNAL "blinky configVariants")
 
-elseif(${PLT_NATIVE})
+elseif(${PDK_NATIVE})
 
    set(hwr_blinky_config_variants
        NATIVE

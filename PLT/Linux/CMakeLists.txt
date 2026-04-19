@@ -23,7 +23,7 @@ add_library(PLT STATIC
     ../POSIX/Socket.cpp)
 
 target_compile_definitions(PLT
-    PUBLIC PLT_FRAME_BUFFERED)
+    PUBLIC PDK_FRAME_BUFFERED)
 
 target_include_directories(PLT
     PRIVATE ${SDL2_INCLUDE_DIRS})

@@ -14,4 +14,4 @@ set(CMAKE_RANLIB         emranlib)
 
 set(CMAKE_EXECUTABLE_SUFFIX_CXX ".html")
 
-set(PLT_MACHINE embc)
+set(PDK_MACHINE embc)

@@ -8,7 +8,7 @@ See the example project [https://github.com/SloeComputers/Blinky](https://github
 
 ## blinky config variations
 
-| PLT_TARGET | Variant    | Description |
+| PDK_TARGET | Variant    | Description |
 |------------|------------|-------------|
 | rp2040     | RPIPICO    | Raspberry-Pi pico module |
 | rp2040     | BADGER2040 | Pimoroni badger2040 |

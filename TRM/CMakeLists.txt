@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-if(${PLT_NATIVE})
+if(${PDK_NATIVE})
 
 add_subdirectory(test)
 

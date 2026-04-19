@@ -3,13 +3,13 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-if(${PLT_TARGET} STREQUAL rp2040)
+if(${PDK_TARGET} STREQUAL rp2040)
 
    set(hwr_picoGame_config_variants
        TUFTY2040
        CACHE INTERNAL "picoGame configVariants")
 
-elseif(${PLT_NATIVE})
+elseif(${PDK_NATIVE})
 
    set(hwr_picoGame_config_variants
        NATIVE

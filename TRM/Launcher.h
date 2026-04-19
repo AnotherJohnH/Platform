@@ -30,7 +30,7 @@ struct TermConfig : public STB::Oil<TermConfig>
    unsigned line_space{0};
    bool     invert_video{false};
    unsigned sleep{1};
-#ifdef PLT_TARGET_Kindle3
+#ifdef PDK_TARGET_Kindle3
    uint32_t bg_colour{0xFFFFFF};
    uint32_t fg_colour{0x000000};
 #else
@@ -243,7 +243,7 @@ private:
       curses.mvaddstr(4, 3, "Description : "); curses.addstr(description);
       curses.mvaddstr(5, 3, "Link        : "); if (link != nullptr) curses.addstr(link);
       curses.mvaddstr(6, 3, "Author      : "); curses.addstr(author);
-      curses.mvaddstr(7, 3, "Version     : "); curses.addstr(PLT_VERSION);
+      curses.mvaddstr(7, 3, "Version     : "); curses.addstr(PDK_VERSION);
 
       curses.mvaddstr(8, 3, "Built       : ");
       curses.addstr(__TIME__); curses.addstr(" "); curses.addstr(__DATE__);

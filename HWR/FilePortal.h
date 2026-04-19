@@ -28,8 +28,8 @@ public:
       s += snprintf(s, end_s - s, "Program  : %s (%s)\n", program_, HW_DESCR);
       s += snprintf(s, end_s - s, "Author   : Copyright (c) 2025 John D. Haughton\n");
       s += snprintf(s, end_s - s, "License  : MIT\n");
-      s += snprintf(s, end_s - s, "Version  : %s\n", PLT_VERSION);
-      s += snprintf(s, end_s - s, "Commit   : %s\n", PLT_COMMIT);
+      s += snprintf(s, end_s - s, "Version  : %s\n", PDK_VERSION);
+      s += snprintf(s, end_s - s, "Commit   : %s\n", PDK_COMMIT);
       s += snprintf(s, end_s - s, "Built    : %s %s\n", __TIME__, __DATE__);
 #if defined(__clang__)
       s += snprintf(s, end_s - s, "Compiler : Clang %s\n", __VERSION__);
@@ -38,7 +38,7 @@ public:
 #else
       s += snprintf(s, end_s - s, "Compiler : %s\n", __VERSION__);
 #endif
-      s += snprintf(s, end_s - s, "Target   : %s %s\n", PLT_TARGET, PLT_MACHINE);
+      s += snprintf(s, end_s - s, "Target   : %s %s\n", PDK_TARGET, PDK_MACHINE);
 
 #if not defined(HW_NATIVE)
       s += MTL::config.format(s, end_s - s);

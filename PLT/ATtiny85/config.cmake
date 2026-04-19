@@ -14,15 +14,15 @@ set(PLT_chip    ATtiny85)
 
 set(PLT_asm_flags "-mmcu=attiny85")
 
-set(PLT_c_flags   "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
+set(PLT_c_flags   "-DPDK_NCONSOLE -DPDK_SMALL_MEMORY \
                    -mmcu=attiny85 \
                    -fno-common -fmessage-length=0 -fno-exceptions -ffunction-sections -fdata-sections")
 
 set(PLT_cxx_flags "-std=c++11 -fno-rtti")
 
-set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/PLT/target/${PLT_TARGET}/script.ld")
+set(PLT_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/Platform/Source/PLT/target/${PDK_TARGET}/script.ld")
 
-include_directories(Platform/Source/PLT/target/${PLT_TARGET})
+include_directories(Platform/Source/PLT/target/${PDK_TARGET})
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
@@ -60,8 +60,8 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE     STATIC_LIBRARY)
 # Configuration for libPLT.a
 
 set(PLT_source
-    Platform/Source/PLT/target/${PLT_TARGET}/startup.s
-    Platform/Source/PLT/target/${PLT_TARGET}/platform.cpp
+    Platform/Source/PLT/target/${PDK_TARGET}/startup.s
+    Platform/Source/PLT/target/${PDK_TARGET}/platform.cpp
     Platform/Source/PLT/Stub/Audio.cpp
     Platform/Source/PLT/Stub/Event.cpp
     Platform/Source/PLT/Stub/Frame.cpp

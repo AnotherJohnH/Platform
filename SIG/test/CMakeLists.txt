@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-if(${PLT_NATIVE})
+if(${PDK_NATIVE})
 
    foreach(variant IN LISTS SIG_VARIANTS)
 

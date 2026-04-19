@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-if(${PLT_NATIVE})
+if(${PDK_NATIVE})
 
    add_executable(testConsoleApp testConsoleApp.cpp)
    target_link_libraries(testConsoleApp PLT)

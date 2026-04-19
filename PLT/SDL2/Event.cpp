@@ -13,7 +13,7 @@
 #include "PLT/Event.h"
 #include "PLT/Frame.h"
 
-#ifdef PLT_TARGET_Emscripten
+#ifdef PDK_TARGET_Emscripten
 #include "emscripten.h"
 #endif
 
@@ -105,7 +105,7 @@ static bool eventLoopIter(void* user_data_)
 }
 
 
-#ifdef PLT_TARGET_Emscripten
+#ifdef PDK_TARGET_Emscripten
 static void wrapLoopIter()
 {
    (void)loopIter();
@@ -198,7 +198,7 @@ static Event::Type getEvent(Event::Message& event, bool wait)
       case SDL_KEYDOWN:
          event.type = Event::KEY_DOWN;
          event.code = translate_key(sdl_event.key.keysym.sym);
-#ifndef PLT_TARGET_macOS
+#ifndef PDK_TARGET_macOS
          if (event.code == PLT::LCTRL)
 #else
          if (event.code == PLT::LCMD)
@@ -267,7 +267,7 @@ Type poll(Message& event)
 
 Type wait(Message& event)
 {
-#ifdef PLT_TARGET_Emscripten
+#ifdef PDK_TARGET_Emscripten
    return getEvent(event, false);
 #else
    return getEvent(event, true);
@@ -279,7 +279,7 @@ int mainLoop(bool (*callback_)(void*), void* user_data_)
    main_callback = callback_;
    user_data     = user_data_;
 
-#ifdef PLT_TARGET_Emscripten
+#ifdef PDK_TARGET_Emscripten
    emscripten_set_main_loop(wrapLoopIter, 0, 1);
 #else
    if(main_callback == nullptr)

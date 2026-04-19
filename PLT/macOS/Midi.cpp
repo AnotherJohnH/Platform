@@ -23,7 +23,7 @@ static MIDIPortRef   output_port;
 
 static bool createClient(MIDIClientRef& client)
 {
-   CFStringRef name   = CFStringCreateWithCString(nullptr, "PLT_client", kCFStringEncodingASCII);
+   CFStringRef name   = CFStringCreateWithCString(nullptr, "PDK_client", kCFStringEncodingASCII);
    OSStatus    status = MIDIClientCreate(name,
                              /* notifyProc */   nullptr,
                              /* notifyRefCon */ nullptr,
@@ -74,7 +74,7 @@ In::In(unsigned device_index)
    if(!createClient(input_client)) return;
 
    // Create an input port
-   CFStringRef name = CFStringCreateWithCString(nullptr, "PLT_port", kCFStringEncodingASCII);
+   CFStringRef name = CFStringCreateWithCString(nullptr, "PDK_port", kCFStringEncodingASCII);
    status = MIDIInputPortCreate(input_client,
                                 name,
                                 midiInputCallBack,
@@ -121,7 +121,7 @@ Out::Out(unsigned device_index)
    if(!createClient(output_client)) return;
 
    // Create an output port
-   name   = CFStringCreateWithCString(nullptr, "PLT_port", kCFStringEncodingASCII);
+   name   = CFStringCreateWithCString(nullptr, "PDK_port", kCFStringEncodingASCII);
    status = MIDIOutputPortCreate(output_client, name, &output_port);
    if(status != noErr)
    {

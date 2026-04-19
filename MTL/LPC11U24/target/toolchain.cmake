@@ -5,15 +5,15 @@
 
 # cmake configuration for LPC11U24 builds
 
-set(PLT_PREFIX  arm-none-eabi-)
-set(PLT_MACHINE armv6m)
+set(PDK_PREFIX  arm-none-eabi-)
+set(PDK_MACHINE armv6m)
 
 #-------------------------------------------------------------------------------
 # Special compile flags for this platform
 
 set(CMAKE_ASM_FLAGS "-mcpu=cortex-m0")
 
-set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
+set(CMAKE_C_FLAGS "-DPDK_NCONSOLE -DPDK_SMALL_MEMORY \
 -mcpu=cortex-m0 -mthumb -mfloat-abi=soft \
 -fno-common -fno-builtin -fmessage-length=0 \
 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
@@ -21,25 +21,25 @@ set(CMAKE_C_FLAGS "-DPLT_NCONSOLE -DPLT_SMALL_MEMORY \
 set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS} \
 -Wno-volatile")
 
-set(PLT_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/MTL/${PLT_TARGET}/target/script.ld")
+set(PDK_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/MTL/${PDK_TARGET}/target/script.ld")
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
 
 set(CMAKE_SYSTEM_NAME         Generic)
-set(CMAKE_SYSTEM_PROCESSOR    ${PLT_MACHINE})
+set(CMAKE_SYSTEM_PROCESSOR    ${PDK_MACHINE})
 
-set(CMAKE_ASM_COMPILER        ${PLT_PREFIX}as)
-set(CMAKE_C_COMPILER          ${PLT_PREFIX}gcc)
-set(CMAKE_CXX_COMPILER        ${PLT_PREFIX}g++)
-set(CMAKE_AR                  ${PLT_PREFIX}ar)
-set(CMAKE_RANLIB              ${PLT_PREFIX}ranlib)
-set(CMAKE_OBJCOPY             ${PLT_PREFIX}objcopy)
-set(CMAKE_OBJDUMP             ${PLT_PREFIX}objdump)
-set(CMAKE_SIZE                ${PLT_PREFIX}size)
+set(CMAKE_ASM_COMPILER        ${PDK_PREFIX}as)
+set(CMAKE_C_COMPILER          ${PDK_PREFIX}gcc)
+set(CMAKE_CXX_COMPILER        ${PDK_PREFIX}g++)
+set(CMAKE_AR                  ${PDK_PREFIX}ar)
+set(CMAKE_RANLIB              ${PDK_PREFIX}ranlib)
+set(CMAKE_OBJCOPY             ${PDK_PREFIX}objcopy)
+set(CMAKE_OBJDUMP             ${PDK_PREFIX}objdump)
+set(CMAKE_SIZE                ${PDK_PREFIX}size)
 
 set(CMAKE_C_LINK_EXECUTABLE
-    "${PLT_PREFIX}ld ${PLT_LD_FLAGS} <OBJECTS> -o <TARGET>.elf <LINK_LIBRARIES>; \
+    "${PDK_PREFIX}ld ${PDK_LD_FLAGS} <OBJECTS> -o <TARGET>.elf <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O binary <TARGET>.elf <TARGET>.bin; \
      ${CMAKE_SOURCE_DIR}/PDK/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>.elf; \
      ${CMAKE_SIZE} <TARGET>.elf")

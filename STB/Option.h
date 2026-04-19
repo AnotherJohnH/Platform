@@ -22,7 +22,7 @@ public:
    OptionBase(char        short_opt_,
               const char* long_opt_,
               const char* description_)
-#if !defined(PLT_NCONSOLE)
+#if !defined(PDK_NCONSOLE)
       : description(description_)
       , long_opt(long_opt_)
       , short_opt(short_opt_)
@@ -30,7 +30,7 @@ public:
    {
    }
 
-#if !defined(PLT_NCONSOLE)
+#if !defined(PDK_NCONSOLE)
    //! Print help for all the options
    static void printHelpAll()
    {
@@ -82,7 +82,7 @@ private:
    //! Return a description of the supplementary option value
    virtual const char* getValueDescription() const = 0;
 
-#if !defined(PLT_NCONSOLE)
+#if !defined(PDK_NCONSOLE)
    //! Print option help
    void printHelp() const
    {

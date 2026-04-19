@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-if(${PLT_TARGET} STREQUAL rp2040)
+if(${PDK_TARGET} STREQUAL rp2040)
 
    set(hwr_picoX7_config_variants
        RPIPICO_I2S_DAC
@@ -13,7 +13,7 @@ if(${PLT_TARGET} STREQUAL rp2040)
        PIMORONI_VGA_DEMO
        CACHE INTERNAL "picoX7 configVariants")
 
-elseif(${PLT_TARGET} STREQUAL rp2350)
+elseif(${PDK_TARGET} STREQUAL rp2350)
 
    set(hwr_picoX7_config_variants
        RPIPICO_I2S_DAC
@@ -22,7 +22,7 @@ elseif(${PLT_TARGET} STREQUAL rp2350)
        RPIPICO_PIMORONI_PICO_AUDIO
        CACHE INTERNAL "picoX7 configVariants")
 
-elseif(${PLT_NATIVE})
+elseif(${PDK_NATIVE})
 
    set(hwr_picoX7_config_variants
        NATIVE

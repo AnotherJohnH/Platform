@@ -16,7 +16,7 @@ endif()
 
 #-------------------------------------------------------------------------------
 
-if(${PLT_NATIVE})
+if(${PDK_NATIVE})
 
    add_library(HWR INTERFACE)
 
@@ -36,6 +36,6 @@ else()
    math(EXPR bcd_version "${CMAKE_MAJOR_VERSION} * 0x100 + ${CMAKE_MINOR_VERSION}"
         OUTPUT_FORMAT HEXADECIMAL)
 
-   target_compile_definitions(HWR PUBLIC PLT_BCD_VERSION=${bcd_version})
+   target_compile_definitions(HWR PUBLIC PDK_BCD_VERSION=${bcd_version})
 
 endif()

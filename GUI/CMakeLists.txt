@@ -18,7 +18,7 @@ target_include_directories(GUI PUBLIC ..)
 
 target_link_libraries(GUI PUBLIC STB PLT)
 
-if(${PLT_NATIVE})
+if(${PDK_NATIVE})
     target_sources(GUI PRIVATE Bitmap/BitmapPNG.cpp)
     add_subdirectory(test)
 endif()

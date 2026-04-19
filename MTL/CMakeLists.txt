@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-add_subdirectory(${PLT_TARGET}/target)
+add_subdirectory(${PDK_TARGET}/target)
 
 target_sources(MTL PRIVATE
                MTL_init.cpp
@@ -23,10 +23,10 @@ target_compile_options(MTL PUBLIC "$<$<COMPILE_LANGUAGE:C>:-Wno-stringop-overflo
 target_compile_options(MTL PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:-Wno-stringop-overflow>")
 
 target_compile_definitions(MTL PUBLIC MTL_TARGET=1)
-target_compile_definitions(MTL PUBLIC MTL_${PLT_TARGET}=1)
-target_compile_definitions(MTL PUBLIC PLT_VERSION="${PROJECT_VERSION}")
-target_compile_definitions(MTL PUBLIC PLT_TARGET="${PLT_TARGET}")
-target_compile_definitions(MTL PUBLIC PLT_MACHINE="${PLT_MACHINE}")
-target_compile_definitions(MTL PUBLIC PLT_COMMIT="${PLT_COMMIT}")
+target_compile_definitions(MTL PUBLIC MTL_${PDK_TARGET}=1)
+target_compile_definitions(MTL PUBLIC PDK_VERSION="${PROJECT_VERSION}")
+target_compile_definitions(MTL PUBLIC PDK_TARGET="${PDK_TARGET}")
+target_compile_definitions(MTL PUBLIC PDK_MACHINE="${PDK_MACHINE}")
+target_compile_definitions(MTL PUBLIC PDK_COMMIT="${PDK_COMMIT}")
 
 target_include_directories(MTL PUBLIC ..)

@@ -27,37 +27,37 @@ include(CTest)
 
 #-------------------------------------------------------------------------------
 # Introspect to determine PDK project variables...
-#    PLT_TARGET
-#    PLT_MACHINE
-#    PLT_COMMIT
+#    PDK_TARGET
+#    PDK_MACHINE
+#    PDK_COMMIT
 
 # Determine current git commit
 execute_process(COMMAND git log --pretty=format:%H -n 1
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                OUTPUT_VARIABLE PLT_COMMIT)
+                OUTPUT_VARIABLE PDK_COMMIT)
 
-if(NOT PLT_TARGET)
-   if(DEFINED ENV{PLT_TARGET})
-      set(PLT_TARGET ${ENV{PLAT_TARGET})
+if(NOT PDK_TARGET)
+   if(DEFINED ENV{PDK_TARGET})
+      set(PDK_TARGET ${ENV{PLAT_TARGET})
    else()
-      set(PLT_TARGET native)
+      set(PDK_TARGET native)
    endif()
 endif()
 
-if(${PLT_TARGET} STREQUAL native)
+if(${PDK_TARGET} STREQUAL native)
 
-   set(PLT_NATIVE  TRUE PARENT_SCOPE)
-   set(PLT_NATIVE  TRUE)
-   set(PLT_TARGET  ${CMAKE_HOST_SYSTEM_NAME})
-   set(PLT_MACHINE ${CMAKE_HOST_SYSTEM_PROCESSOR})
+   set(PDK_NATIVE  TRUE PARENT_SCOPE)
+   set(PDK_NATIVE  TRUE)
+   set(PDK_TARGET  ${CMAKE_HOST_SYSTEM_NAME})
+   set(PDK_MACHINE ${CMAKE_HOST_SYSTEM_PROCESSOR})
 
-   if(${PLT_TARGET} STREQUAL Darwin)
-      set(PLT_TARGET macOS)
+   if(${PDK_TARGET} STREQUAL Darwin)
+      set(PDK_TARGET macOS)
    endif()
 
 else()
-   set(PLT_NATIVE  FALSE PARENT_SCOPE)
-   set(PLT_NATIVE  FALSE)
+   set(PDK_NATIVE  FALSE PARENT_SCOPE)
+   set(PDK_NATIVE  FALSE)
    set(CMAKE_ASM_FLAGS_DEBUG   "")
    set(CMAKE_ASM_FLAGS_RELEASE "")
 
@@ -103,9 +103,9 @@ endfunction()
 
 message("--------------------------------------------------------------------------------")
 message("CMAKE_BUILD_TYPE   = ${CMAKE_BUILD_TYPE}")
-message("PLT_COMMIT         = ${PLT_COMMIT}")
-message("PLT_TARGET         = ${PLT_TARGET}")
-message("PLT_MACHINE        = ${PLT_MACHINE}")
+message("PDK_COMMIT         = ${PDK_COMMIT}")
+message("PDK_TARGET         = ${PDK_TARGET}")
+message("PDK_MACHINE        = ${PDK_MACHINE}")
 message("--------------------------------------------------------------------------------")
 
 #-------------------------------------------------------------------------------

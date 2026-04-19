@@ -19,7 +19,7 @@ namespace STB {
 class ConsoleApp
 {
 private:
-#if !defined(PLT_NCONSOLE)
+#if !defined(PDK_NCONSOLE)
    Option<bool> opt_version{'v', "version", "Display version information"};
    Option<bool> opt_help{   'h', "help",    "Display this help"};
 
@@ -41,12 +41,12 @@ private:
       printf("Program      : %s\n", program);
       printf("Description  : %s\n", description);
       printf("Author       : %s\n", author);
-      printf("Version      : %s\n", PLT_VERSION);
+      printf("Version      : %s\n", PDK_VERSION);
       if (link != nullptr)
       {
          printf("Link         : %s\n", link);
       }
-      printf("Commit       : %s\n", PLT_COMMIT);
+      printf("Commit       : %s\n", PDK_COMMIT);
       printf("Built        : %s %s\n", __TIME__, __DATE__);
       printf("Compiler     : %s\n", __VERSION__);
 #if defined(__arm__)
@@ -104,7 +104,7 @@ private:
 #endif
 
 protected:
-#if !defined(PLT_NCONSOLE)
+#if !defined(PDK_NCONSOLE)
    const char* name;
    const char* program;
    const char* description;
@@ -115,7 +115,7 @@ protected:
 
    void error(const char* format, ...)
    {
-#if !defined(PLT_NCONSOLE)
+#if !defined(PDK_NCONSOLE)
       va_list ap;
 
       fprintf(stderr, "%s: ERROR - ", name);
@@ -141,7 +141,7 @@ public:
               const char* author_,
               const char* copyright_year_,
               const char* args_help_ = nullptr)
-#if !defined(PLT_NCONSOLE)
+#if !defined(PDK_NCONSOLE)
       : name(program_)
       , program(program_)
       , description(description_)
@@ -153,8 +153,8 @@ public:
 
    int parseArgsAndStart(int argc, const char* argv[])
    {
-#if !defined(PLT_NCONSOLE)
-#if defined(PLT_TARGET_Emscripten)
+#if !defined(PDK_NCONSOLE)
+#if defined(PDK_TARGET_Emscripten)
       // TODO this is just a confidence test
       static const char* local_argv[] = {"fred"};
 

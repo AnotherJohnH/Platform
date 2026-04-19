@@ -37,8 +37,8 @@ static void consoleReport()
    printf("Program  : Test picoX21H (%s)\n", HW_DESCR);
    printf("Author   : Copyright (c) 2025 John D. Haughton\n");
    printf("License  : MIT\n");
-   printf("Version  : %s\n", PLT_VERSION);
-   printf("Commit   : %s\n", PLT_COMMIT);
+   printf("Version  : %s\n", PDK_VERSION);
+   printf("Commit   : %s\n", PDK_COMMIT);
    printf("Built    : %s %s\n", __TIME__, __DATE__);
    printf("Compiler : %s\n", __VERSION__);
 

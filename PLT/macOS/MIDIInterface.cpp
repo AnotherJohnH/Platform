@@ -56,7 +56,7 @@ struct Interface::Pimpl
    //! Create a client
    bool createClient()
    {
-      CFStringRef name   = CFStringCreateWithCString(nullptr, "PLT_client", kCFStringEncodingASCII);
+      CFStringRef name   = CFStringCreateWithCString(nullptr, "PDK_client", kCFStringEncodingASCII);
       OSStatus    status = MIDIClientCreate(name,
                                             /* notifyProc */   nullptr,
                                             /* notifyRefCon */ nullptr,
@@ -75,7 +75,7 @@ struct Interface::Pimpl
    //! Create an input port
    bool createPort()
    {
-      CFStringRef name   = CFStringCreateWithCString(nullptr, "PLT_port", kCFStringEncodingASCII);
+      CFStringRef name   = CFStringCreateWithCString(nullptr, "PDK_port", kCFStringEncodingASCII);
       OSStatus    status = MIDIInputPortCreate(client,
                                                name,
                                                midiInputCallBack,

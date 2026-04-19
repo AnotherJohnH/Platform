@@ -3,6 +3,6 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-set(PLT_RAM_SIZE 32k)
+set(PDK_RAM_SIZE 32k)
 
 include(${CMAKE_SOURCE_DIR}/Platform/PLT/microbit/toolchain.cmake)
