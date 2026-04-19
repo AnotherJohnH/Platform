@@ -7,8 +7,8 @@
 
 #include <cmath>
 
-#include "Types.h"
 #include "Const.h"
+#include "Types.h"
 
 #include "Table_gain.h"
 #include "Table_note.h"

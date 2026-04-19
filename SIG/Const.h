@@ -2,7 +2,7 @@
 // Copyright (c) 2025 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
-   
+
 #pragma once
 
 #include "Types.h"
@@ -18,7 +18,7 @@ inline constexpr UPhase UPHASE_HALF{UPHASE_QUARTER * 2};
 #if defined(SIG_SAMPLE_RATE)
 inline constexpr Rate SAMPLE_RATE{SIG_SAMPLE_RATE};
 #else
-inline constexpr Rate SAMPLE_RATE{48000};   //!< 48.0 kHz
+inline constexpr Rate SAMPLE_RATE{48000}; //!< 48.0 kHz
 #endif
 
 inline constexpr Float GAIN_MAX_DB = Float{+20.0};
