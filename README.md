@@ -33,13 +33,14 @@ Version [0.0.0] : <initial version>
 Description [Empty application] : <application purpose>
 Binary [foo] : <filename of application binary>
 
-Install template/.clang-format to <project root directory>/.clang-format
-Install template/.gitignore to <project root directory>/.gitignore
-Install template/CMakeLists.txt to <project root directory>/CMakeLists.txt
-Install template/Doxyfile to <project root directory>/Doxyfile
-Install template/LICENSE to <project root directory>/LICENSE
-Install template/README.md to <project root directory>/README.md
-Install template/Source/consoleApp.cpp to <project root directory>/Source/<filename of application binary>.cpp
+Install 'CMakeLists.txt' to '<project root directory>'
+Install 'LICENSE' to '<project root directory>'
+Install 'Makefile' to '<project root directory>'
+Install 'README.md' to '<project root directory>'
+Install '.gitignore' to '<project root directory>'
+Install '.clang-format' to '<project root directory>'
+Install 'build_on_push.yml' to '<project root dir>/.github/workflows'
+Install '<filename of application binary>.cpp' to '<project root directory>/Source'
 ```
 
 ```

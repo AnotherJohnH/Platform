@@ -5,10 +5,10 @@ all: $(targets)
 
 .PHONY: template
 template:
-	scripts/INSTALL_TEMPLATE.sh
+	scripts/INSTALL_TEMPLATE.py
 
 .PHONY: docs
 docs:
 	doxygen scripts/Doxyfile
 
-include PDK/build.make
+include build.make

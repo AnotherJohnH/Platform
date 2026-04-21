@@ -3,11 +3,6 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-cmake_minimum_required(`VERSION' 3.20)
+add_executable(BINARY Source/BINARY.cpp)
 
-project(APPLICATION
-        LANGUAGES CXX C ASM
-        `VERSION' VERSION)
-
-add_subdirectory(PDK)
-add_subdirectory(Source)
+target_link_libraries(BINARY STB PLT)
