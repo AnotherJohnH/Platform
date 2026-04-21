@@ -16,6 +16,8 @@ The intended deployment of the PDK is as a submodule inside other projects.
 
 ## Starting a new project using the PDK
 
+Create a new git project dir and add the PDK as a git submodule.
+
 ```
 mkdir MyProject
 cd MyProject
@@ -23,34 +25,46 @@ git init .
 git submodule add https://github.com/SloeComputers/PDK.git
 cd PDK
 make template
+```
 
-Project dir [/Users/fred/MyProjects/Foo] : <project root directory>
+The project template installer should run..
+
+```
+Project dir [/Users/fred/MyProjects] : <project root directory>
 Copyright owner [John D. Haughton] : <copyright owner>
 Copyright year [2017] : <copyright year>
 User name [SloeComputers] : <GitHub user id>
-Application [Foo] : <name of application>
+Application [MyProject] : <name of application>
 Version [0.0.0] : <initial version>
-Description [Empty application] : <application purpose>
+Description [Example application] : <application purpose>
 Binary [foo] : <filename of application binary>
 
 Install 'CMakeLists.txt' to '<project root directory>'
 Install 'LICENSE' to '<project root directory>'
 Install 'Makefile' to '<project root directory>'
+Install '<filename of application binary>.cpp' to '<project root directory>/Source'
+Install 'CMakeLists.txt' to '<project root directory>/Source'
 Install 'README.md' to '<project root directory>'
 Install '.gitignore' to '<project root directory>'
+Install '_config.yml' to '<project root directory>'
 Install '.clang-format' to '<project root directory>'
 Install 'build_on_push.yml' to '<project root dir>/.github/workflows'
-Install '<filename of application binary>.cpp' to '<project root directory>/Source'
 ```
+
+Add the newly instantiated project as an initial git patch then build.
 
 ```
 cd ..
 git add .
 git commit -m Initial
-mkdir build_native
-cd build_native
-cmake ..
 make
+```
+
+Run the example application just built. (Try with -v and -h too)
+
+```
+build/native/Source/myproject
+Hello, world!
 ```
 
 The following small projects are using the PDK...

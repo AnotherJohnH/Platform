@@ -41,7 +41,7 @@ def instantiate_template(text, values):
 def install_file(source, destination_dir, destination_name, values):
     """ Instantiate and install a template file. """
 
-    print(f"Install '{source.name}' to '{destination_dir}'")
+    print(f"Install '{destination_name}' to '{destination_dir}'")
 
     destination = destination_dir / destination_name
     destination_dir.mkdir(parents=True, exist_ok=True)
@@ -83,7 +83,7 @@ def main():
     details["USERNAME"]    = prompt("User name", def_username)
     details["APPLICATION"] = prompt("Application", project_dir.name)
     details["VERSION"]     = prompt("Version", "0.0")
-    details["DESCRIPTION"] = prompt("Description", "Initial program")
+    details["DESCRIPTION"] = prompt("Description", "Example application")
     details["LINK"]        = prompt("Link", def_link)
     details["BINARY"]      = prompt("Binary", project_dir.name.lower())
 

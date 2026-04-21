@@ -5,7 +5,7 @@ all: $(targets)
 
 .PHONY: template
 template:
-	scripts/INSTALL_TEMPLATE.py
+	@scripts/INSTALL_TEMPLATE.py
 
 .PHONY: docs
 docs:
