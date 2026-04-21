@@ -70,7 +70,7 @@ inline Signal dBGainLookup_15(signed gain15_)
 
    if (index < 0)
       index = 0;
-   else if (index >= TABLE_GAIN_SIZE)
+   else if (index >= signed(TABLE_GAIN_SIZE))
       index = TABLE_GAIN_SIZE - 1;
 
    return table_gain[index];
