@@ -67,10 +67,10 @@ private:
       switch(code_)
       {
       case 'z':       this->pushEvent(0, down_); break;
-      case ' ':       this->pushEvent(1, down_); break;
-      case 'x':       this->pushEvent(2, down_); break;
-      case PLT::UP:   this->pushEvent(3, down_); break;
-      case PLT::DOWN: this->pushEvent(4, down_); break;
+      case ' ':       if (NUM_BUTTONS > 1) this->pushEvent(1, down_); break;
+      case 'x':       if (NUM_BUTTONS > 2) this->pushEvent(2, down_); break;
+      case PLT::UP:   if (NUM_BUTTONS > 3) this->pushEvent(3, down_); break;
+      case PLT::DOWN: if (NUM_BUTTONS > 4) this->pushEvent(4, down_); break;
       }
    }
 
