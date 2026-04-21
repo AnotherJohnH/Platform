@@ -16,7 +16,7 @@ The intended deployment of the PDK is as a submodule inside other projects.
 
 ## Starting a new project using the PDK
 
-Create a new git project dir and add the PDK as a git submodule.
+Create a new **git** project directory and add the **PDK** as a git submodule.
 
 ```
 mkdir MyProject
