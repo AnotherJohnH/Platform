@@ -69,6 +69,9 @@ if(NOT CMAKE_BUILD_TYPE)
    set(CMAKE_BUILD_TYPE Release)
 endif()
 
+if(NOT DEFINED BUILD_TESTING)
+    set(BUILD_TESTING OFF CACHE BOOL "Build unit tests")
+endif()
 include(CTest)
 
 #-------------------------------------------------------------------------------

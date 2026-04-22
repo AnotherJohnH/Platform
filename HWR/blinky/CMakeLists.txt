@@ -87,4 +87,6 @@ endfunction()
 #-------------------------------------------------------------------------------
 # Test
 
-add_blinky_executable(blinkyEx   example.cpp)
+if(BUILD_TESTING)
+   add_blinky_executable(blinkyEx   example.cpp)
+endif()

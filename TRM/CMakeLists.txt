@@ -3,8 +3,10 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-if(${PDK_NATIVE})
+add_library(TRM INTERFACE)
+   
+target_include_directories(TRM INTERFACE ..)
 
-add_subdirectory(test)
-
+if(BUILD_TESTING)
+   add_subdirectory(test)
 endif()

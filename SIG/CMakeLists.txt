@@ -37,4 +37,6 @@ foreach(variant IN LISTS SIG_VARIANTS)
 
 endforeach()
 
-add_subdirectory(test)
+if(BUILD_TESTING)
+   add_subdirectory(test)
+endif()

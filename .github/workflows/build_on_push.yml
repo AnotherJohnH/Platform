@@ -27,12 +27,19 @@ jobs:
     - name: Configure build
       working-directory: ${{github.workspace}}/build_mac
       shell: bash
-      run: cmake ..
+      run: cmake -DBUILD_TESTING=ON ..
 
     - name: Build
       working-directory: ${{github.workspace}}/build_mac
       shell: bash
       run: make
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build_linux
+      shell: bash
+      # Execute tests defined by the CMake configuration.  
+      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      run: ctest -V -C $BUILD_TYPE
 
   #---------------------------------------------------------------------
   # Linux CI
@@ -56,7 +63,7 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{github.workspace}}/build_linux
-      run: export SDL2_DIR=${{github.workspace}}/.github/workflows; cmake ..
+      run: export SDL2_DIR=${{github.workspace}}/.github/workflows; cmake -DBUILD_TESTING=ON ..
 
     - name: Build
       working-directory: ${{github.workspace}}/build_linux
@@ -68,4 +75,4 @@ jobs:
       shell: bash
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C $BUILD_TYPE
+      run: ctest -V -C $BUILD_TYPE

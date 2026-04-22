@@ -12,4 +12,6 @@ target_include_directories(MIDI PUBLIC ..)
 
 target_link_libraries(MIDI STB)
 
-add_subdirectory(test)
+if(BUILD_TESTING)
+   add_subdirectory(test)
+endif()

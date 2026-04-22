@@ -20,5 +20,8 @@ target_link_libraries(GUI PUBLIC STB PLT)
 
 if(${PDK_NATIVE})
     target_sources(GUI PRIVATE Bitmap/BitmapPNG.cpp)
+endif()
+
+if(BUILD_TESTING)
     add_subdirectory(test)
 endif()

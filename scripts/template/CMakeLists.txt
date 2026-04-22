@@ -9,5 +9,10 @@ project(APPLICATION
         LANGUAGES CXX C ASM
         `VERSION' VERSION)
 
+if(NOT DEFINED BUILD_TESTING)
+    set(BUILD_TESTING OFF CACHE BOOL "Build unit tests")
+endif()
+include(CTest)
+
 add_subdirectory(PDK)
 add_subdirectory(Source)

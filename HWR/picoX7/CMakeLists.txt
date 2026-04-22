@@ -70,4 +70,6 @@ endfunction()
 
 autogen_py(Table_sine)
 
-add_picoX7_executable(picoX7Test test.cpp Table_sine.cpp)
+if(BUILD_TESTING)
+   add_picoX7_executable(picoX7Test test.cpp Table_sine.cpp)
+endif()

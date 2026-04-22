@@ -7,4 +7,6 @@ add_library(USB INTERFACE)
 
 target_include_directories(USB INTERFACE ..)
 
-add_subdirectory(test)
+if(BUILD_TESTING)
+   add_subdirectory(test)
+endif()

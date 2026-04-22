@@ -62,5 +62,7 @@ endfunction()
 #-------------------------------------------------------------------------------
 # Test
 
-add_picoSense_executable(picoSenseTest test.cpp)
-add_picoSense_executable(picoSenseEx   example.cpp)
+if(BUILD_TESTING)
+   add_picoSense_executable(picoSenseTest test.cpp)
+   add_picoSense_executable(picoSenseEx   example.cpp)
+endif()

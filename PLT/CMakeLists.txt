@@ -18,8 +18,6 @@ target_compile_options(PLT PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:-Werror>")
 
 target_include_directories(PLT PUBLIC ${PDK_TARGET} ..)
 
-if(${PDK_NATIVE})
-
-add_subdirectory(test)
-
+if(BUILD_TESTING)
+   add_subdirectory(test)
 endif()

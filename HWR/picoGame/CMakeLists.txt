@@ -55,5 +55,7 @@ endfunction()
 #-------------------------------------------------------------------------------
 # Test
 
-add_picoGame_executable(picoGameTest test.cpp)
-add_picoGame_executable(picoGameEx   example.cpp)
+if(BUILD_TESTING)
+   add_picoGame_executable(picoGameTest test.cpp)
+   add_picoGame_executable(picoGameEx   example.cpp)
+endif()

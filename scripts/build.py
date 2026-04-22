@@ -97,6 +97,7 @@ def build(target, cmake_opts):
 
     print('-'*80)
     os.system(cmd)
+    os.chdir("../..")
 
 #-------------------------------------------------------------------------------
 
@@ -104,12 +105,17 @@ def test(target):
     """ Test a build for the given target """
 
     print('='*80)
-    print(f"Build for '{target}'")
+    print(f"Run tests for '{target}'")
+
+    build_dir = "build/" + target
+
+    print(os.getcwd())
 
     if os.path.exists(build_dir):
 
         os.chdir(build_dir)
-        cmd = "ctest -V"
+        cmd = f"ctest -V"
+        print(cmd)
         os.system(cmd)
 
 #-------------------------------------------------------------------------------
@@ -126,6 +132,9 @@ if args.platform_pull:
 
 if args.pull:
     os.system("git pull --rebase")
+
+if args.test:
+    cmake_opts += " -DBUILD_TESTING=ON"
 
 if args.debug:
     cmake_opts += " -DCMAKE_BUILD_TYPE=Debug"
@@ -145,6 +154,7 @@ for target in args.targets:
         clean(target)
 
     elif args.test:
+        build(target, cmake_opts)
         test(target)
 
     else:

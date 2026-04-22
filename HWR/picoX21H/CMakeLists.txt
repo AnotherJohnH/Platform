@@ -65,6 +65,7 @@ endfunction()
 #-------------------------------------------------------------------------------
 # Test
 
-autogen_py(Table_sine)
-
-add_picoX21H_executable(picoX21HTest test.cpp Table_sine.cpp)
+if(BUILD_TESTING)
+   autogen_py(Table_sine)
+   add_picoX21H_executable(picoX21HTest test.cpp Table_sine.cpp)
+endif()
