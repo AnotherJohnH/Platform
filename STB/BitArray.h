@@ -18,27 +18,23 @@ public:
    class BitRef
    {
    public:
-      BitRef(WORD mask_, WORD& word_)
-         : mask(mask_)
-         , word(word_)
+      BitRef(BitArray* that_, size_t pos_)
+         : that(that_)
+         , pos(pos_)
       {
       }
 
-      operator bool() const { return (word & mask) != 0; }
+      operator bool() const { return that->test(pos); }
 
-      bool operator=(bool value_)
+      bool operator=(bool value_) const
       {
-         if (value_)
-            word |= mask;
-         else
-            word &= ~mask;
-
+         that->assign(pos, value_);
          return value_;
       }
 
    private:
-      WORD  mask;
-      WORD& word;
+      BitArray* that;
+      size_t    pos;
    };
 
    BitArray() = default;
@@ -98,13 +94,13 @@ public:
    //! Set a bit true or given value
    void set(size_t pos_)
    {
-      operator[](pos_) = true;
+      assign(pos_, true);
    }
 
    //! Set a bit false
    void reset(size_t pos_)
    {
-      operator[](pos_) = false;
+      assign(pos_, false);
    }
 
    //! Set a range of bits true or given value
@@ -128,11 +124,21 @@ public:
 
    BitRef operator[](size_t pos_)
    {
-      size_t index{};
-      return BitRef(getMask(pos_, index), data[index]);
+      return BitRef(this, pos_);
    }
 
 private:
+   void assign(size_t pos_, bool value_)
+   {
+      size_t index;
+      WORD   mask = getMask(pos_, index);
+
+      if (value_)
+         data[index] |= mask;
+      else
+         data[index] &= ~mask;
+   }
+
    static WORD getMask(size_t pos_, size_t& index_)
    {
       index_       = pos_ / BITS_PER_WORD;
