@@ -121,10 +121,9 @@ public:
          reset(pos);
    }
 
-   const BitRef operator[](size_t pos_) const
+   bool operator[](size_t pos_) const
    {
-      size_t index;
-      return BitRef(getMask(pos_, index), data[index]);
+      return test(pos_);
    }
 
    BitRef operator[](size_t pos_)
@@ -145,7 +144,8 @@ private:
    static const size_t NUM_WORDS     = ((SIZE - 1) / BITS_PER_WORD) + 1;
    static const size_t FINAL_BITS    = SIZE % BITS_PER_WORD;
    static const WORD   ALL_MASK      = WORD(-1);
-   static const WORD   FINAL_MASK    = (WORD(1) << FINAL_BITS) - 1;
+   static const WORD   FINAL_MASK    = FINAL_BITS == 0 ? ALL_MASK
+                                                       : (WORD(1) << FINAL_BITS) - 1;
 
    std::array<WORD,NUM_WORDS> data = {};
 };
