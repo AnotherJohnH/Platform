@@ -30,7 +30,10 @@ TEST(STB_BitArray, basic)
    EXPECT_FALSE(bits.all());
    EXPECT_TRUE(bits.none());
 
+   printf("here\n");
    bits[78] = true;
+   EXPECT_TRUE(bits.test(78));
+   bits.set(78);
    EXPECT_TRUE(bits.test(78));
 
    bits.reset();
