@@ -1,4 +1,5 @@
 theme: jekyll-theme-slate
 title: APPLICATION
-description: DESCRIPTION
-exclude: PDK
+description: A USERNAME project 
+exclude:
+   - PDK
