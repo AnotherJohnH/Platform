@@ -14,6 +14,10 @@ Provides APIs for...
 
 The intended deployment of the PDK is as a submodule inside other projects.
 
+## Status
+
+[![Build Status](https://github.com/SloeComputers/PDK/actions/workflows/build_on_push.yml/badge.svg)](https://github.com/SloeComputers/PDK/actions/workflows/build_on_push.yml)
+
 ## Starting a new project using the PDK
 
 Create a new **git** project directory and add the **PDK** as a git submodule.
@@ -71,10 +75,6 @@ The following small projects are using the PDK...
 * [MineSweeper](https://github.com/SloeComputers/MineSweeper/)
 * [Sternhalma](https://github.com/SloeComputers/Sternhalma/)
 * [Zif](https://github.com/SloeComputers/Zif/)
-
-## Status
-
-[![Build Status](https://github.com/SloeComputers/PDK/actions/workflows/build_on_push.yml/badge.svg)](https://github.com/SloeComputers/PDK/actions/workflows/build_on_push.yml)
 
 ### Linux
 

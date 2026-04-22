@@ -10,7 +10,7 @@ DESCRIPTION.
 
 Build using cmake...
 
-mkdir build_native
-cd build_native
+mkdir build
+cd build
 cmake ..
 make
