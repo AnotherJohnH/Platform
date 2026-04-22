@@ -1,4 +1,5 @@
 theme: jekyll-theme-slate
 title: PDK - Portable Development Kit
 description: A Sloe Computers Project
-exclude: MTL
+exclude:
+   - MTL
