@@ -75,7 +75,6 @@ The following small projects are using the PDK...
 ## Status
 
 [![Build Status](https://github.com/SloeComputers/PDK/actions/workflows/build_on_push.yml/badge.svg)](https://github.com/SloeComputers/PDK/actions/workflows/build_on_push.yml)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/13938/badge.svg)](https://scan.coverity.com/projects/anotherjohnh-platform)
 
 ### Linux
 
