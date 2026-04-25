@@ -3,11 +3,9 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #pragma once
 
-#include <stdlib.h>
+typedef unsigned size_t;
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,6 +23,7 @@ extern char*  strrchr(const char*, int);
 
 extern void*  memcpy(void*, const void*, size_t);
 extern void*  memset(void*, int, size_t);
+extern void*  memmove(void* dest, const void* src, size_t n);
 
 #ifdef __cplusplus
 }

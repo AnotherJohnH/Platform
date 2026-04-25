@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include "STB/Fifo.h"
-
+#include "MTL/Fifo.h"
 #include "MTL/PS2KeyDecode.h"
 #include "MTL/Digital.h"
 #include "MTL/nRF52/GpioTE.h"
@@ -104,7 +103,7 @@ private:
    PS2KeyDecode              ps2;
    volatile uint8_t          byte;
 
-   STB::Fifo<uint8_t, LOG2_FIFO_SIZE, uint8_t> fifo;
+   MTL::Fifo<uint8_t, LOG2_FIFO_SIZE, uint8_t> fifo;
 };
 
 } // namespace MTL

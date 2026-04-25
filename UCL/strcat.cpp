@@ -3,16 +3,18 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <string.h>
 
-int strncmp(const char* lhs, const char* rhs, size_t n)
+char *strcat(char* dest, const char* src)
 {
-   while((*lhs++ == *rhs++) && (--n > 0))
+   char* d = dest;
+
+   while(*d)
    {
-      if (*rhs == '\0') break;
+      ++d;
    }
 
-   return *lhs - *rhs;
+   strcpy(d, src);
+
+   return dest;
 }

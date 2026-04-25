@@ -7,7 +7,7 @@
 
 #include "MTL/chip/USBDevice.h"
 
-#include "STB/Fifo.h"
+#include "MTL/Fifo.h"
 
 #include "USB/Device.h"
 #include "USB/Interface.h"
@@ -89,7 +89,7 @@ private:
       midi_in.startRx(64);
    }
 
-   STB::Fifo<uint8_t, 10> fifo{};
+   MTL::Fifo<uint8_t, 10> fifo{};
 
    // USB Configuration descriptors
    USB::MS::HeaderDescr        d_header{descr_list};

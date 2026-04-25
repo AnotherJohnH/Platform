@@ -15,8 +15,7 @@
 #include "MTL/chip/IoBank.h"
 #include "MTL/chip/Irq.h"
 #include "MTL/chip/Pins.h"
-
-#include "STB/Fifo.h"
+#include "MTL/Fifo.h"
 
 
 namespace MTL {
@@ -46,7 +45,7 @@ struct UartReg
    uint32_t dmacr;
 };
 
-using UartFifo = STB::Fifo<uint8_t, /* LOG2_BUFFER_SIZE */ 9>;
+using UartFifo = MTL::Fifo<uint8_t, /* LOG2_BUFFER_SIZE */ 9>;
 
 //! Base class with RX/TX buffers for each UART instance
 template <unsigned INDEX>

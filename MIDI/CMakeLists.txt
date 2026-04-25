@@ -6,11 +6,11 @@
 add_library(MIDI STATIC
             Controller/Akai_MIDImix.cpp
             Controller/Akai_MPKmini.cpp
-            Decoder.cpp)
+            $<$<BOOL:${PDK_NATIVE}>:Decoder.cpp>)
 
 target_include_directories(MIDI PUBLIC ..)
 
-target_link_libraries(MIDI STB)
+target_link_libraries(MIDI PUBLIC STB)
 
 if(BUILD_TESTING)
    add_subdirectory(test)

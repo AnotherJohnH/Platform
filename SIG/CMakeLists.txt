@@ -35,6 +35,10 @@ foreach(variant IN LISTS SIG_VARIANTS)
 
    target_compile_definitions(${lib} PUBLIC SIG_SAMPLE_RATE=${SIG_SAMPLE_RATE})
 
+   if(NOT PDK_NATIVE)
+      target_link_libraries(${lib} PUBLIC TNY)
+   endif()
+
 endforeach()
 
 if(BUILD_TESTING)

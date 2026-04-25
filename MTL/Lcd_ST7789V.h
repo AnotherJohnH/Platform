@@ -10,8 +10,7 @@
 
 #pragma once
 
-#include <initializer_list>
-#include <unistd.h>
+#include <stdarg.h>
 
 #include "MTL/MTL.h"
 #include "MTL/Digital.h"
@@ -103,7 +102,7 @@ public:
 
    void clear(uint16_t rgb_ = 0x0000)
    {
-      command(RAMWR);
+      command0(RAMWR);
 
       out_cs = 0;
 
@@ -118,7 +117,7 @@ public:
 
    void display(const uint16_t* buffer_)
    {
-      command(RAMWR);
+      command0(RAMWR);
 
       out_cs = 0;
 
@@ -143,8 +142,8 @@ private:
       out_wr = 1;
    }
 
-   //! Write a command with a variable length parameter list
-   void command(uint8_t cmd, std::initializer_list<uint8_t> data)
+   //! Write a command with one parameters
+   void command(uint8_t cmd, size_t n, const uint8_t* byte)
    {
       out_cs = 0;
       out_dc = 0;
@@ -153,79 +152,102 @@ private:
 
       out_dc = 1;
 
-      for(const auto byte : data) 
-      {
-         write(byte);
-      }
+      for(unsigned i = 0; i < n; ++i)
+         write(byte[i]);
 
       out_cs = 1;
    }
 
    //! Write a command with no parameters
-   void command(uint8_t cmd)
+   void command0(uint8_t cmd)
    {
-      command(cmd, {});
+      command(cmd, 0, nullptr);
+   }
+
+   //! Write a command with one parameters
+   void command1(uint8_t cmd, uint8_t byte)
+   {
+      command(cmd, 1, &byte);
+   }
+
+   //! Write a command with two parameters
+   void command2(uint8_t cmd, uint8_t byte1, uint8_t byte2)
+   {
+      uint8_t buffer[2] = {byte1, byte2};
+
+      command(cmd, 2, buffer);
+   }
+
+   //! Write a command with four parameters
+   void command4(uint8_t cmd, uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4)
+   {
+      uint8_t buffer[4] = {byte1, byte2, byte3, byte4};
+
+      command(cmd, 4, buffer);
    }
 
    void setupRegs()
    {
       // Register values below taken from piromoni example code
 
-      command({SWRESET});
+      command0(SWRESET);
 
       usleep(150000);
 
       // Tearing effect line on
       // XXX why and what about the parameter?
-      command(TEON);
+      command0(TEON);
 
       // Use 16 bits/per pixel (with the control interface)
-      command(COLMOD,   {(0b000 << 4) | (0b101 << 0)});
+      command1(COLMOD,   (0b000 << 4) | (0b101 << 0));
 
       // Porch settings:  BPA   FPA  PSEN   FPB   BPC
-      command(PORCTRL,  {0x0c, 0x0c, 0x00, 0x33, 0x33});
+      static const uint8_t porctrlp[] = {0x0c, 0x0c, 0x00, 0x33, 0x33};
+      command(PORCTRL, sizeof(porctrlp), porctrlp);
 
       // LCM control:    XBGR | XMX | XMH
       // XXX the default, may not be the actual required setting
-      command(LCMCTRL,  {0b00101100});
+      command1(LCMCTRL,  0b00101100);
 
       // VDV and VRH command enable: CMDEN
       // XXX what about second parameter
-      command(VDVVRHEN, {0x01});
+      command1(VDVVRHEN, 0x01);
 
       // VRH set:  +4.45V
-      command(VRHS,     {0x12});
+      command1(VRHS,     0x12);
 
       // VDV set:      0V
-      command(VDVS,     {0x20});
+      command1(VDVS,     0x20);
 
       // Power control 1:  0xa4? AVDD = +6.8V, AVCL = -4.8V, VDDS = +2.3V
-      command(PWCTRL1,  {0xa4, 0xa1});
+      command2(PWCTRL1,  0xa4, 0xa1);
 
       // Frame rate control in normal mode: 64Hz
       // XXX piromoni example of 60Hz was strobing
-      command(FRCTRL2,  {0x0D});
+      command1(FRCTRL2,  0x0D);
 
       // Gate control: VGH = +12.54V, VGL = -9.6V
-      command(GCTRL,    {0x14});
+      command1(GCTRL,    0x14);
 
       // VCOMS setting: VCOMS = +1.475 V
-      command(VCOMS,    {0x37});
+      command1(VCOMS,    0x37);
 
       // XXX ? piromoni example code does not match the data sheet
-      command(NVGAMCTRL,  {0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23});
+      static const uint8_t nvgamctrl[] ={0xD0, 0x04, 0x0D, 0x11, 0x13, 0x2B, 0x3F, 0x54, 0x4C, 0x18, 0x0D, 0x0B, 0x1F, 0x23};
+      command(NVGAMCTRL, sizeof(nvgamctrl), nvgamctrl);
 
       // XXX ? piromoni example code does not match the data sheet
-      command(DGMLUTR,    {0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23});
+      static const uint8_t dgmlutr[] = {0xD0, 0x04, 0x0C, 0x11, 0x13, 0x2C, 0x3F, 0x44, 0x51, 0x2F, 0x1F, 0x1F, 0x20, 0x23};
+      command(DGMLUTR, sizeof(dgmlutr), dgmlutr);
 
       // Inversion mode on
-      command(INVON);
+      command0(INVON);
 
       // Turn off full sleep mode
-      command(SLPOUT);
+      command0(SLPOUT);
 
       // Display on
-      command(DISPON);
+      command0(DISPON);
 
       usleep(150000);
 
@@ -235,12 +257,12 @@ private:
       // Column address set
       word_pair[0] = 0;
       word_pair[1] = WIDTH - 1;
-      command(CASET, {b[1], b[0], b[3], b[2]});
+      command4(CASET, b[1], b[0], b[3], b[2]);
 
       // Row address set
       word_pair[0] = 0;
       word_pair[1] = HEIGHT - 1;
-      command(RASET, {b[1], b[0], b[3], b[2]});
+      command4(RASET, b[1], b[0], b[3], b[2]);
 
       // Memory Data Access control
       const uint8_t MADCTL_MY  = 0b10000000;
@@ -251,7 +273,7 @@ private:
       //const uint8_t MADCTL_MH  = 0b00000100;
 
       // Swap XY and reverse page and line address order
-      command(MADCTL, {MADCTL_MY | MADCTL_MV | MADCTL_ML});
+      command1(MADCTL, MADCTL_MY | MADCTL_MV | MADCTL_ML);
 
       usleep(50000);
    }

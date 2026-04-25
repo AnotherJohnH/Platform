@@ -3,20 +3,16 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <string.h>
 
-char *strcpy(char* dest, const char* src)
+size_t strlen(const char* src)
 {
-   char* d = dest;
+   size_t size = 0;
 
-   while(*src)
+   while(*src++)
    {
-      *d++ = *src++;
+      ++size;
    }
 
-   *d = '\0';
-
-   return dest;
+   return size;
 }

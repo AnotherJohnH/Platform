@@ -109,6 +109,7 @@ else()
    set(CMAKE_ASM_FLAGS_DEBUG   "")
    set(CMAKE_ASM_FLAGS_RELEASE "")
 
+   add_subdirectory(UCL)
    add_subdirectory(MTL)
    add_subdirectory(TNY)
 

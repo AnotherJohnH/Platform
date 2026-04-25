@@ -48,13 +48,7 @@ add_library(TNY STATIC
             snprintf.cpp
             sprintf.cpp
             srand.cpp
-            strcat.cpp
             strchr.cpp
-            strcmp.cpp
-            strcpy.cpp
-            strlen.cpp
-            strncmp.cpp
-            strncpy.cpp
             strrchr.cpp
             strtol.cpp
             strtoll.cpp

@@ -3,8 +3,6 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #pragma once
 
 typedef unsigned char       uint8_t;

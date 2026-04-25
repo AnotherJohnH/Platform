@@ -3,16 +3,15 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <string.h>
 
-void* memset(void* dest, int c, size_t n)
+int strcmp(const char* lhs, const char* rhs)
 {
-   while(n--)
+   while((*lhs == *rhs) && (*rhs != '\0'))
    {
-      ((char*)dest)[n] = c;
+      ++rhs;
+      ++lhs;
    }
 
-   return dest;
+   return *lhs - *rhs;
 }

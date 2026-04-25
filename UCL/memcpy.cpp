@@ -3,18 +3,14 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <string.h>
 
-size_t strlen(const char* src)
+void* memcpy(void* dest, const void* src, size_t n)
 {
-   size_t size = 0;
-
-   while(*src++)
+   while(n--)
    {
-      ++size;
+      ((char*)dest)[n] = ((char*)src)[n];
    }
 
-   return size;
+   return dest;
 }
