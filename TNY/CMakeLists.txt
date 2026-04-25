@@ -70,4 +70,4 @@ add_library(TNY STATIC
 
 target_include_directories(TNY PUBLIC include)
 
-target_link_libraries(TNY PRIVATE MTL)
+target_link_libraries(TNY PUBLIC MTL)

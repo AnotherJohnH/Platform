@@ -133,12 +133,12 @@ endif()
 
 #-------------------------------------------------------------------------------
 
-add_subdirectory(HWR)
-add_subdirectory(GUI)
+add_subdirectory(STB)
+add_subdirectory(USB)
+add_subdirectory(SIG)
 add_subdirectory(MIDI)
 add_subdirectory(PLT)
-add_subdirectory(SIG)
-add_subdirectory(STB)
+add_subdirectory(GUI)
 add_subdirectory(TRM)
-add_subdirectory(USB)
+add_subdirectory(HWR)
 
