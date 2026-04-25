@@ -7,7 +7,7 @@
 
 #pragma once
 
-//#include <cstdio>
+#include <sprintf.h>
 #include <cstring>
 
 namespace MTL {
@@ -33,7 +33,6 @@ public:
    //! Format config into the gievn buffer
    size_t format(char* buffer_, size_t size_) const
    {
-#if 0
       unsigned left_max = 0;
       for(unsigned row = 1; row <= (NUM_PINS / 2); ++row)
       {
@@ -71,8 +70,6 @@ public:
       s += snprintf(s, end_s - s, "    +-----------+\n");
 
       return s - buffer_;
-#endif
-      return 0;
    }
 
 protected:

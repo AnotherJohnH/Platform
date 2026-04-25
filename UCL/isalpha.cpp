@@ -3,17 +3,9 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include <ctype.h>
 
-#include <string.h>
-
-char *strchr(const char* s, int c)
+int isalpha(int c)
 {
-   while(*s != c)
-   {
-      if (*s == '\0') return (char*)0;
-      ++s;
-   }
-
-   return (char*)s;
+   return ((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z'));
 }

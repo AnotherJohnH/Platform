@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
+#include <sprintf.h>
 
 #define  NULL   0
 #define  FILENAME_MAX 256
@@ -51,11 +52,6 @@ extern int     getchar();
 extern char*   gets(char*);
 extern int     printf(const char* format, ...);
 extern int     vprintf(const char*, va_list);
-
-extern int     snprintf(char*, size_t, const char*, ...);
-extern int     sprintf(char*, const char*, ...);
-extern int     vsnprintf(char*, size_t, const char*, va_list);
-extern int     vsprintf(char*, const char*, va_list);
 
 
 #ifdef __cplusplus

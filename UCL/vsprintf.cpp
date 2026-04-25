@@ -5,7 +5,7 @@
 
 //! \brief tiny C library implementation
 
-#include <stdio.h>
+#include <sprintf.h>
 #include <stdint.h>
 #include <ctype.h>
 
@@ -64,9 +64,8 @@ static char* itos(char*    buffer,
 }
 
 
-int vsnprintf(char* buffer, size_t n, const char* format, va_list ap)
+int vsprintf(char* buffer, const char* format, va_list ap)
 {
-   // TODO use n to make this code safer
    char* s = buffer;
 
    while(true)

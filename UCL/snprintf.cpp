@@ -3,9 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
-#include <stdio.h>
+#include <sprintf.h>
 
 int snprintf(char* buffer, size_t n, const char* format, ...)
 {

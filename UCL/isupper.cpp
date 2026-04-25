@@ -1,13 +1,11 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2026 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <ctype.h>
 
-int isalpha(int c)
+int isdigit(int c)
 {
-   return ((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z'));
+   return (c >= 'A') && (c <= 'Z');
 }

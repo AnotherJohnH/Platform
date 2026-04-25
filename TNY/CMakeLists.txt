@@ -26,12 +26,8 @@ add_library(TNY STATIC
             getchar.cpp
             global_obj.cpp
             guard.c
-            isalpha.cpp
-            isdigit.cpp
-            isspace.cpp
             logf.cpp
             malloc.cpp
-            memmove.cpp
             pow.c
             powf.cpp
             printf.cpp
@@ -45,11 +41,7 @@ add_library(TNY STATIC
             sqrtf.c
             scanf.cpp
             sleep.cpp
-            snprintf.cpp
-            sprintf.cpp
             srand.cpp
-            strchr.cpp
-            strrchr.cpp
             strtol.cpp
             strtoll.cpp
             strtoul.cpp
@@ -58,9 +50,7 @@ add_library(TNY STATIC
             tanhf.c
             time.cpp
             usleep.cpp
-            vfprintf.cpp
-            vsnprintf.cpp
-            vsprintf.cpp)
+            vfprintf.cpp)
 
 target_include_directories(TNY PUBLIC include)
 

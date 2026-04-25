@@ -3,19 +3,9 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include <ctype.h>
 
-#include <string.h>
-
-char *strrchr(const char* s, int c)
+int isdigit(int c)
 {
-   const char* m = (const char*)0;
-
-   while(*s != '\0')
-   {
-      if (*s == c) m = s;
-      ++s;
-   }
-
-   return (char*)m;
+   return (c >= '0') && (c <= '9');
 }

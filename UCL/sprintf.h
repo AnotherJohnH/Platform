@@ -3,22 +3,19 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #pragma once
 
-#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int isdigit(int c);
-extern int isalpha(int c);
-extern int islower(int c);
-extern int isupper(int c);
-extern int isalnum(int c);
-extern int isspace(int c);
+extern int snprintf(char*, size_t, const char*, ...);
+extern int sprintf(char*, const char*, ...);
+extern int vsnprintf(char*, size_t, const char*, va_list);
+extern int vsprintf(char*, const char*, va_list);
 
 #ifdef __cplusplus
 }
