@@ -21,5 +21,3 @@ add_library(UCL STATIC
             strncpy.cpp
             vsprintf.cpp
             vsnprintf.cpp)
-
-target_include_directories(UCL PUBLIC .)
