@@ -72,7 +72,7 @@ public:
 
       return s - buffer_;
 #endif
-      return buffer_;
+      return 0;
    }
 
 protected:
