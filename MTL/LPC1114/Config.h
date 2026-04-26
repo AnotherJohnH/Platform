@@ -5,4 +5,4 @@
 
 #include "MTL/MTL.h"
 
-#define CLOCK_FREQ 48000000u //!< 48 MHz
+#define CLOCK_FREQ 50000000u //!< 50 MHz

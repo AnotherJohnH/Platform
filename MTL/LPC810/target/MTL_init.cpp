@@ -5,7 +5,7 @@
 
 #include "MTL/MTL.h"
 
-#include "SysCon.h"
+#include "MTL/LPC810/SysCon.h"
 
 void MTL_init()
 {

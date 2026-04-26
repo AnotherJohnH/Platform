@@ -52,6 +52,14 @@
 #define HW_LED   MTL::PIN_LED1
 
 //------------------------------------------------------------------------------
+#elif defined(HW_DIP)
+
+#include "MTL/chip/Pins.h"
+
+#define HW_DESCR "dip"
+#define HW_LED   MTL::PIN_LED
+
+//------------------------------------------------------------------------------
 #elif defined(HW_MICROBIT)
 
 #include "MTL/chip/module/microbit.h"

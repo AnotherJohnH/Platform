@@ -16,9 +16,11 @@ set(CMAKE_ASM_FLAGS "-mcpu=cortex-m0")
 set(CMAKE_C_FLAGS "-DPDK_NCONSOLE -DPDK_SMALL_MEMORY \
 -mcpu=cortex-m0 -mthumb -mfloat-abi=soft \
 -fno-common -fno-builtin -fmessage-length=0 \
--fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
+-fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections \
+-I${CMAKE_SOURCE_DIR}/PDK/UCL \
+-I${CMAKE_SOURCE_DIR}/PDK/TNY/include")
 
-set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti -Wno-volatile ${CMAKE_C_FLAGS}")
 
 set(PDK_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/MTL/${PDK_TARGET}/target/script.ld")
 
@@ -38,10 +40,10 @@ set(CMAKE_OBJDUMP             ${PDK_PREFIX}objdump)
 set(CMAKE_SIZE                ${PDK_PREFIX}size)
 
 set(CMAKE_C_LINK_EXECUTABLE
-    "${PDK_PREFIX}ld ${PDK_LD_FLAGS} <OBJECTS> -o <TARGET>.elf <LINK_LIBRARIES>; \
-     ${CMAKE_OBJCOPY} -O binary <TARGET>.elf <TARGET>.bin; \
-     ${CMAKE_SOURCE_DIR}/PDK/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>.elf; \
-     ${CMAKE_SIZE} <TARGET>.elf")
+    "${PDK_PREFIX}ld ${PDK_LD_FLAGS} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
+     ${CMAKE_OBJCOPY} -O binary <TARGET> <TARGET>.bin; \
+     ${CMAKE_SOURCE_DIR}/PDK/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>; \
+     ${CMAKE_SIZE} <TARGET>")
 
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
 

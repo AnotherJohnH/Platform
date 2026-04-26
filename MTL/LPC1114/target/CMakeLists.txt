@@ -6,8 +6,8 @@
 add_library(MTL STATIC
             vector_table.s
             MTL_init.cpp
-            MTL/core/CortexM0/MTL_clock.cpp
-            MTL/core/CortexM0/MTL_excep.cpp)
+            ../../core/CortexM0/MTL_clock.cpp
+            ../../core/CortexM0/MTL_excep.cpp)
 
 target_include_directories(MTL PUBLIC .)
 

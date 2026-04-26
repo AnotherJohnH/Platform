@@ -18,35 +18,33 @@ elseif(${PDK_TARGET} STREQUAL rp2350)
        TINY2350 
        CACHE INTERNAL "blinky configVariants")
 
+elseif(${PDK_TARGET} STREQUAL LPC1114)
+
+   set(hwr_blinky_config_variants DIP CACHE INTERNAL "blinky configVariants")
+
 elseif(${PDK_TARGET} STREQUAL LPC11U24)
 
-   set(hwr_blinky_config_variants
-       MBED
-       CACHE INTERNAL "blinky configVariants")
+   set(hwr_blinky_config_variants MBED CACHE INTERNAL "blinky configVariants")
 
 elseif(${PDK_TARGET} STREQUAL LPC1768)
 
-   set(hwr_blinky_config_variants
-       MBED
-       CACHE INTERNAL "blinky configVariants")
+   set(hwr_blinky_config_variants MBED CACHE INTERNAL "blinky configVariants")
+
+elseif(${PDK_TARGET} STREQUAL LPC810)
+
+   set(hwr_blinky_config_variants DIP CACHE INTERNAL "blinky configVariants")
 
 elseif(${PDK_TARGET} STREQUAL nRF51)
 
-   set(hwr_blinky_config_variants
-       MICROBIT
-       CACHE INTERNAL "blinky configVariants")
+   set(hwr_blinky_config_variants MICROBIT CACHE INTERNAL "blinky configVariants")
 
 elseif(${PDK_TARGET} STREQUAL nRF52)
 
-   set(hwr_blinky_config_variants
-       MICROBIT
-       CACHE INTERNAL "blinky configVariants")
+   set(hwr_blinky_config_variants MICROBIT CACHE INTERNAL "blinky configVariants")
 
 elseif(${PDK_NATIVE})
 
-   set(hwr_blinky_config_variants
-       NATIVE
-       CACHE INTERNAL "blinky configVariants")
+   set(hwr_blinky_config_variants NATIVE CACHE INTERNAL "blinky configVariants")
 
 endif()
 

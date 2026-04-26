@@ -1,13 +1,8 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2023 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
 
-#include "MTL/LPC1114/SysCon.h"
-
-void MTL_init()
-{
-   MTL::SysCon().init();
-}
+#define CLOCK_FREQ 25000000u //!< 25 MHz

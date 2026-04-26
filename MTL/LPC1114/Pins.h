@@ -41,6 +41,6 @@ static const unsigned  PIN_27 = 0x004;
 static const unsigned  PIN_28 = 0x007;
 
 
-static const unsigned  PIN_LED1 = PIN_1;
+static const unsigned  PIN_LED = PIN_1;
 
 } // namespace MTL
