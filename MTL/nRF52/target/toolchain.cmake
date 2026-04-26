@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-# cmake configuration for mictobit (V2) builds
+# cmake configuration for microbit (V2) builds
 
 set(PDK_PREFIX  arm-none-eabi-)
 set(PDK_MACHINE armv7m)
@@ -39,9 +39,12 @@ set(CMAKE_OBJCOPY             ${PDK_PREFIX}objcopy)
 set(CMAKE_OBJDUMP             ${PDK_PREFIX}objdump)
 set(CMAKE_SIZE                ${PDK_PREFIX}size)
 
+set(THIS_DIR "${CMAKE_SOURCE_DIR}/PDK/MTL/nRF52/target")
+
 set(CMAKE_C_LINK_EXECUTABLE
     "${PDK_PREFIX}ld ${PDK_LD_FLAGS} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O ihex <TARGET> <TARGET>.hex; \
+     ${THIS_DIR}/univihex.py -1 ${THIS_DIR}/stand-alone-error-v1.hex -2 <TARGET>.hex -o <TARGET>-u.hex; \
      ${CMAKE_SOURCE_DIR}/PDK/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>; \
      ${CMAKE_SIZE} <TARGET>")
 
