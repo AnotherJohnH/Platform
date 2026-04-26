@@ -4,6 +4,7 @@
 #-------------------------------------------------------------------------------
 
 add_library(UCL STATIC
+            isalnum.cpp
             isalpha.cpp
             isdigit.cpp
             islower.cpp
