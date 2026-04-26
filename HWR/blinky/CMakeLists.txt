@@ -15,6 +15,7 @@ elseif(${PDK_TARGET} STREQUAL rp2350)
 
    set(hwr_blinky_config_variants
        RPIPICO
+       TINY2350 
        CACHE INTERNAL "blinky configVariants")
 
 elseif(${PDK_TARGET} STREQUAL LPC11U24)

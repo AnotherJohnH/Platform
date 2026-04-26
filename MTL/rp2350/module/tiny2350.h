@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "MTL/chip/Pins.h"
+#include "MTL/rp2350/Pins.h"
 
 namespace MTL {
 
@@ -32,7 +32,5 @@ static const unsigned PIN_LED3 = IO_PIN_20;
 static const unsigned PIN_LED_RED = PIN_LED1;
 static const unsigned PIN_LED_GRN = PIN_LED2;
 static const unsigned PIN_LED_BLU = PIN_LED2;
-
-static const unsigned PIN_IGNORE = 0xFFFFFFFF;
 
 } // namespace MTL

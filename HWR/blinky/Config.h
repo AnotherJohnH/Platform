@@ -36,6 +36,14 @@
 #define HW_LED   MTL::tufty2040::PIN_USER_LED
 
 //------------------------------------------------------------------------------
+#elif defined(HW_TINY2350)
+
+#include "MTL/chip/module/tiny2350.h"
+
+#define HW_DESCR "tiny2350"
+#define HW_LED   MTL::PIN_LED1
+
+//------------------------------------------------------------------------------
 #elif defined(HW_MBED)
 
 #include "MTL/chip/module/mbed.h"
