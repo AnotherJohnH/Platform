@@ -41,8 +41,8 @@ set(CMAKE_SIZE                ${PDK_PREFIX}size)
 
 set(CMAKE_C_LINK_EXECUTABLE
     "${PDK_PREFIX}ld ${PDK_LD_FLAGS} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
-     ${CMAKE_OBJCOPY} -O ihex <TARGET> <TARGET>.hex; \
-     ${CMAKE_SOURCE_DIR}/PDK/MTL/util/ihexToUF2.py <TARGET>.hex -f 0xE48BFF59 -o<TARGET>.uf2; \
+     ${CMAKE_OBJCOPY} -O ihex <TARGET> <TARGET>.hx; \
+     ${CMAKE_SOURCE_DIR}/PDK/MTL/util/ihexToUF2.py <TARGET>.hx -f 0xE48BFF59 -o<TARGET>.uf2; \
      ${CMAKE_SOURCE_DIR}/PDK/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>; \
      ${CMAKE_SIZE} <TARGET>")
 
