@@ -42,6 +42,14 @@ elseif(${PDK_TARGET} STREQUAL nRF52)
 
    set(hwr_blinky_config_variants MICROBIT CACHE INTERNAL "blinky configVariants")
 
+elseif(${PDK_TARGET} STREQUAL ATtiny85)
+
+   set(hwr_blinky_config_variants DIP CACHE INTERNAL "blinky configVariants")
+
+elseif(${PDK_TARGET} STREQUAL ATtiny84)
+
+   set(hwr_blinky_config_variants DIP CACHE INTERNAL "blinky configVariants")
+
 elseif(${PDK_NATIVE})
 
    set(hwr_blinky_config_variants NATIVE CACHE INTERNAL "blinky configVariants")

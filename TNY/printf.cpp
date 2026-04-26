@@ -60,7 +60,11 @@ static void print_f(float value, int width, unsigned places)
    {
       value -= (int) value;
 
+#if !defined(MTL_ATtiny84) && !defined(MTL_ATtiny85)
       static unsigned pow10[] = { 10, 100, 1000, 10000, 100000 };
+#else
+      static unsigned pow10[] = { 10, 100, 1000, 10000 };
+#endif
 
       unsigned frac = value * pow10[places - 1] + 0.5;
 

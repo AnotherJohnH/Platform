@@ -134,6 +134,8 @@ endif()
 
 #-------------------------------------------------------------------------------
 
+if(NOT PDK_TARGET STREQUAL "ATtiny84" AND NOT PDK_TARGET STREQUAL "ATtiny85")
+
 add_subdirectory(STB)
 add_subdirectory(USB)
 add_subdirectory(SIG)
@@ -141,5 +143,8 @@ add_subdirectory(MIDI)
 add_subdirectory(PLT)
 add_subdirectory(GUI)
 add_subdirectory(TRM)
+
+endif()
+
 add_subdirectory(HWR)
 

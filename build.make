@@ -22,10 +22,10 @@ test:
 
 build_targets := \
    native \
-   Emscripten \
    LPC810 LPC1114 LPC11U24 LPC1768 \
    nRF51 nRF52 \
-   rp2040 rp2350 tiny2350
+   rp2040 rp2350 tiny2350 \
+   ATtiny84 ATtiny85
 
 .PHONY: $(build_targets)
 

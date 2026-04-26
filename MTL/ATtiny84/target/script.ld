@@ -17,9 +17,9 @@ SECTIONS
    {
       KEEP(*(.vectors))
       *(.text*)
-      __init_array_start = .;
+      __ctors_start = .;
       KEEP(*(.init_array))
-      __init_array_end = .;
+      __ctors_end = .;
       *(.rodata*)
 
    } > FLASH
@@ -28,17 +28,18 @@ SECTIONS
 
    .data : AT (__etext)
    {
-      __data_start__ = .;
+      __data_load_start = .;
+      __data_start = .;
       *(.data*)
-      __data_end__ = .;
+      __data_end = .;
 
    } > RAM
 
    .bss :
    {
-      __bss_start__ = .;
+      __bss_start = .;
       *(.bss*)
-      __bss_end__ = .;
+      __bss_end = .;
 
    } > RAM
 }

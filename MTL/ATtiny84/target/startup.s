@@ -45,9 +45,8 @@ reset:
     ldi     r29,0x02
     out     0x3e,r29
 #
-# Initialise C/C++ runtime
 #
-    rcall   TNY_init
+    rcall   MTL_init
 #
 # Call application entry point
 #
