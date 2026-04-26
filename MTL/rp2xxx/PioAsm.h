@@ -186,7 +186,7 @@ public:
    //! Set side set bits in the instruction just encoded
    AsmBase& side(unsigned bits)
    {
-      assert(bits < (1 << side_set_bits));
+      assert(bits < unsigned(1 << side_set_bits));
       uint16_t& inst = prog[pc - 1];
 
       if (side_set_enable)
