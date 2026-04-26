@@ -138,6 +138,34 @@
 #define HW_PROFILER
 
 //------------------------------------------------------------------------------
+#elif defined(HW_TINY2350_I2S_DAC)
+
+#include "MTL/chip/module/tiny2350.h"
+
+#define HW_DESCR          "I2S DAC"
+
+#define HW_USB_DEVICE
+#define HW_LED            MTL::PIN_LED1
+
+#define HW_LCD_I2C        MTL::I2C1_P24_P25
+#define HW_LCD_I2C_ADDR   0x3E
+
+#define HW_MIDI_IN_UART   MTL::Uart1_P26_P27
+
+#define HW_DAC_I2S_GENERIC
+#define HW_DAC_I2S_SD     MTL::PIN_14
+#define HW_DAC_I2S_CLKS   MTL::PIN_15
+
+#define HW_LED_7_SEG
+#define HW_LED_7_SEG_DAT  MTL::PIN_12
+#define HW_LED_7_SEG_CLK  MTL::PIN_13
+
+#define HW_BUTTONS        1
+#define HW_BUTTONS_PIN    MTL::PIN_11
+
+#define HW_PROFILER
+
+//------------------------------------------------------------------------------
 #elif defined(HW_NATIVE)
 
 #define HW_DESCR          "native"
