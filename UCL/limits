@@ -1,0 +1,41 @@
+//------------------------------------------------------------------------------
+// Copyright (c) 2026 John D. Haughton
+// SPDX-License-Identifier: MIT
+//------------------------------------------------------------------------------
+
+#pragma once
+
+namespace std {
+
+template<typename TYPE>
+struct numeric_limits
+{
+   static TYPE max();
+   static TYPE lowest();
+};
+
+template <> bool               numeric_limits<bool>              ::max() { return true; }
+template <> unsigned char      numeric_limits<unsigned char>     ::max() { return 0xFF; }
+template <> signed   char      numeric_limits<signed   char>     ::max() { return 0x7F; }
+template <> unsigned short     numeric_limits<unsigned short>    ::max() { return 0xFFFF; }
+template <> signed   short     numeric_limits<signed   short>    ::max() { return 0x7FFF; }
+template <> unsigned int       numeric_limits<unsigned int>      ::max() { return 0xFFFFFFFF; }
+template <> int                numeric_limits<int>               ::max() { return 0x7FFFFFFF; }
+template <> unsigned long      numeric_limits<unsigned long>     ::max() { return 0xFFFFFFFF; }
+template <> signed   long      numeric_limits<signed   long>     ::max() { return 0x7FFFFFFF; }
+template <> unsigned long long numeric_limits<unsigned long long>::max() { return 0xFFFFFFFFFFFFFFFF; }
+template <> signed   long long numeric_limits<signed   long long>::max() { return 0x7FFFFFFFFFFFFFFF; }
+
+template <> bool               numeric_limits<bool>              ::lowest() { return false; }
+template <> unsigned char      numeric_limits<unsigned char>     ::lowest() { return 0; }
+template <> signed   char      numeric_limits<signed   char>     ::lowest() { return -0x7F; }
+template <> unsigned short     numeric_limits<unsigned short>    ::lowest() { return 0; }
+template <> signed   short     numeric_limits<signed   short>    ::lowest() { return -0x7FFF; }
+template <> unsigned int       numeric_limits<unsigned int>      ::lowest() { return 0; }
+template <> int                numeric_limits<int>               ::lowest() { return -0x7FFFFFFF; }
+template <> unsigned long      numeric_limits<unsigned long>     ::lowest() { return 0; }
+template <> signed   long      numeric_limits<signed   long>     ::lowest() { return -0x7FFFFFFF; }
+template <> unsigned long long numeric_limits<unsigned long long>::lowest() { return 0; }
+template <> signed   long long numeric_limits<signed   long long>::lowest() { return -0x7FFFFFFFFFFFFFFF; }
+
+}

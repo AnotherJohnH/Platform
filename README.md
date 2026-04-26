@@ -1,6 +1,6 @@
 # PDK
 
-Software Development Kit for portable applications.
+C++ Software Development Kit for portable applications.
 
 Provides APIs for...
 * Low-level 2D rendering
