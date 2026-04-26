@@ -3,7 +3,15 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-add_subdirectory(${PDK_TARGET})
+if(PDK_NATIVE)
+   add_subdirectory(${PDK_TARGET})
+
+   if(BUILD_TESTING)
+      add_subdirectory(test)
+   endif()
+else()
+   add_subdirectory(Stub)
+endif()
 
 target_compile_definitions(PLT PUBLIC PDK_VERSION="${PROJECT_VERSION}")
 target_compile_definitions(PLT PUBLIC PDK_TARGET="${PDK_TARGET}")
@@ -18,6 +26,3 @@ target_compile_options(PLT PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:-Werror>")
 
 target_include_directories(PLT PUBLIC ${PDK_TARGET} ..)
 
-if(BUILD_TESTING)
-   add_subdirectory(test)
-endif()

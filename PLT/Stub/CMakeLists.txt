@@ -4,16 +4,15 @@
 #-------------------------------------------------------------------------------
 
 add_library(PLT STATIC
-            ../Stub/Audio.cpp
+            Audio.cpp
             Event.cpp
             Frame.cpp
             Image.cpp
-            ../Stub/NullBitmap.cpp
-            PALVideo.cpp
-            ../Stub/Midi.cpp
-            ../Stub/Sounder.cpp
-            ../Stub/Yield.cpp
-            ../Stub/Info.cpp
-            ../Stub/File.cpp)
+            NullBitmap.cpp
+            Midi.cpp
+            Sounder.cpp
+            Yield.cpp
+            Info.cpp
+            File.cpp)
 
 target_link_libraries(PLT PUBLIC TNY MTL)
