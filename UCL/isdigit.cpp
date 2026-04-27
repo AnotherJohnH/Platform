@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include <ctype.h>
+#include "ctype.h"
 
 int isdigit(int c)
 {

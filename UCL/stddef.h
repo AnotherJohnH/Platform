@@ -3,18 +3,6 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include "string.h"
+#pragma once
 
-char *strncpy(char* dest, const char* src, size_t n)
-{
-   char* d = dest;
-
-   while((*src) && (n-- > 0))
-   {
-      *d++ = *src++;
-   }
-
-   *d = '\0';
-
-   return dest;
-}
+typedef unsigned size_t;

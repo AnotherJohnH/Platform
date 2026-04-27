@@ -5,4 +5,4 @@
 
 //! \brief tiny C library implementation
 
-#include <stddef.h>
+#include "inttypes.h"

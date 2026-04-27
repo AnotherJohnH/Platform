@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include <string.h>
+#include "string.h"
 
 int strcmp(const char* lhs, const char* rhs)
 {

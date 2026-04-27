@@ -1,10 +1,11 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2017 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include "ctype.h"
 
-#pragma once
-
-typedef unsigned size_t;
+int isspace(int c)
+{
+   return (c == ' ') || (c == '\t');
+}

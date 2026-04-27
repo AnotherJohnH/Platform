@@ -1,5 +1,5 @@
 
-targets = native # rp2040 rp2350
+targets = native rp2040 rp2350
 
 all: $(targets)
 

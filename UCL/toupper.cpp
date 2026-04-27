@@ -5,7 +5,7 @@
 
 #include "ctype.h"
 
-int isspace(int c)
+int toupper(int c)
 {
-   return (c == ' ') || (c == '\f') || (c == '\n') || (c == '\r') || (c == '\t') || (c == '\v');
+   return (c >= 'a') && (c <= 'z') ? c - 'a' + 'A' : c;
 }

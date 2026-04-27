@@ -5,7 +5,7 @@
 
 #include "ctype.h"
 
-int isspace(int c)
+int tolower(int c)
 {
-   return (c == ' ') || (c == '\f') || (c == '\n') || (c == '\r') || (c == '\t') || (c == '\v');
+   return (c >= 'A') && (c <= 'Z') ? c - 'A' + 'a' : c;
 }

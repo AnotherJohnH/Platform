@@ -22,10 +22,6 @@ target_compile_options(MTL PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:-Wno-stringop-overf
 
 target_compile_definitions(MTL PUBLIC MTL_TARGET=1)
 target_compile_definitions(MTL PUBLIC MTL_${PDK_TARGET}=1)
-target_compile_definitions(MTL PUBLIC PDK_VERSION="${PROJECT_VERSION}")
-target_compile_definitions(MTL PUBLIC PDK_TARGET="${PDK_TARGET}")
-target_compile_definitions(MTL PUBLIC PDK_MACHINE="${PDK_MACHINE}")
-target_compile_definitions(MTL PUBLIC PDK_COMMIT="${PDK_COMMIT}")
 
 target_include_directories(MTL PUBLIC ..)
 

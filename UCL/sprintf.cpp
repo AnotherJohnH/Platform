@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include <sprintf.h>
+#include "sprintf.h"
 
 int sprintf(char* buffer, const char* format, ...)
 {

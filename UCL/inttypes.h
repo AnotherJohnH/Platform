@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "stdint.h"
 
 #define PRId32 "li"
 #define PRIu32 "lu"

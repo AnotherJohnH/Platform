@@ -5,7 +5,7 @@
 
 #include "ctype.h"
 
-int isspace(int c)
+int iscntrl(int c)
 {
-   return (c == ' ') || (c == '\f') || (c == '\n') || (c == '\r') || (c == '\t') || (c == '\v');
+   return (c >= 0x00) && (c <= 0x1F) || (c == 0x7F);
 }

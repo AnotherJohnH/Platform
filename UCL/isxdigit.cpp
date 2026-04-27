@@ -5,7 +5,11 @@
 
 #include "ctype.h"
 
-int isspace(int c)
+int isxdigit(int c)
 {
-   return (c == ' ') || (c == '\f') || (c == '\n') || (c == '\r') || (c == '\t') || (c == '\v');
+   if (isdigit(c))
+      return true;
+
+   c = tolower(c);
+   return (c >= 'a') && (c <= 'f');
 }

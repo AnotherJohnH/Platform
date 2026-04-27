@@ -103,6 +103,8 @@ if("${PDK_TARGET}" STREQUAL "native")
       set(PDK_TARGET "macOS")
    endif()
 
+   add_subdirectory(UCL)
+
 else()
 
    set(PDK_NATIVE FALSE)

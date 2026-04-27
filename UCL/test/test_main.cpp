@@ -3,9 +3,17 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include "ctype.h"
+#include "test.h"
 
-int isspace(int c)
+extern int test_ctype();
+
+bool TST::pass;
+
+int main()
 {
-   return (c == ' ') || (c == '\f') || (c == '\n') || (c == '\r') || (c == '\t') || (c == '\v');
+   int status{0};
+
+   status += test_ctype();
+
+   return status;
 }

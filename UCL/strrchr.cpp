@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include <string.h>
+#include "string.h"
 
 char* strrchr(const char* s, int c)
 {

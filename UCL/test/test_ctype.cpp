@@ -5,7 +5,11 @@
 
 #include "ctype.h"
 
-int isspace(int c)
+#include "test.h"
+
+int test_ctype()
 {
-   return (c == ' ') || (c == '\f') || (c == '\n') || (c == '\r') || (c == '\t') || (c == '\v');
+   EXPECT_TRUE(isdigit('0'));
+
+   return 0;
 }

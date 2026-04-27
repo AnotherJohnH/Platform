@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include <string.h>
+#include "string.h"
 
 size_t strlen(const char* src)
 {
