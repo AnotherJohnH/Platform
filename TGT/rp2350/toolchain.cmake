@@ -5,6 +5,7 @@
 
 # cmake configuration for RaspberryPi Pico builds
 
+set(PDK_TARGET  rp2350)
 set(PDK_PREFIX  arm-none-eabi-)
 set(PDK_MACHINE armv8m)
 

@@ -18,6 +18,7 @@ add_library(UCL STATIC
             ispunct.cpp
             tolower.cpp
             toupper.cpp
+            memmove.cpp
             memset.cpp
             memcpy.cpp
             sprintf.cpp

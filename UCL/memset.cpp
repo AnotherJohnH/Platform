@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include <string.h>
+#include "string.h"
 
 void* memset(void* dest, int c, size_t n)
 {

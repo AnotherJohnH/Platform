@@ -5,6 +5,7 @@
 
 # cmake configuration for mictobit (V1) builds
 
+set(PDK_TARGET  nRF51)
 set(PDK_PREFIX  arm-none-eabi-)
 set(PDK_MACHINE armv6m)
 

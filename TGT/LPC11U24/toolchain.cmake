@@ -5,6 +5,7 @@
 
 # cmake configuration for LPC11U24 builds
 
+set(PDK_TARGET  LPC11U24)
 set(PDK_PREFIX  arm-none-eabi-)
 set(PDK_MACHINE armv6m)
 

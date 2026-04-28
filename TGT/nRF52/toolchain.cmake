@@ -5,6 +5,7 @@
 
 # cmake configuration for microbit (V2) builds
 
+set(PDK_TARGET  nRF52)
 set(PDK_PREFIX  arm-none-eabi-)
 set(PDK_MACHINE armv7m)
 
