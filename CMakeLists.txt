@@ -104,6 +104,7 @@ if("${PDK_TARGET}" STREQUAL "native")
    endif()
 
    add_subdirectory(UCL)
+   add_subdirectory(TGT)
 
 else()
 
@@ -113,6 +114,7 @@ else()
 
    add_subdirectory(UCL)
    add_subdirectory(MTL)
+   add_subdirectory(TGT)
    add_subdirectory(TNY)
 
 endif()

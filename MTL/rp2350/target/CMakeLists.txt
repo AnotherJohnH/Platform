@@ -4,9 +4,6 @@
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
-            boot.s
-            vector_table_core0.s
-            vector_table_core1.s
             Dma.cpp
             ../../rp2xxx/target/Uart.cpp
             ../../rp2xxx/target/MTL_console.cpp
@@ -16,9 +13,4 @@ add_library(MTL STATIC
             ../../core/CortexM33/MTL_excep.cpp
             Config.cpp)
 
-execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -mfloat-abi=hard -print-file-name=libgcc.a OUTPUT_VARIABLE gcc_lib)
-string(STRIP ${gcc_lib} gcc_lib)
-
 target_include_directories(MTL PUBLIC .)
-
-target_link_libraries(MTL PUBLIC ${gcc_lib})

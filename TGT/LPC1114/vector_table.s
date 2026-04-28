@@ -12,7 +12,7 @@
 .global vector_table
 
 vector_table:
-   .word  0x10002000        @ stack pointer (8k RAM)
+   .word  0x10001000        @ stack pointer (4k RAM)
    .word  VEC_reset+1
    .word  VEC_nmi+1
    .word  VEC_fault+1
@@ -35,20 +35,20 @@ vector_table:
    .weak  VEC_pendSv
    .weak  VEC_sysTick
 
-   .word  IRQ_GPIO_0+1     @ IRQ 0
-   .word  IRQ_GPIO_1+1     @ IRQ 1
-   .word  IRQ_GPIO_2+1     @ IRQ 2
-   .word  IRQ_GPIO_3+1     @ IRQ 3
-   .word  IRQ_GPIO_4+1     @ IRQ 4
-   .word  IRQ_GPIO_5+1     @ IRQ 5
-   .word  IRQ_GPIO_6+1     @ IRQ 6
-   .word  IRQ_GPIO_7+1     @ IRQ 7
-   .word  IRQ_GINT0+1      @ IRQ 8
-   .word  IRQ_GINT1+1      @ IRQ 9
-   .word  0                @ IRQ 10
-   .word  0                @ IRQ 11
-   .word  0                @ IRQ 12
-   .word  0                @ IRQ 13
+   .word  IRQ_PIO0_0+1     @ IRQ 0
+   .word  IRQ_PIO0_1+1     @ IRQ 1
+   .word  IRQ_PIO0_2+1     @ IRQ 2
+   .word  IRQ_PIO0_3+1     @ IRQ 3
+   .word  IRQ_PIO0_4+1     @ IRQ 4
+   .word  IRQ_PIO0_5+1     @ IRQ 5
+   .word  IRQ_PIO0_6+1     @ IRQ 6
+   .word  IRQ_PIO0_7+1     @ IRQ 7
+   .word  IRQ_PIO0_8+1     @ IRQ 8
+   .word  IRQ_PIO0_9+1     @ IRQ 9
+   .word  IRQ_PIO0_10+1    @ IRQ 10
+   .word  IRQ_PIO0_11+1    @ IRQ 11
+   .word  IRQ_PIO1_0+1     @ IRQ 12
+   .word  IRQ_C_CAN        @ IRQ 13
    .word  IRQ_SSP1+1       @ IRQ 14
    .word  IRQ_I2C+1        @ IRQ 15
    .word  IRQ_CT16B0+1     @ IRQ 16
@@ -56,28 +56,31 @@ vector_table:
    .word  IRQ_CT32B0+1     @ IRQ 18
    .word  IRQ_CT32B1+1     @ IRQ 19
    .word  IRQ_SSP0+1       @ IRQ 20
-   .word  IRQ_USART+1      @ IRQ 21
-   .word  IRQ_USB_IRQ+1    @ IRQ 22
-   .word  IRQ_USB_FIQ+1    @ IRQ 23
+   .word  IRQ_UART+1       @ IRQ 21
+   .word  0                @ IRQ 22
+   .word  0                @ IRQ 23
    .word  IRQ_ADC+1        @ IRQ 24
-   .word  IRQ_BOD+1        @ IRQ 25
-   .word  IRQ_WWDT+1       @ IRQ 26
-   .word  IRQ_FLASH+1      @ IRQ 27
-   .word  0                @ IRQ 28
-   .word  0                @ IRQ 29
-   .word  IRQ_USB_WAKEUP+1 @ IRQ 30
-   .word  IRQ_IOH+1        @ IRQ 31
+   .word  IRQ_WDT+1        @ IRQ 25
+   .word  IRQ_BOD+1        @ IRQ 26
+   .word  0                @ IRQ 27
+   .word  IRQ_PIO_3+1      @ IRQ 28
+   .word  IRQ_PIO_2+1      @ IRQ 29
+   .word  IRQ_PIO_1+1      @ IRQ 30
+   .word  IRQ_PIO_0+1      @ IRQ 31
 
-   .weak IRQ_GPIO_0
-   .weak IRQ_GPIO_1
-   .weak IRQ_GPIO_2
-   .weak IRQ_GPIO_3
-   .weak IRQ_GPIO_4
-   .weak IRQ_GPIO_5
-   .weak IRQ_GPIO_6
-   .weak IRQ_GPIO_7
-   .weak IRQ_GINT0
-   .weak IRQ_GINT1
+   .weak IRQ_PIO0_0
+   .weak IRQ_PIO0_1
+   .weak IRQ_PIO0_2
+   .weak IRQ_PIO0_3
+   .weak IRQ_PIO0_4
+   .weak IRQ_PIO0_5
+   .weak IRQ_PIO0_6
+   .weak IRQ_PIO0_7
+   .weak IRQ_PIO0_9
+   .weak IRQ_PIO0_10
+   .weak IRQ_PIO0_11
+   .weak IRQ_PIO1_0
+   .weak IRQ_C_CAN
    .weak IRQ_SSP1
    .weak IRQ_I2C
    .weak IRQ_CT16B0
@@ -85,15 +88,14 @@ vector_table:
    .weak IRQ_CT32B0
    .weak IRQ_CT32B1
    .weak IRQ_SSP0
-   .weak IRQ_USART
-   .weak IRQ_USB_IRQ
-   .weak IRQ_USB_FIQ
+   .weak IRQ_UART
    .weak IRQ_ADC
-   .weak IRQ_WWDT
+   .weak IRQ_WDT
    .weak IRQ_BOD
-   .weak IRQ_FLASH
-   .weak IRQ_USB_WAKEUP
-   .weak IRQ_IOH
+   .weak IRQ_PIO_3
+   .weak IRQ_PIO_2
+   .weak IRQ_PIO_1
+   .weak IRQ_PIO_0
 
 .text
 .align 2
@@ -102,7 +104,7 @@ VEC_reset:
 #
 # Prepare image to run
 #
-    bl   MTL_data_and_bss
+    bl   TGT_data_and_bss
 #
 # Initialise platform
 # XXX Must not use global constructors
@@ -112,7 +114,7 @@ VEC_reset:
 #
 # Construct global objects
 #
-    bl   MTL_global_construction
+    bl   TGT_global_construction
 
 #
 # Call application entry point
@@ -129,16 +131,19 @@ VEC_nmi:
 VEC_svc:
 VEC_pendSv:
 VEC_sysTick:
-IRQ_GPIO_0:
-IRQ_GPIO_1:
-IRQ_GPIO_2:
-IRQ_GPIO_3:
-IRQ_GPIO_4:
-IRQ_GPIO_5:
-IRQ_GPIO_6:
-IRQ_GPIO_7:
-IRQ_GINT0:
-IRQ_GINT1:
+IRQ_PIO0_0:
+IRQ_PIO0_1:
+IRQ_PIO0_2:
+IRQ_PIO0_3:
+IRQ_PIO0_4:
+IRQ_PIO0_5:
+IRQ_PIO0_6:
+IRQ_PIO0_7:
+IRQ_PIO0_8:
+IRQ_PIO0_9:
+IRQ_PIO0_10:
+IRQ_PIO0_11:
+IRQ_PIO1_0:
 IRQ_SSP1:
 IRQ_I2C:
 IRQ_CT16B0:
@@ -146,13 +151,12 @@ IRQ_CT16B1:
 IRQ_CT32B0:
 IRQ_CT32B1:
 IRQ_SSP0:
-IRQ_USART:
-IRQ_USB_IRQ:
-IRQ_USB_FIQ:
+IRQ_UART:
 IRQ_ADC:
-IRQ_WWDT:
 IRQ_BOD:
-IRQ_FLASH:
-IRQ_USB_WAKEUP:
-IRQ_IOH:
+IRQ_WDT:
+IRQ_PIO_3:
+IRQ_PIO_2:
+IRQ_PIO_1:
+IRQ_PIO_0:
     bx   lr

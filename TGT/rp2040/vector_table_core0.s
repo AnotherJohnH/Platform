@@ -102,7 +102,7 @@ VEC_reset:
 #
 # Prepare image to run
 #
-    bl   MTL_data_and_bss
+    bl   TGT_data_and_bss
 #
 # Initialise platform
 # XXX Must not use global constructors
@@ -112,7 +112,7 @@ VEC_reset:
 #
 # Construct global objects
 #
-    bl   MTL_global_construction
+    bl   TGT_global_construction
 #
 # Call application entry point
 #

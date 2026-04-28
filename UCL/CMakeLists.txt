@@ -31,11 +31,6 @@ add_library(UCL STATIC
             vsprintf.cpp
             vsnprintf.cpp)
 
-target_compile_definitions(UCL PUBLIC PDK_VERSION="${PROJECT_VERSION}")
-target_compile_definitions(UCL PUBLIC PDK_COMMIT="${PDK_COMMIT}")
-target_compile_definitions(UCL PUBLIC PDK_TARGET="${PDK_TARGET}")
-target_compile_definitions(UCL PUBLIC PDK_MACHINE="${PDK_MACHINE}")
-
 if(BUILD_TESTING)
    add_subdirectory(test)
 endif()

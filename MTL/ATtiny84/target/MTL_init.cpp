@@ -3,10 +3,6 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-extern "C" {
-void MTL_init();
-}
-
-void MTL_init()
+extern "C" void MTL_init()
 {
 }

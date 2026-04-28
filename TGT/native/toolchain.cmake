@@ -3,5 +3,5 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-# cmake configuration for native builds
+# Empty cmake toolchain configuration for native builds
 

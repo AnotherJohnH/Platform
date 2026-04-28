@@ -5,10 +5,8 @@
 
 #include <cstdint>
 
-#include "MTL/MTL.h"
-
 //! Initialise data section and clear BSS
-void MTL_data_and_bss()
+extern "C" void TGT_data_and_bss()
 {
    extern uint8_t __etext[];
    extern uint8_t __data_start__[];
@@ -28,7 +26,7 @@ void MTL_data_and_bss()
 }
 
 //! Call global constructors
-void MTL_global_construction()
+extern "C" void TGT_global_construction()
 {
    extern void (*__init_array_start)();
    extern void (*__init_array_end)();
