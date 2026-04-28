@@ -62,6 +62,8 @@ vector_table_core0:
    .word  0                @ IRQ 30
    .word  0                @ IRQ 31
 
+   .word  vector_table_core1
+
 .weak VEC_fault
 .weak VEC_nmi
 .weak VEC_svc
