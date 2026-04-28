@@ -14,6 +14,7 @@ if(${PDK_TARGET} STREQUAL rp2040)
 elseif(${PDK_TARGET} STREQUAL rp2350)
 
    set(hwr_picoSense_config_variants
+       RPIPICO_WAVESHARE_EPAPER
        CACHE INTERNAL "picoSense configVariants")
 
 elseif(${PDK_NATIVE})
