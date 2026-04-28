@@ -3,7 +3,5 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-# cmake configuration for macOS
+# cmake configuration for native builds
 
-set(CMAKE_CXX_STANDARD          14)
-set(CMAKE_CXX_STANDARD_REQUIRED True)

@@ -1,28 +1,28 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2020 John D. Haughton
+# Copyright (c) 2019 John D. Haughton
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-# cmake configuration for Atmel ATtiny84 builds
+# cmake configuration for LPC11U24 builds
 
-set(PDK_PREFIX  avr-)
-set(PDK_MACHINE avr24)
+set(PDK_PREFIX  arm-none-eabi-)
+set(PDK_MACHINE armv6m)
 
 #-------------------------------------------------------------------------------
 # Special compile flags for this platform
 
-set(CMAKE_ASM_FLAGS "-mmcu=attiny84")
+set(CMAKE_ASM_FLAGS "-mcpu=cortex-m0")
 
 set(CMAKE_C_FLAGS "-DPDK_NCONSOLE -DPDK_SMALL_MEMORY \
--mmcu=attiny84 \
--fno-common -fmessage-length=0 \
--fno-exceptions -ffunction-sections -fdata-sections \
+-mcpu=cortex-m0 -mthumb -mfloat-abi=soft \
+-fno-common -fno-builtin -fmessage-length=0 \
+-fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections \
 -I${CMAKE_SOURCE_DIR}/PDK/UCL \
 -I${CMAKE_SOURCE_DIR}/PDK/TNY/include")
 
-set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti -Wno-volatile ${CMAKE_C_FLAGS}")
 
-set(PDK_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/MTL/${PDK_TARGET}/target/script.ld")
+set(PDK_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/TGT/${PDK_TARGET}/script.ld")
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
@@ -42,6 +42,7 @@ set(CMAKE_SIZE                ${PDK_PREFIX}size)
 set(CMAKE_C_LINK_EXECUTABLE
     "${PDK_PREFIX}ld ${PDK_LD_FLAGS} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O binary <TARGET> <TARGET>.bin; \
+     ${CMAKE_SOURCE_DIR}/PDK/TGT/util/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>; \
      ${CMAKE_SIZE} <TARGET>")
 
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})

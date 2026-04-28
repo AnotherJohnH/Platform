@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-# cmake configuration for microbit (V2) builds
+# cmake configuration for LPC1768 builds
 
 set(PDK_PREFIX  arm-none-eabi-)
 set(PDK_MACHINE armv7m)
@@ -11,10 +11,10 @@ set(PDK_MACHINE armv7m)
 #-------------------------------------------------------------------------------
 # Special compile flags for this platform
 
-set(CMAKE_ASM_FLAGS "-mcpu=cortex-m4")
+set(CMAKE_ASM_FLAGS "-mcpu=cortex-m3")
 
 set(CMAKE_C_FLAGS "-DPDK_NCONSOLE -DPDK_SMALL_MEMORY \
--mcpu=cortex-m4 -mthumb -mfloat-abi=soft \
+-mcpu=cortex-m3 -mthumb -mfloat-abi=soft \
 -fno-common -fno-builtin -fmessage-length=0 \
 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections \
 -I${CMAKE_SOURCE_DIR}/PDK/UCL \
@@ -22,7 +22,7 @@ set(CMAKE_C_FLAGS "-DPDK_NCONSOLE -DPDK_SMALL_MEMORY \
 
 set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti -Wno-volatile ${CMAKE_C_FLAGS}")
 
-set(PDK_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/MTL/${PDK_TARGET}/target/script.ld")
+set(PDK_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/TGT/${PDK_TARGET}/script.ld")
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
@@ -39,13 +39,10 @@ set(CMAKE_OBJCOPY             ${PDK_PREFIX}objcopy)
 set(CMAKE_OBJDUMP             ${PDK_PREFIX}objdump)
 set(CMAKE_SIZE                ${PDK_PREFIX}size)
 
-set(THIS_DIR "${CMAKE_SOURCE_DIR}/PDK/MTL/nRF52/target")
-
 set(CMAKE_C_LINK_EXECUTABLE
     "${PDK_PREFIX}ld ${PDK_LD_FLAGS} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
-     ${CMAKE_OBJCOPY} -O ihex <TARGET> <TARGET>.hex; \
-     ${THIS_DIR}/univihex.py -1 ${THIS_DIR}/stand-alone-error-v1.hex -2 <TARGET>.hex -o <TARGET>-u.hex; \
-     ${CMAKE_SOURCE_DIR}/PDK/scripts/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>; \
+     ${CMAKE_OBJCOPY} -O binary <TARGET> <TARGET>.bin; \
+     ${CMAKE_SOURCE_DIR}/PDK/TGT/util/objdump.py -b ${CMAKE_OBJDUMP} <TARGET>; \
      ${CMAKE_SIZE} <TARGET>")
 
 set(CMAKE_CXX_LINK_EXECUTABLE ${CMAKE_C_LINK_EXECUTABLE})
