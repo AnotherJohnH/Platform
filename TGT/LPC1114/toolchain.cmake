@@ -5,7 +5,7 @@
 
 # cmake configuration for MBED LPC11U24 builds
 
-set(PDK_TARGET  LCP1114)
+set(PDK_TARGET  LPC1114)
 set(PDK_PREFIX  arm-none-eabi-)
 set(PDK_MACHINE armv6m)
 
