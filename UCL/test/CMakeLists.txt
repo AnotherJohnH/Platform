@@ -3,10 +3,14 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-add_executable(testUCL
-               test_main.cpp
-               test_ctype.cpp)
+if(${PDK_NATIVE})
 
-target_link_libraries(testUCL PRIVATE UCL)
+   add_executable(testUCL
+                  test_main.cpp
+                  test_ctype.cpp)
 
-add_test(NAME testUCL COMMAND testUCL)
+   target_link_libraries(testUCL PRIVATE UCL)
+
+   add_test(NAME testUCL COMMAND testUCL)
+
+endif()
