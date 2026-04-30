@@ -1,9 +1,9 @@
 #-------------------------------------------------------------------------------
-# Copyright (c) 2024 John D. Haughton
+# Copyright (c) 2026 John D. Haughton
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
             MTL_init.cpp)
 
-target_include_directories(MTL PUBLIC .)
+target_include_directories(MTL PUBLIC target)

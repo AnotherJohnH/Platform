@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-add_subdirectory(${PDK_TARGET}/target)
+add_subdirectory(${PDK_TARGET})
 
 target_sources(MTL PRIVATE
                MTL_init.cpp

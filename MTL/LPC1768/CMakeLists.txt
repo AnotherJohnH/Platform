@@ -4,8 +4,10 @@
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
+            MTL_halt.cpp
             MTL_init.cpp
-            ../../core/CortexM0/MTL_clock.cpp
-            ../../core/CortexM0/MTL_excep.cpp)
+            MTL_console.cpp
+            target/MTL/core/MTL_excep.cpp
+            target/MTL/core/MTL_clock.cpp)
 
-target_include_directories(MTL PUBLIC .)
+target_include_directories(MTL PUBLIC target)
