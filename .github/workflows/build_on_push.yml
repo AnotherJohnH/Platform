@@ -8,47 +8,17 @@ env:
 jobs:
 
   #---------------------------------------------------------------------
-  # MacOS CI
-
-  build_MacOS:
-    runs-on: macOS-latest
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-       submodules: 'recursive'
-
-    - name: Install dependencies
-      run:  brew install SDL2
-
-    - name: Prepare build
-      run: cmake -E make_directory ${{github.workspace}}/build_mac
-
-    - name: Configure build
-      working-directory: ${{github.workspace}}/build_mac
-      shell: bash
-      run: cmake -DBUILD_TESTING=ON ..
-
-    - name: Build
-      working-directory: ${{github.workspace}}/build_mac
-      shell: bash
-      run: make
-
-    - name: Test
-      working-directory: ${{github.workspace}}/build_mac
-      shell: bash
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -V -C $BUILD_TYPE
-
-  #---------------------------------------------------------------------
   # Linux CI
 
   build_Linux:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [rp2040, rp2350, LPC1114, LPC11U24, LPC1768, LPC810, nRF51, nRF52, native]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
       with:
        submodules: 'recursive'
 
@@ -56,23 +26,63 @@ jobs:
       run: |
            sudo apt-get update
            sudo apt-get install -y libsdl2-dev
+           sudo apt-get install -y gcc-arm-none-eabi
 
     - name: Prepare build
-      run: cmake -E make_directory ${{github.workspace}}/build_linux
+      run: mkdir -p ${{github.workspace}}/build/${{matrix.target}}
 
     - name: Configure CMake
       shell: bash
-      working-directory: ${{github.workspace}}/build_linux
-      run: export SDL2_DIR=${{github.workspace}}/.github/workflows; cmake -DBUILD_TESTING=ON ..
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
+      run: |
+        export SDL2_DIR=${{github.workspace}}/.github/workflows
+        cmake ../.. -DCMAKE_TOOLCHAIN_FILE=PDK/TGT/${{matrix.target}}/toolchain.cmake -DBUILD_TESTING=ON
 
     - name: Build
-      working-directory: ${{github.workspace}}/build_linux
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
       shell: bash
       run: make
 
     - name: Test
-      working-directory: ${{github.workspace}}/build_linux
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
       shell: bash
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      run: ctest -V -C $BUILD_TYPE
+
+  #---------------------------------------------------------------------
+  # macOS CI
+
+  build_macOS:
+    runs-on: macOS-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [rp2040, rp2350, LPC1114, LPC11U24, LPC1768, LPC810, nRF51, nRF52, native]
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+       submodules: 'recursive'
+
+    - name: Install dependencies
+      run: |
+        brew install arm-none-eabi-gcc
+        brew install SDL2
+
+    - name: Prepare build
+      run: mkdir -p ${{github.workspace}}/build/${{matrix.target}}
+
+    - name: Configure build
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
+      shell: bash
+      run: |
+         cmake ../.. -DCMAKE_TOOLCHAIN_FILE=PDK/TGT/${{matrix.target}}/toolchain.cmake -DBUILD_TESTING=ON
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
+      shell: bash
+      run: make
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
+      shell: bash
       run: ctest -V -C $BUILD_TYPE
