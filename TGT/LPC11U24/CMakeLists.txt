@@ -5,7 +5,9 @@
 
 add_library(TGT STATIC
             vector_table.s
-            ../TGT_load.cpp)
+            ../gcc_guard.cpp
+            ../gcc_pure_virtual.cpp
+            ../gcc_loader.cpp)
 
 execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=cortex-m0 -print-file-name=libgcc.a OUTPUT_VARIABLE gcc_lib)
 string(STRIP ${gcc_lib} gcc_lib)

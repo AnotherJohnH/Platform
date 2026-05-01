@@ -20,13 +20,11 @@ add_library(TNY STATIC
             fstreams.cpp
             getchar.cpp
             global_obj.cpp
-            guard.c
             logf.cpp
             malloc.cpp
             pow.c
             powf.cpp
             printf.cpp
-            pure_virtual.cpp
             putchar.cpp
             puts.cpp
             sin.c
