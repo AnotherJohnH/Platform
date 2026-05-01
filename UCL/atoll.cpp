@@ -3,12 +3,9 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include "UCL/stdlib.h"
 
-#include <stdlib.h>
-
-int abs(int value)
+long long atoll(const char* s)
 {
-   return value < 0 ? -value : value;
+   return strtoll(s, nullptr, 10);
 }
-

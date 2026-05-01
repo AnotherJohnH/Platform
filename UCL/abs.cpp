@@ -1,14 +1,12 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2017 John D. Haughton
+// Copyright (c) 2013 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include "UCL/stdlib.h"
 
-#include <stdlib.h>
-#include "strto.h"
-
-long atol(const char* s)
+int abs(int value)
 {
-   return TNY::strto<long>(s, nullptr, 10);
+   return value < 0 ? -value : value;
 }
+

@@ -3,9 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
-#include "sprintf.h"
+#include "UCL/stdio.h"
 #include "stdint.h"
 
 int vsprintf(char* buffer, const char* format, va_list ap)

@@ -3,12 +3,16 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include "UCL/stdlib.h"
 
-#include <stdlib.h>
-#include <stdint.h>
+#include "stdint.h"
 
 static uint32_t rand_state = 1;
+
+void srand(unsigned seed_)
+{
+   rand_state = seed_;
+}
 
 int rand(void)
 {

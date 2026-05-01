@@ -5,11 +5,6 @@
 
 add_library(TNY STATIC
             abort.cpp
-            abs.cpp
-            atof.cpp
-            atoi.cpp
-            atol.cpp
-            atoll.cpp
             cos.c
             cosf.c
             clock.cpp
@@ -34,18 +29,12 @@ add_library(TNY STATIC
             pure_virtual.cpp
             putchar.cpp
             puts.cpp
-            rand.cpp
             sin.c
             sinf.c
             sqrt.c
             sqrtf.c
             scanf.cpp
             sleep.cpp
-            srand.cpp
-            strtol.cpp
-            strtoll.cpp
-            strtoul.cpp
-            strtoull.cpp
             system.cpp
             tanhf.c
             time.cpp

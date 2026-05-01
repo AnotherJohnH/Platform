@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include "sprintf.h"
+#include "UCL/stdio.h"
 #include "stdint.h"
 #include "ctype.h"
 

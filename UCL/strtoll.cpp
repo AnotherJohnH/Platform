@@ -3,12 +3,11 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include "UCL/stdlib.h"
 
-#include <stdlib.h>
-#include "strto.h"
+#include "strto_template.h"
 
 long long strtoll(const char* s, const char** endptr, int base)
 {
-   return TNY::strto<long long>(s, endptr, base);
+   return UCL::strto<long long>(s, endptr, base);
 }

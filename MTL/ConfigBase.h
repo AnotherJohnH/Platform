@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include <sprintf.h>
+#include "UCL/stdio.h"
+
 #include <cstring>
 
 namespace MTL {

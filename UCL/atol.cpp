@@ -1,13 +1,11 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2020 John D. Haughton
+// Copyright (c) 2013 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include "UCL/stdlib.h"
 
-#include <stdlib.h>
-
-void srand(unsigned)
+long atol(const char* s)
 {
-   // Do nothing for now
+   return strtol(s, nullptr, 10);
 }

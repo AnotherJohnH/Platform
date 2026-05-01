@@ -9,7 +9,7 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
-#include <sprintf.h>
+#include "UCL/stdio.h"
 
 #define  NULL   0
 #define  FILENAME_MAX 256

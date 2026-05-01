@@ -4,6 +4,11 @@
 #-------------------------------------------------------------------------------
 
 add_library(UCL STATIC
+            abs.cpp
+            atof.cpp
+            atoi.cpp
+            atol.cpp
+            atoll.cpp
             isalnum.cpp
             isalpha.cpp
             islower.cpp
@@ -21,6 +26,7 @@ add_library(UCL STATIC
             memmove.cpp
             memset.cpp
             memcpy.cpp
+            rand.cpp
             sprintf.cpp
             snprintf.cpp
             strcat.cpp
@@ -29,8 +35,16 @@ add_library(UCL STATIC
             strlen.cpp
             strncmp.cpp
             strncpy.cpp
+            strtod.cpp
+            strtof.cpp
+            strtol.cpp
+            strtoll.cpp
+            strtoul.cpp
+            strtoull.cpp
             vsprintf.cpp
             vsnprintf.cpp)
+
+target_include_directories(UCL PUBLIC include)
 
 if(BUILD_TESTING)
    add_subdirectory(test)
