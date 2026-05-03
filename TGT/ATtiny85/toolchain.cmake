@@ -18,7 +18,7 @@ set(CMAKE_C_FLAGS "-DPDK_NCONSOLE -DPDK_SMALL_MEMORY \
 -mmcu=attiny85 \
 -fno-common -fmessage-length=0 \
 -fno-exceptions -ffunction-sections -fdata-sections \
--I${CMAKE_SOURCE_DIR}/PDK/UCL \
+-I${CMAKE_SOURCE_DIR}/PDK/UCL/include \
 -I${CMAKE_SOURCE_DIR}/PDK/TNY/include")
 
 set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS}")

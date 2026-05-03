@@ -5,8 +5,8 @@
 
 add_library(MTL STATIC
             Dma.cpp
-            ../rp2xxx/target/Uart.cpp
-            ../rp2xxx/target/MTL_console.cpp
+            ../rp2xxx/Uart.cpp
+            ../rp2xxx/MTL_console.cpp
             MTL_init.cpp
             MTL_start_core.cpp
             MTL_clock.cpp

@@ -160,7 +160,7 @@ private:
     bool isTxFIFOfull()  const { return (this->reg->status & (1 << 1)) == 0; }
 };
 
-#if defined(MTL_RP2040)
+#if defined(PDK_RP2040)
 
 using I2C0_P1_P2   = I2C<0x40044000, Resets::I2C0, IO_PIN_0,  IO_PIN_1>;
 using I2C0_P6_P7   = I2C<0x40044000, Resets::I2C0, IO_PIN_4,  IO_PIN_5>;
@@ -175,7 +175,7 @@ using I2C1_P19_P20 = I2C<0x40048000, Resets::I2C1, IO_PIN_14, IO_PIN_15>;
 using I2C1_P24_P25 = I2C<0x40048000, Resets::I2C1, IO_PIN_18, IO_PIN_19>;
 using I2C1_P31_P32 = I2C<0x40048000, Resets::I2C1, IO_PIN_26, IO_PIN_27>;
 
-#elif defined(MTL_RP2350)
+#elif defined(PDK_RP2350)
 
 using I2C0_P1_P2   = I2C<0x40090000, Resets::I2C0, IO_PIN_0,  IO_PIN_1>;
 using I2C0_P6_P7   = I2C<0x40090000, Resets::I2C0, IO_PIN_4,  IO_PIN_5>;

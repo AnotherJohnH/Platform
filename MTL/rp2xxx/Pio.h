@@ -371,7 +371,7 @@ uint8_t Pio<IO_FUNC,BASE_ADDRESS,DREQ_BASE>::free_pc = 0;
 using Pio0 = Pio<IoBank::PIO0,0x50200000,/* DREQ_BASE */  0>;
 using Pio1 = Pio<IoBank::PIO1,0x50300000,/* DREQ_BASE */  8>;
 
-#if defined(MTL_RP2350)
+#if defined(PDK_RP2350)
 using Pio2 = Pio<IoBank::PIO1,0x50400000,/* DREQ_BASE */ 16>;
 #endif
 

@@ -31,9 +31,9 @@ struct AdcReg
 //! Analogue to digital convertor
 template <unsigned CHANNEL>
 class Adc
-#if defined(MTL_RP2040)
+#if defined(PDK_RP2040)
    : public Periph<AdcReg, 0x4004C000>
-#elif defined(MTL_RP2350)
+#elif defined(PDK_RP2350)
    : public Periph<AdcReg, 0x400A0000>
 #endif
 {

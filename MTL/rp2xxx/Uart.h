@@ -224,7 +224,7 @@ private:
    bool use_tx_buffer{true};
 };
 
-#if defined(MTL_RP2040)
+#if defined(PDK_RP2040)
 
 using Uart0_P1_P2   = Uart<0x40034000, 0, MTL::IO_PIN_0,  MTL::IO_PIN_1>;
 using Uart0_P16_P17 = Uart<0x40034000, 0, MTL::IO_PIN_12, MTL::IO_PIN_13>;
@@ -234,7 +234,7 @@ using Uart1_P6_P7   = Uart<0x40038000, 1, MTL::IO_PIN_4,  MTL::IO_PIN_5>;
 using Uart1_P11_P12 = Uart<0x40038000, 1, MTL::IO_PIN_8,  MTL::IO_PIN_9>;
 using Uart1_P26_P27 = Uart<0x40038000, 1, MTL::IO_PIN_20, MTL::IO_PIN_21>;
 
-#elif defined(MTL_RP2350)
+#elif defined(PDK_RP2350)
 
 using Uart0_P1_P2   = Uart<0x40070000, 0, MTL::IO_PIN_0,  MTL::IO_PIN_1>;
 using Uart0_P16_P17 = Uart<0x40070000, 0, MTL::IO_PIN_12, MTL::IO_PIN_13>;

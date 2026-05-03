@@ -18,7 +18,7 @@ set(CMAKE_C_FLAGS "-DPDK_NCONSOLE -DPDK_SMALL_MEMORY \
 -mcpu=cortex-m4 -mthumb -mfloat-abi=soft \
 -fno-common -fno-builtin -fmessage-length=0 \
 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections \
--I${CMAKE_SOURCE_DIR}/PDK/UCL \
+-I${CMAKE_SOURCE_DIR}/PDK/UCL/include \
 -I${CMAKE_SOURCE_DIR}/PDK/TNY/include")
 
 set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti -Wno-volatile ${CMAKE_C_FLAGS}")
