@@ -5,7 +5,7 @@
 
 #include "ctype.h"
 
-int isdigit(int c)
+int islower(int c)
 {
    return (c >= 'a') && (c <= 'z');
 }

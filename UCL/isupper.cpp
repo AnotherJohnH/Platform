@@ -5,7 +5,7 @@
 
 #include "ctype.h"
 
-int isdigit(int c)
+int isupper(int c)
 {
    return (c >= 'A') && (c <= 'Z');
 }

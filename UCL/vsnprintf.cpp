@@ -91,23 +91,27 @@ int vsnprintf(char* buffer, size_t n, const char* format, va_list ap)
          break;
 
       char ch = *format++;
+
       if (ch == '\0')
       {
          break;
       }
       else if (ch == '%')
       {
+         ch = *format++;
+
          bool left_justify = false;
          bool include_sign = false;
          bool leading_zero = false;
+
          while(true)
          {
-             ch = *format++;
-
                   if (ch == '-') left_justify = true;
              else if (ch == '+') include_sign = true;
              else if (ch == '0') leading_zero = true;
              else                break;
+
+             ch = *format++;
          }
 
          unsigned width = 0;
