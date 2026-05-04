@@ -7,173 +7,34 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#include <stdint.h>
 
-static void print_u(unsigned value, unsigned base, int width=10, char pad = ' ')
+#include "UCL/PrintF.h"
+
+class Buffer : public PrintF
 {
-   uint8_t  digit[32];
-   int      num_digits;
+public:
+    Buffer() = default;
 
-   for(num_digits=0; (value > 0) && (num_digits < 32); num_digits++)
-   {
-      uint8_t d = value % base;
-      value = value / base;
-      digit[num_digits] = d > 9 ? d - 10 + 'A' : d + '0';
-   }
-
-   if (num_digits == 0)
-   {
-      digit[0] = '0';
-      num_digits = 1;
-   }
-
-   for(int i=0; i<(width - num_digits); i++)
-   {
-      putchar(pad);
-   }
-
-   for(int i=0; i<num_digits; i++)
-   {
-      putchar(digit[num_digits - 1 - i]);
-   }
-}
-
-static void print_i(int value, unsigned base, int width=10, char pad = ' ')
-{
-   if (value < 0)
-   {
-      putchar('-');
-      value = -value;
-      width--;
-   }
-
-   print_u(value, base, width, pad);
-}
-
-static void print_f(float value, int width, unsigned places)
-{
-   print_i((int)value, 10, width - places - 1, ' ');
-
-   putchar('.');
-
-   if (places > 0)
-   {
-      value -= (int) value;
-
-#if !defined(MTL_ATtiny84) && !defined(MTL_ATtiny85)
-      static unsigned pow10[] = { 10, 100, 1000, 10000, 100000 };
-#else
-      static unsigned pow10[] = { 10, 100, 1000, 10000 };
-#endif
-
-      unsigned frac = value * pow10[places - 1] + 0.5;
-
-      print_u(frac, 10, places, '0');
-   }
-}
+private:
+    void putc(char ch) override
+    {
+       putchar(ch);
+       ++count;
+    }
+};
 
 int vprintf(const char* format, va_list ap)
 {
-   for(const char* s = format; *s; s++)
-   {
-      char ch = *s;
+   Buffer buffer;
 
-      if (ch == '%')
-      {
-         ch = *++s;
+   buffer.vprintf(format, ap);
 
-         if (ch == '%')
-         {
-            putchar('%');
-         }
-         else
-         {
-            char pad = ' ';
-
-            if (ch == '0')
-            {
-               pad = '0';
-               ch = *++s;
-            }
-
-            unsigned field_width = 0;
-            unsigned places = 0;
-
-            while( (ch >= '0') && (ch <= '9'))
-            {
-               field_width = field_width*10 + ch - '0';
-               ch = *++s;
-            }
-
-            if (ch == '.')
-            {
-               ch = *++s;
-
-               while( (ch >= '0') && (ch <= '9'))
-               {
-                  places = places*10 + ch - '0';
-                  ch = *++s;
-               }
-            }
-
-            switch(ch)
-            {
-            case 'b':
-               print_u(va_arg(ap, unsigned),  2, field_width, pad);
-               break;
-
-            case 'o':
-               print_u(va_arg(ap, unsigned),  8, field_width, pad);
-               break;
-
-            case 'u':
-               print_u(va_arg(ap, unsigned), 10, field_width, pad);
-               break;
-
-            case 'x':
-            case 'X':
-               print_u(va_arg(ap, unsigned), 16, field_width, pad);
-               break;
-
-            case 'd':
-               print_i(va_arg(ap, unsigned), 10, field_width, pad);
-               break;
-
-            case 'f':
-               print_f(float(va_arg(ap, double)), field_width, places);
-               break;
-
-            case 'p':
-               print_u((unsigned)va_arg(ap, void*), 16, 8, '0');
-               break;
-
-            case 's':
-               for(const char* s = va_arg(ap, const char*); *s; s++)
-                  putchar(*s);
-               break;
-
-            case 'c':
-               putchar(va_arg(ap, int));
-               break;
-
-            default:
-               break;
-            }
-         }
-      }
-      else
-      {
-         putchar(ch);
-      }
-   }
-
-   return 0;
+   return buffer.size();
 }
-
 
 int printf(const char* format, ...)
 {
-   va_list  ap;
+   va_list ap;
 
    va_start(ap, format);
    int status = vprintf(format, ap);

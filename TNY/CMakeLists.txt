@@ -36,8 +36,7 @@ add_library(TNY STATIC
             system.cpp
             tanhf.c
             time.cpp
-            usleep.cpp
-            vfprintf.cpp)
+            usleep.cpp)
 
 target_include_directories(TNY PUBLIC include)
 

@@ -41,8 +41,7 @@ add_library(UCL STATIC
             strtoll.cpp
             strtoul.cpp
             strtoull.cpp
-            vsprintf.cpp
-            vsnprintf.cpp)
+            PrintF.cpp)
 
 target_include_directories(UCL PUBLIC include)
 

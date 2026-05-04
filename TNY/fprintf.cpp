@@ -3,17 +3,44 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <stdio.h>
+
+#include "UCL/PrintF.h"
+
+class Buffer : public PrintF
+{
+public:
+    Buffer(FILE* stream_)
+       : stream(stream_)
+    {
+    }
+
+private:
+    void putc(char ch) override
+    {
+       fputc(ch, stream);
+       ++count;
+    }
+
+    FILE* stream;
+};
+
+int vfprintf(FILE* stream, const char* format, va_list ap)
+{
+   Buffer buffer{stream};
+
+   buffer.vprintf(format, ap);
+
+   return buffer.size();
+}
 
 int fprintf(FILE* stream, const char* format, ...)
 {
    va_list  ap;
 
    va_start(ap, format);
-   vfprintf(stream, format, ap);
+   int status = vfprintf(stream, format, ap);
    va_end(ap);
 
-   return 0;
+   return status;
 }
