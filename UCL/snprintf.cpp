@@ -9,9 +9,9 @@
 class Buffer : public PrintF
 {
 public:
-    Buffer(char* buffer_, size_t n_)
+    Buffer(char* buffer_, size_t size_)
        : buffer(buffer_)
-       , n(n_)
+       , limit(size_ - 1)
     {
     }
 
@@ -23,22 +23,20 @@ public:
 private:
     void putc(char ch) override
     {
-       if (i < (n - 1))
+       if (i < limit)
           buffer[i++] = ch;
        ++count;
     }
 
     char*    buffer;
-    unsigned n;
+    unsigned limit;
     unsigned i{0};
 };
 
 int vsnprintf(char* buffer_, size_t n_, const char* format_, va_list ap_)
 {
    Buffer buffer(buffer_, n_);
-
    buffer.vprintf(format_, ap_);
-
    return buffer.size();
 }
 
