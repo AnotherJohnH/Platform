@@ -3,8 +3,6 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <math.h>
 
 float tanhf(float x)

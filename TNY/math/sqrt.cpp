@@ -1,16 +1,11 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2025 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include <math.h>
 
-#include <stdio.h>
-
-int scanf(const char* format, ...)
+double sqrt(double x_)
 {
-   // TODO implementation
-   return 0;
+   return 0.0;
 }
-
-

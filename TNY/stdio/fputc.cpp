@@ -3,16 +3,15 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <cstdio>
 
-#include "MTL/MTL.h"
-
-int getchar()
+int fputc(int ch, FILE* fp)
 {
-   uint8_t ch = MTL_getch();
-   if (ch == '\r')
-      ch = '\n';
-   return ch;
+   if ((fp == stdout) || (fp == stderr))
+   {
+      putchar(ch);
+      return ch;
+   }
+
+   return -1;
 }

@@ -4,39 +4,38 @@
 #-------------------------------------------------------------------------------
 
 add_library(TNY STATIC
-            abort.cpp
-            cos.c
-            cosf.c
-            clock.cpp
             delete.cpp
-            exit.cpp
-            expf.cpp
-            fabsf.cpp
-            fprintf.cpp
-            feof.cpp
-            fgetc.cpp
-            fputc.cpp
-            feof.cpp
-            fstreams.cpp
-            getchar.cpp
             global_obj.cpp
-            logf.cpp
-            malloc.cpp
-            pow.c
-            powf.cpp
-            printf.cpp
-            putchar.cpp
-            puts.cpp
-            sin.c
-            sinf.c
-            sqrt.c
-            sqrtf.c
-            scanf.cpp
-            sleep.cpp
-            system.cpp
-            tanhf.c
-            time.cpp
-            usleep.cpp)
+            math/cos.cpp
+            math/cosf.cpp
+            math/expf.cpp
+            math/fabsf.cpp
+            math/logf.cpp
+            math/pow.cpp
+            math/powf.cpp
+            math/sin.cpp
+            math/sinf.cpp
+            math/sqrt.cpp
+            math/sqrtf.cpp
+            math/tanhf.cpp
+            stdio/fprintf.cpp
+            stdio/feof.cpp
+            stdio/fgetc.cpp
+            stdio/fputc.cpp
+            stdio/fstreams.cpp
+            stdio/getchar.cpp
+            stdio/printf.cpp
+            stdio/putchar.cpp
+            stdio/puts.cpp
+            stdio/scanf.cpp
+            stdlib/abort.cpp
+            stdlib/exit.cpp
+            stdlib/system.cpp
+            stdlib/malloc.cpp
+            time/clock.cpp
+            time/time.cpp
+            unistd/sleep.cpp
+            unistd/usleep.cpp)
 
 target_include_directories(TNY PUBLIC include)
 

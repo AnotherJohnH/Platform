@@ -3,12 +3,10 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <math.h>
 #include <stdint.h>
 
-float cosf(float x_)
+float sinf(float x_)
 {
    // Handle NaN or infinity
    union { float f; uint32_t u; } ix = {x_};
@@ -27,13 +25,14 @@ float cosf(float x_)
       r = -M_PI_F - r;
 
    // Taylor series
-   // cos(x) ~= 1 - x^2/2! + x^4/4! - x^6/6!
-   const float C2 = -1.0f / 2;
-   const float C4 = +1.0f / 24;
-   const float C6 = -1.0f / 720;
+   // sin(x) ~= x - x^3/3! + x^5/5! - x^7/7!
+   const float C3 = -1.0f / 6;
+   const float C5 = +1.0f / 120;
+   const float C7 = -1.0f / 5040;
 
    float r2     = r * r;
-   float result = 1.0f + r2 * (C2 + r2 * (C4 + r2 * C6));
+   float r3     = r2 * r;
+   float result = r + r3 * (C3 + r2 * (C5 + r2 * C7));
 
    return (n & 1) != 0 ? -result : result;
 }

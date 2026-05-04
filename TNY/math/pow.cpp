@@ -3,11 +3,9 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <math.h>
 
-double sqrt(double x_)
+double pow(double x_, double y_)
 {
    return 0.0;
 }

@@ -3,11 +3,10 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <stdio.h>
 
-int system(const char*)
-{
-   return 0;
-}
+static FILE handles[4];
+
+FILE* stdin  = &handles[0];
+FILE* stdout = &handles[1];
+FILE* stderr = &handles[2];

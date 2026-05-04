@@ -3,17 +3,10 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include  <stdlib.h>
 
-#include <cstdio>
-
-int fputc(int ch, FILE* fp)
+void* malloc(size_t size)
 {
-   if ((fp == stdout) || (fp == stderr))
-   {
-      putchar(ch);
-      return ch;
-   }
-
-   return -1;
+   return 0;
 }
+

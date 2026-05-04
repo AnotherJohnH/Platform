@@ -3,16 +3,16 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include <stdio.h>
 
-#include <time.h>
-
-time_t time(time_t* t_ptr)
+int puts(const char* s)
 {
-   time_t t = clock() / CLOCKS_PER_SEC;
-   if (t_ptr != nullptr)
+   while(*s)
    {
-      *t_ptr = t;
+      putchar(*s++);
    }
-   return t;
+
+   putchar('\n');
+
+   return 0;
 }

@@ -3,8 +3,6 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <signal.h>
 
 #include "MTL/MTL.h"

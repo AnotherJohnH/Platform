@@ -3,11 +3,9 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <math.h>
 
-float sqrtf(float x_)
+double cos(double theta_)
 {
    return 0.0;
 }

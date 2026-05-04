@@ -3,11 +3,17 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include <cstdio>
+#include <cstdint>
 
-#include <stdio.h>
+#include "MTL/MTL.h"
 
-int feof(FILE* fp)
+int putchar(int ch)
 {
-   return 0;
+   if (ch == '\n')
+   {
+      MTL_putch(uint8_t('\r'));
+   }
+   MTL_putch(uint8_t(ch));
+   return ch;
 }

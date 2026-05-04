@@ -1,13 +1,14 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2025 John D. Haughton
+// Copyright (c) 2013 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include <stdio.h>
 
-#include <math.h>
-
-double pow(double x_, double y_)
+int scanf(const char* format, ...)
 {
-   return 0.0;
+   // TODO implementation
+   return 0;
 }
+
+

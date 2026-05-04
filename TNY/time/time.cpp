@@ -3,12 +3,14 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include <time.h>
 
-#include <stdio.h>
-
-static FILE handles[4];
-
-FILE* stdin  = &handles[0];
-FILE* stdout = &handles[1];
-FILE* stderr = &handles[2];
+time_t time(time_t* t_ptr)
+{
+   time_t t = clock() / CLOCKS_PER_SEC;
+   if (t_ptr != nullptr)
+   {
+      *t_ptr = t;
+   }
+   return t;
+}

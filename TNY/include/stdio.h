@@ -20,7 +20,8 @@ extern "C" {
 
 typedef struct
 {
-   long  pos;
+   int           fd;
+   unsigned long pos;
 
 } FILE;
 

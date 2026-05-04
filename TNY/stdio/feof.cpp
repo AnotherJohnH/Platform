@@ -3,12 +3,9 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include <stdio.h>
 
-#include  <stdlib.h>
-
-void* malloc(size_t size)
+int feof(FILE* fp)
 {
    return 0;
 }
-

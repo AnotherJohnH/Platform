@@ -1,15 +1,13 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2019 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+#include <assert.h>
+#include <math.h>
 
-#include <stdlib.h>
-
-#include "MTL/MTL.h"
-
-void abort()
+double sin(double theta)
 {
-   MTL_halt(2);
+   assert(!"no implementation");
+   return 0.0;
 }

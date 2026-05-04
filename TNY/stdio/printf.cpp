@@ -3,8 +3,6 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 #include <stdio.h>
 #include <stdarg.h>
 
