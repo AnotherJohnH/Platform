@@ -1,0 +1,98 @@
+name: build_on_push
+
+on: [push]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+
+  #---------------------------------------------------------------------
+  # Linux CI
+
+  build_Linux:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [native]
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+       submodules: 'recursive'
+
+    - name: Install dependencies
+      run: |
+           sudo apt-get update
+           sudo apt-get install -y libsdl2-dev
+
+    - name: Prepare build
+      run: mkdir -p ${{github.workspace}}/build/${{matrix.target}}
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
+      run: |
+        export SDL2_DIR=${{github.workspace}}/.github/workflows
+        cmake ../.. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
+      shell: bash
+      run: make
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
+      shell: bash
+      run: ctest -V -C $BUILD_TYPE
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: BINARY_Linux_${{matrix.target}}
+        path: |
+          ${{github.workspace}}/build/${{matrix.target}}/BINARY
+
+  #---------------------------------------------------------------------
+  # macOS CI
+
+  build_macOS:
+    runs-on: macOS-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [native]
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+       submodules: 'recursive'
+
+    - name: Install dependencies
+      run: |
+        brew install SDL2
+
+    - name: Prepare build
+      run: mkdir -p ${{github.workspace}}/build/${{matrix.target}}
+
+    - name: Configure build
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
+      shell: bash
+      run: |
+         cmake ../.. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
+      shell: bash
+      run: make
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build/${{matrix.target}}
+      shell: bash
+      run: ctest -V -C $BUILD_TYPE
+
+    - uses: actions/upload-artifact@v7
+      with:
+        name: BINARY_macOS_${{matrix.target}}
+        path: |
+          ${{github.workspace}}/build/${{matrix.target}}/BINARY

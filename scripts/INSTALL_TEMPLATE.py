@@ -7,6 +7,7 @@
 import datetime
 import pathlib
 import re
+import subprocess
 
 #-------------------------------------------------------------------------------
 
@@ -15,6 +16,55 @@ def prompt(label, default):
 
     value = input(f"{label} [{default}] : ").strip()
     return value or default
+
+#-------------------------------------------------------------------------------
+
+def git_config(name, default):
+    """ Return a git config value, or default if it is not configured. """
+
+    try:
+        result = subprocess.run(
+            ["git", "config", "--get", name],
+            capture_output=True,
+            text=True,
+        )
+    except OSError:
+        return default
+
+    value = result.stdout.strip()
+    return value or default
+
+#-------------------------------------------------------------------------------
+
+def chooseTemplate(script_dir):
+
+    template_options = {
+        path.name.removeprefix("template_"): path
+        for path in sorted(script_dir.glob("template_*"))
+        if path.is_dir()
+    }
+
+    if not template_options:
+        raise FileNotFoundError(f"No template directories found in '{script_dir}'")
+
+    print("Template options:")
+    for index, name in enumerate(template_options, start=1):
+        print(f"  {index}. {name}")
+
+    while True:
+        selection = input("Template [1] : ").strip() or "1"
+
+        if selection.isdigit():
+            index = int(selection)
+            if 1 <= index <= len(template_options):
+                name = list(template_options)[index - 1]
+                return template_options[name]
+
+        selection = selection.upper()
+        if selection in template_options:
+            return template_options[selection]
+
+        print("Please select a template by number or name.")
 
 #-------------------------------------------------------------------------------
 
@@ -69,11 +119,12 @@ def main():
 
     project_dir  = pathlib.Path.cwd().parent.resolve()
     script_dir   = pathlib.Path(__file__).resolve().parent
-    template_dir = script_dir / "template"
-    projedt_dir  = prompt("Project dir", project_dir)
+    project_dir  = pathlib.Path(prompt("Project dir", project_dir)).expanduser()
 
-    def_author   = "John D. Haughton"
-    def_username = "SloeComputers"
+    template_dir = chooseTemplate(script_dir)
+
+    def_author   = git_config("user.name", "John D. Haughton")
+    def_username = git_config("user.email", "SloeComputers").split("@", 1)[0]
     def_year     = str(datetime.datetime.now().year)
     def_link     = f"https://github.com/{def_username}"
 
@@ -89,7 +140,6 @@ def main():
 
     print()
 
-    project_dir = pathlib.Path(project_dir).expanduser()
     project_dir.mkdir(parents=True, exist_ok=True)
 
     install_dir(template_dir, project_dir, details)
