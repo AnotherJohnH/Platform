@@ -17,6 +17,12 @@ if(NOT ${PDK_NATIVE})
                   gcc_loader.cpp
                   gcc_pure_virtual.cpp)
 
+   separate_arguments(c_flags NATIVE_COMMAND "${CMAKE_C_FLAGS}")
+   execute_process(COMMAND ${CMAKE_C_COMPILER} ${c_flags} -print-file-name=libgcc.a
+                   OUTPUT_VARIABLE gcc_lib
+                   OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+   target_link_libraries(TGT PUBLIC MTL ${gcc_lib})
 endif()
 
 string(TOUPPER "${PDK_TARGET}" PDK_TARGET_UPPER)
