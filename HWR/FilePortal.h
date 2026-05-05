@@ -53,10 +53,7 @@ private:
    //! Auto-generate the project INDEX.html
    void addINDEX(const char* url_)
    {
-      char* s = index_html;
-      const char* end_s = s + sizeof(index_html) - 1;
-
-      s += snprintf(s, end_s - s,
+      snprintf(index_html, sizeof(index_html),
          "<html>"
             "<head>"
                "<meta http-equiv=\"refresh\" content=\"0;URL='%s'\"/>"
@@ -64,8 +61,7 @@ private:
             "<body>"
                "Redirecting to <a href='%s'>github.com</a>"
             "</body>"
-         "</html>",
-         url_, url_);
+         "</html>", url_, url_);
 
       addFile("INDEX.htm", strlen(index_html), (uint8_t*)index_html);
    }

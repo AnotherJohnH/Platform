@@ -8,6 +8,8 @@
 
 #include "UCL/PrintF.h"
 
+namespace {
+
 class Buffer : public PrintF
 {
 public:
@@ -21,22 +23,19 @@ private:
     }
 };
 
+} // namespace
+
 int vprintf(const char* format, va_list ap)
 {
    Buffer buffer;
-
-   buffer.vprintf(format, ap);
-
-   return buffer.size();
+   return buffer.vprintf(format, ap);
 }
 
 int printf(const char* format, ...)
 {
    va_list ap;
-
    va_start(ap, format);
    int status = vprintf(format, ap);
    va_end(ap);
-
    return status;
 }

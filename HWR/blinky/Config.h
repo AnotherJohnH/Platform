@@ -17,6 +17,8 @@
 #include "MTL/chip/module/RPiPico.h"
 
 #define HW_DESCR "RPiPico"
+
+#define HW_USB_FILE_DEVICE
 #define HW_LED   MTL::PIN_LED1
 
 //------------------------------------------------------------------------------
@@ -25,6 +27,8 @@
 #include "MTL/chip/module/badger2040.h"
 
 #define HW_DESCR "badger2040"
+
+#define HW_USB_FILE_DEVICE
 #define HW_LED   MTL::badger2040::PIN_USER_LED
 
 //------------------------------------------------------------------------------
@@ -33,6 +37,8 @@
 #include "MTL/chip/module/tufty2040.h"
 
 #define HW_DESCR "tufty2040"
+
+#define HW_USB_FILE_DEVICE
 #define HW_LED   MTL::tufty2040::PIN_USER_LED
 
 //------------------------------------------------------------------------------
@@ -41,6 +47,8 @@
 #include "MTL/chip/module/tiny2350.h"
 
 #define HW_DESCR "tiny2350"
+
+#define HW_USB_FILE_DEVICE
 #define HW_LED   MTL::PIN_LED1
 
 //------------------------------------------------------------------------------
@@ -71,6 +79,7 @@
 #elif defined(HW_NATIVE)
 
 #define HW_DESCR          "native"
+#define HW_USB_FILE_NATIVE
 #define HW_LED_NATIVE
 
 //------------------------------------------------------------------------------
@@ -83,3 +92,4 @@
 //==============================================================================
 
 #include "HWR/Device/Led.h"
+#include "HWR/Device/UsbFile.h"

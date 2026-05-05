@@ -6,45 +6,48 @@
 #include "UCL/stdio.h"
 #include "UCL/PrintF.h"
 
+namespace {
+
 class Buffer : public PrintF
 {
 public:
     Buffer(char* buffer_, size_t size_)
-       : buffer(buffer_)
-       , limit(size_ - 1)
+       : s(buffer_)
+       , limit(buffer_ + size_ - 1)
     {
     }
 
     ~Buffer()
     {
-       buffer[i] = '\0';
+       *s = '\0';
     }
 
 private:
     void putc(char ch) override
     {
-       if (i < limit)
-          buffer[i++] = ch;
+       if (s < limit)
+          *s++ = ch;
        ++count;
     }
 
-    char*    buffer;
-    unsigned limit;
-    unsigned i{0};
+    char*       s;
+    const char* limit;
 };
+
+} // namespace
 
 int vsnprintf(char* buffer_, size_t n_, const char* format_, va_list ap_)
 {
    Buffer buffer(buffer_, n_);
-   buffer.vprintf(format_, ap_);
-   return buffer.size();
+   return buffer.vprintf(format_, ap_);
 }
 
-int snprintf(char* buffer, size_t n, const char* format, ...)
+int snprintf(char* buffer_, size_t n_, const char* format_, ...)
 {
+   Buffer buffer(buffer_, n_);
    va_list ap;
-   va_start(ap, format);
-   int status = vsnprintf(buffer, n, format, ap);
+   va_start(ap, format_);
+   int status = buffer.vprintf(format_, ap);
    va_end(ap);
    return status;
 }
