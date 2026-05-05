@@ -9,4 +9,4 @@ add_library(TGT STATIC
 execute_process(COMMAND ${CMAKE_C_COMPILER} -mcpu=attiny85 -print-file-name=libgcc.a OUTPUT_VARIABLE gcc_lib)
 string(STRIP ${gcc_lib} gcc_lib)
 
-target_link_libraries(TGT PUBLIC MTL UCL ${gcc_lib})
+target_link_libraries(TGT PUBLIC MTL ${gcc_lib})

@@ -48,3 +48,5 @@ target_include_directories(UCL PUBLIC include)
 if(BUILD_TESTING)
    add_subdirectory(test)
 endif()
+
+target_link_libraries(UCL PUBLIC TGT)

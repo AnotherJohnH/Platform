@@ -92,7 +92,7 @@ static void write_flt(PrintF*  buffer,
    {           
       value -= int(value);
 
-#if !defined(PDK_ATtiny84) && !defined(PDK_ATtiny85)
+#if !defined(PDK_ATTINY84) && !defined(PDK_ATTINY85)
       static unsigned pow10[] = { 10, 100, 1000, 10000, 100000 };
 #else       
       static unsigned pow10[] = { 10, 100, 1000, 10000 };

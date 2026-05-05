@@ -6,9 +6,17 @@
 add_subdirectory(${PDK_TARGET})
 
 if(NOT ${PDK_NATIVE})
+
    # This warning seems broken in gcc 10 and later
    target_compile_options(TGT PUBLIC "$<$<COMPILE_LANGUAGE:C>:-Wno-stringop-overflow>")
    target_compile_options(TGT PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:-Wno-stringop-overflow>")
+
+   target_sources(TGT PRIVATE
+                  gcc_global_obj.cpp
+                  gcc_guard.cpp
+                  gcc_loader.cpp
+                  gcc_pure_virtual.cpp)
+
 endif()
 
 string(TOUPPER "${PDK_TARGET}" PDK_TARGET_UPPER)

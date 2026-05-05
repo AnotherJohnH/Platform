@@ -5,7 +5,6 @@
 
 add_library(TNY STATIC
             delete.cpp
-            global_obj.cpp
             math/cos.cpp
             math/cosf.cpp
             math/expf.cpp

@@ -29,7 +29,7 @@ else()
    add_library(HWR STATIC
                fault_handler.cpp)
 
-   target_link_libraries(HWR PUBLIC TNY TGT)
+   target_link_libraries(HWR PUBLIC TNY)
 
    target_include_directories(HWR PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
