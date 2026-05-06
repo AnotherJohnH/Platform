@@ -12,8 +12,7 @@ template <typename TYPE>
 static void write_int(PrintF*  buffer,
                       TYPE     value,
                       unsigned base,
-                      unsigned width,
-                      bool     left_justify,
+                      int      width,
                       char     pad,
                       char     sign  = '\0',
                       bool     upper = false)
@@ -42,6 +41,13 @@ static void write_int(PrintF*  buffer,
          }
          value = value / base;
       }
+   }
+
+   bool left_justify{false};
+   if (width < 0)
+   {
+      left_justify = true;
+      width        = -width;
    }
 
    if (sign != '\0')
@@ -77,18 +83,18 @@ static void write_int(PrintF*  buffer,
    }
 }
 
-static void write_flt(PrintF*  buffer,
-                      float    value,
-                      unsigned places,
-                      int      width,
-                      char     pad,
-                      char     sign)
+static void write_flt(PrintF* buffer,
+                      float   value,
+                      int     precision,
+                      int     width,
+                      char    pad,
+                      char    sign)
 {
-   write_int(buffer, int(value), 10, width - places - 1, /* lj */ false, pad, sign);
+   write_int(buffer, int(value), 10, width - precision - 1, pad, sign);
               
    buffer->putc('.');
                   
-   if (places > 0)
+   if (precision > 0)
    {           
       value -= int(value);
 
@@ -98,13 +104,13 @@ static void write_flt(PrintF*  buffer,
       static unsigned pow10[] = { 10, 100, 1000, 10000 };
 #endif         
    
-      unsigned frac = value * pow10[places - 1] + 0.5;
+      unsigned frac = value * pow10[precision - 1] + 0.5;
                
-      write_int(buffer, frac, 10, places, /* lj */ false, '0');
+      write_int(buffer, frac, 10, precision, '0');
    }
 }    
 
-static void write_str(PrintF* buffer, const char* value)
+static void write_str(PrintF* buffer, const char* value, int width)
 {
    while(true)
    {
@@ -129,73 +135,93 @@ int PrintF::vprintf(const char* format, va_list ap)
          ch = *format++;
 
          bool left_justify = false;
-         bool include_sign = false;
+         char sign         = '\0';
          char pad          = ' ';
+         int  width        = 0;
+         int  precision    = 0;
 
          while(true)
          {
                   if (ch == '-') left_justify = true;
-             else if (ch == '+') include_sign = true;
+             else if (ch == '+') sign         = '+';
+             else if (ch == ' ') sign         = ' ';
              else if (ch == '0') pad          = '0';
              else                break;
 
              ch = *format++;
          }
 
-         unsigned width = 0;
-         while(isdigit(ch))
+         if (left_justify)
+            pad = ' ';
+
+         if (ch == '*')
          {
-            width = width * 10 + ch - '0';
-            ch = *format++;
+            width = va_arg(ap, int);
+            ch    = *format++;
+         }
+         else if (isdigit(ch))
+         {
+            do
+            {
+               width = width * 10 + ch - '0';
+               ch = *format++;
+            }
+            while(isdigit(ch));
+
+            if (left_justify)
+               width = -width;
          }
 
-         unsigned places = 0;
          if (ch == '.')
          {
-            ch = *format++;
+            ch  = *format++;
+            pad = ' ';
 
-            while(isdigit(ch))
+            if (ch == '*')
             {
-               places = places * 10 + ch - '0';
+               precision = va_arg(ap, int);
                ch = *format++;
+            }
+            else
+            {
+               while(isdigit(ch))
+               {
+                  precision = precision * 10 + ch - '0';
+                  ch = *format++;
+               } 
             } 
          }
 
          switch(ch)
          {
-         case 'b':
-            write_int(this, va_arg(ap, unsigned), 2, width, left_justify, pad);
-            break;
-
-         case 'o':
-            write_int(this, va_arg(ap, unsigned), 8, width, left_justify, pad);
-            break;
-
          case 'd':
          case 'i':
             {
                int value = va_arg(ap, int);
-               char sign{'\0'};
                if (value < 0)
                {
                   value = -value;
                   sign = '-';
                }
-               else if (include_sign)
-               {
-                  sign = '+';
-               }
-               write_int(this, value, 10, width, left_justify, pad, sign);
+               write_int(this, value, 10, width, pad, sign);
             }
             break;
 
+         case 'b':
+            write_int(this, va_arg(ap, unsigned), 2, width, pad);
+            break;
+
+         case 'o':
+            write_int(this, va_arg(ap, unsigned), 8, width, pad);
+            break;
+
          case 'u':
-            write_int(this, va_arg(ap, unsigned), 10, width, left_justify, pad);
+            write_int(this, va_arg(ap, unsigned), 10, width, pad);
             break;
 
          case 'x':
          case 'X':
-            write_int(this, va_arg(ap, unsigned), 16, width, left_justify, pad, '\0', ch == 'X');
+            write_int(this, va_arg(ap, unsigned), 16, width, pad, '\0', ch == 'X');
             break;
 
          case 'c':
@@ -203,16 +229,20 @@ int PrintF::vprintf(const char* format, va_list ap)
             break;
 
          case 's':
-            write_str(this, va_arg(ap, const char*));
+            write_str(this, va_arg(ap, const char*), width);
             break;
 
          case 'p':
-            write_str(this, "0x");
-            write_int(this, uintptr_t(va_arg(ap, void*)), 16, sizeof(uintptr_t) * 2,
-                         /* left_justify */ false, '0');
+            write_str(this, "0x", /* width */ 0);
+            write_int(this, uintptr_t(va_arg(ap, void*)), 16, sizeof(uintptr_t) * 2, '0');
             break;
 
          case 'f':
+         case 'F':
+         case 'e':
+         case 'E':
+         case 'g':
+         case 'G':
             {
                float value = va_arg(ap, double);
                char sign{'\0'};
@@ -221,11 +251,14 @@ int PrintF::vprintf(const char* format, va_list ap)
                   value = -value;
                   sign = '-';
                }
-               else if (include_sign)
-               {
-                  sign = '+';
-               }
-               write_flt(this, value, places, width, pad, sign);
+               write_flt(this, value, precision, width, pad, sign);
+            }
+            break;
+
+         case 'n':
+            {
+               int* ptr = va_arg(ap, int*);
+               *ptr = this->size();
             }
             break;
 

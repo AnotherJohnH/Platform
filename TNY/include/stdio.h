@@ -11,7 +11,6 @@
 #include <stdarg.h>
 #include "UCL/stdio.h"
 
-#define  NULL   0
 #define  FILENAME_MAX 256
 
 #ifdef __cplusplus

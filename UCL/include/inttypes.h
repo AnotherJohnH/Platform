@@ -10,13 +10,13 @@
 #include "stdint.h"
 
 #define PRId32 "li"
-#define PRIu32 "lu"
-#define PRIo32 "lo"
-#define PRIx32 "lx"
-#define PRIX32 "lX"
-
 #define PRId64 "lli"
-#define PRIu64 "llu"
+
+#define PRIo32 "lo"
 #define PRIo64 "llo"
+#define PRIu32 "lu"
+#define PRIu64 "llu"
+#define PRIx32 "lx"
 #define PRIx64 "llx"
+#define PRIX32 "lX"
 #define PRIX64 "llX"

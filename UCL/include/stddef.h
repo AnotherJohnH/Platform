@@ -5,4 +5,6 @@
 
 #pragma once
 
-typedef unsigned size_t;
+#define NULL nullptr
+
+using size_t = unsigned;
