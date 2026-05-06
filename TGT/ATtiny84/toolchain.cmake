@@ -16,9 +16,7 @@ set(CMAKE_ASM_FLAGS "-mmcu=attiny84")
 
 set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} \
 -fno-common -fmessage-length=0 \
--fno-exceptions -ffunction-sections -fdata-sections \
--I${CMAKE_SOURCE_DIR}/PDK/UCL/include \
--I${CMAKE_SOURCE_DIR}/PDK/TNY/include")
+-fno-exceptions -ffunction-sections -fdata-sections")
 
 set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS}")
 

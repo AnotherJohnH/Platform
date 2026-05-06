@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include <cstdint>
+using uint8_t = unsigned char;
 
 //! Initialise data section and clear BSS
 extern "C" void TGT_data_and_bss()
