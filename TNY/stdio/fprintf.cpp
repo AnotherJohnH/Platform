@@ -7,6 +7,8 @@
 
 #include "UCL/PrintF.h"
 
+namespace {
+
 class Buffer : public PrintF
 {
 public:
@@ -25,12 +27,12 @@ private:
     FILE* stream;
 };
 
+} // namespace
+
 int vfprintf(FILE* stream, const char* format, va_list ap)
 {
    Buffer buffer{stream};
-
    buffer.vprintf(format, ap);
-
    return buffer.size();
 }
 

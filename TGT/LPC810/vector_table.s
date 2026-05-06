@@ -3,9 +3,6 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-.cpu cortex-m0
-.fpu softvfp
-
 .section .vectors
 .align	2
 
@@ -111,7 +108,8 @@ VEC_reset:
 #
 # Call application entry point
 #
-    bl   MTL_main
+    mov  r0,#0
+    bl   main
 #
 # Fall through to unhandled exception
 #

@@ -103,8 +103,8 @@ if("${PDK_TARGET}" STREQUAL "native")
       set(PDK_TARGET "macOS")
    endif()
 
-   add_subdirectory(UCL)
    add_subdirectory(TGT)
+   add_subdirectory(UCL)
 
 else()
 
@@ -112,9 +112,9 @@ else()
    set(CMAKE_ASM_FLAGS_DEBUG   "")
    set(CMAKE_ASM_FLAGS_RELEASE "")
 
+   add_subdirectory(TGT)
    add_subdirectory(UCL)
    add_subdirectory(MTL)
-   add_subdirectory(TGT)
    add_subdirectory(TNY)
 
 endif()

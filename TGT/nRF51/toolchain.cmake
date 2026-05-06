@@ -14,12 +14,11 @@ if (NOT DEFINED PDK_RAM_SIZE)
 endif()
 
 #-------------------------------------------------------------------------------
-# Special compile flags for this platform
+# Special flags for this platform
 
-set(CMAKE_ASM_FLAGS "-mcpu=cortex-m0")
+set(CMAKE_ASM_FLAGS "-mcpu=cortex-m0 -mfloat-abi=soft -mthumb")
 
-set(CMAKE_C_FLAGS "-DPDK_NCONSOLE -DPDK_SMALL_MEMORY \
--mcpu=cortex-m0 -mthumb -mfloat-abi=soft \
+set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} \
 -fno-common -fno-builtin -fmessage-length=0 \
 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections \
 -I${CMAKE_SOURCE_DIR}/PDK/UCL/include \

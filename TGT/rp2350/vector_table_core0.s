@@ -3,8 +3,6 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-.cpu cortex-m33
-.fpu softvfp
 .syntax unified
 .thumb
 
@@ -190,7 +188,8 @@ start_cpu0:
 #
 # Call application entry point
 #
-    bl   MTL_main
+    mov  r0, #0
+    bl   main
 #
 # Fall through to unhandled exception
 #

@@ -24,9 +24,6 @@ extern "C"
    //! Intialise the platform
    void MTL_init();
 
-   //! Application entry point
-   int MTL_main();
-
    //! Halt platform
    [[ noreturn ]] void MTL_halt(uint32_t status);
 

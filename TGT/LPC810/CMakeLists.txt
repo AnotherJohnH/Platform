@@ -3,6 +3,5 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-add_library(TGT STATIC
-            vector_table.s)
+add_library(VEC OBJECT vector_table.s)
 

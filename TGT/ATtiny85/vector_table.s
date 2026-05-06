@@ -1,9 +1,7 @@
 #-------------------------------------------------------------------------------
-# ; Copyright (c) 2013 John D. Haughton
+# Copyright (c) 2013 John D. Haughton
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------
 
 .section .vectors
 .align  2
@@ -50,7 +48,7 @@ reset:
 #
 # Call application entry point
 #
-    rcall   MTL_main
+    rcall   main
 
 irq:
 loop:

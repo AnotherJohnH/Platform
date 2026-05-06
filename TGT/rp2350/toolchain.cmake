@@ -10,12 +10,11 @@ set(PDK_PREFIX  arm-none-eabi-)
 set(PDK_MACHINE armv8m)
 
 #-------------------------------------------------------------------------------
-# Special compile flags for this platform
+# Special flags for this platform
 
-set(CMAKE_ASM_FLAGS "-mcpu=cortex-m33")
+set(CMAKE_ASM_FLAGS "-mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb")
 
-set(CMAKE_C_FLAGS "-DPDK_NCONSOLE -DPDK_SMALL_MEMORY \
--mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb \
+set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} \
 -fno-common -fno-builtin -fmessage-length=0 \
 -fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections \
 -I${CMAKE_SOURCE_DIR}/PDK/UCL/include \

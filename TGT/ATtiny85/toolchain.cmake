@@ -10,12 +10,11 @@ set(PDK_PREFIX  avr-)
 set(PDK_MACHINE avr25)
 
 #-------------------------------------------------------------------------------
-# Special compile flags for this platform
+# Special flags for this platform
 
 set(CMAKE_ASM_FLAGS "-mmcu=attiny85")
 
-set(CMAKE_C_FLAGS "-DPDK_NCONSOLE -DPDK_SMALL_MEMORY \
--mmcu=attiny85 \
+set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} \
 -fno-common -fmessage-length=0 \
 -fno-exceptions -ffunction-sections -fdata-sections \
 -I${CMAKE_SOURCE_DIR}/PDK/UCL/include \
