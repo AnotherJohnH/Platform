@@ -10,4 +10,4 @@ add_library(MTL STATIC
             ../core/CortexM0/MTL_clock.cpp
             ../core/CortexM0/MTL_excep.cpp)
 
-target_include_directories(MTL PUBLIC target)
+target_include_directories(MTL PUBLIC include)

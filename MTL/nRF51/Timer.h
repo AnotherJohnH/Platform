@@ -13,7 +13,7 @@
 
 #include "MTL/Periph.h"
 
-#include "MTL/core/CortexM0/NVIC.h"
+#include "MTL/CortexM0/NVIC.h"
 
 #include "Irq.h"
 

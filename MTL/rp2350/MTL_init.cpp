@@ -5,7 +5,7 @@
 
 #include "MTL/MTL.h"
 
-#include "MTL/core/CortexM33/SysCtrlBlk.h"
+#include "MTL/CortexM33/SysCtrlBlk.h"
 
 #include "MTL/rp2350/Clocks.h"
 #include "MTL/rp2350/Resets.h"

@@ -7,7 +7,7 @@ add_library(MTL STATIC
             MTL_halt.cpp
             MTL_init.cpp
             MTL_console.cpp
-            target/MTL/core/MTL_excep.cpp
-            target/MTL/core/MTL_clock.cpp)
+            ../core/CortexM3/MTL_excep.cpp
+            ../core/CortexM3/MTL_clock.cpp)
 
-target_include_directories(MTL PUBLIC target)
+target_include_directories(MTL PUBLIC include)

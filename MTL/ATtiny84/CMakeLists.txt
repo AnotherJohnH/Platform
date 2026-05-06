@@ -6,4 +6,4 @@
 add_library(MTL STATIC
             MTL_init.cpp)
 
-target_include_directories(MTL PUBLIC target)
+target_include_directories(MTL PUBLIC include)

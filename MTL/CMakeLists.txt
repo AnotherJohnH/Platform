@@ -17,6 +17,6 @@ target_sources(MTL PRIVATE
 
 target_compile_definitions(MTL PUBLIC MTL_TARGET=1)
 
-target_include_directories(MTL PUBLIC ..)
+target_include_directories(MTL PUBLIC include) 
 
 target_link_libraries(MTL PUBLIC UCL)
