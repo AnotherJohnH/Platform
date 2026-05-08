@@ -21,7 +21,7 @@ else()
    target_compile_options(TGT PUBLIC "$<$<COMPILE_LANGUAGE:C>:-Wno-stringop-overflow>")
    target_compile_options(TGT PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:-Wno-stringop-overflow>")
 
-   # Legacy, are these still reuired?
+   target_compile_definitions(TGT PUBLIC NORTTI=1)
    target_compile_definitions(TGT PUBLIC PDK_NCONSOLE=1)
    target_compile_definitions(TGT PUBLIC PDK_SMALL_MEMORY=1)
 

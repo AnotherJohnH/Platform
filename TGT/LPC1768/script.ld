@@ -34,7 +34,6 @@ SECTIONS
 
    } > FLASH
 
-
    __etext = .;
 
    .data : AT (__etext)

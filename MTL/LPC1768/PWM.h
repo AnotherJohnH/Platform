@@ -11,7 +11,7 @@
 
 #include "MTL/Periph.h"
 
-#include "MTL/core/CortexM3/NVIC.h"
+#include "MTL/CortexM3/NVIC.h"
 
 #include "SysCon.h"
 #include "PinCon.h"

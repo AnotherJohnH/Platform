@@ -8,10 +8,10 @@
 #pragma once
 
 #include "MTL/Periph.h"
-#include "MTL/core/CortexM0/NVIC.h"
-#include "MTL/rp2040/Clocks.h"
+#include "MTL/CortexM0/NVIC.h"
+#include "Clocks.h"
 
-#include "unistd.h"
+#include <unistd.h>
 
 namespace MTL {
 

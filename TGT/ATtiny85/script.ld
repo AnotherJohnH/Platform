@@ -15,12 +15,14 @@ SECTIONS
 {
    .text :
    {
+      __text_start__ = .;
       KEEP(*(.vectors))
       *(.text*)
       __ctors_start = .;
       KEEP(*(.init_array))
       __ctors_end = .;
       *(.rodata*)
+      __text_end__ = .;
 
    } > FLASH
 

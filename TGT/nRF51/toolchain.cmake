@@ -20,9 +20,11 @@ set(CMAKE_ASM_FLAGS "-mcpu=cortex-m0 -mfloat-abi=soft -mthumb")
 
 set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} \
 -fno-common -fno-builtin -fmessage-length=0 \
--fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections")
+-fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections \
+-I${CMAKE_SOURCE_DIR}/PDK/UCL/include \
+-I${CMAKE_SOURCE_DIR}/PDK/TNY/include")
 
-set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti -Wno-volatile ${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -Wno-volatile")
 
 set(PDK_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/TGT/${PDK_TARGET}/script_${PDK_RAM_SIZE}.ld")
 

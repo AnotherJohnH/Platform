@@ -15,10 +15,12 @@ set(PDK_MACHINE avr25)
 set(CMAKE_ASM_FLAGS "-mmcu=attiny85")
 
 set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} \
--fno-common -fmessage-length=0 \
--fno-exceptions -ffunction-sections -fdata-sections")
+-fno-common -fno-builtin -fmessage-length=0 \
+-fno-default-inline -fno-exceptions -ffunction-sections -fdata-sections \
+-I${CMAKE_SOURCE_DIR}/PDK/UCL/include \
+-I${CMAKE_SOURCE_DIR}/PDK/TNY/include")
 
-set(CMAKE_CXX_FLAGS "-DNO_RTTI -fno-rtti ${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -Wno-volatile")
 
 set(PDK_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/TGT/${PDK_TARGET}/script.ld")
 
