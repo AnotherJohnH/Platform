@@ -6,11 +6,13 @@
 .syntax unified
 .thumb
 
-.section .vectors
+#===============================================================================
+# Initial vector table for core0 and core1
+
+.section .vectors.core0
 .align 8
 
 .global vector_table_core0
-
 vector_table_core0:
    .word  0x20082000        @ stack pointer
    .word  VEC_reset+1
@@ -20,12 +22,12 @@ vector_table_core0:
    .word  VEC_bus_fault+1
    .word  VEC_usage_fault+1
    .word  VEC_secure_fault+1
-   .word  invalid_excep+1
-   .word  invalid_excep+1
-   .word  invalid_excep+1
+   .word  0
+   .word  0
+   .word  0
    .word  VEC_svc+1
    .word  VEC_dbg_mon+1
-   .word  invalid_excep+1
+   .word  0
    .word  VEC_pendSv+1
    .word  VEC_sysTick+1
 
@@ -82,7 +84,100 @@ vector_table_core0:
    .word  0                  @ IRQ 50 
    .word  0                  @ IRQ 51
 
-   .word  vector_table_core1
+#===============================================================================
+# Image definition for the Raspberry Pi RP2350 boot ROM
+
+.align 2
+IMAGE_DEF:
+   .word 0xffffded3    @ block start
+   .word 0x10210142    @    0x42 item, 0x01 length, 0x1021 value (exe, secure, Arm, RP2350)
+   .word 0x000001ff    @    0xff last item
+   .word 0x00000000    @    next block pointer
+   .word 0xab123579    @ block end marker
+
+#===============================================================================
+
+.text
+.align 2
+
+#-------------------------------------------------------------------------------
+
+VEC_reset:
+# Check for core0
+    ldr   r0, =0xd0000000
+    ldr   r0,[r0,#0]
+    cbz   r0,start_core0
+ 
+# Is core1 => set the boot ROM VTABLE
+    mov     r0, #0
+    ldr     r1, =0xe000ed08
+    str     r0, [r1, #0]
+ 
+# Re-enter the boot ROM via the reset vector
+    ldmia   r0, {r0, r1}
+    msr     MSP, r0
+    bx      r1
+
+start_core0:
+    bl   TGT_data_and_bss
+
+# Initialise platform
+# XXX Must not use global constructors as not initialised yet
+    bl   MTL_init
+    bl   TGT_global_construction
+
+# Call application entry point
+    movs r0, #0
+    bl   main
+#
+    bl   MTL_halt
+
+#-------------------------------------------------------------------------------
+
+.global VEC_hard_fault
+VEC_hard_fault:
+    mov    r0, #3
+    b      call_fault_handler
+
+#-------------------------------------------------------------------------------
+
+.global VEC_mem_fault
+VEC_mem_fault:
+    mov    r0, #4
+    b      call_fault_handler
+
+#-------------------------------------------------------------------------------
+
+.global VEC_bus_fault
+VEC_bus_fault:
+    mov    r0, #5
+    b      call_fault_handler
+
+#-------------------------------------------------------------------------------
+
+.global VEC_usage_fault
+VEC_usage_fault:
+    mov    r0, #6
+    b      call_fault_handler
+
+#-------------------------------------------------------------------------------
+
+.global VEC_secure_fault
+VEC_secure_fault:
+    mov    r0, #7
+    b      call_fault_handler
+
+#-------------------------------------------------------------------------------
+
+call_fault_handler:
+    tst    lr, #4
+    ite    eq
+    mrseq  r1, MSP
+    mrsne  r1, PSP
+    b      MTL_fault
+
+#-------------------------------------------------------------------------------
+# Empty handlers
 
 .weak VEC_nmi
 .weak VEC_svc
@@ -137,92 +232,6 @@ vector_table_core0:
 .weak IRQ_POWMAN_POW
 .weak IRQ_POWMAN_TIMER
 
-invalid_excep:
-   bkpt 0
-
-#-------------------------------------------------------------------------------
-
-.align 2
-IMAGE_DEF:
-   .word 0xffffded3
-   .word 0x10210142
-   .word 0x000001ff
-   .word 0x00000000
-   .word 0xab123579
-
-#-------------------------------------------------------------------------------
-
-VEC_reset:
-#
-# Check for CPU-1
-#
-    ldr   r0, =0xd0000000
-    ldr   r0,[r0,#0]
-    cbz   r0,start_cpu0
-#
-# Set the boot ROM VTABLE
-    mov     r0, #0
-    ldr     r1, =0xe000ed08
-    str     r0, [r1, #0]
-#
-# Enter the boot ROM via the reset vector
-    ldmia   r0, {r0, r1}
-    msr     MSP, r0
-    bx      r1
-
-start_cpu0:
-#
-# Prepare image to run
-#
-    bl   TGT_data_and_bss
-#
-# Initialise platform
-# XXX Must not use global constructors
-#     as not initialised yet
-#
-    bl   MTL_init
-#
-# Construct global objects
-#
-    bl   TGT_global_construction
-#
-# Call application entry point
-#
-    mov  r0, #0
-    bl   main
-#
-# Fall through to unhandled exception
-#
-    bl   MTL_halt
-
-VEC_hard_fault:
-    mov    r0, #3
-    b      call_fault_handler
-
-VEC_mem_fault:
-    mov    r0, #4
-    b      call_fault_handler
-
-VEC_bus_fault:
-    mov    r0, #5
-    b      call_fault_handler
-
-VEC_usage_fault:
-    mov    r0, #6
-    b      call_fault_handler
-
-VEC_secure_fault:
-    mov    r0, #7
-    b      call_fault_handler
-
-call_fault_handler:
-    tst    lr, #4
-    ite    eq
-    mrseq  r1, MSP
-    mrsne  r1, PSP
-    b      MTL_fault
-
-# Empty handlers
 VEC_nmi:
 VEC_svc:
 VEC_dbg_mon:
@@ -275,4 +284,3 @@ IRQ_PLL_USB:
 IRQ_POWMAN_POW:
 IRQ_POWMAN_TIMER:
     bx   lr
-

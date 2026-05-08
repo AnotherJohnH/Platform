@@ -17,7 +17,8 @@ SECTIONS
    {
       __text_start__ = .;
       KEEP(*(.boot2))
-      KEEP(*(.vectors))
+      KEEP(*(.vectors.core0))
+      *(.vectors.core1)
       *(.text*)
       __init_array_start = ALIGN(4);
       KEEP(*(.init_array))

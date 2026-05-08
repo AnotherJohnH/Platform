@@ -3,11 +3,16 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
+.syntax unified
+.thumb
+
+#===============================================================================
+# Vector table
+
 .section .vectors
-.align	2
+.align 8
 
 .global vector_table
-
 vector_table:
    .word  0x20004000        @ stack pointer (16k RAM)
    .word  VEC_reset+1
@@ -25,12 +30,6 @@ vector_table:
    .word  0
    .word  VEC_pendSv+1
    .word  VEC_sysTick+1
-
-   .weak  VEC_fault
-   .weak  VEC_nmi
-   .weak  VEC_svc
-   .weak  VEC_pendSv
-   .weak  VEC_sysTick
 
    .word  PowerClock_IRQ+1  @ IRQ  0
    .word  Radio_IRQ+1       @ IRQ  1
@@ -59,69 +58,69 @@ vector_table:
    .word  Swi_4_IRQ+1       @ IRQ 24
    .word  Swi_5_IRQ+1       @ IRQ 25
 
-   .weak  PowerClock_IRQ
-   .weak  Radio_IRQ
-   .weak  Uart_IRQ
-   .weak  SpiTwi_0_IRQ
-   .weak  SpiTwi_1_IRQ
-   .weak  irq5
-   .weak  GpioTE_IRQ
-   .weak  Adc_IRQ
-   .weak  Timer_0_IRQ
-   .weak  Timer_1_IRQ
-   .weak  Timer_2_IRQ
-   .weak  Rtc_0_IRQ
-   .weak  Temp_IRQ
-   .weak  Rng_IRQ
-   .weak  Ecb_IRQ
-   .weak  CcmAar_IRQ
-   .weak  Wdt_IRQ
-   .weak  Rtc_1_IRQ
-   .weak  Qdec_IRQ
-   .weak  LpComp_IRQ
-   .weak  Swi_0_IRQ
-   .weak  Swi_1_IRQ
-   .weak  Swi_2_IRQ
-   .weak  Swi_3_IRQ
-   .weak  Swi_4_IRQ
-   .weak  Swi_5_IRQ
+#===============================================================================
 
 .text
 .align 2
 
+#-------------------------------------------------------------------------------
+
 VEC_reset:
-#
 # Make sure all RAM banks are powered on
-#
     ldr     r0,ramon
     movs    r1,#3
     str     r1,[r0]
 #
-# Prepare image to run
-#
     bl   TGT_data_and_bss
-#
+
 # Initialise platform
-# XXX Must not use global constructors
-#     as not initialised yet
-#
+# XXX Must not use global constructors as not initialised yet
     bl   MTL_init
-#
-# Construct global objects
-#
     bl   TGT_global_construction
-#
+
 # Call application entry point
-#
-    mov  r0,#0
+    movs r0, #0
     bl   main
-#
-# Fall through to unhandled exception
 #
 VEC_fault:
     bl   MTL_halt
 
+#-------------------------------------------------------------------------------
 # Empty handlers
+
+.weak VEC_fault
+.weak VEC_nmi
+.weak VEC_svc
+.weak VEC_pendSv
+.weak VEC_sysTick
+
+.weak PowerClock_IRQ
+.weak Radio_IRQ
+.weak Uart_IRQ
+.weak SpiTwi_0_IRQ
+.weak SpiTwi_1_IRQ
+.weak irq5
+.weak GpioTE_IRQ
+.weak Adc_IRQ
+.weak Timer_0_IRQ
+.weak Timer_1_IRQ
+.weak Timer_2_IRQ
+.weak Rtc_0_IRQ
+.weak Temp_IRQ
+.weak Rng_IRQ
+.weak Ecb_IRQ
+.weak CcmAar_IRQ
+.weak Wdt_IRQ
+.weak Rtc_1_IRQ
+.weak Qdec_IRQ
+.weak LpComp_IRQ
+.weak Swi_0_IRQ
+.weak Swi_1_IRQ
+.weak Swi_2_IRQ
+.weak Swi_3_IRQ
+.weak Swi_4_IRQ
+.weak Swi_5_IRQ
+
 VEC_nmi:
 VEC_svc:
 VEC_pendSv:

@@ -3,14 +3,16 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-.cpu cortex-m0
-.fpu softvfp
+.syntax unified
+.thumb
 
-.section .vectors
+#===============================================================================
+# Initial vector table for core0 and core1
+
+.section .vectors.core0
 .align 8
 
 .global vector_table_core0
-
 vector_table_core0:
    .word  0x20042000        @ stack pointer
    .word  VEC_reset+1
@@ -62,7 +64,30 @@ vector_table_core0:
    .word  0                @ IRQ 30
    .word  0                @ IRQ 31
 
-   .word  vector_table_core1
+#===============================================================================
+
+.text
+.align 2
+
+#-------------------------------------------------------------------------------
+
+VEC_reset:
+    bl   TGT_data_and_bss
+
+# Initialise platform
+# XXX Must not use global constructors as not initialised yet
+    bl   MTL_init
+    bl   TGT_global_construction
+
+# Call application entry point
+    movs r0, #0
+    bl   main
+#
+VEC_fault:
+    bl   MTL_halt
+
+#-------------------------------------------------------------------------------
+# Empty handlers
 
 .weak VEC_fault
 .weak VEC_nmi
@@ -97,36 +122,6 @@ vector_table_core0:
 .weak IRQ_I2C1
 .weak IRQ_RTC
 
-.text
-.align 2
-
-VEC_reset:
-#
-# Prepare image to run
-#
-    bl   TGT_data_and_bss
-#
-# Initialise platform
-# XXX Must not use global constructors
-#     as not initialised yet
-#
-    bl   MTL_init
-#
-# Construct global objects
-#
-    bl   TGT_global_construction
-#
-# Call application entry point
-#
-    mov  r0,#0
-    bl   main
-#
-# Fall through to unhandled exception
-#
-VEC_fault:
-    bl   MTL_halt
-
-# Empty handlers
 VEC_nmi:
 VEC_svc:
 VEC_pendSv:

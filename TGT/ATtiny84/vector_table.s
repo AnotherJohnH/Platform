@@ -3,6 +3,9 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
+#===============================================================================
+# Vector table
+
 .section .vectors
 .align  2
 
@@ -13,9 +16,8 @@
 .endm
 
 .global vector_table
-
 vector_table:
-    rjmp    reset
+    rjmp    VEC_reset
     vector  __vector_1
     vector  __vector_2
     vector  __vector_3
@@ -31,10 +33,14 @@ vector_table:
     vector  __vector_13
     vector  __vector_14
 
-.text
-.align  2
+#===============================================================================
 
-reset:
+.text
+.align 2
+
+#-------------------------------------------------------------------------------
+
+VEC_reset:
     eor     r1,r1
     out     0x3f,r1
 
@@ -42,13 +48,15 @@ reset:
     out     0x3d,r28
     ldi     r29,0x02
     out     0x3e,r29
-#
-#
+
     rcall   MTL_init
-#
+
 # Call application entry point
 #
     rcall   main
+
+#-------------------------------------------------------------------------------
+# Empty handlers
 
 irq:
 loop:

@@ -3,14 +3,16 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-.cpu cortex-m4
-.fpu vfp
+.syntax unified
+.thumb
+
+#===============================================================================
+# Vector table
 
 .section .vectors
-.align	2
+.align 8
 
 .global vector_table
-
 vector_table:
    .word  0x00820000        @ stack pointer
    .word  VEC_reset+1
@@ -78,86 +80,84 @@ vector_table:
    .word  0
    .word  SPIM3_IRQ+1       @ IRQ 47
 
-   .weak  VEC_nmi
-   .weak  VEC_fault
-   .weak  VEC_memMan
-   .weak  VEC_busFault
-   .weak  VEC_usageFault
-   .weak  VEC_svc
-   .weak  VEC_dbg
-   .weak  VEC_pendSv
-   .weak  VEC_sysTick
 
-   .weak  PowerClock_IRQ
-   .weak  Radio_IRQ
-   .weak  Uart_IRQ
-   .weak  UartE_IRQ
-   .weak  SpiTwi_0_IRQ
-   .weak  SpiTwi_1_IRQ
-   .weak  irq5
-   .weak  GpioTE_IRQ
-   .weak  Adc_IRQ
-   .weak  Timer_0_IRQ
-   .weak  Timer_1_IRQ
-   .weak  Timer_2_IRQ
-   .weak  Rtc_0_IRQ
-   .weak  Temp_IRQ
-   .weak  Rng_IRQ
-   .weak  Ecb_IRQ
-   .weak  CcmAar_IRQ
-   .weak  Wdt_IRQ
-   .weak  Rtc_1_IRQ
-   .weak  Qdec_IRQ
-   .weak  LpComp_IRQ
-   .weak  Swi_0_IRQ 
-   .weak  Swi_1_IRQ 
-   .weak  Swi_2_IRQ 
-   .weak  Swi_3_IRQ 
-   .weak  Swi_4_IRQ 
-   .weak  Swi_5_IRQ 
-   .weak  Timer_3_IRQ
-   .weak  Timer_4_IRQ
-   .weak  PWM0_IRQ
-   .weak  PDM_IRQ
-   .weak  MWU_IRQ
-   .weak  PWM1_IRQ
-   .weak  PWM2_IRQ
-   .weak  SPI2_IRQ
-   .weak  RTC2_IRQ
-   .weak  I2S_IRQ
-   .weak  FPU_IRQ
-   .weak  USBD_IRQ
-   .weak  UARTE1_IRQ
-   .weak  PWM3_IRQ
-   .weak  SPIM3_IRQ
+#===============================================================================
 
 .text
-.align	2
+.align 2
+
+#-------------------------------------------------------------------------------
 
 VEC_reset:
-#
-# Prepare image to run
-#
     bl   TGT_data_and_bss
-#
+
 # Initialise platform
-# XXX Must not use global constructors
-#     as not initialised yet
-#
+# XXX Must not use global constructors as not initialised yet
     bl   MTL_init
-#
-# Construct global objects
-#
     bl   TGT_global_construction
-#
+
 # Call application entry point
-#
-    mov  r0,#0
+    movs r0, #0
     bl   main
 #
-# Fall through to unhandled exception
-#
-unhandled_exception:
+    bl   MTL_halt
+
+#-------------------------------------------------------------------------------
+# Empty handlers
+
+.weak VEC_fault
+.weak VEC_nmi
+.weak VEC_svc
+.weak VEC_pendSv
+.weak VEC_sysTick
+.weak VEC_memMan
+.weak VEC_busFault
+.weak VEC_usageFault
+.weak VEC_dbg
+
+
+.weak PowerClock_IRQ
+.weak Radio_IRQ
+.weak Uart_IRQ
+.weak UartE_IRQ
+.weak SpiTwi_0_IRQ
+.weak SpiTwi_1_IRQ
+.weak irq5
+.weak GpioTE_IRQ
+.weak Adc_IRQ
+.weak Timer_0_IRQ
+.weak Timer_1_IRQ
+.weak Timer_2_IRQ
+.weak Rtc_0_IRQ
+.weak Temp_IRQ
+.weak Rng_IRQ
+.weak Ecb_IRQ
+.weak CcmAar_IRQ
+.weak Wdt_IRQ
+.weak Rtc_1_IRQ
+.weak Qdec_IRQ
+.weak LpComp_IRQ
+.weak Swi_0_IRQ
+.weak Swi_1_IRQ
+.weak Swi_2_IRQ
+.weak Swi_3_IRQ
+.weak Swi_4_IRQ
+.weak Swi_5_IRQ
+.weak Timer_3_IRQ
+.weak Timer_4_IRQ
+.weak PWM0_IRQ
+.weak PDM_IRQ
+.weak MWU_IRQ
+.weak PWM1_IRQ
+.weak PWM2_IRQ
+.weak SPI2_IRQ
+.weak RTC2_IRQ
+.weak I2S_IRQ
+.weak FPU_IRQ
+.weak USBD_IRQ
+.weak UARTE1_IRQ
+.weak PWM3_IRQ
+.weak SPIM3_IRQ
 
 VEC_nmi:
 VEC_fault:
@@ -168,7 +168,6 @@ VEC_svc:
 VEC_dbg:
 VEC_pendSv:
 VEC_sysTick:
-
 PowerClock_IRQ:
 Radio_IRQ:
 Uart_IRQ:
@@ -213,5 +212,4 @@ USBD_IRQ:
 UARTE1_IRQ:
 PWM3_IRQ:
 SPIM3_IRQ:
-loop:
-    bl      MTL_halt
+    bx   lr

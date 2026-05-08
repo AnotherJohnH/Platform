@@ -3,11 +3,16 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
+.syntax unified
+.thumb
+
+#===============================================================================
+# Vector table
+
 .section .vectors
-.align	2
+.align 8
 
 .global vector_table
-
 vector_table:
    .word  0x10008000        @ stack pointer (32k RAM)
    .word  VEC_reset+1
@@ -62,85 +67,78 @@ vector_table:
    .word  IRQ_USBAct+1    @ IRQ 33
    .word  IRQ_CANAct+1    @ IRQ 34
 
-   .weak  VEC_nmi
-   .weak  VEC_hard_fault
-   .weak  VEC_mem_fault
-   .weak  VEC_svc
-   .weak  VEC_pendSv
-   .weak  VEC_sysTick
-
-   .weak  IRQ_WDT
-   .weak  IRQ_Timer0
-   .weak  IRQ_Timer1
-   .weak  IRQ_Timer2
-   .weak  IRQ_Timer3
-   .weak  IRQ_UART0
-   .weak  IRQ_UART1
-   .weak  IRQ_UART2
-   .weak  IRQ_UART3
-   .weak  IRQ_PWM1
-   .weak  IRQ_I2C0
-   .weak  IRQ_I2C1
-   .weak  IRQ_I2C2
-   .weak  IRQ_SPI
-   .weak  IRQ_SSP0
-   .weak  IRQ_SSP1
-   .weak  IRQ_PLL0
-   .weak  IRQ_RTC
-   .weak  IRQ_Ext0
-   .weak  IRQ_Ext1
-   .weak  IRQ_Ext2
-   .weak  IRQ_Ext3
-   .weak  IRQ_ADC
-   .weak  IRQ_BOD
-   .weak  IRQ_USB
-   .weak  IRQ_CAN
-   .weak  IRQ_GPDMA
-   .weak  IRQ_I2S
-   .weak  IRQ_Eth
-   .weak  IRQ_RepTimer
-   .weak  IRQ_MCPWM
-   .weak  IRQ_QuadEnc
-   .weak  IRQ_PLL1
-   .weak  IRQ_USBAct
-   .weak  IRQ_CANAct
+#===============================================================================
 
 .text
 .align 2
 
+#-------------------------------------------------------------------------------
+
 VEC_reset:
-#
-# Prepare image to run
-#
     bl   TGT_data_and_bss
-#
+
 # Initialise platform
-# XXX Must not use global constructors
-#     as not initialised yet
-#
+# XXX Must not use global constructors as not initialised yet
     bl   MTL_init
-#
-# Construct global objects
-#
     bl   TGT_global_construction
-#
+
 # Call application entry point
-#
-    mov  r0,#0
+    movs r0, #0
     bl   main
-#
-# Fall through to unhandled exception
 #
 VEC_hard_fault:
 VEC_mem_fault:
     bl   MTL_halt
 
+#-------------------------------------------------------------------------------
 # Empty handlers
+
+.weak VEC_fault
+.weak VEC_nmi
+.weak VEC_svc
+.weak VEC_pendSv
+.weak VEC_sysTick
+
+.weak IRQ_WDT
+.weak IRQ_Timer0
+.weak IRQ_Timer1
+.weak IRQ_Timer2
+.weak IRQ_Timer3
+.weak IRQ_UART0
+.weak IRQ_UART1
+.weak IRQ_UART2
+.weak IRQ_UART3
+.weak IRQ_PWM1
+.weak IRQ_I2C0
+.weak IRQ_I2C1
+.weak IRQ_I2C2
+.weak IRQ_SPI
+.weak IRQ_SSP0
+.weak IRQ_SSP1
+.weak IRQ_PLL0
+.weak IRQ_RTC
+.weak IRQ_Ext0
+.weak IRQ_Ext1
+.weak IRQ_Ext2
+.weak IRQ_Ext3
+.weak IRQ_ADC
+.weak IRQ_BOD
+.weak IRQ_USB
+.weak IRQ_CAN
+.weak IRQ_GPDMA
+.weak IRQ_I2S
+.weak IRQ_Eth
+.weak IRQ_RepTimer
+.weak IRQ_MCPWM
+.weak IRQ_QuadEnc
+.weak IRQ_PLL1
+.weak IRQ_USBAct
+.weak IRQ_CANAct
+
 VEC_nmi:
 VEC_svc:
 VEC_pendSv:
 VEC_sysTick:
-
 IRQ_WDT:
 IRQ_Timer0:
 IRQ_Timer1:

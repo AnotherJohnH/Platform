@@ -3,11 +3,16 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
+.syntax unified
+.thumb
+
+#===============================================================================
+# Vector table
+
 .section .vectors
-.align	2
+.align 8
 
 .global vector_table
-
 vector_table:
    .word  0x10001000        @ stack pointer (4k RAM)
    .word  VEC_reset+1
@@ -25,12 +30,6 @@ vector_table:
    .word  0
    .word  VEC_pendSv+1
    .word  VEC_sysTick+1
-
-   .weak  VEC_fault
-   .weak  VEC_nmi
-   .weak  VEC_svc
-   .weak  VEC_pendSv
-   .weak  VEC_sysTick
 
    .word  IRQ_PIO0_0+1     @ IRQ 0
    .word  IRQ_PIO0_1+1     @ IRQ 1
@@ -65,66 +64,66 @@ vector_table:
    .word  IRQ_PIO_1+1      @ IRQ 30
    .word  IRQ_PIO_0+1      @ IRQ 31
 
-   .weak IRQ_PIO0_0
-   .weak IRQ_PIO0_1
-   .weak IRQ_PIO0_2
-   .weak IRQ_PIO0_3
-   .weak IRQ_PIO0_4
-   .weak IRQ_PIO0_5
-   .weak IRQ_PIO0_6
-   .weak IRQ_PIO0_7
-   .weak IRQ_PIO0_9
-   .weak IRQ_PIO0_10
-   .weak IRQ_PIO0_11
-   .weak IRQ_PIO1_0
-   .weak IRQ_C_CAN
-   .weak IRQ_SSP1
-   .weak IRQ_I2C
-   .weak IRQ_CT16B0
-   .weak IRQ_CT16B1
-   .weak IRQ_CT32B0
-   .weak IRQ_CT32B1
-   .weak IRQ_SSP0
-   .weak IRQ_UART
-   .weak IRQ_ADC
-   .weak IRQ_WDT
-   .weak IRQ_BOD
-   .weak IRQ_PIO_3
-   .weak IRQ_PIO_2
-   .weak IRQ_PIO_1
-   .weak IRQ_PIO_0
+#===============================================================================
 
 .text
 .align 2
 
+#-------------------------------------------------------------------------------
+
 VEC_reset:
-#
-# Prepare image to run
-#
     bl   TGT_data_and_bss
-#
+
 # Initialise platform
-# XXX Must not use global constructors
-#     as not initialised yet
-#
+# XXX Must not use global constructors as not initialised yet
     bl   MTL_init
-#
-# Construct global objects
-#
     bl   TGT_global_construction
 
-#
 # Call application entry point
-#
-    mov  r0,#0
+    movs r0, #0
     bl   main
-#
-# Fall through to unhandled exception
 #
 VEC_fault:
     bl   MTL_halt
 
+#-------------------------------------------------------------------------------
 # Empty handlers
+
+.weak VEC_fault
+.weak VEC_nmi
+.weak VEC_svc
+.weak VEC_pendSv
+.weak VEC_sysTick
+
+.weak IRQ_PIO0_0
+.weak IRQ_PIO0_1
+.weak IRQ_PIO0_2
+.weak IRQ_PIO0_3
+.weak IRQ_PIO0_4
+.weak IRQ_PIO0_5
+.weak IRQ_PIO0_6
+.weak IRQ_PIO0_7
+.weak IRQ_PIO0_9
+.weak IRQ_PIO0_10
+.weak IRQ_PIO0_11
+.weak IRQ_PIO1_0
+.weak IRQ_C_CAN
+.weak IRQ_SSP1
+.weak IRQ_I2C
+.weak IRQ_CT16B0
+.weak IRQ_CT16B1
+.weak IRQ_CT32B0
+.weak IRQ_CT32B1
+.weak IRQ_SSP0
+.weak IRQ_UART
+.weak IRQ_ADC
+.weak IRQ_WDT
+.weak IRQ_BOD
+.weak IRQ_PIO_3
+.weak IRQ_PIO_2
+.weak IRQ_PIO_1
+.weak IRQ_PIO_0
+
 VEC_nmi:
 VEC_svc:
 VEC_pendSv:

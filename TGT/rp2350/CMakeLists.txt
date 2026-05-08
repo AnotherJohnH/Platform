@@ -4,6 +4,6 @@
 #-------------------------------------------------------------------------------
 
 add_library(VEC OBJECT
-            vector_table_core0.s
+            vector_table.s
             vector_table_core1.s)
 

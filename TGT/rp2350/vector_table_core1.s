@@ -3,29 +3,31 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-.cpu cortex-m33
-.fpu softvfp
+.syntax unified
+.thumb
 
-.section .vectors
+#===============================================================================
+# Vector table for core-1 when manually started
+
+.section .vectors.core1
 .align 8
 
 .global vector_table_core1
-
 vector_table_core1:
    .word  0x20080000        @ stack pointer
-   .word  VEC_reset+1
+   .word  0                 @ reset will go to main vector table
    .word  VEC_nmi+1
    .word  VEC_hard_fault+1
    .word  VEC_mem_fault+1
    .word  VEC_bus_fault+1
    .word  VEC_usage_fault+1
    .word  VEC_secure_fault+1
-   .word  invalid_excep+1
-   .word  invalid_excep+1
-   .word  invalid_excep+1
+   .word  0
+   .word  0
+   .word  0
    .word  VEC_svc+1
    .word  VEC_dbg_mon+1
-   .word  invalid_excep+1
+   .word  0
    .word  VEC_pendSv+1
    .word  VEC_sysTick+1
 
@@ -81,152 +83,3 @@ vector_table_core1:
    .word  0                  @ IRQ 49
    .word  0                  @ IRQ 50 
    .word  0                  @ IRQ 51
-
-.weak VEC_nmi
-.weak VEC_hard_fault
-.weak VEC_mem_fault
-.weak VEC_bus_fault
-.weak VEC_usage_fault
-.weak VEC_secure_fault
-.weak VEC_svc
-.weak VEC_dbg_mon
-.weak VEC_pendSv
-.weak VEC_sysTick
-
-.weak IRQ_TIMER0_0
-.weak IRQ_TIMER0_1
-.weak IRQ_TIMER0_2
-.weak IRQ_TIMER0_3
-.weak IRQ_TIMER1_0
-.weak IRQ_TIMER1_1
-.weak IRQ_TIMER1_2
-.weak IRQ_TIMER1_3
-.weak IRQ_PWM_WRAP_0
-.weak IRQ_PWM_WRAP_1
-.weak IRQ_DMA_0
-.weak IRQ_DMA_1
-.weak IRQ_DMA_2
-.weak IRQ_DMA_3
-.weak IRQ_USBCTRL
-.weak IRQ_PIO0_0
-.weak IRQ_PIO0_1
-.weak IRQ_PIO1_0
-.weak IRQ_PIO1_1
-.weak IRQ_PIO2_0
-.weak IRQ_PIO2_1
-.weak IRQ_IO_BANK0
-.weak IRQ_IO_BANK0_NS
-.weak IRQ_IO_QSPI
-.weak IRQ_IO_QSPI_NS
-.weak IRQ_SIO_FIFO
-.weak IRQ_SIO_BELL
-.weak IRQ_SIO_FIFO_NS
-.weak IRQ_SIO_BELL_NS
-.weak IRQ_SIO_MTIMECMP
-.weak IRQ_CLOCKS
-.weak IRQ_SPI0
-.weak IRQ_SPI1
-.weak IRQ_UART0
-.weak IRQ_UART1
-.weak IRQ_ADC_FIFO
-.weak IRQ_I2C0
-.weak IRQ_I2C1
-.weak IRQ_OTP
-.weak IRQ_TRNG
-.weak IRQ_PROC0_CTI
-.weak IRQ_PROC1_CTI
-.weak IRQ_PLL_SYS
-.weak IRQ_PLL_USB
-.weak IRQ_POWMAN_POW
-.weak IRQ_POWMAN_TIMER
-
-invalid_excep:
-   bkpt 0
-
-#-------------------------------------------------------------------------------
-
-VEC_reset:
-#
-# Prepare image to run
-#
-    bl   TGT_data_and_bss
-#
-# Initialise platform
-# XXX Must not use global constructors
-#     as not initialised yet
-#
-    bl   MTL_init
-#
-# Construct global objects
-#
-    bl   TGT_global_construction
-#
-# Call application entry point
-#
-    mov  r0,#0
-    bl   main
-#
-# Fall through to unhandled exception
-#
-VEC_fault:
-    bl   MTL_halt
-
-# Empty handlers
-VEC_nmi:
-VEC_svc:
-VEC_hard_fault:
-VEC_mem_fault:
-VEC_bus_fault:
-VEC_usage_fault:
-VEC_secure_fault:
-VEC_dbg_mon:
-VEC_pendSv:
-VEC_sysTick:
-IRQ_TIMER0_0:
-IRQ_TIMER0_1:
-IRQ_TIMER0_2:
-IRQ_TIMER0_3:
-IRQ_TIMER1_0:
-IRQ_TIMER1_1:
-IRQ_TIMER1_2:
-IRQ_TIMER1_3:
-IRQ_PWM_WRAP_0:
-IRQ_PWM_WRAP_1:
-IRQ_DMA_0:
-IRQ_DMA_1:
-IRQ_DMA_2:
-IRQ_DMA_3:
-IRQ_USBCTRL:
-IRQ_PIO0_0:
-IRQ_PIO0_1:
-IRQ_PIO1_0:
-IRQ_PIO1_1:
-IRQ_PIO2_0:
-IRQ_PIO2_1:
-IRQ_IO_BANK0:
-IRQ_IO_BANK0_NS:
-IRQ_IO_QSPI:
-IRQ_IO_QSPI_NS:
-IRQ_SIO_FIFO:
-IRQ_SIO_BELL:
-IRQ_SIO_FIFO_NS:
-IRQ_SIO_BELL_NS:
-IRQ_SIO_MTIMECMP:
-IRQ_CLOCKS:
-IRQ_SPI0:
-IRQ_SPI1:
-IRQ_UART0:
-IRQ_UART1:
-IRQ_ADC_FIFO:
-IRQ_I2C0:
-IRQ_I2C1:
-IRQ_OTP:
-IRQ_TRNG:
-IRQ_PROC0_CTI:
-IRQ_PROC1_CTI:
-IRQ_PLL_SYS:
-IRQ_PLL_USB:
-IRQ_POWMAN_POW:
-IRQ_POWMAN_TIMER:
-    bx   lr
-
