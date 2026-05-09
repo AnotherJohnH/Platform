@@ -13,7 +13,7 @@ target_sources(MTL PRIVATE
                MTL_getch.cpp
                MTL_PS2KeyDecode.cpp
                PALVideo.cpp
-               $<TARGET_OBJECTS:VEC>)
+               $<TARGET_OBJECTS:TGT_VEC>)
 
 target_compile_definitions(MTL PUBLIC MTL_TARGET=1)
 

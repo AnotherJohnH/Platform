@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
-add_library(VEC OBJECT
+add_library(TGT_VEC OBJECT
             vector_table.s
             vector_table_core1.s)
 
