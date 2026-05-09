@@ -13,10 +13,10 @@ else()
    add_subdirectory(Stub)
 endif()
 
-target_compile_definitions(PLT PUBLIC PDK_VERSION="${PROJECT_VERSION}")
+target_compile_definitions(PLT PUBLIC PDK_PROJ_VERSION="${PROJECT_VERSION}")
 target_compile_definitions(PLT PUBLIC PDK_TARGET="${PDK_TARGET}")
 target_compile_definitions(PLT PUBLIC PDK_MACHINE="${PDK_MACHINE}")
-target_compile_definitions(PLT PUBLIC PDK_COMMIT="${PDK_COMMIT}")
+target_compile_definitions(PLT PUBLIC PDK_PROJ_COMMIT="${PDK_PROJ_COMMIT}")
 
 target_compile_options(PLT PUBLIC "$<$<COMPILE_LANGUAGE:C>:-Wall>")
 target_compile_options(PLT PUBLIC "$<$<COMPILE_LANGUAGE:C>:-Werror>")

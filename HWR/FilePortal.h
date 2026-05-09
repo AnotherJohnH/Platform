@@ -28,8 +28,8 @@ public:
       s += snprintf(s, end_s - s, "Program  : %s (%s)\n", program_, HW_DESCR);
       s += snprintf(s, end_s - s, "Author   : Copyright (c) 2025 John D. Haughton\n");
       s += snprintf(s, end_s - s, "License  : MIT\n");
-      s += snprintf(s, end_s - s, "Version  : %s\n", PDK_VERSION);
-      s += snprintf(s, end_s - s, "Commit   : %s\n", PDK_COMMIT);
+      s += snprintf(s, end_s - s, "Version  : %s\n", PDK_PROJ_VERSION);
+      s += snprintf(s, end_s - s, "Commit   : %s\n", PDK_PROJ_COMMIT);
       s += snprintf(s, end_s - s, "Built    : %s %s\n", __TIME__, __DATE__);
 #if defined(__clang__)
       s += snprintf(s, end_s - s, "Compiler : Clang %s\n", __VERSION__);

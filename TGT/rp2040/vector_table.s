@@ -83,13 +83,19 @@ VEC_reset:
     movs r0, #0
     bl   main
 #
-VEC_fault:
     bl   MTL_halt
+
+#-------------------------------------------------------------------------------
+
+.global VEC_fault
+VEC_fault:
+    movs r0, #3
+    mov  r1, sp
+    bl   MTL_fault
 
 #-------------------------------------------------------------------------------
 # Empty handlers
 
-.weak VEC_fault
 .weak VEC_nmi
 .weak VEC_svc
 .weak VEC_pendSv

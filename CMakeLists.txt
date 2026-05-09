@@ -78,12 +78,12 @@ include(CTest)
 # Introspect to determine PDK project variables...
 #    PDK_TARGET
 #    PDK_MACHINE
-#    PDK_COMMIT
+#    PDK_PROJ_COMMIT
 
 # Determine current git commit
 execute_process(COMMAND git log --pretty=format:%H -n 1
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                OUTPUT_VARIABLE PDK_COMMIT)
+                OUTPUT_VARIABLE PDK_PROJ_COMMIT)
 
 if(NOT PDK_TARGET)
    if(DEFINED ENV{PDK_TARGET})
@@ -126,7 +126,7 @@ message("CMAKE_PROJECT_NAME    = ${CMAKE_PROJECT_NAME}")
 message("CMAKE_PROJECT_VERSION = ${CMAKE_PROJECT_VERSION}")
 message("CMAKE_BUILD_TYPE      = ${CMAKE_BUILD_TYPE}")
 message("--------------------------------------------------------------------------------")
-message("PDK_COMMIT         = ${PDK_COMMIT}")
+message("PDK_PROJ_COMMIT    = ${PDK_PROJ_COMMIT}")
 message("PDK_TARGET         = ${PDK_TARGET}")
 message("PDK_NATIVE         = ${PDK_NATIVE}")
 message("PDK_MACHINE        = ${PDK_MACHINE}")

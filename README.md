@@ -1,22 +1,39 @@
 # PDK
 
-C++ Software Development Kit for portable applications.
-
-Provides APIs for...
-* Low-level 2D rendering
-* Simple GUIs
-* Audio processing and synthesis
-* MIDI
-* Console applications
-  * Command line processing
-  * A light-weight curses API
-* Some static data structures suitable for an embedded or limited memory enviornment
-
-The intended deployment of the PDK is as a submodule inside other projects.
+PDK is a Portable Development Kit for C++ host and embedded applications. It is intended to be used as a git submodule inside application projects.
 
 ## Status
 
 [![Build Status](https://github.com/SloeComputers/PDK/actions/workflows/build_on_push.yml/badge.svg)](https://github.com/SloeComputers/PDK/actions/workflows/build_on_push.yml)
+
+## Libraries
+
+Embedded application support libraries
+
+|Library|Purpose|
+|-------|-------|
+|[TGT](TGT)|Target support: toolchains, vector tables, linker scripts, loadable image generation, and build macros.|
+|[UCL](UCL)|Small standard C library subset for embedded builds.|
+|[MTL](MTL)|Bare metal support for microcontrollers: MCU bringup, clocks, UARTs, timers, I2C, SPI etc.|
+|[TNY](TNY)|Additional standard C library support dependent on `MTL` for I/O.|
+|[HWR](HWR)|Hardware configuration layer for reusable board/product APIs and native simulation variants.|
+
+General purpose libraries for host and embedded applications
+
+|Library|Purpose|
+|-------|-------|
+|STB|Static data structures and utility types for limited-memory code.|
+|USB|USB descriptors and support utilities.|
+|SIG|Signal processing and synthesis.|
+|MIDI|MIDI protocol support.|
+|GUI|Simple GUI and 2D rendering.|
+|TRM|Lightweight terminal/curses-style interface.|
+
+Host OS abstraction libraries
+
+|Library|Purpose|
+|-------|-------|
+|PLT|Platform abstraction for display, MIDI, audio etc.|
 
 ## Starting a new project using the PDK
 
@@ -102,10 +119,6 @@ brew update
 brew install cmake
 brew install sdl2
 ```
-
-NOTE: The current version of SDL2 (2.0.8) does not work properly on macOS 10.14
-Mojave. The following [patch](https://hg.libsdl.org/SDL/rev/55489adbb75c)
-seems to resolve the issue.
 
 ### Kindle3
 

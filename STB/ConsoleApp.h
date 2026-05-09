@@ -41,12 +41,12 @@ private:
       printf("Program      : %s\n", program);
       printf("Description  : %s\n", description);
       printf("Author       : %s\n", author);
-      printf("Version      : %s\n", PDK_VERSION);
+      printf("Version      : %s\n", PDK_PROJ_VERSION);
       if (link != nullptr)
       {
          printf("Link         : %s\n", link);
       }
-      printf("Commit       : %s\n", PDK_COMMIT);
+      printf("Commit       : %s\n", PDK_PROJ_COMMIT);
       printf("Built        : %s %s\n", __TIME__, __DATE__);
       printf("Compiler     : %s\n", __VERSION__);
 #if defined(__arm__)

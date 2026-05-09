@@ -6,7 +6,7 @@
 # cmake configuration for microbit (V2) builds
 
 set(PDK_TARGET  nRF52)
-set(PDK_PREFIX  arm-none-eabi-)
+set(pdk_prefix  arm-none-eabi-)
 set(PDK_MACHINE armv7m)
 
 #-------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} \
 
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -Wno-volatile")
 
-set(PDK_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/TGT/${PDK_TARGET}/script.ld")
+set(pdk_ld_flags  "--static -T${CMAKE_SOURCE_DIR}/PDK/TGT/${PDK_TARGET}/script.ld")
 
 #-------------------------------------------------------------------------------
 # Configure the cmake tools
@@ -30,19 +30,19 @@ set(PDK_LD_FLAGS  "--static -T${CMAKE_SOURCE_DIR}/PDK/TGT/${PDK_TARGET}/script.l
 set(CMAKE_SYSTEM_NAME         Generic)
 set(CMAKE_SYSTEM_PROCESSOR    ${PDK_MACHINE})
 
-set(CMAKE_ASM_COMPILER        ${PDK_PREFIX}as)
-set(CMAKE_C_COMPILER          ${PDK_PREFIX}gcc)
-set(CMAKE_CXX_COMPILER        ${PDK_PREFIX}g++)
-set(CMAKE_AR                  ${PDK_PREFIX}ar)
-set(CMAKE_RANLIB              ${PDK_PREFIX}ranlib)
-set(CMAKE_OBJCOPY             ${PDK_PREFIX}objcopy)
-set(CMAKE_OBJDUMP             ${PDK_PREFIX}objdump)
-set(CMAKE_SIZE                ${PDK_PREFIX}size)
+set(CMAKE_ASM_COMPILER        ${pdk_prefix}as)
+set(CMAKE_C_COMPILER          ${pdk_prefix}gcc)
+set(CMAKE_CXX_COMPILER        ${pdk_prefix}g++)
+set(CMAKE_AR                  ${pdk_prefix}ar)
+set(CMAKE_RANLIB              ${pdk_prefix}ranlib)
+set(CMAKE_OBJCOPY             ${pdk_prefix}objcopy)
+set(CMAKE_OBJDUMP             ${pdk_prefix}objdump)
+set(CMAKE_SIZE                ${pdk_prefix}size)
 
 set(THIS_DIR "${CMAKE_SOURCE_DIR}/PDK/TGT/nRF52")
 
 set(CMAKE_C_LINK_EXECUTABLE
-    "${PDK_PREFIX}ld ${PDK_LD_FLAGS} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
+    "${pdk_prefix}ld ${pdk_ld_flags} <OBJECTS> -o <TARGET> <LINK_LIBRARIES>; \
      ${CMAKE_OBJCOPY} -O ihex <TARGET> <TARGET>.hex; \
      ${CMAKE_SOURCE_DIR}/PDK/TGT/util/univihex.py -1 ${THIS_DIR}/stand-alone-error-v1.hex -2 <TARGET>.hex -o <TARGET>-u.hex; \
      ${CMAKE_SOURCE_DIR}/PDK/TGT/util//objdump.py -b ${CMAKE_OBJDUMP} <TARGET>; \

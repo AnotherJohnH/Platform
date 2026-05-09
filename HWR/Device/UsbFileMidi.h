@@ -35,7 +35,7 @@ public:
                STB::FileSystem& file_system_)
       : MTL::USBDevice("https://github.com/SloeComputers",
                        device_id_, PDK_BCD_VERSION, device_name_,
-                       PDK_COMMIT)
+                       PDK_PROJ_COMMIT)
       , storage_if{this, file_system_}
    {}
 
