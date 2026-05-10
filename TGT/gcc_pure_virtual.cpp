@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
+extern "C" void MTL_fault(unsigned, void*);
 
 extern "C" void __cxa_pure_virtual()
 {
-   while(1);
+   MTL_fault(0, nullptr);
 }

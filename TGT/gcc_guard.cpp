@@ -3,10 +3,9 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C library implementation
-
 extern "C" int __cxa_guard_acquire(volatile int* guard)
 {
+   // XXX not an atomic operation so not thread safe!
    return *guard == 0 ? 1 : 0;
 }
 

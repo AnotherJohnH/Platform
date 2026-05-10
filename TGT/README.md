@@ -35,3 +35,18 @@ Note, the vector table objects depend on functions implemented in the target spe
 |PDK_MACHINE|Processor architecture e.g. "armv6m"|
 |PDK_\<TARGET\>|PDK target name as a macro e.g. PDK_RP2040|
 
+## Targets
+
+|PDK_TARGET|PDK_MACHINE|Description|
+|----------|------------|-----------|
+|`native`|host|Host build using native compiler|
+|`ATtiny84`|`avr24`|Atmel ATtiny84|
+|`ATtiny85`|`avr25`|Atmel ATtiny85|
+|`LPC810`|`armv6m`|NXP LPC810, Arm Cortex-M0|
+|`LPC1114`|`armv6m`|NXP LPC1114, Arm Cortex-M0|
+|`LPC11U24`|`armv6m`|NXP LPC11U24, Arm Cortex-M0|
+|`LPC1768`|`armv7m`|NXP LPC1768, Arm Cortex-M3|
+|`nRF51`|`armv6m`|Nordic nRF51 (micro:bit v1), Arm Cortex-M0|
+|`nRF52`|`armv7m`|Nordic nRF52 (micro:bit v2), Arm Cortex-M4|
+|`rp2040`|`armv6m`|Raspberry Pi RP2040 (Pico), dual Arm Cortex-M0+|
+|`rp2350`|`armv8m`|Raspberry Pi RP2350 (Pico 2), dual Arm Cortex-M33|
