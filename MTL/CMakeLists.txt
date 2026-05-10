@@ -7,6 +7,7 @@ add_subdirectory(${PDK_TARGET})
 
 target_sources(MTL PRIVATE
                MTL_init.cpp
+               MTL_fault.cpp
                MTL_halt.cpp
                MTL_clock.cpp
                MTL_putch.cpp

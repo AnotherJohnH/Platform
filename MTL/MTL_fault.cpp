@@ -6,7 +6,7 @@
 #include "MTL/MTL.h"
 
 __attribute__((weak))
-void MTL_init()
+void MTL_fault(unsigned excep_num_, uint32_t* fault_stack_ptr_)
 {
+   MTL_halt(1);
 }
-
