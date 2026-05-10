@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-#include <stdlib.h>
+#include "UCL/stdlib.h"
 
 #include "MTL/MTL.h"
 

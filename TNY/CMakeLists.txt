@@ -5,6 +5,7 @@
 
 add_library(TNY STATIC
             delete.cpp
+            gcc_pure_virtual.cpp
             math/cos.cpp
             math/cosf.cpp
             math/expf.cpp

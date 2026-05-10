@@ -26,16 +26,15 @@ if(${PDK_NATIVE})
 
 else()
 
-   add_library(HWR STATIC
-               fault_handler.cpp)
+   add_library(HWR INTERFACE)
 
-   target_link_libraries(HWR PUBLIC TNY)
+   target_link_libraries(HWR INTERFACE TNY)
 
-   target_include_directories(HWR PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..)
+   target_include_directories(HWR INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
    math(EXPR bcd_version "${CMAKE_MAJOR_VERSION} * 0x100 + ${CMAKE_MINOR_VERSION}"
         OUTPUT_FORMAT HEXADECIMAL)
 
-   target_compile_definitions(HWR PUBLIC PDK_BCD_VERSION=${bcd_version})
+   target_compile_definitions(HWR INTERFACE PDK_BCD_VERSION=${bcd_version})
 
 endif()

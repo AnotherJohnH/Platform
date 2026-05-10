@@ -16,8 +16,6 @@ extern "C" {
 extern void* malloc(size_t);
 extern void  free(void*);
 extern int   atexit(void (*)(void));
-extern void  exit(int);
-extern void  abort(void);
 extern int   system(const char*);
 
 #ifdef __cplusplus

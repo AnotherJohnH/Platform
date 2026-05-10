@@ -9,4 +9,3 @@ __attribute__((weak))
 void MTL_init()
 {
 }
-

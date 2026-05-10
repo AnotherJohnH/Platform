@@ -7,6 +7,7 @@
 #include <stdarg.h>
 
 #include "UCL/PrintF.h"
+#include "MTL/MTL.h"
 
 namespace {
 
@@ -18,7 +19,7 @@ public:
 private:
     void putc(char ch) override
     {
-       putchar(ch);
+       MTL_putch(ch);
        ++count;
     }
 };

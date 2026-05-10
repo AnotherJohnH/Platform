@@ -22,8 +22,8 @@ Note, the vector table objects depend on functions implemented in the target spe
 |Symbol|Description|
 |------|-----------|
 |`void MTL_init()`|Called from the reset vector after data and bss have been initialised, but before global constructors, should bring up and configure the microcontroller|
-|`void MTL_halt(uint32_t)`|Called when main() returns or the application explicitly requests to stop. Shuts down the system and wait for power off or reset.|
-|`void MTL_fault(unsigned excep_num, uint32_t* stack_ptr)`|A fault exception has occurred.|
+|`void MTL_halt(unsigned)`|Called when main() returns or the application explicitly requests to stop. Shuts down the system and wait for power off or reset.|
+|`void MTL_fault(unsigned excep_num, unsigned long* stack_ptr)`|A fault or exception has occurred.|
 
 ## PDK macros
 

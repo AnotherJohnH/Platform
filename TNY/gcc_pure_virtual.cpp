@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-extern "C" void MTL_fault(unsigned, void*);
+#include "MTL/MTL.h"
 
 extern "C" void __cxa_pure_virtual()
 {
-   MTL_fault(0, nullptr);
+   MTL_fault(0x100, nullptr);
 }

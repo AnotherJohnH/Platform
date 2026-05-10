@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 
-using Handler = void (*)(uint32_t);
+using Handler = void (*)(unsigned);
 
 enum Exception
 {
@@ -19,38 +19,35 @@ enum Exception
    NUM_EXC
 };
 
-extern "C"
-{
-   //! Intialise the platform
-   void MTL_init();
+//! Intialise the platform
+extern "C" void MTL_init();
 
-   //! Halt platform
-   [[ noreturn ]] void MTL_halt(uint32_t status);
+//! Fault handler
+extern "C" [[ noreturn ]] void MTL_fault(unsigned excep_num, unsigned long* fault_stack_ptr);
 
-   //! Get current 100 Hz tick count
-   uint32_t MTL_clock();
+//! Halt platform
+extern "C" [[ noreturn ]] void MTL_halt(unsigned status);
 
-   //! Get current microsecond tick count
-   uint32_t MTL_us_clock();
+//! Get current 100 Hz tick count
+uint32_t MTL_clock();
 
-   //! Send character to console
-   void MTL_putch(uint8_t ch);
+//! Get current microsecond tick count
+uint32_t MTL_us_clock();
 
-   //! Get character from the console
-   int MTL_getch();
+//! Send character to console
+void MTL_putch(uint8_t ch);
 
-   //! Check if character avialable from the console
-   bool MTL_getch_empty();
+//! Get character from the console
+int MTL_getch();
 
-   //! Disable console buffering (avoids IRQs)
-   void MTL_nobuff();
+//! Check if character avialable from the console
+bool MTL_getch_empty();
 
-   //! Fault handler
-   [[ noreturn ]] void MTL_fault(unsigned excep_num, uint32_t* fault_stack_ptr);
+//! Disable console buffering (avoids IRQs)
+void MTL_nobuff();
 
-   //! Exception handling
-   void MTL_excep(Exception signal, Handler handler, uint32_t data);
+//! Exception handling
+void MTL_excep(Exception signal, Handler handler, uint32_t data);
 
-   //! Start another core
-   bool MTL_start_core(unsigned index, void (*func)());
-}
+//! Start another core
+bool MTL_start_core(unsigned index, void (*func)());
