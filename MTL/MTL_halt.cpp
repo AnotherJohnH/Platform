@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
-#include "MTL/Digital.h"
 
 namespace {
 
@@ -19,20 +18,14 @@ void usleep(unsigned microseconds)
 
 void MTL_halt(unsigned status_)
 {
-#if 0
-   MTL::Digital::Out<MTL::PIN_LED1> onboard_led;
-#else
-   bool onboard_led;
-#endif
-
    while(true)
    {
       for(unsigned i = 0; i < status_; ++i)
       {
-         onboard_led = true;
+         MTL_alert(true);
          usleep(100000);
 
-         onboard_led = false;
+         MTL_alert(false);
          usleep(100000);
       }
 

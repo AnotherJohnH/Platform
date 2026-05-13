@@ -1,18 +1,19 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2014 John D. Haughton
+// Copyright (c) 2023 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
 
-__attribute__((weak))
-uint32_t MTL_clock()
+void MTL_putch(uint8_t ch)
 {
-   return 0;
 }
 
-__attribute__((weak))
-uint32_t MTL_us_clock()
+int MTL_getch()
 {
-   return 0;
+   return -1;
+}
+
+void MTL_nobuff()
+{
 }

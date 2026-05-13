@@ -83,17 +83,22 @@ VEC_reset:
     movs r0, #0
     bl   main
 #
-VEC_fault:
     bl   MTL_halt
+
+#-------------------------------------------------------------------------------
+
+.global VEC_fault
+VEC_fault:
+    movs r0, #3
+    mov  r1, sp
+    b    MTL_fault
 
 #-------------------------------------------------------------------------------
 # Empty handlers
 
-.weak VEC_fault
 .weak VEC_nmi
 .weak VEC_svc
 .weak VEC_pendSv
-.weak VEC_sysTick
 
 .weak IRQ_GPIO_0
 .weak IRQ_GPIO_1
@@ -125,7 +130,6 @@ VEC_fault:
 VEC_nmi:
 VEC_svc:
 VEC_pendSv:
-VEC_sysTick:
 IRQ_GPIO_0:
 IRQ_GPIO_1:
 IRQ_GPIO_2:

@@ -91,7 +91,7 @@ VEC_reset:
 VEC_fault:
     movs r0, #3
     mov  r1, sp
-    bl   MTL_fault
+    b    MTL_fault
 
 #-------------------------------------------------------------------------------
 # Empty handlers

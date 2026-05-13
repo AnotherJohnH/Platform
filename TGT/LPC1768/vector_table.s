@@ -86,18 +86,46 @@ VEC_reset:
     movs r0, #0
     bl   main
 #
-VEC_hard_fault:
-VEC_mem_fault:
     bl   MTL_halt
+
+#-------------------------------------------------------------------------------
+
+.global VEC_hard_fault
+VEC_hard_fault:
+    mov    r0, #3
+    mov    r1, sp
+    b      MTL_fault
+
+#-------------------------------------------------------------------------------
+
+.global VEC_mem_fault
+VEC_mem_fault:
+    mov    r0, #4
+    mov    r1, sp
+    b      MTL_fault
+
+#-------------------------------------------------------------------------------
+
+.global VEC_bus_fault
+VEC_bus_fault:
+    mov    r0, #5
+    mov    r1, sp
+    b      MTL_fault
+
+#-------------------------------------------------------------------------------
+
+.global VEC_usage_fault
+VEC_usage_fault:
+    mov    r0, #6
+    mov    r1, sp
+    b      MTL_fault
 
 #-------------------------------------------------------------------------------
 # Empty handlers
 
-.weak VEC_fault
 .weak VEC_nmi
 .weak VEC_svc
 .weak VEC_pendSv
-.weak VEC_sysTick
 
 .weak IRQ_WDT
 .weak IRQ_Timer0

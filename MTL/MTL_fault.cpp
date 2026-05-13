@@ -42,7 +42,7 @@ void MTL_fault(unsigned excep_num_, unsigned long* fault_stack_ptr_)
    // Prevent console out using IRQs (as they won't work)
    MTL_nobuff();
 
-   printf("\n\nFAULT: #%u\n", excep_num_, fault_stack_ptr_[6]);
+   printf("\n\nFAULT: #%u\n", excep_num_);
 
    printf("R0  = %08x  R1 = %08x  R2 = %08x  R3 = %08x\n",
           fault_stack_ptr_[0], fault_stack_ptr_[1],
@@ -54,5 +54,7 @@ void MTL_fault(unsigned excep_num_, unsigned long* fault_stack_ptr_)
 
    printf("PSR = %08x\n", fault_stack_ptr_[7]);
 
-   MTL_halt(excep_num_);
+   // Setup return as MTL_halt(excep_num_)
+   fault_stack_ptr_[0] = excep_num_;
+   fault_stack_ptr_[6] = (unsigned long)MTL_halt;
 }

@@ -134,7 +134,7 @@ public:
 
    void tx(uint8_t data)
    {
-      while(reg->lsr & (1<<5) == 0);
+      while((reg->lsr & (1<<5)) == 0);
 
       reg->rbr_thr_dll = data;
    }

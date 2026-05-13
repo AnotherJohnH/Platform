@@ -4,14 +4,17 @@
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
-            Dma.cpp
-            ../rp2xxx/Uart.cpp
-            ../rp2xxx/MTL_console.cpp
             MTL_init.cpp
+            ../MTL_halt.cpp
+            ../MTL_fault.cpp
+            ../rp2xxx/Uart.cpp
+            ../rp2xxx/MTL_alert.cpp
+            ../rp2xxx/MTL_console.cpp
+            ../core/CortexM0/MTL_excep.cpp
             MTL_start_core.cpp
             MTL_clock.cpp
             MTL_mutex.cpp
-            ../core/CortexM0/MTL_excep.cpp
+            Dma.cpp
             Config.cpp)
 
 target_include_directories(MTL PUBLIC include)

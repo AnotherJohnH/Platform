@@ -23,29 +23,14 @@ union SysTickReg
 class SysTick : public Periph<SysTickReg,0xE000E000>
 {
 public:
-   //! Initialize, free-running tick timer
-   SysTick()
-   {
-      // Select the core clock, not external reference, as clock source
-      reg->csr.setBit(CSR_CLKSOURCE);
-
-      setPeriod(0x1000000);
-      start();
-   }
-
    //! Start the SysTick timer
-   //
    //! \param period24 24-bit clock tick
-   SysTick(unsigned period)
+   SysTick(unsigned period = 0x1000000)
    {
-      // Select the core clock, not external reference, as clock source
-      reg->csr.setBit(CSR_CLKSOURCE);
-
-      // Enable SysTick interrupt
-      reg->csr.setBit(CSR_TICKINT);
-
       setPeriod(period);
       start();
+
+      __asm volatile("cpsie i");
    }
 
    //! Read current value
@@ -58,7 +43,6 @@ public:
    bool isReset() const { return reg->csr.getBit(CSR_COUNTFLAG); }
 
    //! Set the tick period
-   //
    //! \param ticks24 period 24-bit value
    void setPeriod(uint32_t ticks24)
    {
@@ -69,13 +53,17 @@ public:
    void start()
    {
       reg->cvr = 0;
-      reg->csr.setBit(CSR_ENABLE);
+
+      // Select the core clock, not external reference, as clock source
+      reg->csr = (1 << CSR_CLKSOURCE) |
+                 (1 << CSR_TICKINT) |
+                 (1 << CSR_ENABLE);
    }
 
    //! Stop tick timer
    void stop()
    {
-      reg->csr.clrBit(CSR_ENABLE);
+      reg->csr = 0;
    }
 
 private:

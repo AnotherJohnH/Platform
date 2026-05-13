@@ -4,23 +4,11 @@
 //-------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
+#include "MTL/Digital.h"
 
-#include "MTL/LPC1768/UART.h"
-
-static MTL::UART0 uart(MTL::UART::BAUD_115200);
-
-void MTL_putch(uint8_t ch)
+void MTL_alert(bool state_)
 {
-   if (ch == '\n')
-      uart.tx('\r');
-   uart.tx(ch);
-}
+   static MTL::Digital::Out</* MTL::PIN_LED1 */0x19> onboard_led;
 
-int MTL_getch()
-{
-   return uart.rx();
-}
-
-void MTL_nobuff()
-{
+   onboard_led = state_;
 }

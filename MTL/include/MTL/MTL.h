@@ -23,7 +23,7 @@ enum Exception
 extern "C" void MTL_init();
 
 //! Fault handler
-extern "C" [[ noreturn ]] void MTL_fault(unsigned excep_num, unsigned long* fault_stack_ptr);
+extern "C" void MTL_fault(unsigned excep_num, unsigned long* fault_stack_ptr);
 
 //! Halt platform
 extern "C" [[ noreturn ]] void MTL_halt(unsigned status);
@@ -45,6 +45,9 @@ bool MTL_getch_empty();
 
 //! Disable console buffering (avoids IRQs)
 void MTL_nobuff();
+
+//! Set alert indication state
+void MTL_alert(bool state_);
 
 //! Exception handling
 void MTL_excep(Exception signal, Handler handler, uint32_t data);

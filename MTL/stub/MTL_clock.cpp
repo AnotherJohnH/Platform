@@ -1,11 +1,16 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2014 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
 
-void MTL_halt(uint32_t status)
+uint32_t MTL_clock()
 {
-   while(true);
+   return 0;
+}
+
+uint32_t MTL_us_clock()
+{
+   return 0;
 }
