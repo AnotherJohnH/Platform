@@ -9,7 +9,7 @@ add_library(MTL STATIC
             ../MTL_fault.cpp
             MTL_alert.cpp
             MTL_console.cpp
-            ../core/CortexM0/MTL_clock.cpp
+            MTL_clock.cpp
             ../core/CortexM0/MTL_excep.cpp
             Leds.cpp)
 

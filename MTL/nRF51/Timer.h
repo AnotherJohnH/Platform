@@ -84,7 +84,7 @@ private:
    using Periph<TimerReg,0x40008000,INDEX>::reg;
 
 public:
-   Timer(TimerWidth width = TIMER_WIDTH_16_BITS)
+   Timer(TimerWidth width = TIMER_WIDTH_32_BITS)
    {
       stop();
 
