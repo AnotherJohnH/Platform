@@ -5,6 +5,10 @@
 
 add_library(MTL STATIC
             MTL_init.cpp
+            ../MTL_halt.cpp
+            ../MTL_fault.cpp
+            MTL_alert.cpp
+            MTL_console.cpp
             ../core/CortexM0/MTL_clock.cpp
             ../core/CortexM0/MTL_excep.cpp)
 

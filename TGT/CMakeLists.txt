@@ -14,7 +14,9 @@ else()
    add_library(TGT STATIC
                TGT_loader.cpp
                gcc_global_obj.cpp
-               gcc_guard.cpp)
+               gcc_guard.cpp
+               gcc_pure_virtual.cpp
+               delete.cpp)
 
    # This warning seems broken in gcc 10 and later
    target_compile_options(TGT PUBLIC "$<$<COMPILE_LANGUAGE:C>:-Wno-stringop-overflow>")

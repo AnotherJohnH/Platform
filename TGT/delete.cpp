@@ -3,8 +3,6 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \brief tiny C/C++ library implementation
-
 #include <cstddef>
 
 // XXX gcc is bringing in a dependency on the delete operator

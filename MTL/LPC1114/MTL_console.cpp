@@ -1,11 +1,19 @@
 //-------------------------------------------------------------------------------
-// Copyright (c) 2013 John D. Haughton
+// Copyright (c) 2023 John D. Haughton
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
 #include "MTL/MTL.h"
 
-extern "C" void __cxa_pure_virtual()
+void MTL_putch(uint8_t ch)
 {
-   MTL_fault(0x100, nullptr);
+}
+
+int MTL_getch()
+{
+   return -1;
+}
+
+void MTL_nobuff()
+{
 }

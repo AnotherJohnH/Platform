@@ -4,8 +4,11 @@
 #-------------------------------------------------------------------------------
 
 add_library(MTL STATIC
-            MTL_halt.cpp
             MTL_init.cpp
+            ../MTL_halt.cpp
+            ../MTL_fault.cpp
+            MTL_alert.cpp
+            MTL_console.cpp
             ../core/CortexM4/MTL_clock.cpp
             ../core/CortexM4/MTL_excep.cpp)
 
