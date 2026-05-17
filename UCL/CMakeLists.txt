@@ -43,6 +43,26 @@ add_library(UCL STATIC
             stdlib/abs.cpp
             stdlib/rand.cpp)
 
+if (${PDK_FP32})
+   target_sources(UCL PUBLIC
+                  math/cosf.cpp
+                  math/expf.cpp
+                  math/fabsf.cpp
+                  math/logf.cpp
+                  math/powf.cpp
+                  math/sinf.cpp
+                  math/sqrtf.cpp
+                  math/tanhf.cpp)
+endif()
+
+if (${PDK_FP64})
+   target_sources(UCL PUBLIC
+                  math/cos.cpp
+                  math/pow.cpp
+                  math/sin.cpp
+                  math/sqrt.cpp)
+endif()
+
 target_include_directories(UCL PUBLIC include)
 
 if(BUILD_TESTING)

@@ -6,8 +6,9 @@
 # cmake configuration for Atmel ATtiny84 builds
 
 set(PDK_TARGET  ATtiny84)
-set(pdk_prefix  avr-)
 set(PDK_MACHINE avr24)
+
+set(pdk_prefix  avr-)
 
 #-------------------------------------------------------------------------------
 # Special flags for this platform

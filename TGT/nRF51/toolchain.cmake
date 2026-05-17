@@ -6,12 +6,13 @@
 # cmake configuration for mictobit (V1) builds
 
 set(PDK_TARGET  nRF51)
-set(pdk_prefix  arm-none-eabi-)
 set(PDK_MACHINE armv6m)
 
 if (NOT DEFINED PDK_RAM_SIZE)
    set(PDK_RAM_SIZE 16k)
 endif()
+
+set(pdk_prefix  arm-none-eabi-)
 
 #-------------------------------------------------------------------------------
 # Special flags for this platform

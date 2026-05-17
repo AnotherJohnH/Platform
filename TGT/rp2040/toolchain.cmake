@@ -6,8 +6,9 @@
 # cmake configuration for RaspberryPi Pico builds
 
 set(PDK_TARGET  rp2040)
-set(pdk_prefix  arm-none-eabi-)
 set(PDK_MACHINE armv6m)
+
+set(pdk_prefix  arm-none-eabi-)
 
 #-------------------------------------------------------------------------------
 # Special flags for this platform

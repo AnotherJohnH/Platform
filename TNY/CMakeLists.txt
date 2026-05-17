@@ -4,18 +4,6 @@
 #-------------------------------------------------------------------------------
 
 add_library(TNY STATIC
-            math/cos.cpp
-            math/cosf.cpp
-            math/expf.cpp
-            math/fabsf.cpp
-            math/logf.cpp
-            math/pow.cpp
-            math/powf.cpp
-            math/sin.cpp
-            math/sinf.cpp
-            math/sqrt.cpp
-            math/sqrtf.cpp
-            math/tanhf.cpp
             stdio/fprintf.cpp
             stdio/feof.cpp
             stdio/fgetc.cpp

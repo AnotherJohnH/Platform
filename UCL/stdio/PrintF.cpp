@@ -83,6 +83,8 @@ static void write_int(PrintF*  buffer,
    }
 }
 
+#if defined(PDK_FP32)
+
 static void write_flt(PrintF* buffer,
                       float   value,
                       int     precision,
@@ -98,17 +100,15 @@ static void write_flt(PrintF* buffer,
    {           
       value -= int(value);
 
-#if !defined(PDK_ATTINY84) && !defined(PDK_ATTINY85)
       static unsigned pow10[] = { 10, 100, 1000, 10000, 100000 };
-#else       
-      static unsigned pow10[] = { 10, 100, 1000, 10000 };
-#endif         
    
       unsigned frac = value * pow10[precision - 1] + 0.5;
                
       write_int(buffer, frac, 10, precision, '0');
    }
 }    
+
+#endif
 
 static void write_str(PrintF* buffer, const char* value, int width)
 {
@@ -244,6 +244,7 @@ int PrintF::vprintf(const char* format, va_list ap)
          case 'g':
          case 'G':
             {
+#if defined(PDK_FP32)
                float value = va_arg(ap, double);
                char sign{'\0'};
                if (value < 0)
@@ -252,6 +253,10 @@ int PrintF::vprintf(const char* format, va_list ap)
                   sign = '-';
                }
                write_flt(this, value, precision, width, pad, sign);
+#else
+               (void) va_arg(ap, double);
+               write_str(this, "x.x", /* width */ 0);
+#endif
             }
             break;
 

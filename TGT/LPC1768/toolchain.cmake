@@ -6,8 +6,9 @@
 # cmake configuration for LPC1768 builds
 
 set(PDK_TARGET  LPC1768)
-set(pdk_prefix  arm-none-eabi-)
 set(PDK_MACHINE armv7m)
+
+set(pdk_prefix  arm-none-eabi-)
 
 #-------------------------------------------------------------------------------
 # Special flags for this platform

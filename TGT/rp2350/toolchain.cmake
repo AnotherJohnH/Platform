@@ -7,6 +7,8 @@
 
 set(PDK_TARGET  rp2350)
 set(PDK_MACHINE armv8m)
+set(PDK_FP32    1)
+
 set(pdk_prefix  arm-none-eabi-)
 
 #-------------------------------------------------------------------------------
