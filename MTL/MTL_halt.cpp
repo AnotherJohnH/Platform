@@ -7,28 +7,29 @@
 
 namespace {
 
-void usleep(unsigned microseconds)
+void delay(unsigned ticks_)
 {
-   unsigned long future = MTL_us_clock() + microseconds + 1;
-
-   while(signed(MTL_us_clock() - future) < 0);
+   for(volatile unsigned i=0; i < ticks_; ++i);
 }
 
 } // namespace
 
 void MTL_halt(unsigned status_)
 {
+   const unsigned SHORT = 1000000;
+   const unsigned LONG  = 5000000;
+
    while(true)
    {
       for(unsigned i = 0; i < status_; ++i)
       {
          MTL_alert(true);
-         usleep(100000);
+         delay(SHORT);
 
          MTL_alert(false);
-         usleep(100000);
+         delay(SHORT);
       }
 
-      usleep(1000000);
+      delay(LONG);
    }
 }
