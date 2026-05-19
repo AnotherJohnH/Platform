@@ -5,6 +5,10 @@
 
 #include "MTL/MTL.h"
 
+#include "Clock.h"
+
 void MTL_init()
 {
+   // Start the 16MHz xtal
+   MTL::Clock().startHFClock();
 }

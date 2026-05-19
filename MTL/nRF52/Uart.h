@@ -65,7 +65,7 @@ public:
    // TODO calc baudrate constant from an actual frequency
    //      formulae is baud-rate * (1<<32) / 16000000
    //      round to nearest 0x1000
-   UartInstance(uint32_t baud = 0x275000, bool parity = false)  // 9600 no-parity
+   UartInstance(uint32_t baud = UART_BAUD_9600, bool parity = false)  // 9600 no-parity
    {
       reg->psel_rxd = PIN_RXD;
       reg->psel_txd = PIN_TXD;

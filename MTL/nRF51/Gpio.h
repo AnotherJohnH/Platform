@@ -47,15 +47,13 @@ class Out : public Periph<Reg,0x50000000>
 public:
    Out(GpioDrive drive=GPIO_S0_S1)
    {
-      reg->dirset.setField(MSB, LSB, DATA_MASK);
-
       for(unsigned bit=LSB; bit<=MSB; ++bit)
       {
-         reg->pin_cnf[bit] = (0     <<16) | // Sensing disabled
-                             (drive << 8) | // Drive configuration
-                             (0     << 2) | // No pull
-                             (1     << 1) | // Disconnect input buffer
-                             (1     << 0);  // Output
+         reg->pin_cnf[bit] = (0     << 16) | // Sensing disabled
+                             (drive <<  8) | // Drive configuration
+                             (0     <<  2) | // No pull
+                             (1     <<  1) | // Disconnect input buffer
+                             (1     <<  0);  // Output
       }
    }
 
@@ -92,8 +90,6 @@ class In : public Periph<Reg,0x50000000>
 public:
    In(GpioDrive drive=GPIO_S0_S1)
    {
-      reg->dirclr.setField(MSB, LSB, DATA_MASK);
-
       for(unsigned bit=LSB; bit<=MSB; ++bit)
       {
          reg->pin_cnf[bit] = (0     <<16) | // Sensing disabled

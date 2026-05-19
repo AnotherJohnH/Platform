@@ -95,6 +95,8 @@ public:
       setClock(TIMER_1_MHZ);
 
       irq.enable();
+
+      start();
    }
 
    void setModeIsCounter() { reg->mode = 1; }

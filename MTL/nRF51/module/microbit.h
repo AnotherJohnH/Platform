@@ -65,7 +65,7 @@ static const unsigned  PIN_PAD_16     = nRF51::PIN_16;
 static const unsigned  PIN_PAD_19     = nRF51::PIN_0;
 static const unsigned  PIN_PAD_20     = nRF51::PIN_30;
 
-static const unsigned  PIN_LED1 = PIN_LED_COL1;
+static const unsigned  PIN_LED1 = PIN_LED_ROW1;
 
 static const unsigned  PIN_NOT_CONNECTED = 0xFFFFFFFF;
 
