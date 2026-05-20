@@ -10,10 +10,6 @@
 
 int putchar(int ch)
 {
-   if (ch == '\n')
-   {
-      MTL_putch(uint8_t('\r'));
-   }
    MTL_putch(uint8_t(ch));
    return ch;
 }

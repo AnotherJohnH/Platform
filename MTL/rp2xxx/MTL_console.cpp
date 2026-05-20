@@ -16,6 +16,9 @@ static MTL::Uart0_P1_P2 uart{MTL::console_baud, 8, MTL::UART::NONE, 1};
 
 void MTL_putch(uint8_t ch)
 {
+   if (ch == '\n')
+      uart.tx('\r');
+
    uart.tx(ch);
 }
 
